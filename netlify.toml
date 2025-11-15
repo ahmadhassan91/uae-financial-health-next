@@ -1,15 +1,19 @@
 [build]
-  # Build command for Next.js static export
+  # Build command for Next.js standard build (not static export)
   command = "npm run build"
   
-  # Publish directory for static export
-  publish = "out"
+  # For Next.js standard build, don't specify publish directory
+  # Let @netlify/plugin-nextjs handle it automatically
   
   # Set Node.js version to 18 for compatibility
   [build.environment]
     NODE_VERSION = "18"
-    # Production API URL pointing to Heroku backend
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
+    # Production API URL pointing to new Heroku backend
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
+
+# Next.js plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 # Headers for security and performance
 [[headers]]
@@ -68,12 +72,12 @@
 # Context-specific settings
 [context.production]
   [context.production.environment]
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
 
 [context.deploy-preview]
   [context.deploy-preview.environment]
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
 
 [context.branch-deploy]
   [context.branch-deploy.environment]
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
