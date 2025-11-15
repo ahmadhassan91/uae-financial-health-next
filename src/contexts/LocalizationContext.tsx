@@ -12,6 +12,7 @@ import {
   LoadingState 
 } from '@/lib/types';
 import { translations as simpleTranslations } from '@/lib/simple-translations';
+import { apiClient } from '@/lib/api-client';
 
 export interface EnhancedLocalizationContextType {
   language: SupportedLanguage;
@@ -346,7 +347,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
       setLoadingState({ isLoading: true, progress: 25 });
       
       // Load from API with retry logic
-      const apiTranslations = await loadContentWithRetry(`/api/v1/localization/ui/${lang}`);
+      const apiTranslations = await apiClient.getUITranslations(lang);
       
       setLoadingState({ isLoading: true, progress: 75 });
       
@@ -452,7 +453,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
       try {
         const cacheKey = getCacheKey(type, language);
         if (!cacheRef.current[cacheKey] || !isCacheValid(cacheRef.current[cacheKey])) {
-          const content = await loadContentWithRetry(`/api/v1/localization/content?content_type=${type}&language=${language}`);
+          const content = await apiClient.getLocalizedContent(language, type);
           
           // Transform to key-value pairs for caching
           const keyValuePairs: Record<string, string> = {};

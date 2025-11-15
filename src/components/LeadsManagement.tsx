@@ -14,6 +14,7 @@ import {
   Users, Download, Mail, Phone, MessageCircle, Calendar,
   Eye, Edit, Trash2, Filter, Search, RefreshCw, MoreVertical
 } from 'lucide-react';
+import { apiClient } from '@/lib/api-client';
 
 interface ConsultationRequest {
   id: number;
@@ -53,13 +54,7 @@ export function LeadsManagement() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('admin_access_token');
-    return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    };
-  };
+
 
   const loadLeads = async () => {
     try {
@@ -69,16 +64,8 @@ export function LeadsManagement() {
       if (sourceFilter !== 'all') params.append('source', sourceFilter);
       if (searchTerm) params.append('search', searchTerm);
 
-      const response = await fetch(`/api/v1/consultations/admin/list?${params}`, {
-        headers: getAuthHeaders()
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setLeads(data);
-      } else {
-        toast.error('Failed to load consultation requests');
-      }
+      const data = await apiClient.request(`/consultations/admin/list?${params}`);
+      setLeads(data);
     } catch (error) {
       console.error('Error loading leads:', error);
       toast.error('An error occurred while loading leads');
@@ -89,14 +76,8 @@ export function LeadsManagement() {
 
   const loadStats = async () => {
     try {
-      const response = await fetch('/api/v1/consultations/admin/stats', {
-        headers: getAuthHeaders()
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data);
-      }
+      const data = await apiClient.request('/consultations/admin/stats');
+      setStats(data);
     } catch (error) {
       console.error('Error loading stats:', error);
     }
@@ -109,24 +90,19 @@ export function LeadsManagement() {
 
   const handleStatusUpdate = async (id: number, newStatus: string, notes?: string) => {
     try {
-      const response = await fetch(`/api/v1/consultations/admin/${id}`, {
+      await apiClient.request(`/consultations/admin/${id}`, {
         method: 'PUT',
-        headers: getAuthHeaders(),
         body: JSON.stringify({ 
           status: newStatus,
           notes: notes || selectedLead?.notes
         })
       });
 
-      if (response.ok) {
-        toast.success('Lead status updated successfully');
-        loadLeads();
-        loadStats();
-        setIsEditDialogOpen(false);
-        setSelectedLead(null);
-      } else {
-        toast.error('Failed to update lead status');
-      }
+      toast.success('Lead status updated successfully');
+      loadLeads();
+      loadStats();
+      setIsEditDialogOpen(false);
+      setSelectedLead(null);
     } catch (error) {
       console.error('Error updating lead:', error);
       toast.error('An error occurred while updating the lead');
@@ -137,18 +113,13 @@ export function LeadsManagement() {
     if (!confirm('Are you sure you want to delete this lead?')) return;
 
     try {
-      const response = await fetch(`/api/v1/consultations/admin/${id}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders()
+      await apiClient.request(`/consultations/admin/${id}`, {
+        method: 'DELETE'
       });
 
-      if (response.ok) {
-        toast.success('Lead deleted successfully');
-        loadLeads();
-        loadStats();
-      } else {
-        toast.error('Failed to delete lead');
-      }
+      toast.success('Lead deleted successfully');
+      loadLeads();
+      loadStats();
     } catch (error) {
       console.error('Error deleting lead:', error);
       toast.error('An error occurred while deleting the lead');
@@ -163,8 +134,11 @@ export function LeadsManagement() {
       if (sourceFilter !== 'all') params.append('source', sourceFilter);
       if (searchTerm) params.append('search', searchTerm);
 
-      const response = await fetch(`/api/v1/consultations/admin/export?${params}`, {
-        headers: getAuthHeaders()
+      const token = localStorage.getItem('admin_access_token');
+      const response = await fetch(`${apiClient.getBaseUrl()}/consultations/admin/export?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
       });
 
       if (response.ok) {

@@ -4,7 +4,7 @@
  */
 
 // Production Heroku backend URL (with /api/v1 prefix)
-const PRODUCTION_API_URL = 'https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1';
+const PRODUCTION_API_URL = 'https://uae-financial-health-api-4188fd6ae86c.herokuapp.com/api/v1';
 const DEVELOPMENT_API_URL = 'http://localhost:8000/api/v1';
 
 // Determine API base URL based on environment
@@ -146,7 +146,7 @@ class ApiClient {
     };
   }
 
-  private async request<T>(
+  async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
@@ -158,7 +158,9 @@ class ApiClient {
     options: RequestInit = {},
     attempt: number = 0
   ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    // Normalize endpoint to remove trailing slashes (except for root)
+    const normalizedEndpoint = endpoint === '/' ? endpoint : endpoint.replace(/\/+$/, '');
+    const url = `${this.baseUrl}${normalizedEndpoint}`;
     
     // Get token from localStorage
     const token = this.getToken();
@@ -741,7 +743,7 @@ class ApiClient {
     keys?: string[]
   ): Promise<Record<string, string>> {
     const keysParam = keys ? `?keys=${keys.join(',')}` : '';
-    return this.request(`/api/v1/localization/ui/${language}${keysParam}`);
+    return this.request(`/localization/ui/${language}${keysParam}`);
   }
 
   async getLocalizedContent(

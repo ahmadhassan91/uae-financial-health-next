@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useLocalization } from '@/contexts/LocalizationContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { apiClient } from '@/lib/api-client';
 
 export default function TestResultsLocalization() {
   const { t, language, isRTL } = useLocalization();
@@ -45,11 +46,8 @@ export default function TestResultsLocalization() {
     const loadApiTranslations = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/v1/localization/ui/${language}`);
-        if (response.ok) {
-          const data = await response.json();
-          setApiTranslations(data);
-        }
+        const data = await apiClient.getUITranslations(language);
+        setApiTranslations(data);
       } catch (error) {
         console.error('Error loading API translations:', error);
       } finally {

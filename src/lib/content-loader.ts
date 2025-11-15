@@ -12,6 +12,7 @@ import {
   CacheStats,
   LoadingState 
 } from '@/lib/types';
+import { apiClient } from '@/lib/api-client';
 
 interface CacheEntry {
   data: LocalizedContent[];
@@ -183,11 +184,8 @@ export class ContentLoader {
     keys?: string[]
   ): Promise<Record<string, string>> {
     try {
-      const url = `${this.config.baseUrl}/api/v1/localization/ui/${language}`;
-      const params = keys ? `?keys=${keys.join(',')}` : '';
-
-      const response = await this.fetchWithRetry(`${url}${params}`);
-      const translations: Record<string, string> = await response.json();
+      const keysParam = keys ? `?keys=${keys.join(',')}` : '';
+      const translations: Record<string, string> = await apiClient.getUITranslations(language, keys);
 
       console.log(`ContentLoader: Loaded ${Object.keys(translations).length} UI translations for ${language}`);
       return translations;
