@@ -1,0 +1,61 @@
+# Netlify _redirects file for SPA routing
+# This file handles client-side routing for the Next.js static export
+
+# API proxy rules - redirect API calls to Heroku backend
+# Note: These are optional since the frontend will directly call the backend
+# but can be useful for CORS handling if needed
+/api/*  https://uae-financial-health-api-4188fd6ae86c.herokuapp.com/api/:splat  200
+
+# Handle dynamic company survey routes
+# Pattern: /survey/c/[companyId] -> static export handles this automatically
+/survey/c/*  /survey/c/[companyId]/index.html  200
+
+# Admin routes - ensure admin pages are served correctly
+/admin/*  /admin/index.html  200
+/admin  /admin/  301
+
+# Company admin routes
+/company-admin/*  /company-admin/index.html  200
+/company-admin  /company-admin/  301
+
+# Test routes (for development/testing purposes)
+/test-*  /test-:splat/index.html  200
+
+# Handle trailing slash redirects for consistency
+/survey  /survey/  301
+/profile  /profile/  301
+/history  /history/  301
+/results  /results/  301
+/login  /login/  301
+/consent  /consent/  301
+
+# Handle all other SPA routes - catch-all for client-side routing
+# This must be the last rule as it catches everything
+/*  /index.html  200
+
+# 404 fallback - if a file doesn't exist, serve the 404 page
+# This should be handled by the catch-all above, but kept for explicit 404s
+/404  /404.html  404
+
+# Security redirects - redirect HTTP to HTTPS (handled by Netlify by default)
+# Force HTTPS for all requests
+http://uae-financial-health.netlify.app/*  https://uae-financial-health.netlify.app/:splat  301!
+
+# Handle legacy URLs or common misconfigurations
+/index.php  /  301
+/index.htm  /  301
+/home  /  301
+
+# Prevent access to sensitive files
+/.env*  /404.html  404
+/config/*  /404.html  404
+/.git/*  /404.html  404
+/node_modules/*  /404.html  404
+
+# Handle common bot requests
+/robots.txt  /robots.txt  200
+/sitemap.xml  /sitemap.xml  200
+/favicon.ico  /favicon.ico  200
+
+# Handle service worker
+/sw.js  /sw.js  200

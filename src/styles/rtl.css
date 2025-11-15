@@ -1,0 +1,555 @@
+/* RTL (Right-to-Left) Layout Support for Arabic */
+
+/* CSS Custom Properties for RTL support */
+:root {
+  --text-align-start: left;
+  --text-align-end: right;
+  --margin-start: margin-left;
+  --margin-end: margin-right;
+  --padding-start: padding-left;
+  --padding-end: padding-right;
+  --border-start: border-left;
+  --border-end: border-right;
+  --border-start-width: border-left-width;
+  --border-end-width: border-right-width;
+  --border-start-color: border-left-color;
+  --border-end-color: border-right-color;
+  --border-start-style: border-left-style;
+  --border-end-style: border-right-style;
+  --inset-start: left;
+  --inset-end: right;
+}
+
+/* RTL overrides when dir="rtl" */
+[dir="rtl"] {
+  --text-align-start: right;
+  --text-align-end: left;
+  --margin-start: margin-right;
+  --margin-end: margin-left;
+  --padding-start: padding-right;
+  --padding-end: padding-left;
+  --border-start: border-right;
+  --border-end: border-left;
+  --border-start-width: border-right-width;
+  --border-end-width: border-left-width;
+  --border-start-color: border-right-color;
+  --border-end-color: border-left-color;
+  --border-start-style: border-right-style;
+  --border-end-style: border-left-style;
+  --inset-start: right;
+  --inset-end: left;
+}
+
+/* RTL-aware utility classes */
+.text-start {
+  text-align: var(--text-align-start);
+}
+
+.text-end {
+  text-align: var(--text-align-end);
+}
+
+.ms-auto {
+  margin-inline-start: auto;
+}
+
+.me-auto {
+  margin-inline-end: auto;
+}
+
+.ps-2 {
+  padding-inline-start: 0.5rem;
+}
+
+.ps-3 {
+  padding-inline-start: 0.75rem;
+}
+
+.ps-4 {
+  padding-inline-start: 1rem;
+}
+
+.pe-2 {
+  padding-inline-end: 0.5rem;
+}
+
+.pe-3 {
+  padding-inline-end: 0.75rem;
+}
+
+.pe-4 {
+  padding-inline-end: 1rem;
+}
+
+.ms-2 {
+  margin-inline-start: 0.5rem;
+}
+
+.ms-3 {
+  margin-inline-start: 0.75rem;
+}
+
+.ms-4 {
+  margin-inline-start: 1rem;
+}
+
+.me-2 {
+  margin-inline-end: 0.5rem;
+}
+
+.me-3 {
+  margin-inline-end: 0.75rem;
+}
+
+.me-4 {
+  margin-inline-end: 1rem;
+}
+
+/* Arabic font support */
+[dir="rtl"] {
+  font-family: 'Noto Sans Arabic', 'Amiri', 'Scheherazade New', 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+}
+
+/* Arabic font class for better typography */
+.font-arabic {
+  font-family: 'Noto Sans Arabic', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+/* Better Arabic heading support */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3 {
+  font-family: 'Noto Sans Arabic', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  line-height: 1.3;
+  word-spacing: 0.1em;
+}
+
+/* Fix gradient text issues with Arabic */
+[dir="rtl"] .bg-clip-text {
+  background-clip: unset;
+  -webkit-background-clip: unset;
+  color: hsl(var(--primary));
+}
+
+/* Better text rendering for Arabic */
+[dir="rtl"] {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsive Arabic text sizing */
+@media (max-width: 768px) {
+  [dir="rtl"] h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+
+  [dir="rtl"] .font-arabic {
+    font-size: inherit;
+    line-height: 1.3;
+  }
+}
+
+/* Prevent text overflow in Arabic */
+[dir="rtl"] .text-4xl,
+[dir="rtl"] .text-6xl {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+/* Better container spacing for Arabic */
+[dir="rtl"] .container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Fix button spacing in RTL */
+[dir="rtl"] .flex-col .gap-4>*,
+[dir="rtl"] .flex-row .gap-4>* {
+  margin: 0;
+}
+
+[dir="rtl"] .flex-col {
+  gap: 1rem;
+}
+
+[dir="rtl"] .sm\:flex-row {
+  gap: 1rem;
+}
+
+/* Ensure proper Arabic text rendering */
+[dir="rtl"] * {
+  text-align: inherit;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* RTL-aware flexbox utilities */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+/* Additional RTL flexbox support */
+.rtl-flex-reverse {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .space-x-reverse> :not([hidden])~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: var(--tw-space-x-reverse);
+  margin-left: calc(1 - var(--tw-space-x-reverse));
+}
+
+/* RTL-aware positioning */
+[dir="rtl"] .left-0 {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .right-0 {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .left-4 {
+  left: auto;
+  right: 1rem;
+}
+
+[dir="rtl"] .right-4 {
+  right: auto;
+  left: 1rem;
+}
+
+/* RTL-aware transforms */
+[dir="rtl"] .transform {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .rotate-180 {
+  transform: rotate(180deg) scaleX(-1);
+}
+
+/* Button and form element RTL support */
+[dir="rtl"] .btn-with-icon {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .btn-with-icon .icon {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Navigation and menu RTL support */
+[dir="rtl"] .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .dropdown-menu-end {
+  left: 0;
+  right: auto;
+}
+
+/* Card and content RTL support */
+[dir="rtl"] .card-header {
+  text-align: right;
+}
+
+[dir="rtl"] .card-content {
+  text-align: right;
+}
+
+/* Progress bar RTL support */
+[dir="rtl"] .progress-bar {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .progress-bar>* {
+  transform: scaleX(-1);
+}
+
+/* Radio group and checkbox RTL support */
+[dir="rtl"] .radio-group-item {
+  margin-left: 0.75rem;
+  margin-right: 0;
+}
+
+[dir="rtl"] .checkbox {
+  margin-left: 0.75rem;
+  margin-right: 0;
+}
+
+/* Table RTL support */
+[dir="rtl"] table {
+  direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+[dir="rtl"] th:first-child,
+[dir="rtl"] td:first-child {
+  text-align: right;
+}
+
+[dir="rtl"] th:last-child,
+[dir="rtl"] td:last-child {
+  text-align: left;
+}
+
+/* Input field RTL support */
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="password"],
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] input::placeholder,
+[dir="rtl"] textarea::placeholder {
+  text-align: right;
+}
+
+/* Number inputs should remain LTR even in RTL context */
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="tel"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Icon RTL adjustments */
+[dir="rtl"] .icon-arrow-right {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .icon-arrow-left {
+  transform: scaleX(-1);
+}
+
+/* Breadcrumb RTL support */
+[dir="rtl"] .breadcrumb {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .breadcrumb-separator {
+  transform: scaleX(-1);
+}
+
+/* Tooltip RTL support */
+[dir="rtl"] .tooltip {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Modal and dialog RTL support */
+[dir="rtl"] .modal-header {
+  text-align: right;
+}
+
+[dir="rtl"] .modal-body {
+  text-align: right;
+}
+
+[dir="rtl"] .modal-footer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .modal-footer>*+* {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Sidebar and navigation RTL support */
+[dir="rtl"] .sidebar {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .sidebar-toggle {
+  left: auto;
+  right: 1rem;
+}
+
+/* Chart and graph RTL support */
+[dir="rtl"] .chart-container {
+  direction: ltr;
+  /* Keep charts LTR for consistency */
+}
+
+[dir="rtl"] .chart-legend {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Animation adjustments for RTL */
+[dir="rtl"] .slide-in-right {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+[dir="rtl"] .slide-in-left {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Ensure proper Arabic numeral display */
+[dir="rtl"] .arabic-numerals {
+  font-feature-settings: "lnum" 0;
+  font-variant-numeric: normal;
+}
+
+/* Western numerals in RTL context (for scores, etc.) */
+[dir="rtl"] .western-numerals {
+  font-feature-settings: "lnum" 1;
+  font-variant-numeric: lining-nums;
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+/* Mixed content (Arabic text with English numbers) */
+[dir="rtl"] .mixed-content {
+  unicode-bidi: plaintext;
+}
+
+/* Ensure proper text selection in RTL */
+[dir="rtl"] ::selection {
+  direction: rtl;
+}
+
+/* Print styles for RTL */
+@media print {
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  [dir="rtl"] .print-ltr {
+    direction: ltr;
+  }
+}
+
+/* Arab
+ic font and gradient support */
+[dir="rtl"] .font-arabic {
+  font-family: 'Noto Sans Arabic', 'Amiri', 'Scheherazade New', 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+}
+
+/* RTL gradient text support */
+[dir="rtl"] .rtl-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* RTL content container */
+[dir="rtl"] .rtl-content {
+  text-align: center;
+  direction: rtl;
+  unicode-bidi: embed;
+}
+
+/* Prevent text overflow in RTL */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
+}
+
+/* Arabic heading specific styles */
+[dir="rtl"] .arabic-heading {
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 0 1rem;
+}
+
+/* Responsive Arabic text */
+@media (max-width: 768px) {
+  [dir="rtl"] .arabic-heading {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    line-height: 1.2;
+  }
+}
+
+/* Ensure gradient works in all browsers for RTL */
+[dir="rtl"] .bg-gradient-to-r {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Fix for Safari RTL gradient */
+@supports (-webkit-background-clip: text) {
+  [dir="rtl"] .bg-gradient-to-r {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+}
+
+/* Additional RTL heading fixes */
+[dir="rtl"] .text-4xl,
+[dir="rtl"] .text-6xl {
+  line-height: 1.1 !important;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+/* Center Arabic text properly */
+[dir="rtl"] .text-center {
+  text-align: center !important;
+  display: block;
+  width: 100%;
+}

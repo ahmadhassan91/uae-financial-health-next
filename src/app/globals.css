@@ -1,0 +1,299 @@
+/* Import Poppins font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Import react-datepicker styles */
+@import url('../styles/datepicker.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Financial Clinic - Clean Green Theme (Based on Homepage Design) */
+@layer base {
+  :root {
+    /* Clean white background */
+    --background: 0 0% 100%;
+    --foreground: 142 15% 30%; /* Dark green-gray for text */
+    --card: 0 0% 100%;
+    --card-foreground: 142 15% 30%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 142 15% 30%;
+    
+    /* Primary Green - Main CTA color from homepage */
+    --primary: 142 71% 45%; /* Vibrant green #4CAF50 */
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary - Softer green for accents */
+    --secondary: 142 40% 60%; /* Light green */
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Accent - Green highlight */
+    --accent: 142 50% 50%; /* Medium green */
+    --accent-foreground: 0 0% 100%;
+    
+    --muted: 0 0% 96%;
+    --muted-foreground: 142 10% 50%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 142 15% 90%;
+    --input: 142 15% 90%;
+    --ring: 142 71% 45%;
+    --radius: 0.5rem;
+    
+    /* Gradient colors for hero sections */
+    --gradient-primary-start: 142 71% 45%; /* Primary green */
+    --gradient-primary-end: 142 50% 55%; /* Lighter green */
+    --gradient-cta-start: 142 71% 45%; /* Green */
+    --gradient-cta-end: 142 60% 40%; /* Deeper green */
+    
+    /* Chart colors - green-themed */
+    --chart-1: 142 71% 45%;
+    --chart-2: 174 62% 47%;
+    --chart-3: 197 71% 56%;
+    --chart-4: 142 40% 60%;
+    --chart-5: 142 50% 50%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+  
+  body {
+    background-color: white;
+    color: hsl(var(--foreground));
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Custom gradient utilities for Financial Clinic green theme */
+  .bg-hero-gradient {
+    background: linear-gradient(135deg, hsl(142, 71%, 45%) 0%, hsl(142, 50%, 55%) 100%);
+  }
+  
+  .bg-cta-gradient {
+    background: linear-gradient(135deg, hsl(142, 71%, 45%) 0%, hsl(142, 60%, 40%) 100%);
+  }
+  
+  .text-gradient-primary {
+    background: linear-gradient(135deg, hsl(142, 71%, 45%) 0%, hsl(142, 50%, 55%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* Enhanced styling for Financial Clinic clean theme */
+.gradient-bg {
+  background: linear-gradient(135deg, hsl(142, 71%, 45%) 0%, hsl(142, 50%, 55%) 100%);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+}
+
+.button-gradient {
+  background: linear-gradient(135deg, hsl(142, 71%, 45%) 0%, hsl(142, 60%, 40%) 100%);
+  transition: all 0.3s ease;
+}
+
+.button-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+}
+
+/* Modern glass morphism effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced button styles */
+.btn-primary {
+  background: linear-gradient(135deg, hsl(220, 90%, 50%) 0%, hsl(150, 70%, 40%) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced form inputs */
+.form-input {
+  background: hsl(var(--background));
+  border: 2px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsla(var(--primary), 0.1);
+}
+
+/* Progress indicators */
+.progress-bar {
+  background: linear-gradient(90deg, hsl(220, 90%, 50%) 0%, hsl(150, 70%, 40%) 100%);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fade-in 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RTL Support */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+/* RTL-specific styles */
+[dir="rtl"] {
+  --text-align-start: right;
+  --text-align-end: left;
+  --margin-start: margin-right;
+  --margin-end: margin-left;
+  --padding-start: padding-right;
+  --padding-end: padding-left;
+}
+
+[dir="ltr"] {
+  --text-align-start: left;
+  --text-align-end: right;
+  --margin-start: margin-left;
+  --margin-end: margin-right;
+  --padding-start: padding-left;
+  --padding-end: padding-right;
+}
+
+/* Arabic font support */
+[dir="rtl"] body {
+  font-family: 'Noto Sans Arabic', 'Arial', sans-serif;
+}
+
+/* RTL utility classes */
+.rtl-flip {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(1);
+}
+
+/* RTL-aware spacing */
+.space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.75rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 1rem;
+  margin-left: 0;
+}
+
+/* RTL-aware text alignment */
+.text-start {
+  text-align: var(--text-align-start);
+}
+
+.text-end {
+  text-align: var(--text-align-end);
+}
+
+/* RTL-aware flexbox */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+/* RTL-aware positioning */
+[dir="rtl"] .left-0 {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .right-0 {
+  right: auto;
+  left: 0;
+}
+
+/* RTL-aware borders */
+[dir="rtl"] .border-l {
+  border-left: none;
+  border-right: 1px solid hsl(var(--border));
+}
+
+[dir="rtl"] .border-r {
+  border-right: none;
+  border-left: 1px solid hsl(var(--border));
+}
+
+/* RTL-aware rounded corners */
+[dir="rtl"] .rounded-l {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+[dir="rtl"] .rounded-r {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+}
+
+/* RTL-aware transforms for icons */
+[dir="rtl"] .transform-rtl {
+  transform: scaleX(-1);
+}
+
+/* Ensure proper Arabic text rendering */
+[dir="rtl"] {
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "liga", "kern";
+  font-feature-settings: "liga", "kern";
+}

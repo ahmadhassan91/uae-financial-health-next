@@ -1,0 +1,28 @@
+'use client';
+
+import React from 'react';
+import { useLocalization } from '@/contexts/LocalizationContext';
+
+export function HomepageFooter() {
+  const { language } = useLocalization();
+
+  return (
+    <footer className="w-full bg-white py-16 px-6 border-t border-gray-200">
+      <div className="max-w-7xl mx-auto flex flex-col items-center justify-center">
+        <div className="mb-8">
+          <img
+            src="/homepage/images/nbc-logo2-02-1.png"
+            alt="National Bonds"
+            className="h-24 object-contain"
+          />
+        </div>
+
+        <p className="text-sm text-[#a1aeb7] text-center">
+          {language === 'ar'
+            ? `© ${new Date().getFullYear()} صكوك الوطنية. جميع الحقوق محفوظة.`
+            : `© ${new Date().getFullYear()} National Bonds. All rights reserved.`}
+        </p>
+      </div>
+    </footer>
+  );
+}

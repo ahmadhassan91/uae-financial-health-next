@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow test pages in production
+Disallow: /test-*
+Disallow: /admin/
+Disallow: /company-admin/
+
+# Sitemap location (if you have one)
+# Sitemap: https://your-domain.netlify.app/sitemap.xml

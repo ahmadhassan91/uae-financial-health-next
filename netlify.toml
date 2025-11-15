@@ -1,0 +1,79 @@
+[build]
+  # Build command for Next.js static export
+  command = "npm run build"
+  
+  # Publish directory for static export
+  publish = "out"
+  
+  # Set Node.js version to 18 for compatibility
+  [build.environment]
+    NODE_VERSION = "18"
+    # Production API URL pointing to Heroku backend
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Cache control for static assets
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    # Different cache control for HTML files
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    # Service worker should not be cached
+    Cache-Control = "no-cache"
+
+# Redirects for SPA routing - handled in _redirects file
+# This section is kept for reference but actual redirects are in _redirects
+
+# Error pages
+[[redirects]]
+  from = "/404"
+  to = "/404.html"
+  status = 404
+
+# Functions configuration (if needed in future)
+[functions]
+  # Directory for Netlify functions (not used currently)
+  directory = "netlify/functions"
+
+# Build processing
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+# Context-specific settings
+[context.production]
+  [context.production.environment]
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
+
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
+
+[context.branch-deploy]
+  [context.branch-deploy.environment]
+    NEXT_PUBLIC_API_URL = "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com"
