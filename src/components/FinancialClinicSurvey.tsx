@@ -208,7 +208,7 @@ export function FinancialClinicSurvey({
       <HomepageHeader />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-4 md:px-6 lg:px-8 py-6 md:py-12 lg:py-16">
+      <main className="flex-1 flex flex-col items-center px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-12 lg:py-16">
         {/* Title Section */}
         <div className="flex flex-col items-center gap-1.5 mb-6 md:mb-10 lg:mb-12">
           <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#437749] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
@@ -247,31 +247,31 @@ export function FinancialClinicSurvey({
 
         {/* Questions Category */}
         {currentCategoryQuestions.length > 0 && (
-          <div className="w-full max-w-[1380px] px-2">
-            <h2 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#437749] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-3.5 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <div className="w-full max-w-[1380px] px-1 sm:px-2">
+            <h2 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#437749] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-4 md:mb-5 px-2 sm:px-0 ${isRTL ? 'text-right' : 'text-left'}`}>
               {language === 'ar' ? 'فئة الأسئلة: ' : 'Questions Category: '}
               {getCategoryDisplay(currentCategory)}
             </h2>
 
             {/* Question Cards - All questions from current category */}
-            <div className="flex flex-col gap-3 md:gap-3.5 w-full">
+            <div className="flex flex-col gap-3 md:gap-4 w-full">
               {currentCategoryQuestions.map((question) => {
                 const questionText = language === 'ar' ? question.text_ar : question.text_en;
                 const currentResponse = getResponse(question.id);
 
                 return (
-                  <Card key={question.id} className="w-full bg-[#f8fbfd] border border-solid border-[#bdcdd6]">
-                    <CardContent className="flex flex-col md:flex-row items-start gap-4 md:gap-6 lg:gap-8 p-4 md:p-6 lg:p-[42px]">
+                  <Card key={question.id} className="w-full bg-[#f8fbfd] border border-solid border-[#bdcdd6] overflow-hidden">
+                    <CardContent className="flex flex-col sm:flex-row items-start gap-4 md:gap-6 lg:gap-8 p-3 sm:p-4 md:p-6 lg:p-[42px]">
                       {/* Question Number Circle */}
-                      <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#c2d1d9] rounded-[100px] flex-shrink-0">
-                        <div className="font-[family-name:var(--font-poppins)] font-normal text-[#64717c] text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
+                      <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#c2d1d9] rounded-[100px] flex-shrink-0 self-center sm:self-start">
+                        <div className="font-[family-name:var(--font-poppins)] font-normal text-[#64717c] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
                           {question.number}
                         </div>
                       </div>
 
                       {/* Question Content */}
-                      <div className="flex flex-col items-start gap-2 flex-1 w-full">
-                        <h3 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#767f87] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 ${isRTL ? 'text-right' : 'text-left'}`}>
+                      <div className="flex flex-col items-start gap-2 flex-1 w-full min-w-0">
+                        <h3 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#767f87] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${isRTL ? 'text-right' : 'text-left'}`}>
                           {questionText}
                         </h3>
 
@@ -279,7 +279,7 @@ export function FinancialClinicSurvey({
                         <RadioGroup
                           value={currentResponse !== undefined ? currentResponse.toString() : ""}
                           onValueChange={(value) => onResponse(question.id, parseInt(value))}
-                          className="flex flex-col gap-1.5 md:gap-2 w-full mt-1 md:mt-2"
+                          className="flex flex-col gap-2 md:gap-2.5 w-full mt-2 md:mt-3"
                         >
                           {question.options.map((option) => {
                             const optionLabel = language === 'ar' ? option.label_ar : option.label_en;
@@ -288,16 +288,16 @@ export function FinancialClinicSurvey({
                             return (
                               <div 
                                 key={option.value} 
-                                className={`flex items-center gap-2 md:gap-2.5 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}
+                                className={`flex items-start gap-2.5 md:gap-3 ${isRTL ? 'flex-row-reverse' : 'flex-row'} min-h-[24px]`}
                               >
                                 <RadioGroupItem
                                   value={option.value.toString()}
                                   id={`${question.id}-${option.value}`}
-                                  className="w-3.5 h-3.5 md:w-4 md:h-4 rounded-lg border-[#a1aeb7] flex-shrink-0"
+                                  className="w-4 h-4 md:w-[18px] md:h-[18px] rounded-lg border-[#a1aeb7] flex-shrink-0 mt-0.5"
                                 />
                                 <Label
                                   htmlFor={`${question.id}-${option.value}`}
-                                  className={`font-[family-name:var(--font-poppins)] font-normal text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 cursor-pointer ${
+                                  className={`font-[family-name:var(--font-poppins)] font-normal text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 cursor-pointer flex-1 min-w-0 break-words ${
                                     isSelected ? 'text-[#767f87]' : 'text-[#c2d1d9]'
                                   } ${isRTL ? 'text-right' : 'text-left'}`}
                                 >
@@ -317,16 +317,16 @@ export function FinancialClinicSurvey({
         )}
 
         {/* Navigation Buttons */}
-        <div className={`flex ${currentStep > 0 ? 'justify-between' : 'justify-end'} items-center w-full max-w-[1380px] mt-8 md:mt-12 lg:mt-[59px] gap-3 md:gap-4 px-2 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+        <div className={`flex flex-col sm:flex-row ${currentStep > 0 ? 'sm:justify-between' : 'sm:justify-end'} items-stretch sm:items-center w-full max-w-[1380px] mt-8 md:mt-12 lg:mt-[59px] gap-3 md:gap-4 px-2 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
           {/* Previous Button - Only show if not on first category */}
           {currentStep > 0 && (
             <Button 
               onClick={handlePrevious}
               variant="outline"
-              className="h-auto border-[#c2d1d9] text-[#767f87] hover:bg-[#f8fbfd] hover:text-[#505d68] hover:border-[#a1aeb7] px-4 md:px-6 lg:px-7 py-2 md:py-2.5 w-full md:w-auto transition-colors"
+              className="h-auto border-[#c2d1d9] text-[#767f87] hover:bg-[#f8fbfd] hover:text-[#505d68] hover:border-[#a1aeb7] px-4 md:px-6 lg:px-7 py-3 sm:py-2 md:py-2.5 w-full sm:w-auto min-w-0 flex-1 sm:flex-initial transition-colors"
             >
-              <span className="font-[family-name:var(--font-poppins)] font-normal text-xs md:text-sm text-center tracking-[0] leading-[18px]">
-                {language === 'ar' ? 'الفئة السابقة' : 'PREVIOUS CATEGORY'}
+              <span className="font-[family-name:var(--font-poppins)] font-normal text-xs md:text-sm text-center tracking-[0] leading-[18px] truncate">
+                {language === 'ar' ? 'الفئة السابقة' : 'PREVIOUS'}
               </span>
             </Button>
           )}
@@ -335,12 +335,12 @@ export function FinancialClinicSurvey({
           <Button 
             onClick={handleNext}
             disabled={!allCurrentQuestionsAnswered}
-            className="h-auto bg-[#3fab4c] hover:bg-[#3fab4c]/90 px-4 md:px-6 lg:px-7 py-2 md:py-2.5 disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto"
+            className="h-auto bg-[#3fab4c] hover:bg-[#3fab4c]/90 px-4 md:px-6 lg:px-7 py-3 sm:py-2 md:py-2.5 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto min-w-0 flex-1 sm:flex-initial order-first sm:order-last"
           >
-            <span className="font-[family-name:var(--font-poppins)] font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
+            <span className="font-[family-name:var(--font-poppins)] font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px] truncate">
               {isLastCategory
-                ? (language === 'ar' ? 'إكمال التقييم' : 'COMPLETE ASSESSMENT')
-                : (language === 'ar' ? 'الفئة التالية' : 'NEXT CATEGORY')
+                ? (language === 'ar' ? 'إكمال التقييم' : 'COMPLETE')
+                : (language === 'ar' ? 'الفئة التالية' : 'NEXT')
               }
             </span>
           </Button>
