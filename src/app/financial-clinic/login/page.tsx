@@ -12,6 +12,8 @@ import { OTPInput } from '@/components/OTPInput';
 import { useOTPAuth } from '@/hooks/use-otp-auth';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
+import { HomepageHeader } from '@/components/homepage/Header';
+import { HomepageFooter } from '@/components/homepage/Footer';
 
 function FinancialClinicLoginContent() {
   const router = useRouter();
@@ -135,19 +137,21 @@ function FinancialClinicLoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="w-full max-w-md">
-        {/* Logo/Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-900 mb-2">
-            {language === 'ar' ? 'العيادة المالية' : 'Financial Clinic'}
-          </h1>
-          <p className="text-muted-foreground">
-            {language === 'ar' 
-              ? 'سجل الدخول للوصول إلى سجل التقييم الخاص بك'
-              : 'Login to access your assessment history'}
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col">
+      <HomepageHeader />
+      <div className="flex-1 bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="w-full max-w-md">
+          {/* Logo/Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-blue-900 mb-2">
+              {language === 'ar' ? 'العيادة المالية' : 'Financial Clinic'}
+            </h1>
+            <p className="text-muted-foreground">
+              {language === 'ar' 
+                ? 'سجل الدخول للوصول إلى سجل التقييم الخاص بك'
+                : 'Login to access your assessment history'}
+            </p>
+          </div>
 
         <Card>
           <CardHeader>
@@ -328,14 +332,16 @@ function FinancialClinicLoginContent() {
         </Card>
 
         {/* Additional Info */}
-        <div className="mt-4 text-center text-sm text-muted-foreground">
-          <p>
-            {language === 'ar'
-              ? '🔒 تسجيل الدخول آمن ومشفر. لن نشارك معلوماتك مع أي جهة خارجية.'
-              : '🔒 Secure and encrypted login. We never share your information with third parties.'}
-          </p>
+          <div className="mt-4 text-center text-sm text-muted-foreground">
+            <p>
+              {language === 'ar'
+                ? '🔒 تسجيل الدخول آمن ومشفر. لن نشارك معلوماتك مع أي جهة خارجية.'
+                : '🔒 Secure and encrypted login. We never share your information with third parties.'}
+            </p>
+          </div>
         </div>
       </div>
+      <HomepageFooter />
     </div>
   );
 }
@@ -343,8 +349,12 @@ function FinancialClinicLoginContent() {
 export default function FinancialClinicLoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
-        <div className="animate-pulse">Loading...</div>
+      <div className="min-h-screen flex flex-col">
+        <HomepageHeader />
+        <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
+          <div className="animate-pulse">Loading...</div>
+        </div>
+        <HomepageFooter />
       </div>
     }>
       <FinancialClinicLoginContent />
