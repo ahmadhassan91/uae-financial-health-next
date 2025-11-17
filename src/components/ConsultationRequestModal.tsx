@@ -38,10 +38,11 @@ export function ConsultationRequestModal({ onClose, isOpen }: ConsultationReques
     preferred_time: 'morning'
   });
 
-  // Auto-populate form with user data if logged in
+  // Auto-populate form with user data if logged in OR from profile
   useEffect(() => {
     if (isOpen) {
       try {
+        // First, try to get data from logged-in user session
         const userSession = localStorage.getItem('simpleAuthSession');
         if (userSession) {
           const userData = JSON.parse(userSession);
@@ -51,6 +52,18 @@ export function ConsultationRequestModal({ onClose, isOpen }: ConsultationReques
             email: userData.email || '',
             phone_number: userData.phone || userData.phone_number || ''
           }));
+        } else {
+          // If not logged in, try to get data from Financial Clinic profile
+          const profileData = localStorage.getItem('financialClinicProfile');
+          if (profileData) {
+            const profile = JSON.parse(profileData);
+            setFormData(prev => ({
+              ...prev,
+              name: profile.name || '',
+              email: profile.email || '',
+              phone_number: profile.mobile_number || profile.phone_number || ''
+            }));
+          }
         }
       } catch (error) {
         console.warn('Could not load user data:', error);

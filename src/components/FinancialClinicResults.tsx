@@ -92,9 +92,9 @@ export function FinancialClinicResults({
     <div className="w-full flex flex-col bg-white overflow-hidden font-['Poppins',Helvetica]" dir={isRTL ? 'rtl' : 'ltr'}>
       <HomepageHeader />
       
-      <section className="flex flex-col items-center gap-8 md:gap-[65px] px-4 md:px-6 lg:px-8 py-8 md:py-[65px] w-full">
+      <section className="flex flex-col items-center gap-6 md:gap-12 lg:gap-[65px] px-3 md:px-6 lg:px-8 py-4 md:py-8 lg:py-12 w-full">
         {/* Hero Section */}
-        <div className="flex flex-col items-center gap-4 md:gap-[22px] w-full">
+        <div className="flex flex-col items-center gap-3 md:gap-4 lg:gap-[22px] w-full">
           <div className="inline-flex flex-col items-center gap-1.5 px-4">
             <h1 className="font-semibold text-[#437749] text-2xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight md:leading-[38px] text-center">
               {language === 'ar' 
@@ -130,13 +130,21 @@ export function FinancialClinicResults({
 
         {/* Score Display */}
         <div className="flex flex-col w-full max-w-[697px] items-center gap-3 md:gap-4 px-4">
-          <div className="font-normal text-[#437749] text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]">
+          <div 
+            className="font-normal text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]"
+            style={{ 
+              color: result.total_score >= 80 ? '#6cc922' : 
+                     result.total_score >= 60 ? '#fca924' : 
+                     result.total_score >= 30 ? '#fe6521' : '#f00c01'
+            }}
+          >
             {Math.round(result.total_score)}%
           </div>
 
           <StripedProgress 
             value={result.total_score} 
             className="w-full h-[14px] md:h-[18px]"
+            scoreBasedColor={true}
           />
         </div>
 
