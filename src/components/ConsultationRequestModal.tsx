@@ -42,10 +42,17 @@ export function ConsultationRequestModal({ onClose, isOpen }: ConsultationReques
   useEffect(() => {
     if (isOpen) {
       try {
+        console.log('🔍 Loading profile data for consultation form...');
+        
         // First, try to get data from logged-in user session
         const userSession = localStorage.getItem('simpleAuthSession');
         if (userSession) {
           const userData = JSON.parse(userSession);
+          console.log('✅ Found user session:', { 
+            name: userData.full_name || userData.name, 
+            email: userData.email,
+            phone: userData.phone || userData.phone_number 
+          });
           setFormData(prev => ({
             ...prev,
             name: userData.full_name || userData.name || '',
@@ -55,18 +62,27 @@ export function ConsultationRequestModal({ onClose, isOpen }: ConsultationReques
         } else {
           // If not logged in, try to get data from Financial Clinic profile
           const profileData = localStorage.getItem('financialClinicProfile');
+          console.log('📋 Checking financialClinicProfile:', profileData ? 'Found' : 'Not found');
+          
           if (profileData) {
             const profile = JSON.parse(profileData);
+            console.log('✅ Profile data:', { 
+              name: profile.name, 
+              email: profile.email,
+              mobile: profile.mobile_number 
+            });
             setFormData(prev => ({
               ...prev,
               name: profile.name || '',
               email: profile.email || '',
               phone_number: profile.mobile_number || profile.phone_number || ''
             }));
+          } else {
+            console.log('❌ No profile data found in localStorage');
           }
         }
       } catch (error) {
-        console.warn('Could not load user data:', error);
+        console.error('❌ Error loading user data:', error);
       }
     }
   }, [isOpen]);
@@ -103,7 +119,8 @@ export function ConsultationRequestModal({ onClose, isOpen }: ConsultationReques
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/v1/consultations/request', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const response = await fetch(`${apiUrl}/consultations/request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,6 +133,15 @@ export function ConsultationRequestModal({ onClose, isOpen }: ConsultationReques
 
       if (response.ok) {
         setIsSuccess(true);
+        // Reset form after successful submission
+        setFormData({
+          name: '',
+          email: '',
+          phone_number: '',
+          message: '',
+          preferred_contact_method: 'email',
+          preferred_time: 'morning'
+        });
         toast.success(
           language === 'ar' 
             ? 'تم إرسال طلب الاستشارة بنجاح. سنتواصل معك قريباً!'
@@ -147,14 +173,8 @@ export function ConsultationRequestModal({ onClose, isOpen }: ConsultationReques
 
   const handleClose = () => {
     setIsSuccess(false);
-    setFormData({
-      name: '',
-      email: '',
-      phone_number: '',
-      message: '',
-      preferred_contact_method: 'email',
-      preferred_time: 'morning'
-    });
+    // Don't reset form data on close - keep it for next time
+    // Form will be reset only after successful submission
     onClose();
   };
 
