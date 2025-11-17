@@ -38,6 +38,7 @@ import { ScoreAnalyticsTable } from './admin/ScoreAnalyticsTable';
 // Import existing admin components for other tabs
 import { CompanyManagement } from './CompanyManagement';
 import { LeadsManagement } from './LeadsManagement';
+import { SubmissionsTable } from './admin/SubmissionsTable';
 import { IncompleteSurveys } from './admin/IncompleteSurveys';
 import { RegistrationMetrics } from './admin/RegistrationMetrics';
 import { SystemManagement } from './admin/SystemManagement';
@@ -289,8 +290,9 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
 
         {/* Tabs */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6 mt-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview & Analytics</TabsTrigger>
+            <TabsTrigger value="submissions">Submissions</TabsTrigger>
             <TabsTrigger value="companies">Companies</TabsTrigger>
             <TabsTrigger value="leads">Leads</TabsTrigger>
             <TabsTrigger value="incomplete">Incomplete</TabsTrigger>
@@ -443,6 +445,11 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                 <ScoreAnalyticsTable data={scoreAnalyticsTable} />
               </>
             )}
+          </TabsContent>
+
+          {/* Submissions Tab */}
+          <TabsContent value="submissions" className="space-y-6">
+            <SubmissionsTable />
           </TabsContent>
 
           {/* Companies Tab */}

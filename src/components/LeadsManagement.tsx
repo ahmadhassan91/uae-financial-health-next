@@ -64,7 +64,7 @@ export function LeadsManagement() {
       if (sourceFilter !== 'all') params.append('source', sourceFilter);
       if (searchTerm) params.append('search', searchTerm);
 
-      const data = await apiClient.request(`/consultations/admin/list?${params}`);
+      const data = await apiClient.request(`/consultations/admin/list?${params}`) as ConsultationRequest[];
       setLeads(data);
     } catch (error) {
       console.error('Error loading leads:', error);
@@ -76,7 +76,7 @@ export function LeadsManagement() {
 
   const loadStats = async () => {
     try {
-      const data = await apiClient.request('/consultations/admin/stats');
+      const data = await apiClient.request('/consultations/admin/stats') as LeadsStats;
       setStats(data);
     } catch (error) {
       console.error('Error loading stats:', error);
