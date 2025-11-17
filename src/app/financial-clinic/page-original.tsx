@@ -255,25 +255,25 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
       <HomepageHeader />
 
       {/* Main Content */}
-      <main className="flex flex-col items-center px-4 md:px-8 py-8 md:py-16 flex-1">
+      <main className="flex flex-col items-center px-3 md:px-6 py-4 md:py-8 flex-1">
         {/* Title Section */}
-        <div className="flex flex-col items-center gap-1.5 mb-8 md:mb-12">
-          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#437749] text-2xl md:text-[33px] tracking-[0] leading-[38px] text-center">
+        <div className="flex flex-col items-center gap-1.5 mb-4 md:mb-8">
+          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
             {language === 'ar' ? 'ملف العميل' : 'Customer Profile'}
           </h1>
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#a1aeb7] text-sm text-center tracking-[0] leading-6">
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm text-center tracking-[0] leading-6">
             {language === 'ar' ? 'هل أنت مستعد لبدء الفحص الخاص بك؟' : 'Ready to begin your checkup?'}
           </p>
         </div>
 
         {/* Description */}
-        <div className="flex flex-col items-center gap-[3px] mb-8 md:mb-16 max-w-[833px] px-4">
-          <p className="w-full font-[family-name:var(--font-poppins)] font-normal text-[#a1aeb7] text-sm tracking-[0] leading-6 text-center">
+        <div className="flex flex-col items-center gap-[3px] mb-4 md:mb-8 max-w-[833px] px-2">
+          <p className="w-full font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm tracking-[0] leading-6 text-center">
             {language === 'ar' 
               ? 'أدخل اسمك وبريدك الإلكتروني للبدء.'
               : 'Enter your name and email to start.'}
           </p>
-          <p className="w-full font-[family-name:var(--font-poppins)] font-normal text-[#a1aeb7] text-sm tracking-[0] leading-6 text-center">
+          <p className="w-full font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm tracking-[0] leading-6 text-center">
             {language === 'ar'
               ? 'سنرسل لك تقريرك الشخصي والتوصيات المتابعة لإبقائك على المسار الصحيح.'
               : "We'll send you your personalized report and follow-up recommendations to keep you on track."}
@@ -282,7 +282,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
 
         {/* Company Tracking Indicator */}
         {companyTracking?.active && (
-          <div className="mb-8 p-4 bg-[#f0f4f1] border-2 border-[#3fab4c] rounded-lg shadow-md max-w-[850px] w-full">
+          <div className="mb-4 md:mb-6 p-3 md:p-4 bg-[#f0f4f1] border-2 border-[#3fab4c] rounded-lg shadow-md max-w-[850px] w-full">
             <div className="flex items-center justify-center gap-3">
               <svg className="w-6 h-6 text-[#437749]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -308,9 +308,9 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
         )}
 
         {/* Form */}
-        <div className="flex flex-col items-center gap-8 w-full max-w-[850px]">
+        <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[850px]">
           {/* Name and Date of Birth */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 w-full">
             <Input
               placeholder={language === 'ar' ? 'الاسم' : 'Name'}
               value={profile.name}
@@ -319,16 +319,18 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
             />
 
             <Input
+              type="date"
               placeholder="DD/MM/YYYY"
               value={profile.date_of_birth}
               onChange={(e) => handleInputChange('date_of_birth', e.target.value)}
               className="flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
+              max={new Date().toISOString().split('T')[0]} // Prevent future dates
             />
           </div>
 
           {/* Gender and Nationality */}
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-[156px] w-full">
-            <div className="flex items-center gap-[46px]">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full">
+            <div className="flex items-center gap-6 md:gap-[46px]">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 whitespace-nowrap">
                 {language === 'ar' ? 'الجنس' : 'Gender'}
               </Label>
@@ -478,15 +480,15 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
               </Select>
             </div>
 
-            {/* Income Range Dropdown with Label */}
+            {/* Household Monthly Income Range Dropdown with Label */}
             <div className="flex-1">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === 'ar' ? 'نطاق الدخل' : 'Income Range'}
+                {language === 'ar' ? 'نطاق الدخل الشهري للأسرة بالدرهم الإماراتي' : 'Household Monthly Income Range in AED'}
               </Label>
               <Select value={profile.income_range} onValueChange={handleIncomeChange}>
                 <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9]">
                   <SelectValue 
-                    placeholder={language === 'ar' ? 'اختر نطاق الدخل' : 'Select income range'}
+                    placeholder={language === 'ar' ? 'اختر نطاق دخل الأسرة الشهري' : 'Select household monthly income range'}
                     className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6"
                   />
                 </SelectTrigger>
@@ -539,7 +541,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
         {/* Submit Button */}
         <Button 
           onClick={handleStartSurvey}
-          className="h-auto mt-12 md:mt-[119px] px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 w-full md:w-auto"
+          className="h-auto mt-6 md:mt-12 px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 w-full md:w-auto"
         >
           <span className="font-[family-name:var(--font-poppins)] font-normal text-white text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
             {language === 'ar' ? 'ابدأ فحصي' : 'START MY CHECKUP'}

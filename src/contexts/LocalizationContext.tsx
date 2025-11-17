@@ -98,7 +98,7 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'employment_status': 'Employment Status',
   'employment_sector': 'Employment Sector',
   'monthly_income': 'Monthly Income',
-  'income_range': 'Income Range',
+  'income_range': 'Household Monthly Income Range in AED',
   'household_size': 'Household Size',
   'children': 'Children',
   'residence': 'Residence',

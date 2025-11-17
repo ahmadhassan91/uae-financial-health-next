@@ -208,20 +208,20 @@ export function FinancialClinicSurvey({
       <HomepageHeader />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-12 lg:py-16">
+      <main className="flex-1 flex flex-col items-center px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-8 lg:py-12">
         {/* Title Section */}
-        <div className="flex flex-col items-center gap-1.5 mb-6 md:mb-10 lg:mb-12">
-          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#437749] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
+        <div className="flex flex-col items-center gap-1.5 mb-4 md:mb-6 lg:mb-8">
+          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
             {language === 'ar' ? 'ملف العميل' : 'Customer Profile'}
           </h1>
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
             {language === 'ar' ? 'هل أنت مستعد لبدء الفحص الخاص بك؟' : 'Ready to begin your checkup?'}
           </p>
         </div>
 
         {/* Welcome Text */}
-        <div className="w-full max-w-[833px] mb-6 md:mb-8 lg:mb-10 px-2">
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
+        <div className="w-full max-w-[833px] mb-4 md:mb-6 lg:mb-8 px-2">
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
             {language === 'ar' 
               ? 'مرحباً بك في فحص العيادة المالية! دعنا نأخذ بضع دقائق لفهم عاداتك المالية - بدون أحكام، فقط رؤى.'
               : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits—no judgments, just insights."}
@@ -229,14 +229,14 @@ export function FinancialClinicSurvey({
         </div>
 
         {/* Progress Bar Section */}
-        <div className="w-full max-w-[697px] mb-8 md:mb-12 lg:mb-[83px] px-2">
+        <div className="w-full max-w-[697px] mb-6 md:mb-8 lg:mb-12 px-2">
           <div className="flex flex-col items-center gap-3 md:gap-4">
             {/* Striped Progress Bar (same as results page) */}
             <StripedProgress value={progress} className="w-full h-[14px] md:h-[16px] lg:h-[18px]" />
 
             {/* Progress Text */}
             <div className="flex flex-col items-center justify-center gap-[3px]">
-              <p className="font-[family-name:var(--font-poppins)] font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
+              <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
                 {language === 'ar' 
                   ? `أنت ${Math.round(progress)}٪ من خلال فحصك - تقدم رائع!`
                   : `You're ${Math.round(progress)}% through your checkup—great progress!`}
@@ -248,30 +248,30 @@ export function FinancialClinicSurvey({
         {/* Questions Category */}
         {currentCategoryQuestions.length > 0 && (
           <div className="w-full max-w-[1380px] px-1 sm:px-2">
-            <h2 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#437749] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-4 md:mb-5 px-2 sm:px-0 ${isRTL ? 'text-right' : 'text-left'}`}>
+            <h2 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${isRTL ? 'text-right' : 'text-left'}`}>
               {language === 'ar' ? 'فئة الأسئلة: ' : 'Questions Category: '}
               {getCategoryDisplay(currentCategory)}
             </h2>
 
             {/* Question Cards - All questions from current category */}
-            <div className="flex flex-col gap-3 md:gap-4 w-full">
+            <div className="flex flex-col gap-2 md:gap-3 w-full">
               {currentCategoryQuestions.map((question) => {
                 const questionText = language === 'ar' ? question.text_ar : question.text_en;
                 const currentResponse = getResponse(question.id);
 
                 return (
                   <Card key={question.id} className="w-full bg-[#f8fbfd] border border-solid border-[#bdcdd6] overflow-hidden">
-                    <CardContent className="flex flex-col sm:flex-row items-start gap-4 md:gap-6 lg:gap-8 p-3 sm:p-4 md:p-6 lg:p-[42px]">
+                    <CardContent className="flex flex-col sm:flex-row items-start gap-3 md:gap-4 lg:gap-6 p-3 sm:p-4 md:p-5 lg:p-8">
                       {/* Question Number Circle */}
                       <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#c2d1d9] rounded-[100px] flex-shrink-0 self-center sm:self-start">
-                        <div className="font-[family-name:var(--font-poppins)] font-normal text-[#64717c] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
+                        <div className="font-[family-name:var(--font-poppins)] font-normal text-[#4a5a68] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
                           {question.number}
                         </div>
                       </div>
 
                       {/* Question Content */}
                       <div className="flex flex-col items-start gap-2 flex-1 w-full min-w-0">
-                        <h3 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#767f87] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <h3 className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a3f4a] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${isRTL ? 'text-right' : 'text-left'}`}>
                           {questionText}
                         </h3>
 
@@ -298,7 +298,7 @@ export function FinancialClinicSurvey({
                                 <Label
                                   htmlFor={`${question.id}-${option.value}`}
                                   className={`font-[family-name:var(--font-poppins)] font-normal text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 cursor-pointer flex-1 min-w-0 break-words ${
-                                    isSelected ? 'text-[#767f87]' : 'text-[#c2d1d9]'
+                                    isSelected ? 'text-[#2a3f4a]' : 'text-[#6b7c8a]'
                                   } ${isRTL ? 'text-right' : 'text-left'}`}
                                 >
                                   {optionLabel}
@@ -317,7 +317,7 @@ export function FinancialClinicSurvey({
         )}
 
         {/* Navigation Buttons */}
-        <div className={`flex flex-col sm:flex-row ${currentStep > 0 ? 'sm:justify-between' : 'sm:justify-end'} items-stretch sm:items-center w-full max-w-[1380px] mt-8 md:mt-12 lg:mt-[59px] gap-3 md:gap-4 px-2 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+        <div className={`flex flex-col sm:flex-row ${currentStep > 0 ? 'sm:justify-between' : 'sm:justify-end'} items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
           {/* Previous Button - Only show if not on first category */}
           {currentStep > 0 && (
             <Button 

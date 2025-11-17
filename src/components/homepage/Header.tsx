@@ -22,13 +22,20 @@ export function HomepageHeader() {
         />
       </Link>
 
-      <nav className="flex items-center gap-6 md:gap-10">
-        {/* Sign-in button removed - not needed for public surveys */}
+      <nav className="flex items-center gap-4 md:gap-6">
+        <Link href="/financial-clinic">
+          <Button
+            variant="ghost"
+            className="h-auto p-2 font-normal text-[#1b1f26b8] text-sm md:text-base tracking-[0.16px] hover:bg-transparent hover:text-[#1b1f26]"
+          >
+            {language === 'ar' ? 'الرئيسية' : 'Home'}
+          </Button>
+        </Link>
         
         <Button
           variant="ghost"
           onClick={toggleLanguage}
-          className="h-auto p-0 font-normal text-[#1b1f26b8] text-sm md:text-base tracking-[0.16px] hover:bg-transparent hover:text-[#1b1f26]"
+          className="h-auto p-2 font-normal text-[#1b1f26b8] text-sm md:text-base tracking-[0.16px] hover:bg-transparent hover:text-[#1b1f26]"
         >
           {language === 'ar' ? 'EN' : 'AR'}
         </Button>

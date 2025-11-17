@@ -217,6 +217,7 @@ export function FinancialClinicResults({
                     <StripedProgress 
                       value={percentage} 
                       className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0"
+                      scoreBasedColor={true}
                     />
                   </div>
 

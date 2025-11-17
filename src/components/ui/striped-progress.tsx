@@ -3,14 +3,26 @@ import React, { useMemo } from 'react';
 interface StripedProgressProps {
   value: number; // 0-100
   className?: string;
+  scoreBasedColor?: boolean; // Use score-based coloring
 }
 
-export function StripedProgress({ value, className = '' }: StripedProgressProps) {
+export function StripedProgress({ value, className = '', scoreBasedColor = false }: StripedProgressProps) {
   // Clamp value between 0 and 100
   const percentage = Math.min(Math.max(value, 0), 100);
   
   // Generate stable unique IDs for this component instance
   const uniqueId = useMemo(() => Math.random().toString(36).substring(7), []);
+  
+  // Get score-based color
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return '#6cc922'; // Excellent - Green
+    if (score >= 60) return '#fca924'; // Good - Yellow/Orange
+    if (score >= 30) return '#fe6521'; // Fair - Orange
+    return '#f00c01'; // Needs Improvement - Red
+  };
+  
+  const fillColor = scoreBasedColor ? getScoreColor(percentage) : '#6CA854';
+  const stripeColor = scoreBasedColor ? getScoreColor(percentage) : '#456237';
   
   return (
     <div className={`relative rounded-full overflow-hidden ${className}`}>
@@ -33,7 +45,7 @@ export function StripedProgress({ value, className = '' }: StripedProgressProps)
               y1="0"
               x2="0"
               y2="16"
-              stroke="#456237"
+              stroke={stripeColor}
               strokeOpacity="0.15"
               strokeWidth="8"
             />
@@ -52,7 +64,7 @@ export function StripedProgress({ value, className = '' }: StripedProgressProps)
               y1="0"
               x2="0"
               y2="16"
-              stroke="#456237"
+              stroke={stripeColor}
               strokeOpacity="0.8"
               strokeWidth="8"
             />
@@ -63,12 +75,12 @@ export function StripedProgress({ value, className = '' }: StripedProgressProps)
         <rect width="697" height="18" rx="9" fill="#E1E1EA" />
         <rect width="697" height="18" rx="9" fill={`url(#stripesBg-${uniqueId})`} />
         
-        {/* Green filled portion with solid stripes - Only up to percentage */}
+        {/* Score-colored filled portion with solid stripes - Only up to percentage */}
         <rect 
           width={`${(percentage / 100) * 697}`} 
           height="18" 
           rx="9" 
-          fill="#6CA854" 
+          fill={fillColor} 
         />
         <rect 
           width={`${(percentage / 100) * 697}`} 
