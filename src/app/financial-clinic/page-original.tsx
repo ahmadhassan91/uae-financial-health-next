@@ -349,8 +349,8 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
           </div>
 
           {/* Gender and Nationality */}
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:justify-between">
-            <div className="flex items-center gap-6 md:gap-[46px]">
+          <div className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:justify-between ${language === 'ar' ? 'md:flex-row-reverse' : ''}`}>
+            <div className={`flex items-center gap-6 md:gap-[46px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
                 {language === 'ar' ? 'الجنس' : 'Gender'}
               </Label>
@@ -358,9 +358,9 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
               <RadioGroup 
                 value={profile.gender}
                 onValueChange={handleGenderChange}
-                className="flex items-center gap-[46px]"
+                className={`flex items-center gap-[46px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}
               >
-                <div className="flex items-center gap-[5px]">
+                <div className={`flex items-center gap-[5px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
                   <RadioGroupItem
                     value="Male"
                     id="male"
@@ -373,7 +373,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                     {language === 'ar' ? 'ذكر' : 'Male'}
                   </Label>
                 </div>
-                <div className="flex items-center gap-[5px]">
+                <div className={`flex items-center gap-[5px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
                   <RadioGroupItem
                     value="Female"
                     id="female"
@@ -389,7 +389,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
               </RadioGroup>
             </div>
 
-            <div className="flex items-center gap-[46px]">
+            <div className={`flex items-center gap-[46px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
                 {language === 'ar' ? 'الجنسية' : 'Nationality'}
               </Label>
@@ -397,9 +397,9 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
               <RadioGroup
                 value={profile.nationality}
                 onValueChange={handleNationalityChange}
-                className="flex items-center gap-[46px]"
+                className={`flex items-center gap-[46px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}
               >
-                <div className="flex items-center gap-[5px]">
+                <div className={`flex items-center gap-[5px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
                   <RadioGroupItem
                     value="Emirati"
                     id="emirati"
@@ -412,7 +412,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                     {language === 'ar' ? 'إماراتي' : 'Emirati'}
                   </Label>
                 </div>
-                <div className="flex items-center gap-[5px]">
+                <div className={`flex items-center gap-[5px] ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
                   <RadioGroupItem
                     value="Non-Emirati"
                     id="non-emirati"
@@ -433,14 +433,14 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
             {/* Emirate Dropdown with Label */}
             <div className="flex-1">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 mb-2 block">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === 'ar' ? 'الإمارة' : 'Emirate'}
               </Label>
               <Select value={profile.emirate} onValueChange={handleEmirateChange}>
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9]">
+                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   <SelectValue 
                     placeholder={language === 'ar' ? 'اختر الإمارة' : 'Select emirate'}
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6"
+                    className="placeholder:text-[#a1aeb7]"
                   />
                 </SelectTrigger>
                 <SelectContent>
@@ -456,14 +456,14 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
 
             {/* Children Dropdown with Label */}
             <div className="flex-1">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 mb-2 block">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === 'ar' ? 'الأطفال' : 'Children'}
               </Label>
               <Select value={profile.children.toString()} onValueChange={handleChildrenChange}>
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9]">
+                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   <SelectValue 
                     placeholder={language === 'ar' ? 'عدد الأطفال' : 'Number of children'}
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6"
+                    className="placeholder:text-[#a1aeb7]"
                   />
                 </SelectTrigger>
                 <SelectContent>
@@ -482,14 +482,14 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
             {/* Employment Status Dropdown with Label */}
             <div className="flex-1">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 mb-2 block">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === 'ar' ? 'حالة التوظيف' : 'Employment Status'}
               </Label>
               <Select value={profile.employment_status} onValueChange={handleEmploymentChange}>
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9]">
+                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   <SelectValue 
                   placeholder={language === 'ar' ? 'حالة التوظيف' : 'Employment Status'}
-                  className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6"
+                  className="placeholder:text-[#a1aeb7]"
                 />
               </SelectTrigger>
               <SelectContent>
@@ -502,14 +502,14 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
 
             {/* Household Monthly Income Range Dropdown with Label */}
             <div className="flex-1">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 mb-2 block">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === 'ar' ? 'نطاق الدخل الشهري للأسرة بالدرهم الإماراتي' : 'Household Monthly Income Range in AED'}
               </Label>
               <Select value={profile.income_range} onValueChange={handleIncomeChange}>
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9]">
+                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   <SelectValue 
                     placeholder={language === 'ar' ? 'اختر نطاق دخل الأسرة الشهري' : 'Select household monthly income range'}
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6"
+                    className="placeholder:text-[#a1aeb7]"
                   />
                 </SelectTrigger>
                 <SelectContent>
@@ -530,7 +530,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
             {/* Email Field with Label */}
             <div className="flex-1">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 mb-2 block">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === 'ar' ? 'عنوان البريد الإلكتروني' : 'Email Address'}
               </Label>
               <Input
@@ -538,13 +538,13 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                 type="email"
                 value={profile.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
+                className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
               />
             </div>
 
             {/* Mobile Number Field with Label */}
             <div className="flex-1">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 mb-2 block">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === 'ar' ? 'رقم الجوال' : 'Mobile Number'}
               </Label>
               <Input
@@ -552,7 +552,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                 type="tel"
                 value={profile.mobile_number || ''}
                 onChange={(e) => handleInputChange('mobile_number', e.target.value)}
-                className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
+                className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
               />
             </div>
           </div>

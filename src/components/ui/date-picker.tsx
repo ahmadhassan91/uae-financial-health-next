@@ -1,16 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { format } from "date-fns"
+import ReactDatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 
 interface DatePickerComponentProps {
   date?: Date
@@ -26,61 +20,43 @@ export function DatePickerComponent({
   date,
   onSelect,
   placeholder = "Pick a date",
-  disabled,
+  disabled = false,
   className,
   maxDate = new Date(),
-  minDate,
+  minDate = new Date(1920, 0, 1),
 }: DatePickerComponentProps) {
-  const [open, setOpen] = React.useState(false)
-
-  // Format date as DD/MM/YYYY
-  const formatDateDisplay = (date: Date | undefined) => {
-    if (!date) return placeholder
-    return format(date, "dd/MM/yyyy")
-  }
-
-  const isDateDisabled = (date: Date) => {
-    if (typeof disabled === 'boolean') return disabled
-    if (typeof disabled === 'function') return disabled(date)
-    if (maxDate && date > maxDate) return true
-    if (minDate && date < minDate) return true
-    return false
-  }
-
+  // Separate boolean disabled from function-based date filtering
+  const isInputDisabled = typeof disabled === 'boolean' ? disabled : false
+  const filterDate = typeof disabled === 'function' ? (date: Date) => !disabled(date) : undefined
+  
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "h-[50px] w-full justify-start text-left font-normal px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] text-sm",
-            !date && "text-[#a1aeb7]",
-            date && "text-[#505d68]",
-            className
-          )}
-          disabled={typeof disabled === 'boolean' ? disabled : false}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4 text-[#a1aeb7]" />
-          {formatDateDisplay(date)}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start" sideOffset={4}>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(selectedDate) => {
-            onSelect?.(selectedDate)
-            setOpen(false)
-          }}
-          disabled={isDateDisabled}
-          initialFocus
-          defaultMonth={date || maxDate}
-          captionLayout="dropdown-buttons"
-          fromYear={1920}
-          toYear={new Date().getFullYear()}
-          className="rounded-md border"
-        />
-      </PopoverContent>
-    </Popover>
+    <div className={cn("relative", className)}>
+      <ReactDatePicker
+        selected={date}
+        onChange={(date) => onSelect?.(date || undefined)}
+        dateFormat="dd/MM/yyyy"
+        placeholderText={placeholder}
+        disabled={isInputDisabled}
+        filterDate={filterDate}
+        maxDate={maxDate}
+        minDate={minDate}
+        showYearDropdown
+        showMonthDropdown
+        dropdownMode="select"
+        yearDropdownItemNumber={100}
+        scrollableYearDropdown
+        className={cn(
+          "h-[50px] w-full px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9]",
+          "font-[family-name:var(--font-poppins)] text-sm",
+          "text-[#505d68] placeholder:text-[#a1aeb7]",
+          "focus:outline-none focus:ring-2 focus:ring-[#437749] focus:border-transparent",
+          "disabled:bg-gray-100 disabled:cursor-not-allowed"
+        )}
+        wrapperClassName="w-full"
+        popperClassName="z-[9999]"
+        calendarClassName="!font-[family-name:var(--font-poppins)]"
+      />
+      <CalendarIcon className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a1aeb7] pointer-events-none" />
+    </div>
   )
 }
