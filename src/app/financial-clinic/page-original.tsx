@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DatePickerComponent } from '@/components/ui/date-picker';
 import { useLocalization } from '@/contexts/LocalizationContext';
 import type { FinancialClinicProfile } from '@/lib/financial-clinic-types';
 import { toast } from 'sonner';
@@ -311,27 +312,46 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
         <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[850px]">
           {/* Name and Date of Birth */}
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 w-full">
-            <Input
-              placeholder={language === 'ar' ? 'الاسم' : 'Name'}
-              value={profile.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              className="flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
-            />
+            {/* Name Input with Label */}
+            <div className="flex-1">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
+                {language === 'ar' ? 'الاسم' : 'Name'}
+              </Label>
+              <Input
+                placeholder={language === 'ar' ? 'أدخل اسمك' : 'Enter your name'}
+                value={profile.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                className="h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
+              />
+            </div>
 
-            <Input
-              type="date"
-              placeholder="DD/MM/YYYY"
-              value={profile.date_of_birth}
-              onChange={(e) => handleInputChange('date_of_birth', e.target.value)}
-              className="flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
-              max={new Date().toISOString().split('T')[0]} // Prevent future dates
-            />
+            {/* Date of Birth Input with Label */}
+            <div className="flex-1">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
+                {language === 'ar' ? 'تاريخ الميلاد' : 'Date of Birth'}
+              </Label>
+              <DatePickerComponent
+                date={profile.date_of_birth ? new Date(profile.date_of_birth) : undefined}
+                onSelect={(date) => {
+                  if (date) {
+                    // Format date as YYYY-MM-DD for storage
+                    const formattedDate = date.toISOString().split('T')[0];
+                    handleInputChange('date_of_birth', formattedDate);
+                  } else {
+                    handleInputChange('date_of_birth', '');
+                  }
+                }}
+                placeholder={language === 'ar' ? 'اختر تاريخ الميلاد' : 'Select date of birth'}
+                maxDate={new Date()} // Prevent future dates
+                minDate={new Date(1920, 0, 1)} // Minimum year 1920
+              />
+            </div>
           </div>
 
           {/* Gender and Nationality */}
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:justify-between">
             <div className="flex items-center gap-6 md:gap-[46px]">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 whitespace-nowrap">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
                 {language === 'ar' ? 'الجنس' : 'Gender'}
               </Label>
 
@@ -348,7 +368,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                   />
                   <Label
                     htmlFor="male"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
                   >
                     {language === 'ar' ? 'ذكر' : 'Male'}
                   </Label>
@@ -361,7 +381,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                   />
                   <Label
                     htmlFor="female"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
                   >
                     {language === 'ar' ? 'أنثى' : 'Female'}
                   </Label>
@@ -370,7 +390,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
             </div>
 
             <div className="flex items-center gap-[46px]">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 whitespace-nowrap">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
                 {language === 'ar' ? 'الجنسية' : 'Nationality'}
               </Label>
 
@@ -387,7 +407,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                   />
                   <Label
                     htmlFor="emirati"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
                   >
                     {language === 'ar' ? 'إماراتي' : 'Emirati'}
                   </Label>
@@ -400,7 +420,7 @@ export default function FinancialClinicPage({ restoredSession }: FinancialClinic
                   />
                   <Label
                     htmlFor="non-emirati"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#a1aeb7] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
                   >
                     {language === 'ar' ? 'غير إماراتي' : 'Non- Emirati'}
                   </Label>

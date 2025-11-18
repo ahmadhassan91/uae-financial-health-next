@@ -297,3 +297,70 @@
   -webkit-font-feature-settings: "liga", "kern";
   font-feature-settings: "liga", "kern";
 }
+
+/* Date Input Styling - DD/MM/YYYY Format */
+input[type="date"] {
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: var(--font-poppins), sans-serif;
+  color: #505d68;
+}
+
+/* Ensure date input is visible on mobile */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  cursor: pointer;
+  color: #a1aeb7;
+  background: transparent;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+}
+
+/* Style the date input text */
+input[type="date"]::-webkit-datetime-edit {
+  padding: 0;
+  color: #505d68;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+/* Individual date segments */
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #505d68;
+  font-weight: 500;
+}
+
+/* Placeholder styling when empty */
+input[type="date"]:not(:focus):invalid {
+  color: #a1aeb7;
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+  input[type="date"] {
+    min-height: 50px;
+    font-size: 14px;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Ensure proper Arabic text rendering */
+[dir="rtl"] {
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "liga", "kern";
+  font-feature-settings: "liga", "kern";
+}
