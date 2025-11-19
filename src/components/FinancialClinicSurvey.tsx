@@ -35,6 +35,11 @@ export function FinancialClinicSurvey({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
+  // Auto-scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
+  
   // Load questions from backend API
   // Questions are conditional based on children count (Q15 only shows if children > 0)
   useEffect(() => {
