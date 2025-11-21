@@ -185,20 +185,20 @@ export function FinancialClinicScoreHistory({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4">
-      <div className="container mx-auto max-w-6xl py-8">
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-3 sm:p-4 md:p-6">
+      <div className="container mx-auto max-w-6xl py-4 sm:py-6 md:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={onBack}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+            <Button variant="outline" onClick={onBack} size="sm" className="shrink-0">
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <div>
-              <h1 className="text-3xl font-bold">Score History</h1>
-              <p className="text-muted-foreground">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">Score History</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Track your financial health progress over time
                 {userEmail && (
-                  <span className="block text-sm mt-1">
+                  <span className="block text-xs mt-1 truncate">
                     Logged in as: {userEmail}
                   </span>
                 )}
@@ -207,67 +207,67 @@ export function FinancialClinicScoreHistory({
           </div>
           
           {onLogout && (
-            <Button variant="outline" onClick={onLogout}>
+            <Button variant="outline" onClick={onLogout} size="sm" className="w-full sm:w-auto">
               Sign Out
             </Button>
           )}
         </div>
 
         {/* Current Score Summary */}
-        <Card className="mb-8 border-none shadow-lg">
-          <CardContent className="p-6">
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-2">
+        <Card className="mb-6 sm:mb-8 border-none shadow-lg">
+          <CardContent className="p-4 sm:p-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="text-center col-span-2 md:col-span-1">
+                <div className="text-3xl sm:text-4xl font-bold text-primary mb-2">
                   {Math.round(latestScore.overall_score)}
                 </div>
-                <div className="text-sm text-muted-foreground">Current Score</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Current Score</div>
               </div>
               
               {previousScore && (
                 <div className="text-center">
-                  <div className={`flex items-center justify-center gap-2 text-2xl font-bold mb-2 ${
+                  <div className={`flex items-center justify-center gap-1 sm:gap-2 text-xl sm:text-2xl font-bold mb-2 ${
                     scoreDiff > 0 ? 'text-green-600' : scoreDiff < 0 ? 'text-red-600' : 'text-muted-foreground'
                   }`}>
-                    {scoreDiff > 0 ? <ChartLineUp className="w-6 h-6" /> : scoreDiff < 0 ? <ChartLineDown className="w-6 h-6" /> : null}
+                    {scoreDiff > 0 ? <ChartLineUp className="w-5 h-5 sm:w-6 sm:h-6" /> : scoreDiff < 0 ? <ChartLineDown className="w-5 h-5 sm:w-6 sm:h-6" /> : null}
                     {scoreDiff > 0 ? '+' : ''}{Math.round(scoreDiff)}
                   </div>
-                  <div className="text-sm text-muted-foreground">Change from Previous</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Change from Previous</div>
                 </div>
               )}
               
               <div className="text-center">
-                <div className="text-2xl font-bold mb-2">
+                <div className="text-xl sm:text-2xl font-bold mb-2">
                   {scoreHistory.length}
                 </div>
-                <div className="text-sm text-muted-foreground">Total Assessments</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Total Assessments</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Charts */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Score Trend */}
           <Card>
-            <CardHeader>
-              <CardTitle>Score Trend</CardTitle>
-              <CardDescription>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Score Trend</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
                 Your financial health score progression over time
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-80">
+            <CardContent className="p-4 sm:p-6">
+              <div className="h-64 sm:h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
                       dataKey="assessment" 
-                      tick={{ fontSize: 12 }}
+                      tick={{ fontSize: 10 }}
                     />
                     <YAxis 
                       domain={[0, 100]}
-                      tick={{ fontSize: 12 }}
+                      tick={{ fontSize: 10 }}
                     />
                     <Tooltip 
                       labelFormatter={(label) => `Assessment ${label}`}
@@ -277,8 +277,8 @@ export function FinancialClinicScoreHistory({
                       type="monotone" 
                       dataKey="score" 
                       stroke="hsl(var(--primary))" 
-                      strokeWidth={3}
-                      dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                      strokeWidth={2}
+                      dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 3 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -288,16 +288,16 @@ export function FinancialClinicScoreHistory({
 
           {/* Category Breakdown */}
           <Card>
-            <CardHeader>
-              <CardTitle>Current Pillar Analysis</CardTitle>
-              <CardDescription>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Current Pillar Analysis</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
                 Breakdown of your latest score by the 6 financial health pillars
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-80">
+            <CardContent className="p-4 sm:p-6">
+              <div className="h-64 sm:h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={histogramDataWithDot} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                  <ComposedChart data={histogramDataWithDot} margin={{ top: 20, right: 10, left: 0, bottom: 80 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
                       dataKey="factor" 
@@ -340,77 +340,81 @@ export function FinancialClinicScoreHistory({
 
         {/* Assessment History */}
         <Card>
-          <CardHeader>
-            <CardTitle>Assessment History</CardTitle>
-            <CardDescription>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-base sm:text-lg">Assessment History</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
               Detailed view of all your completed assessments
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-3 sm:space-y-4">
               {scoreHistory.map((response, index) => {
                 const prevResponse = scoreHistory[index + 1];
                 const diff = prevResponse ? response.overall_score - prevResponse.overall_score : 0;
                 
                 return (
-                  <div key={response.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold">{Math.round(response.overall_score)}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {new Date(response.created_at).toLocaleDateString()}
+                  <div key={response.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+                    <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                      <div className="text-center shrink-0">
+                        <div className="text-xl sm:text-2xl font-bold">{Math.round(response.overall_score)}</div>
+                        <div className="text-[10px] sm:text-xs text-muted-foreground">
+                          {new Date(response.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </div>
                       </div>
                       
-                      {index === 0 && (
-                        <Badge variant="default">Latest</Badge>
-                      )}
-                      
-                      {response.risk_tolerance && (
-                        <Badge variant="outline">
-                          {response.risk_tolerance}
-                        </Badge>
-                      )}
-                      
-                      {diff !== 0 && (
-                        <div className={`flex items-center gap-1 text-sm ${
-                          diff > 0 ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {diff > 0 ? <ChartLineUp className="w-4 h-4" /> : <ChartLineDown className="w-4 h-4" />}
-                          {diff > 0 ? '+' : ''}{Math.round(diff)}
-                        </div>
-                      )}
+                      <div className="flex flex-wrap items-center gap-2">
+                        {index === 0 && (
+                          <Badge variant="default" className="text-[10px] sm:text-xs">Latest</Badge>
+                        )}
+                        
+                        {response.risk_tolerance && (
+                          <Badge variant="outline" className="text-[10px] sm:text-xs">
+                            {response.risk_tolerance}
+                          </Badge>
+                        )}
+                        
+                        {diff !== 0 && (
+                          <div className={`flex items-center gap-1 text-xs sm:text-sm ${
+                            diff > 0 ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {diff > 0 ? <ChartLineUp className="w-3 h-3 sm:w-4 sm:h-4" /> : <ChartLineDown className="w-3 h-3 sm:w-4 sm:h-4" />}
+                            {diff > 0 ? '+' : ''}{Math.round(diff)}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     
-                    <div className="flex items-center gap-2">
-                      <div className="text-right mr-4">
-                        <div className="text-sm font-medium">
+                    <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                      <div className="text-left sm:text-right sm:mr-4">
+                        <div className="text-xs sm:text-sm font-medium">
                           Assessment #{scoreHistory.length - index}
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {new Date(response.created_at).toLocaleTimeString()}
+                        <div className="text-[10px] sm:text-xs text-muted-foreground">
+                          {new Date(response.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                         </div>
                       </div>
                       
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownloadPDF(response.id)}
-                        className="gap-2"
-                      >
-                        <FileText className="w-4 h-4" />
-                        PDF
-                      </Button>
-                      
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEmailReport(response.id)}
-                        className="gap-2"
-                      >
-                        <EnvelopeSimple className="w-4 h-4" />
-                        Email
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDownloadPDF(response.id)}
+                          className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                          <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span className="hidden sm:inline">PDF</span>
+                        </Button>
+                        
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEmailReport(response.id)}
+                          className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
+                        >
+                          <EnvelopeSimple className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span className="hidden sm:inline">Email</span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 );

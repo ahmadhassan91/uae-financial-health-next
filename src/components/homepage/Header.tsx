@@ -23,7 +23,7 @@ export function HomepageHeader() {
       </Link>
 
       <nav className="flex items-center gap-4 md:gap-6">
-        <Link href="/financial-clinic">
+        <Link href="/">
           <Button
             variant="ghost"
             className="h-auto p-2 font-normal text-[#1b1f26b8] text-sm md:text-base tracking-[0.16px] hover:bg-transparent hover:text-[#1b1f26]"
