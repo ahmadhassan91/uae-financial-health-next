@@ -1,18 +1,18 @@
 /**
  * ContentLoader Service
- * 
+ *
  * Handles dynamic loading and caching of localized content with intelligent
  * caching, TTL management, retry logic, and error handling.
  */
 
-import { 
-  SupportedLanguage, 
-  ContentType, 
-  LocalizedContent, 
+import {
+  SupportedLanguage,
+  ContentType,
+  LocalizedContent,
   CacheStats,
-  LoadingState 
-} from '@/lib/types';
-import { apiClient } from '@/lib/api-client';
+  LoadingState,
+} from "@/lib/types";
+import { apiClient } from "@/lib/api-client";
 
 interface CacheEntry {
   data: LocalizedContent[];
@@ -46,7 +46,7 @@ interface LoadingProgress {
   contentType: ContentType;
   language: SupportedLanguage;
   progress: number;
-  status: 'loading' | 'complete' | 'error';
+  status: "loading" | "complete" | "error";
   error?: string;
 }
 
@@ -59,18 +59,18 @@ export class ContentLoader {
 
   constructor(config?: Partial<ContentLoaderConfig>) {
     this.config = {
-      baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+      baseUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
       cacheTTL: 5 * 60 * 1000, // 5 minutes
       maxCacheSize: 100,
       retryConfig: {
         maxAttempts: 3,
         baseDelay: 1000,
         maxDelay: 10000,
-        backoffMultiplier: 2
+        backoffMultiplier: 2,
       },
       enablePrefetch: true,
       memoryThreshold: 50, // 50MB
-      ...config
+      ...config,
     };
 
     this.cacheStats = {
@@ -78,7 +78,7 @@ export class ContentLoader {
       hitRate: 0,
       missRate: 0,
       lastCleared: new Date(),
-      memoryUsage: 0
+      memoryUsage: 0,
     };
 
     // Initialize cleanup interval
@@ -89,19 +89,21 @@ export class ContentLoader {
    * Load content by type and language with intelligent caching
    */
   async loadContentByType(
-    type: ContentType, 
+    type: ContentType,
     language: SupportedLanguage
   ): Promise<LocalizedContent[]> {
     const cacheKey = this.getCacheKey(type, language);
-    
+
     // Check cache first
     const cachedEntry = this.cache[cacheKey];
     if (cachedEntry && this.isCacheValid(cachedEntry)) {
       cachedEntry.hits++;
       cachedEntry.lastAccessed = Date.now();
       this.updateCacheStats(true);
-      
-      console.log(`ContentLoader: Cache hit for ${type}/${language} (${cachedEntry.data.length} items)`);
+
+      console.log(
+        `ContentLoader: Cache hit for ${type}/${language} (${cachedEntry.data.length} items)`
+      );
       return cachedEntry.data;
     }
 
@@ -115,24 +117,24 @@ export class ContentLoader {
    */
   async preloadContent(types: ContentType[]): Promise<void> {
     if (!this.config.enablePrefetch) {
-      console.log('ContentLoader: Prefetch disabled');
+      console.log("ContentLoader: Prefetch disabled");
       return;
     }
 
-    const languages: SupportedLanguage[] = ['en', 'ar'];
+    const languages: SupportedLanguage[] = ["en", "ar"];
     const prefetchPromises: Promise<void>[] = [];
 
     for (const type of types) {
       for (const language of languages) {
         const cacheKey = this.getCacheKey(type, language);
-        
+
         // Skip if already cached or in queue
         if (this.cache[cacheKey] || this.prefetchQueue.has(cacheKey)) {
           continue;
         }
 
         this.prefetchQueue.add(cacheKey);
-        
+
         const prefetchPromise = this.loadContentByType(type, language)
           .then(() => {
             this.prefetchQueue.delete(cacheKey);
@@ -140,7 +142,10 @@ export class ContentLoader {
           })
           .catch((error) => {
             this.prefetchQueue.delete(cacheKey);
-            console.warn(`ContentLoader: Prefetch failed for ${type}/${language}:`, error);
+            console.warn(
+              `ContentLoader: Prefetch failed for ${type}/${language}:`,
+              error
+            );
           });
 
         prefetchPromises.push(prefetchPromise);
@@ -148,27 +153,31 @@ export class ContentLoader {
     }
 
     await Promise.allSettled(prefetchPromises);
-    console.log(`ContentLoader: Preload completed for ${types.length} content types`);
+    console.log(
+      `ContentLoader: Preload completed for ${types.length} content types`
+    );
   }
 
   /**
    * Load specific content items by IDs
    */
   async loadContentByIds(
-    contentIds: string[], 
+    contentIds: string[],
     language: SupportedLanguage
   ): Promise<LocalizedContent[]> {
     try {
-      const url = `${this.config.baseUrl}/api/localization/content`;
+      const url = `${this.config.baseUrl}/localization/content`;
       const params = new URLSearchParams({
         language,
-        content_ids: contentIds.join(',')
+        content_ids: contentIds.join(","),
       });
 
       const response = await this.fetchWithRetry(`${url}?${params}`);
       const content: LocalizedContent[] = await response.json();
 
-      console.log(`ContentLoader: Loaded ${content.length} items by IDs for ${language}`);
+      console.log(
+        `ContentLoader: Loaded ${content.length} items by IDs for ${language}`
+      );
       return content;
     } catch (error) {
       console.error(`ContentLoader: Error loading content by IDs:`, error);
@@ -184,10 +193,15 @@ export class ContentLoader {
     keys?: string[]
   ): Promise<Record<string, string>> {
     try {
-      const keysParam = keys ? `?keys=${keys.join(',')}` : '';
-      const translations: Record<string, string> = await apiClient.getUITranslations(language, keys);
+      const keysParam = keys ? `?keys=${keys.join(",")}` : "";
+      const translations: Record<string, string> =
+        await apiClient.getUITranslations(language, keys);
 
-      console.log(`ContentLoader: Loaded ${Object.keys(translations).length} UI translations for ${language}`);
+      console.log(
+        `ContentLoader: Loaded ${
+          Object.keys(translations).length
+        } UI translations for ${language}`
+      );
       return translations;
     } catch (error) {
       console.error(`ContentLoader: Error loading UI translations:`, error);
@@ -205,14 +219,16 @@ export class ContentLoader {
       console.log(`ContentLoader: Invalidated cache for ${type}/${language}`);
     } else if (type) {
       // Invalidate all languages for this type
-      const keysToDelete = Object.keys(this.cache).filter(key => key.startsWith(`${type}_`));
-      keysToDelete.forEach(key => delete this.cache[key]);
+      const keysToDelete = Object.keys(this.cache).filter((key) =>
+        key.startsWith(`${type}_`)
+      );
+      keysToDelete.forEach((key) => delete this.cache[key]);
       console.log(`ContentLoader: Invalidated cache for type ${type}`);
     } else {
       // Clear all cache
       this.cache = {};
       this.cacheStats.lastCleared = new Date();
-      console.log('ContentLoader: Cleared all cache');
+      console.log("ContentLoader: Cleared all cache");
     }
 
     this.updateCacheSize();
@@ -239,38 +255,38 @@ export class ContentLoader {
   isLoading(type: ContentType, language: SupportedLanguage): boolean {
     const key = this.getCacheKey(type, language);
     const state = this.loadingStates.get(key);
-    return state?.status === 'loading' || false;
+    return state?.status === "loading" || false;
   }
 
   /**
    * Private method to load content from API with retry logic
    */
   private async loadFromAPI(
-    type: ContentType, 
+    type: ContentType,
     language: SupportedLanguage
   ): Promise<LocalizedContent[]> {
     const cacheKey = this.getCacheKey(type, language);
-    
+
     // Set loading state
     this.loadingStates.set(cacheKey, {
       contentType: type,
       language,
       progress: 0,
-      status: 'loading'
+      status: "loading",
     });
 
     try {
-      const url = `${this.config.baseUrl}/api/localization/content`;
+      const url = `${this.config.baseUrl}/localization/content`;
       const params = new URLSearchParams({
         content_type: type,
-        language
+        language,
       });
 
       // Update progress
       this.updateLoadingProgress(cacheKey, 25);
 
       const response = await this.fetchWithRetry(`${url}?${params}`);
-      
+
       // Update progress
       this.updateLoadingProgress(cacheKey, 75);
 
@@ -284,20 +300,21 @@ export class ContentLoader {
         contentType: type,
         language,
         progress: 100,
-        status: 'complete'
+        status: "complete",
       });
 
-      console.log(`ContentLoader: Loaded ${content.length} items for ${type}/${language} from API`);
+      console.log(
+        `ContentLoader: Loaded ${content.length} items for ${type}/${language} from API`
+      );
       return content;
-
     } catch (error) {
       // Set error state
       this.loadingStates.set(cacheKey, {
         contentType: type,
         language,
         progress: 0,
-        status: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        status: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
       });
 
       console.error(`ContentLoader: Error loading ${type}/${language}:`, error);
@@ -309,14 +326,15 @@ export class ContentLoader {
    * Fetch with retry logic and exponential backoff
    */
   private async fetchWithRetry(url: string): Promise<Response> {
-    const { maxAttempts, baseDelay, maxDelay, backoffMultiplier } = this.config.retryConfig;
+    const { maxAttempts, baseDelay, maxDelay, backoffMultiplier } =
+      this.config.retryConfig;
     let lastError: Error;
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
         const response = await fetch(url, {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
 
@@ -330,11 +348,12 @@ export class ContentLoader {
         }
 
         // For non-2xx responses, wait and retry
-        lastError = new Error(`HTTP ${response.status}: ${response.statusText}`);
-
+        lastError = new Error(
+          `HTTP ${response.status}: ${response.statusText}`
+        );
       } catch (error) {
-        lastError = error instanceof Error ? error : new Error('Network error');
-        
+        lastError = error instanceof Error ? error : new Error("Network error");
+
         // If it's the last attempt, throw the error
         if (attempt === maxAttempts) {
           throw lastError;
@@ -347,7 +366,9 @@ export class ContentLoader {
         maxDelay
       );
 
-      console.warn(`ContentLoader: Attempt ${attempt} failed, retrying in ${delay}ms...`);
+      console.warn(
+        `ContentLoader: Attempt ${attempt} failed, retrying in ${delay}ms...`
+      );
       await this.sleep(delay);
     }
 
@@ -374,7 +395,7 @@ export class ContentLoader {
       timestamp: Date.now(),
       ttl: this.config.cacheTTL,
       hits: 1,
-      lastAccessed: Date.now()
+      lastAccessed: Date.now(),
     };
 
     this.updateCacheSize();
@@ -410,9 +431,9 @@ export class ContentLoader {
    */
   private updateCacheStats(hit: boolean): void {
     if (hit) {
-      this.cacheStats.hitRate = (this.cacheStats.hitRate * 0.9) + (1 * 0.1); // Moving average
+      this.cacheStats.hitRate = this.cacheStats.hitRate * 0.9 + 1 * 0.1; // Moving average
     } else {
-      this.cacheStats.missRate = (this.cacheStats.missRate * 0.9) + (1 * 0.1); // Moving average
+      this.cacheStats.missRate = this.cacheStats.missRate * 0.9 + 1 * 0.1; // Moving average
     }
   }
 
@@ -428,8 +449,8 @@ export class ContentLoader {
    */
   private updateMemoryUsage(): void {
     let totalSize = 0;
-    
-    Object.values(this.cache).forEach(entry => {
+
+    Object.values(this.cache).forEach((entry) => {
       // Rough estimation of memory usage
       totalSize += JSON.stringify(entry.data).length * 2; // UTF-16 characters
     });
@@ -451,7 +472,9 @@ export class ContentLoader {
   private performMemoryCleanup(): void {
     const entriesToRemove = Math.ceil(Object.keys(this.cache).length * 0.25); // Remove 25%
     this.evictOldestEntries(entriesToRemove);
-    console.log(`ContentLoader: Performed memory cleanup, removed ${entriesToRemove} entries`);
+    console.log(
+      `ContentLoader: Performed memory cleanup, removed ${entriesToRemove} entries`
+    );
   }
 
   /**
@@ -485,7 +508,7 @@ export class ContentLoader {
     const now = Date.now();
     let removedCount = 0;
 
-    Object.keys(this.cache).forEach(key => {
+    Object.keys(this.cache).forEach((key) => {
       const entry = this.cache[key];
       if (now - entry.timestamp > entry.ttl) {
         delete this.cache[key];
@@ -495,7 +518,9 @@ export class ContentLoader {
 
     if (removedCount > 0) {
       this.updateCacheSize();
-      console.log(`ContentLoader: Cleaned up ${removedCount} expired cache entries`);
+      console.log(
+        `ContentLoader: Cleaned up ${removedCount} expired cache entries`
+      );
     }
   }
 
@@ -503,7 +528,7 @@ export class ContentLoader {
    * Utility method for sleeping
    */
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -513,7 +538,7 @@ export class ContentLoader {
     this.cache = {};
     this.loadingStates.clear();
     this.prefetchQueue.clear();
-    console.log('ContentLoader: Destroyed and cleaned up resources');
+    console.log("ContentLoader: Destroyed and cleaned up resources");
   }
 }
 
