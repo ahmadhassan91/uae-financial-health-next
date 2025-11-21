@@ -107,12 +107,13 @@
 
 /* Arabic font support */
 [dir="rtl"] {
-  font-family: 'Noto Sans Arabic', 'Amiri', 'Scheherazade New', 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+  font-family: "Noto Sans Arabic", "Amiri", "Scheherazade New", "Cairo",
+    "Tajawal", system-ui, -apple-system, sans-serif;
 }
 
 /* Arabic font class for better typography */
 .font-arabic {
-  font-family: 'Noto Sans Arabic', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  font-family: "Noto Sans Arabic", "Cairo", "Tajawal", system-ui, sans-serif;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.02em;
@@ -122,7 +123,7 @@
 [dir="rtl"] h1,
 [dir="rtl"] h2,
 [dir="rtl"] h3 {
-  font-family: 'Noto Sans Arabic', 'Cairo', 'Tajawal', system-ui, sans-serif;
+  font-family: "Noto Sans Arabic", "Cairo", "Tajawal", system-ui, sans-serif;
   line-height: 1.3;
   word-spacing: 0.1em;
 }
@@ -169,8 +170,8 @@
 }
 
 /* Fix button spacing in RTL */
-[dir="rtl"] .flex-col .gap-4>*,
-[dir="rtl"] .flex-row .gap-4>* {
+[dir="rtl"] .flex-col .gap-4 > *,
+[dir="rtl"] .flex-row .gap-4 > * {
   margin: 0;
 }
 
@@ -187,9 +188,9 @@
   text-align: inherit;
 }
 
-[dir="rtl"] .text-left {
+/* [dir="rtl"] .text-left {
   text-align: right;
-}
+} */
 
 [dir="rtl"] .text-right {
   text-align: left;
@@ -213,7 +214,7 @@
   flex-direction: row-reverse;
 }
 
-[dir="rtl"] .space-x-reverse> :not([hidden])~ :not([hidden]) {
+[dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 1;
   margin-right: var(--tw-space-x-reverse);
   margin-left: calc(1 - var(--tw-space-x-reverse));
@@ -284,7 +285,7 @@
   transform: scaleX(-1);
 }
 
-[dir="rtl"] .progress-bar>* {
+[dir="rtl"] .progress-bar > * {
   transform: scaleX(-1);
 }
 
@@ -378,7 +379,7 @@
   flex-direction: row-reverse;
 }
 
-[dir="rtl"] .modal-footer>*+* {
+[dir="rtl"] .modal-footer > * + * {
   margin-left: 0;
   margin-right: 0.5rem;
 }
@@ -472,13 +473,18 @@
 /* Arab
 ic font and gradient support */
 [dir="rtl"] .font-arabic {
-  font-family: 'Noto Sans Arabic', 'Amiri', 'Scheherazade New', 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+  font-family: "Noto Sans Arabic", "Amiri", "Scheherazade New", "Cairo",
+    "Tajawal", system-ui, -apple-system, sans-serif;
   font-weight: 700;
 }
 
 /* RTL gradient text support */
 [dir="rtl"] .rtl-gradient {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--accent)) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -523,7 +529,11 @@ ic font and gradient support */
 
 /* Ensure gradient works in all browsers for RTL */
 [dir="rtl"] .bg-gradient-to-r {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--accent)) 100%
+  ) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
@@ -533,7 +543,11 @@ ic font and gradient support */
 /* Fix for Safari RTL gradient */
 @supports (-webkit-background-clip: text) {
   [dir="rtl"] .bg-gradient-to-r {
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%) !important;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 100%
+    ) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
   }
