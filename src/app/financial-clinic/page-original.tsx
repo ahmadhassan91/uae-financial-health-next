@@ -64,6 +64,8 @@ export default function FinancialClinicPage({
     mobile_number: "",
   });
 
+  const [nameError, setNameError] = useState<string>("");
+
   // Handle restored session data
   useEffect(() => {
     if (restoredSession && restoredSession.profile) {
@@ -235,11 +237,35 @@ export default function FinancialClinicPage({
       );
       return;
     }
+    // Validate name doesn't contain numbers
+    if (/[0-9]/.test(profile.name)) {
+      setNameError(
+        language === "ar"
+          ? "الاسم يجب أن يحتوي على أحرف فقط"
+          : "Name must contain only letters"
+      );
+      toast.error(
+        language === "ar" ? "يرجى إدخال اسم صحيح" : "Please enter a valid name"
+      );
+      return;
+    }
     if (!profile.date_of_birth.trim()) {
       toast.error(
         language === "ar"
           ? "يرجى إدخال تاريخ الميلاد"
           : "Please enter your date of birth"
+      );
+      return;
+    }
+    // Validate name doesn't contain numbers or special characters
+    if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(profile.name)) {
+      setNameError(
+        language === "ar"
+          ? "الاسم يجب أن يحتوي على أحرف فقط"
+          : "Name must contain only letters"
+      );
+      toast.error(
+        language === "ar" ? "يرجى إدخال اسم صحيح" : "Please enter a valid name"
       );
       return;
     }
@@ -381,9 +407,34 @@ export default function FinancialClinicPage({
                   language === "ar" ? "أدخل اسمك" : "Enter your name"
                 }
                 value={profile.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  handleInputChange("name", value);
+                  // Clear error when user starts typing
+                  if (nameError) setNameError("");
+                }}
+                onBlur={(e) => {
+                  const value = e.target.value;
+                  // Validate on blur - check if contains numbers or special characters
+                  if (value && !/^[a-zA-Z\u0600-\u06FF\s]+$/.test(value)) {
+                    setNameError(
+                      language === "ar"
+                        ? "الاسم يجب أن يحتوي على أحرف فقط"
+                        : "Name must contain only letters"
+                    );
+                  } else {
+                    setNameError("");
+                  }
+                }}
+                className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                  nameError ? "border-red-500" : "border-[#c2d1d9]"
+                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]`}
               />
+              {nameError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {nameError}
+                </p>
+              )}
             </div>
 
             {/* Date of Birth Input with Label */}

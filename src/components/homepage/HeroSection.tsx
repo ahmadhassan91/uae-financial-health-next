@@ -89,7 +89,11 @@ export function HeroSection() {
           alt="Financial health hero"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className={`absolute ${language === 'ar' ? 'left-0' : 'right-0'} w-full md:max-w-[647px] h-full flex bg-[#ffffffe6] opacity-90`}>
+        <div
+          className={`absolute ${
+            language === "ar" ? "left-0" : "right-0"
+          } w-full md:max-w-[647px] h-full flex bg-[#ffffffe6] opacity-90`}
+        >
           <div className="flex w-full items-center justify-center px-6 md:px-[59px] py-[79px]">
             <div className="flex flex-col w-full max-w-[494px] items-start gap-7">
               <div className="flex flex-col items-start gap-[21px] w-full">
