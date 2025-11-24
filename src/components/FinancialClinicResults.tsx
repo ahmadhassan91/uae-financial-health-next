@@ -253,35 +253,55 @@ export function FinancialClinicResults({
                     className="flex flex-col items-center gap-4 w-full max-w-[1000px]"
                   >
                     <div
-                      className={`flex flex-col md:flex-row items-start md:items-center gap-4 w-full ${
-                        isRTL ? "md:flex-row-reverse" : ""
-                      }`}
+                      className="flex flex-col md:flex-row items-start md:items-center gap-4"
+                      style={{
+                        flexDirection: isRTL ? "row-reverse" : "row",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      }}
                     >
-                      {/* Title and description */}
-                      <div className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start">
-                        <div
-                          className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full ${
-                            isRTL ? "text-right" : "text-left"
-                          }`}
-                        >
-                          {getCategoryTranslation(categoryName)}
-                        </div>
+                      {isRTL ? (
+                        <>
+                          {/* Title and description (on the right in RTL) */}
+                          <div className="flex flex-col justify-center gap-1.5 items-start order-2 md:order-2">
+                            <div className="font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full">
+                              {getCategoryTranslation(categoryName)}
+                            </div>
 
-                        <div
-                          className={`font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full ${
-                            isRTL ? "text-right" : "text-left"
-                          }`}
-                        >
-                          {getCategoryDescription(categoryName)}
-                        </div>
-                      </div>
+                            <div className="font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-right">
+                              {getCategoryDescription(categoryName)}
+                            </div>
+                          </div>
 
-                      {/* Progress bar */}
-                      <StripedProgress
-                        value={percentage}
-                        className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0"
-                        scoreBasedColor={true}
-                      />
+                          {/* Progress bar (on the left in RTL) */}
+                          <StripedProgress
+                            value={percentage}
+                            className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0 order-1 md:order-1"
+                            scoreBasedColor={true}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {/* Title and description (on the left in LTR) */}
+                          <div className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start">
+                            <div className="font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full text-left">
+                              {getCategoryTranslation(categoryName)}
+                            </div>
+
+                            <div className="font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-left">
+                              {getCategoryDescription(categoryName)}
+                            </div>
+                          </div>
+
+                          {/* Progress bar (on the right in LTR) */}
+                          <StripedProgress
+                            value={percentage}
+                            className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0"
+                            scoreBasedColor={true}
+                          />
+                        </>
+                      )}
                     </div>
 
                     {index <
