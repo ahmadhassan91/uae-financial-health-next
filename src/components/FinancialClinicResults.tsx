@@ -254,7 +254,7 @@ export function FinancialClinicResults({
                     style={{ width: "80%" }}
                   >
                     <div
-                      className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 lg:gap-[54px] w-full ${
+                      className={`w-full ${
                         isRTL
                           ? "md:flex-row-reverse md:justify-start"
                           : "justify-between"
@@ -264,6 +264,7 @@ export function FinancialClinicResults({
                         flexDirection: "row",
                         justifyContent: "space-between",
                         width: "100%",
+                        marginLeft: "25%",
                       }}
                     >
                       {/* Title and description - responsive order for RTL */}
@@ -293,7 +294,7 @@ export function FinancialClinicResults({
                       />
                     </div>
 
-                    <Separator className="w-full" />
+                    <Separator style={{ width: "80%" }} />
                   </div>
                 );
               }
@@ -340,7 +341,9 @@ export function FinancialClinicResults({
                     )}
 
                     <div
-                      className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}
+                      className={`flex-1 ${
+                        isRTL ? "flex-row-reverse" : "flex-row"
+                      }`}
                     >
                       <span className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
                         {translateInsightCategory(insight.category)}:{" "}
