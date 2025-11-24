@@ -411,7 +411,6 @@ export function FinancialClinicResults({
               variant="outline"
               className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
             >
-              📧{" "}
               {language === "ar"
                 ? "إرسال التقرير بالبريد الإلكتروني"
                 : "Email Report"}
@@ -423,7 +422,6 @@ export function FinancialClinicResults({
             variant="outline"
             className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
           >
-            📊{" "}
             {isLoggedIn
               ? language === "ar"
                 ? "عرض تاريخ التقييمات"
@@ -439,7 +437,7 @@ export function FinancialClinicResults({
               variant="outline"
               className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
             >
-              🔄 {language === "ar" ? "إعادة التقييم" : "Retake Assessment"}
+              {language === "ar" ? "إعادة التقييم" : "Retake Assessment"}
             </Button>
           )}
         </div>

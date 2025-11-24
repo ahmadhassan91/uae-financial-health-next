@@ -545,7 +545,9 @@ export default function FinancialClinicPage({
                 }}
                 className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
                   nameError ? "border-red-500" : "border-[#c2d1d9]"
-                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]`}
+                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
               />
               {nameError && (
                 <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
@@ -603,7 +605,7 @@ export default function FinancialClinicPage({
                 language === "ar" ? "flex-row-reverse" : ""
               }`}
             >
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "الجنس" : "Gender"}{" "}
                 <span className="text-red-500">*</span>
               </Label>
@@ -662,7 +664,7 @@ export default function FinancialClinicPage({
                 language === "ar" ? "flex-row-reverse" : ""
               }`}
             >
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "الجنسية" : "Nationality"}{" "}
                 <span className="text-red-500">*</span>
               </Label>
@@ -729,7 +731,11 @@ export default function FinancialClinicPage({
                 value={profile.emirate}
                 onValueChange={handleEmirateChange}
               >
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                <SelectTrigger
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
                   <SelectValue
                     placeholder={
                       language === "ar" ? "اختر الإمارة" : "Select emirate"
@@ -738,7 +744,7 @@ export default function FinancialClinicPage({
                   />
                 </SelectTrigger>
                 <SelectContent
-                  className={language === "ar" ? "text-right" : ""}
+                  className={language === "ar" ? "flex-row-reverse" : ""}
                 >
                   <SelectItem
                     value="Dubai"
@@ -798,7 +804,11 @@ export default function FinancialClinicPage({
                 value={profile.children.toString()}
                 onValueChange={handleChildrenChange}
               >
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                <SelectTrigger
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
                   <SelectValue
                     placeholder={
                       language === "ar" ? "عدد الأطفال" : "Number of children"
@@ -807,7 +817,7 @@ export default function FinancialClinicPage({
                   />
                 </SelectTrigger>
                 <SelectContent
-                  className={language === "ar" ? "text-right" : ""}
+                  className={language === "ar" ? "flex-row-reverse" : ""}
                 >
                   <SelectItem
                     value="0"
@@ -863,7 +873,11 @@ export default function FinancialClinicPage({
                 value={profile.employment_status}
                 onValueChange={handleEmploymentChange}
               >
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                <SelectTrigger
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
                   <SelectValue
                     placeholder={
                       language === "ar" ? "حالة التوظيف" : "Employment Status"
@@ -872,7 +886,7 @@ export default function FinancialClinicPage({
                   />
                 </SelectTrigger>
                 <SelectContent
-                  className={language === "ar" ? "text-right" : ""}
+                  className={language === "ar" ? "flex-row-reverse" : ""}
                 >
                   <SelectItem
                     value="Employed"
@@ -913,7 +927,11 @@ export default function FinancialClinicPage({
                 value={profile.income_range}
                 onValueChange={handleIncomeChange}
               >
-                <SelectTrigger className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                <SelectTrigger
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
                   <SelectValue
                     placeholder={
                       language === "ar"
@@ -924,7 +942,7 @@ export default function FinancialClinicPage({
                   />
                 </SelectTrigger>
                 <SelectContent
-                  className={language === "ar" ? "text-right" : ""}
+                  className={language === "ar" ? "flex-row-reverse" : ""}
                 >
                   <SelectItem
                     value="Below 5,000"
@@ -1031,7 +1049,9 @@ export default function FinancialClinicPage({
                 }}
                 className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
                   emailError ? "border-red-500" : "border-[#c2d1d9]"
-                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]`}
+                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
               />
               {emailError && (
                 <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
@@ -1094,7 +1114,9 @@ export default function FinancialClinicPage({
                   }}
                   className={`flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
                     phoneError ? "border-red-500" : "border-[#c2d1d9]"
-                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]`}
+                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
                 />
               </div>
               {phoneError && (
