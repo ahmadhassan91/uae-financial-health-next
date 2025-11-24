@@ -21,6 +21,13 @@ import { ConsentModal } from "@/components/ConsentModal";
 import { consentService } from "@/services/consentService";
 import { HomepageHeader } from "@/components/homepage/Header";
 import { HomepageFooter } from "@/components/homepage/Footer";
+import {
+  getCountries,
+  getCountryCallingCode,
+} from "react-phone-number-input/input";
+import en from "react-phone-number-input/locale/en.json";
+import { getExampleNumber } from "libphonenumber-js";
+import examples from "libphonenumber-js/mobile/examples";
 
 interface FinancialClinicPageProps {
   restoredSession?: {
@@ -54,17 +61,42 @@ export default function FinancialClinicPage({
   const [profile, setProfile] = useState<FinancialClinicProfile>({
     name: "",
     date_of_birth: "",
-    gender: "Male",
-    nationality: "Emirati",
+    gender: "" as any,
+    nationality: "" as any,
     children: 0,
-    employment_status: "Employed",
-    income_range: "Below 5,000",
-    emirate: "Dubai",
+    employment_status: "" as any,
+    income_range: "",
+    emirate: "",
     email: "",
     mobile_number: "",
   });
 
   const [nameError, setNameError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+  const [dateError, setDateError] = useState<string>("");
+  const [genderError, setGenderError] = useState<string>("");
+  const [nationalityError, setNationalityError] = useState<string>("");
+  const [emirateError, setEmirateError] = useState<string>("");
+  const [employmentError, setEmploymentError] = useState<string>("");
+  const [incomeError, setIncomeError] = useState<string>("");
+  const [countryCode, setCountryCode] = useState<string>("AE");
+
+  // Get list of all countries
+  const countries = getCountries();
+
+  // Get placeholder based on country using library
+  const getPhonePlaceholder = (countryCode: string) => {
+    try {
+      const exampleNumber = getExampleNumber(countryCode as any, examples);
+      if (exampleNumber) {
+        return exampleNumber.nationalNumber.toString();
+      }
+    } catch (error) {
+      console.log("No example for country:", countryCode);
+    }
+    return "123456789";
+  };
 
   // Handle restored session data
   useEffect(() => {
@@ -165,6 +197,7 @@ export default function FinancialClinicPage({
       ...prev,
       nationality: value as "Emirati" | "Non-Emirati",
     }));
+    if (nationalityError) setNationalityError("");
   };
 
   const handleGenderChange = (value: string) => {
@@ -172,6 +205,7 @@ export default function FinancialClinicPage({
       ...prev,
       gender: value as "Male" | "Female",
     }));
+    if (genderError) setGenderError("");
   };
 
   const handleChildrenChange = (value: string) => {
@@ -186,6 +220,7 @@ export default function FinancialClinicPage({
       ...prev,
       employment_status: value as "Employed" | "Self-Employed" | "Unemployed",
     }));
+    if (employmentError) setEmploymentError("");
   };
 
   const handleIncomeChange = (value: string) => {
@@ -193,6 +228,7 @@ export default function FinancialClinicPage({
       ...prev,
       income_range: value,
     }));
+    if (incomeError) setIncomeError("");
   };
 
   const handleEmirateChange = (value: string) => {
@@ -200,6 +236,7 @@ export default function FinancialClinicPage({
       ...prev,
       emirate: value,
     }));
+    if (emirateError) setEmirateError("");
   };
 
   const handleInputChange = (
@@ -230,53 +267,116 @@ export default function FinancialClinicPage({
   };
 
   const handleStartSurvey = () => {
-    // Validate required fields
+    // Clear all errors first
+    setNameError("");
+    setDateError("");
+    setGenderError("");
+    setNationalityError("");
+    setEmirateError("");
+    setEmploymentError("");
+    setIncomeError("");
+    setEmailError("");
+    setPhoneError("");
+
+    let hasError = false;
+
+    // Validate all fields and collect errors
     if (!profile.name.trim()) {
-      toast.error(
-        language === "ar" ? "يرجى إدخال الاسم" : "Please enter your name"
-      );
-      return;
-    }
-    // Validate name doesn't contain numbers
-    if (/[0-9]/.test(profile.name)) {
+      setNameError(language === "ar" ? "الاسم مطلوب" : "Name is required");
+      hasError = true;
+    } else if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(profile.name)) {
       setNameError(
         language === "ar"
           ? "الاسم يجب أن يحتوي على أحرف فقط"
           : "Name must contain only letters"
       );
-      toast.error(
-        language === "ar" ? "يرجى إدخال اسم صحيح" : "Please enter a valid name"
-      );
-      return;
-    }
-    if (!profile.date_of_birth.trim()) {
-      toast.error(
-        language === "ar"
-          ? "يرجى إدخال تاريخ الميلاد"
-          : "Please enter your date of birth"
-      );
-      return;
-    }
-    // Validate name doesn't contain numbers or special characters
-    if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(profile.name)) {
-      setNameError(
-        language === "ar"
-          ? "الاسم يجب أن يحتوي على أحرف فقط"
-          : "Name must contain only letters"
-      );
-      toast.error(
-        language === "ar" ? "يرجى إدخال اسم صحيح" : "Please enter a valid name"
-      );
-      return;
+      hasError = true;
     }
 
-    // Email validation with proper regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!profile.email.trim() || !emailRegex.test(profile.email.trim())) {
+    if (!profile.date_of_birth.trim()) {
+      setDateError(
+        language === "ar" ? "تاريخ الميلاد مطلوب" : "Date of Birth is required"
+      );
+      hasError = true;
+    }
+
+    if (!profile.gender) {
+      setGenderError(language === "ar" ? "الجنس مطلوب" : "Gender is required");
+      hasError = true;
+    }
+
+    if (!profile.nationality) {
+      setNationalityError(
+        language === "ar" ? "الجنسية مطلوبة" : "Nationality is required"
+      );
+      hasError = true;
+    }
+
+    if (!profile.emirate) {
+      setEmirateError(
+        language === "ar" ? "الإمارة مطلوبة" : "Emirate is required"
+      );
+      hasError = true;
+    }
+
+    if (!profile.employment_status) {
+      setEmploymentError(
+        language === "ar"
+          ? "حالة التوظيف مطلوبة"
+          : "Employment Status is required"
+      );
+      hasError = true;
+    }
+
+    if (!profile.income_range) {
+      setIncomeError(
+        language === "ar" ? "نطاق الدخل مطلوب" : "Income Range is required"
+      );
+      hasError = true;
+    }
+
+    if (!profile.email.trim()) {
+      setEmailError(
+        language === "ar"
+          ? "البريد الإلكتروني مطلوب"
+          : "Email Address is required"
+      );
+      hasError = true;
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(profile.email.trim())) {
+        setEmailError(
+          language === "ar"
+            ? "يرجى إدخال بريد إلكتروني صحيح"
+            : "Please enter a valid email address"
+        );
+        hasError = true;
+      }
+    }
+
+    if (!profile.mobile_number || profile.mobile_number.trim() === "") {
+      setPhoneError(
+        language === "ar" ? "رقم الجوال مطلوب" : "Mobile Number is required"
+      );
+      hasError = true;
+    } else {
+      const cleanedNumber = profile.mobile_number.replace(/[^0-9]/g, "");
+      if (cleanedNumber.length < 7 || cleanedNumber.length > 15) {
+        setPhoneError(
+          language === "ar"
+            ? "يرجى إدخال رقم جوال صحيح (7-15 رقم)"
+            : "Please enter a valid mobile number (7-15 digits)"
+        );
+        hasError = true;
+      }
+    }
+
+    // If there are any errors, don't proceed
+    if (hasError) {
       toast.error(
         language === "ar"
-          ? "يرجى إدخال بريد إلكتروني صحيح"
-          : "Please enter a valid email address"
+          ? "يرجى تصحيح الأخطاء في النموذج"
+          : "Please correct the errors in the form"
       );
       return;
     }
@@ -400,7 +500,8 @@ export default function FinancialClinicPage({
             {/* Name Input with Label */}
             <div className="flex-1">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "الاسم" : "Name"}
+                {language === "ar" ? "الاسم" : "Name"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Input
                 placeholder={
@@ -440,7 +541,8 @@ export default function FinancialClinicPage({
             {/* Date of Birth Input with Label */}
             <div className="flex-1">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "تاريخ الميلاد" : "Date of Birth"}
+                {language === "ar" ? "تاريخ الميلاد" : "Date of Birth"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
               <DatePickerComponent
                 date={
@@ -453,6 +555,7 @@ export default function FinancialClinicPage({
                     // Format date as YYYY-MM-DD for storage
                     const formattedDate = date.toISOString().split("T")[0];
                     handleInputChange("date_of_birth", formattedDate);
+                    if (dateError) setDateError("");
                   } else {
                     handleInputChange("date_of_birth", "");
                   }
@@ -465,6 +568,11 @@ export default function FinancialClinicPage({
                 maxDate={new Date()} // Prevent future dates
                 minDate={new Date(1920, 0, 1)} // Minimum year 1920
               />
+              {dateError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {dateError}
+                </p>
+              )}
             </div>
           </div>
 
@@ -475,12 +583,13 @@ export default function FinancialClinicPage({
             }`}
           >
             <div
-              className={`flex items-center gap-6 md:gap-[46px] ${
+              className={`flex items-center gap-6 md:gap-[35px] ${
                 language === "ar" ? "flex-row-reverse" : ""
               }`}
             >
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
-                {language === "ar" ? "الجنس" : "Gender"}
+                {language === "ar" ? "الجنس" : "Gender"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
 
               <RadioGroup
@@ -525,6 +634,11 @@ export default function FinancialClinicPage({
                   </Label>
                 </div>
               </RadioGroup>
+              {genderError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {genderError}
+                </p>
+              )}
             </div>
 
             <div
@@ -533,7 +647,8 @@ export default function FinancialClinicPage({
               }`}
             >
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap">
-                {language === "ar" ? "الجنسية" : "Nationality"}
+                {language === "ar" ? "الجنسية" : "Nationality"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
 
               <RadioGroup
@@ -578,15 +693,21 @@ export default function FinancialClinicPage({
                   </Label>
                 </div>
               </RadioGroup>
+              {nationalityError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {nationalityError}
+                </p>
+              )}
             </div>
           </div>
 
           {/* Emirate and Children */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
+          <div className="flex flex-col md:flex-row items-start md:items-start gap-4 w-full">
             {/* Emirate Dropdown with Label */}
             <div className="flex-1">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "الإمارة" : "Emirate"}
+                {language === "ar" ? "الإمارة" : "Emirate"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={profile.emirate}
@@ -611,6 +732,13 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
+              <div className="min-h-[20px]">
+                {emirateError && (
+                  <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                    {emirateError}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Children Dropdown with Label */}
@@ -639,6 +767,7 @@ export default function FinancialClinicPage({
                   <SelectItem value="5">5+</SelectItem>
                 </SelectContent>
               </Select>
+              <div className="min-h-[20px]"></div>
             </div>
           </div>
 
@@ -647,7 +776,8 @@ export default function FinancialClinicPage({
             {/* Employment Status Dropdown with Label */}
             <div className="flex-1">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "حالة التوظيف" : "Employment Status"}
+                {language === "ar" ? "حالة التوظيف" : "Employment Status"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={profile.employment_status}
@@ -673,6 +803,11 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {employmentError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {employmentError}
+                </p>
+              )}
             </div>
 
             {/* Household Monthly Income Range Dropdown with Label */}
@@ -680,7 +815,8 @@ export default function FinancialClinicPage({
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar"
                   ? "نطاق الدخل الشهري للأسرة بالدرهم الإماراتي"
-                  : "Household Monthly Income Range in AED"}
+                  : "Household Monthly Income Range in AED"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Select
                 value={profile.income_range}
@@ -719,6 +855,11 @@ export default function FinancialClinicPage({
                   <SelectItem value="Above 100,000">Above 100,000</SelectItem>
                 </SelectContent>
               </Select>
+              {incomeError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {incomeError}
+                </p>
+              )}
             </div>
           </div>
 
@@ -729,39 +870,105 @@ export default function FinancialClinicPage({
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar"
                   ? "عنوان البريد الإلكتروني"
-                  : "Email Address"}
+                  : "Email Address"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Input
                 placeholder={
-                  language === "ar"
-                    ? "أدخل بريدك الإلكتروني"
-                    : "Enter your email"
+                  language === "ar" ? "example@email.com" : "example@email.com"
                 }
                 type="email"
                 value={profile.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
+                onChange={(e) => {
+                  handleInputChange("email", e.target.value);
+                  if (emailError) setEmailError("");
+                }}
+                onBlur={(e) => {
+                  const value = e.target.value.trim();
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  if (value && !emailRegex.test(value)) {
+                    setEmailError(
+                      language === "ar"
+                        ? "يرجى إدخال بريد إلكتروني صحيح"
+                        : "Please enter a valid email address"
+                    );
+                  } else {
+                    setEmailError("");
+                  }
+                }}
+                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                  emailError ? "border-red-500" : "border-[#c2d1d9]"
+                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]`}
               />
+              {emailError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {emailError}
+                </p>
+              )}
             </div>
 
             {/* Mobile Number Field with Label */}
             <div className="flex-1">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "رقم الجوال" : "Mobile Number"}
+                {language === "ar" ? "رقم الجوال" : "Mobile Number"}{" "}
+                <span className="text-red-500">*</span>
               </Label>
-              <Input
-                placeholder={
-                  language === "ar"
-                    ? "أدخل رقم جوالك"
-                    : "Enter your mobile number"
-                }
-                type="tel"
-                value={profile.mobile_number || ""}
-                onChange={(e) =>
-                  handleInputChange("mobile_number", e.target.value)
-                }
-                className="w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]"
-              />
+              <div className="flex gap-2">
+                <Select value={countryCode} onValueChange={setCountryCode}>
+                  <SelectTrigger
+                    className="w-full md:w-[220px] h-[50px] px-3 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6"
+                    style={{ height: "50px" }}
+                  >
+                    <SelectValue>
+                      {en[countryCode as keyof typeof en] || countryCode} +
+                      {getCountryCallingCode(countryCode as any)}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px] w-full md:w-[320px]">
+                    {countries.map((country) => {
+                      const callingCode = getCountryCallingCode(country);
+                      const countryName =
+                        en[country as keyof typeof en] || country;
+                      return (
+                        <SelectItem key={country} value={country}>
+                          {countryName} +{callingCode}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+                <Input
+                  placeholder={getPhonePlaceholder(countryCode)}
+                  type="tel"
+                  value={profile.mobile_number || ""}
+                  onChange={(e) => {
+                    // Only allow numbers and basic formatting
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    handleInputChange("mobile_number", value);
+                    if (phoneError) setPhoneError("");
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    if (value && (value.length < 7 || value.length > 15)) {
+                      setPhoneError(
+                        language === "ar"
+                          ? "يرجى إدخال رقم جوال صحيح (7-15 رقم)"
+                          : "Please enter a valid mobile number (7-15 digits)"
+                      );
+                    } else {
+                      setPhoneError("");
+                    }
+                  }}
+                  className={`flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                    phoneError ? "border-red-500" : "border-[#c2d1d9]"
+                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7]`}
+                />
+              </div>
+              {phoneError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {phoneError}
+                </p>
+              )}
             </div>
           </div>
         </div>
