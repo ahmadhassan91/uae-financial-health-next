@@ -192,6 +192,19 @@ export default function FinancialClinicPage({
     // Note: We keep profile in case user is editing, but clear results
   }, []);
 
+  // Clear all validation errors when language changes
+  useEffect(() => {
+    setNameError("");
+    setEmailError("");
+    setPhoneError("");
+    setDateError("");
+    setGenderError("");
+    setNationalityError("");
+    setEmirateError("");
+    setEmploymentError("");
+    setIncomeError("");
+  }, [language]);
+
   const handleNationalityChange = (value: string) => {
     setProfile((prev) => ({
       ...prev,
@@ -423,7 +436,10 @@ export default function FinancialClinicPage({
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-white">
+    <div
+      className="w-full min-h-screen flex flex-col bg-white"
+      dir={language === "ar" ? "rtl" : "ltr"}
+    >
       {/* Header */}
       <HomepageHeader />
 
@@ -721,14 +737,46 @@ export default function FinancialClinicPage({
                     className="placeholder:text-[#a1aeb7]"
                   />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Dubai">Dubai</SelectItem>
-                  <SelectItem value="Abu Dhabi">Abu Dhabi</SelectItem>
-                  <SelectItem value="Sharjah">Sharjah</SelectItem>
-                  <SelectItem value="Ajman">Ajman</SelectItem>
-                  <SelectItem value="Al Ain">Al Ain</SelectItem>
-                  <SelectItem value="Ras Al Khaimah / Fujairah / UAQ / Outside UAE">
-                    Ras Al Khaimah / Fujairah / UAQ / Outside UAE
+                <SelectContent
+                  className={language === "ar" ? "text-right" : ""}
+                >
+                  <SelectItem
+                    value="Dubai"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "دبي" : "Dubai"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Abu Dhabi"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "أبو ظبي" : "Abu Dhabi"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Sharjah"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "الشارقة" : "Sharjah"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Ajman"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "عجمان" : "Ajman"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Al Ain"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "العين" : "Al Ain"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Ras Al Khaimah / Fujairah / UAQ / Outside UAE"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar"
+                      ? "رأس الخيمة / الفجيرة / أم القيوين / خارج الإمارات"
+                      : "Ras Al Khaimah / Fujairah / UAQ / Outside UAE"}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -758,13 +806,45 @@ export default function FinancialClinicPage({
                     className="placeholder:text-[#a1aeb7]"
                   />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">0</SelectItem>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                  <SelectItem value="4">4</SelectItem>
-                  <SelectItem value="5">5+</SelectItem>
+                <SelectContent
+                  className={language === "ar" ? "text-right" : ""}
+                >
+                  <SelectItem
+                    value="0"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "0" : "0"}
+                  </SelectItem>
+                  <SelectItem
+                    value="1"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "١" : "1"}
+                  </SelectItem>
+                  <SelectItem
+                    value="2"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "٢" : "2"}
+                  </SelectItem>
+                  <SelectItem
+                    value="3"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "٣" : "3"}
+                  </SelectItem>
+                  <SelectItem
+                    value="4"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "٤" : "4"}
+                  </SelectItem>
+                  <SelectItem
+                    value="5"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "٥+" : "5+"}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <div className="min-h-[20px]"></div>
@@ -791,14 +871,25 @@ export default function FinancialClinicPage({
                     className="placeholder:text-[#a1aeb7]"
                   />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Employed">
+                <SelectContent
+                  className={language === "ar" ? "text-right" : ""}
+                >
+                  <SelectItem
+                    value="Employed"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
                     {language === "ar" ? "موظف" : "Employed"}
                   </SelectItem>
-                  <SelectItem value="Self-Employed">
+                  <SelectItem
+                    value="Self-Employed"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
                     {language === "ar" ? "أعمال حرة" : "Self-Employed"}
                   </SelectItem>
-                  <SelectItem value="Unemployed">
+                  <SelectItem
+                    value="Unemployed"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
                     {language === "ar" ? "عاطل عن العمل" : "Unemployed"}
                   </SelectItem>
                 </SelectContent>
@@ -832,27 +923,69 @@ export default function FinancialClinicPage({
                     className="placeholder:text-[#a1aeb7]"
                   />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Below 5,000">Below 5,000</SelectItem>
-                  <SelectItem value="5,000 to 10,000">
-                    5,000 to 10,000
+                <SelectContent
+                  className={language === "ar" ? "text-right" : ""}
+                >
+                  <SelectItem
+                    value="Below 5,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "أقل من 5,000" : "Below 5,000"}
                   </SelectItem>
-                  <SelectItem value="10,000 to 20,000">
-                    10,000 to 20,000
+                  <SelectItem
+                    value="5,000 to 10,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar"
+                      ? "من 5,000 إلى 10,000"
+                      : "5,000 to 10,000"}
                   </SelectItem>
-                  <SelectItem value="20,000 to 30,000">
-                    20,000 to 30,000
+                  <SelectItem
+                    value="10,000 to 20,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar"
+                      ? "من 10,000 إلى 20,000"
+                      : "10,000 to 20,000"}
                   </SelectItem>
-                  <SelectItem value="30,000 to 40,000">
-                    30,000 to 40,000
+                  <SelectItem
+                    value="20,000 to 30,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar"
+                      ? "من 20,000 إلى 30,000"
+                      : "20,000 to 30,000"}
                   </SelectItem>
-                  <SelectItem value="40,000 to 50,000">
-                    40,000 to 50,000
+                  <SelectItem
+                    value="30,000 to 40,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar"
+                      ? "من 30,000 إلى 40,000"
+                      : "30,000 to 40,000"}
                   </SelectItem>
-                  <SelectItem value="50,000 to 100,000">
-                    50,000 to 100,000
+                  <SelectItem
+                    value="40,000 to 50,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar"
+                      ? "من 40,000 إلى 50,000"
+                      : "40,000 to 50,000"}
                   </SelectItem>
-                  <SelectItem value="Above 100,000">Above 100,000</SelectItem>
+                  <SelectItem
+                    value="50,000 to 100,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar"
+                      ? "من 50,000 إلى 100,000"
+                      : "50,000 to 100,000"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Above 100,000"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "أكثر من 100,000" : "Above 100,000"}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               {incomeError && (

@@ -138,7 +138,7 @@ export function FinancialClinicResults({
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "تعكس نتيجتك كيفية أدائك عبر المجالات الرئيسية."
-                : "Your score reflects how you're doing across five key areas."}
+                : "Your score reflects how you're doing across key areas."}
             </p>
 
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
@@ -234,7 +234,7 @@ export function FinancialClinicResults({
             <p className="font-normal text-[#a1aeb7] text-sm md:text-base text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "أدائك عبر 7 مجالات رئيسية للصحة المالية"
-                : "Your performance across the 7 key areas of financial health"}
+                : "Your performance across the key areas of financial health"}
             </p>
           </div>
 
@@ -249,11 +249,15 @@ export function FinancialClinicResults({
                     key={index}
                     className="flex flex-col items-center gap-4 md:gap-[35px] w-full"
                   >
-                    <div className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 lg:gap-[54px] w-full ${isRTL ? 'md:flex-row-reverse md:justify-start' : 'justify-between'}`}>
+                    <div
+                      className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 lg:gap-[54px] w-full ${
+                        isRTL
+                          ? "md:flex-row-reverse md:justify-start"
+                          : "justify-between"
+                      }`}
+                    >
                       {/* Title and description - responsive order for RTL */}
-                      <div
-                        className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start"
-                      >
+                      <div className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start">
                         <div
                           className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full ${
                             isRTL ? "text-right" : "text-left"

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "financial health, UAE, National Bonds Corporation, NBC, financial wellness, assessment",
   authors: [{ name: "National Bonds Corporation" }],
   icons: {
-    icon: "/newicon.svg",
+    icon: "/updatedicon.svg",
     apple: "/logos/nbc-logo-01.png",
   },
 };
