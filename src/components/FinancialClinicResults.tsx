@@ -238,7 +238,10 @@ export function FinancialClinicResults({
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-6 md:gap-[38px] w-full max-w-[1100px] mx-auto px-4">
+          <div
+            className="flex flex-col items-center px-4"
+            style={{ width: "100%" }}
+          >
             {Object.entries(result.category_scores).map(
               ([categoryName, category]: [string, any], index) => {
                 const percentage =
@@ -247,7 +250,8 @@ export function FinancialClinicResults({
                 return (
                   <div
                     key={index}
-                    className="flex flex-col items-center gap-4 md:gap-[35px] w-full"
+                    className="flex flex-col items-center gap-4"
+                    style={{ width: "80%" }}
                   >
                     <div
                       className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 lg:gap-[54px] w-full ${
@@ -255,6 +259,12 @@ export function FinancialClinicResults({
                           ? "md:flex-row-reverse md:justify-start"
                           : "justify-between"
                       }`}
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      }}
                     >
                       {/* Title and description - responsive order for RTL */}
                       <div className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start">
