@@ -8,13 +8,15 @@ import "./globals.css";
 import "@/styles/rtl.css";
 
 export const metadata: Metadata = {
-  title: "UAE Financial Health Check | National Bonds Corporation",
-  description: "Assess your financial wellness with our comprehensive financial health check tool. Get personalized recommendations and track your progress over time.",
-  keywords: "financial health, UAE, National Bonds Corporation, NBC, financial wellness, assessment",
+  title: "Financial Clinic | National Bonds",
+  description:
+    "Assess your financial wellness with our comprehensive financial health check tool. Get personalized recommendations and track your progress over time.",
+  keywords:
+    "financial health, UAE, National Bonds Corporation, NBC, financial wellness, assessment",
   authors: [{ name: "National Bonds Corporation" }],
   icons: {
-    icon: '/favicon.png',
-    apple: '/logos/nbc-logo-01.png',
+    icon: "/updatedicon.svg",
+    apple: "/logos/nbc-logo-01.png",
   },
 };
 

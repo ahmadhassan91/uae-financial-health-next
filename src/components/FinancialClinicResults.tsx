@@ -138,7 +138,7 @@ export function FinancialClinicResults({
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "تعكس نتيجتك كيفية أدائك عبر المجالات الرئيسية."
-                : "Your score reflects how you're doing across five key areas."}
+                : "Your score reflects how you're doing across key areas."}
             </p>
 
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
@@ -234,11 +234,14 @@ export function FinancialClinicResults({
             <p className="font-normal text-[#a1aeb7] text-sm md:text-base text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "أدائك عبر 7 مجالات رئيسية للصحة المالية"
-                : "Your performance across the 7 key areas of financial health"}
+                : "Your performance across the key areas of financial health"}
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-6 md:gap-[38px] w-full max-w-[1100px] mx-auto px-4">
+          <div
+            className="flex flex-col items-center px-4"
+            style={{ width: "100%" }}
+          >
             {Object.entries(result.category_scores).map(
               ([categoryName, category]: [string, any], index) => {
                 const percentage =
@@ -247,39 +250,64 @@ export function FinancialClinicResults({
                 return (
                   <div
                     key={index}
-                    className="flex flex-col items-center gap-4 md:gap-[35px] w-full"
+                    className="flex flex-col items-center gap-4 w-full max-w-[1000px]"
                   >
-                    <div className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 lg:gap-[54px] w-full ${isRTL ? 'md:flex-row-reverse md:justify-start' : 'justify-between'}`}>
-                      {/* Title and description - responsive order for RTL */}
-                      <div
-                        className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start"
-                      >
-                        <div
-                          className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full ${
-                            isRTL ? "text-right" : "text-left"
-                          }`}
-                        >
-                          {getCategoryTranslation(categoryName)}
-                        </div>
+                    <div
+                      className="flex flex-col md:flex-row items-start md:items-center gap-4"
+                      style={{
+                        flexDirection: isRTL ? "row-reverse" : "row",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      }}
+                    >
+                      {isRTL ? (
+                        <>
+                          {/* Title and description (on the right in RTL) */}
+                          <div className="flex flex-col justify-center gap-1.5 items-start order-2 md:order-2">
+                            <div className="font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full">
+                              {getCategoryTranslation(categoryName)}
+                            </div>
 
-                        <div
-                          className={`font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full ${
-                            isRTL ? "text-right" : "text-left"
-                          }`}
-                        >
-                          {getCategoryDescription(categoryName)}
-                        </div>
-                      </div>
+                            <div className="font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-right">
+                              {getCategoryDescription(categoryName)}
+                            </div>
+                          </div>
 
-                      {/* Progress bar */}
-                      <StripedProgress
-                        value={percentage}
-                        className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0"
-                        scoreBasedColor={true}
-                      />
+                          {/* Progress bar (on the left in RTL) */}
+                          <StripedProgress
+                            value={percentage}
+                            className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0 order-1 md:order-1"
+                            scoreBasedColor={true}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {/* Title and description (on the left in LTR) */}
+                          <div className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start">
+                            <div className="font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full text-left">
+                              {getCategoryTranslation(categoryName)}
+                            </div>
+
+                            <div className="font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-left">
+                              {getCategoryDescription(categoryName)}
+                            </div>
+                          </div>
+
+                          {/* Progress bar (on the right in LTR) */}
+                          <StripedProgress
+                            value={percentage}
+                            className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0"
+                            scoreBasedColor={true}
+                          />
+                        </>
+                      )}
                     </div>
 
-                    <Separator className="w-full" />
+                    {index <
+                      Object.entries(result.category_scores).length - 1 && (
+                      <Separator className="w-full" />
+                    )}
                   </div>
                 );
               }
@@ -326,7 +354,9 @@ export function FinancialClinicResults({
                     )}
 
                     <div
-                      className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}
+                      className={`flex-1 ${
+                        isRTL ? "flex-row-reverse" : "flex-row"
+                      }`}
                     >
                       <span className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
                         {translateInsightCategory(insight.category)}:{" "}
@@ -407,7 +437,6 @@ export function FinancialClinicResults({
               variant="outline"
               className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
             >
-              📧{" "}
               {language === "ar"
                 ? "إرسال التقرير بالبريد الإلكتروني"
                 : "Email Report"}
@@ -419,7 +448,6 @@ export function FinancialClinicResults({
             variant="outline"
             className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
           >
-            📊{" "}
             {isLoggedIn
               ? language === "ar"
                 ? "عرض تاريخ التقييمات"
@@ -435,7 +463,7 @@ export function FinancialClinicResults({
               variant="outline"
               className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
             >
-              🔄 {language === "ar" ? "إعادة التقييم" : "Retake Assessment"}
+              {language === "ar" ? "إعادة التقييم" : "Retake Assessment"}
             </Button>
           )}
         </div>
