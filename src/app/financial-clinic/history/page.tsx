@@ -53,17 +53,21 @@ export default function FinancialClinicHistoryPage() {
       try {
         setLoading(true);
 
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL ||
+          (typeof window !== "undefined" &&
+          window.location.origin.includes("localhost")
+            ? "http://localhost:8000/api/v1"
+            : "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1");
+
         // First check if user is authenticated
         if (session && isAuthenticated) {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/financial-clinic/history`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${session.accessToken}`,
-              },
-            }
-          );
+          const response = await fetch(`${apiUrl}/financial-clinic/history`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.accessToken}`,
+            },
+          });
 
           if (!response.ok) {
             if (response.status === 401) {
@@ -112,9 +116,9 @@ export default function FinancialClinicHistoryPage() {
 
               if (email) {
                 const response = await fetch(
-                  `${
-                    process.env.NEXT_PUBLIC_API_URL
-                  }/financial-clinic/history/${encodeURIComponent(email)}`
+                  `${apiUrl}/financial-clinic/history/${encodeURIComponent(
+                    email
+                  )}`
                 );
 
                 if (response.ok) {

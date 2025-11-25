@@ -56,10 +56,15 @@ export function HomepageHeader() {
 
     // Check if user has any results
     try {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_URL ||
+        (typeof window !== "undefined" &&
+        window.location.origin.includes("localhost")
+          ? "http://localhost:8000/api/v1"
+          : "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1");
+
       const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL
-        }/financial-clinic/history/${encodeURIComponent(email)}`
+        `${apiUrl}/financial-clinic/history/${encodeURIComponent(email)}`
       );
 
       if (response.ok) {
