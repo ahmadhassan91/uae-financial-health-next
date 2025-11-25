@@ -223,7 +223,7 @@ export function FinancialClinicSurvey({
         {/* Title Section */}
         <div className="flex flex-col items-center gap-1.5 mb-4 md:mb-6 lg:mb-8">
           <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
-            {language === "ar" ? "ملف العميل" : "Customer Profile"}
+            {language === "ar" ? "صفحة الفحص" : "Checkup Page"}
           </h1>
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
             {language === "ar"
@@ -268,7 +268,7 @@ export function FinancialClinicSurvey({
           <div className="w-full max-w-[1380px] px-1 sm:px-2">
             <h2
               className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${
-                isRTL ? "text-right" : "text-left"
+                isRTL ? "flex-row-reverse" : "flex-row"
               }`}
             >
               {language === "ar" ? "فئة الأسئلة: " : "Questions Category: "}
@@ -376,7 +376,7 @@ export function FinancialClinicSurvey({
           className={`flex flex-col sm:flex-row ${
             currentStep > 0 ? "sm:justify-between" : "sm:justify-end"
           } items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${
-            isRTL ? "sm:flex-row-reverse" : ""
+            isRTL ? "flex-row-reverse" : "flex-row"
           }`}
         >
           {/* Previous Button - Only show if not on first category */}

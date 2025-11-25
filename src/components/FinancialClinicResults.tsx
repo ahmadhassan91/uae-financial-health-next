@@ -327,7 +327,7 @@ export function FinancialClinicResults({
             {language === "ar"
               ? "التغييرات الصغيرة تحدث فرقًا كبيرًا. إليك كيفية تقوية نتيجتك."
               : "Small changes make big differences. Here's how to strengthen your score."}
-          </p>
+          </p> 
         </div>
 
         <div className="flex flex-col w-full max-w-[948px] items-start gap-3 md:gap-3.5 px-4">
