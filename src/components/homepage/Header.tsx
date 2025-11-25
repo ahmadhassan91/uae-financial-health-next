@@ -16,6 +16,20 @@ export function HomepageHeader() {
   };
 
   const handleViewResults = async () => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem("simpleAuthSession");
+
+    if (!isLoggedIn) {
+      // User is not logged in, redirect to login page
+      toast.info(
+        language === "ar"
+          ? "الرجاء تسجيل الدخول لعرض النتائج السابقة"
+          : "Please login to view previous assessments"
+      );
+      router.push("/financial-clinic/login");
+      return;
+    }
+
     // Try to get email from localStorage
     const storedProfile = localStorage.getItem("financialClinicProfile");
     let email = "";
@@ -30,13 +44,13 @@ export function HomepageHeader() {
     }
 
     if (!email) {
-      // No email found, prompt user to enter email first
+      // No email found but user is logged in, redirect to login
       toast.info(
         language === "ar"
-          ? "الرجاء إدخال بريدك الإلكتروني أولاً في صفحة التقييم"
-          : "Please enter your email on the assessment page first"
+          ? "الرجاء تسجيل الدخول لعرض النتائج السابقة"
+          : "Please login to view previous assessments"
       );
-      router.push("/financial-clinic");
+      router.push("/financial-clinic/login");
       return;
     }
 
@@ -51,8 +65,8 @@ export function HomepageHeader() {
       if (response.ok) {
         const data = await response.json();
         if (data && data.length > 0) {
-          // User has results, navigate to results page (latest)
-          router.push("/financial-clinic/results");
+          // User has results, navigate to Score History page
+          router.push("/financial-clinic/history");
         } else {
           toast.info(
             language === "ar"
