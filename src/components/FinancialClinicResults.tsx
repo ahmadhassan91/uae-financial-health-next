@@ -93,6 +93,18 @@ export function FinancialClinicResults({
     return language === "ar" ? desc?.ar || "" : desc?.en || "";
   };
 
+  const getScoreBandText = (score: number): string => {
+    if (score >= 80) {
+      return language === "ar" ? "ممتاز" : "Excellent";
+    } else if (score >= 60) {
+      return language === "ar" ? "جيد" : "Good";
+    } else if (score >= 30) {
+      return language === "ar" ? "متوسط" : "Fair";
+    } else {
+      return language === "ar" ? "يحتاج إلى تحسين" : "Needs Improvement";
+    }
+  };
+
   const translateInsightCategory = (category: string): string => {
     // Map English insight category names to Arabic
     const categoryMap: Record<string, string> = {
@@ -151,6 +163,22 @@ export function FinancialClinicResults({
 
         {/* Score Display */}
         <div className="flex flex-col w-full max-w-[697px] items-center gap-3 md:gap-4 px-4">
+          <div 
+            className="font-semibold text-xl md:text-2xl lg:text-3xl text-center tracking-[0] leading-tight"
+            style={{
+              color:
+                result.total_score >= 80
+                  ? "#6cc922"
+                  : result.total_score >= 60
+                  ? "#fca924"
+                  : result.total_score >= 30
+                  ? "#fe6521"
+                  : "#f00c01",
+            }}
+          >
+            {getScoreBandText(result.total_score)}
+          </div>
+          
           <div
             className="font-normal text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]"
             style={{
