@@ -1,11 +1,36 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, ComposedChart, Scatter } from 'recharts';
-import { ArrowLeft, ChartLineUp, ChartLineDown, FileText, EnvelopeSimple } from '@phosphor-icons/react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  ComposedChart,
+  Scatter,
+  Legend,
+} from "recharts";
+import {
+  ArrowLeft,
+  ChartLineUp,
+  ChartLineDown,
+  FileText,
+  EnvelopeSimple,
+} from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface FinancialClinicResponse {
   id: number;
@@ -27,11 +52,11 @@ interface FinancialClinicScoreHistoryProps {
   userEmail?: string;
 }
 
-export function FinancialClinicScoreHistory({ 
-  scoreHistory, 
-  onBack, 
-  onLogout, 
-  userEmail 
+export function FinancialClinicScoreHistory({
+  scoreHistory,
+  onBack,
+  onLogout,
+  userEmail,
 }: FinancialClinicScoreHistoryProps) {
   const router = useRouter();
 
@@ -42,7 +67,8 @@ export function FinancialClinicScoreHistory({
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-4">Score History</h1>
             <p className="text-muted-foreground mb-8">
-              No previous assessments found. Complete your first assessment to start tracking your progress.
+              No previous assessments found. Complete your first assessment to
+              start tracking your progress.
             </p>
             <Button onClick={onBack}>
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -56,131 +82,200 @@ export function FinancialClinicScoreHistory({
 
   const latestScore = scoreHistory[0];
   const previousScore = scoreHistory[1];
-  const scoreDiff = previousScore ? latestScore.overall_score - previousScore.overall_score : 0;
+  const scoreDiff = previousScore
+    ? latestScore.overall_score - previousScore.overall_score
+    : 0;
 
   // Prepare data for line chart (latest on the right)
   const chartData = scoreHistory
     .slice(0, 10) // Show last 10 scores
     .reverse() // Reverse to have oldest first
     .map((response, index) => {
-      const assessmentNumber = scoreHistory.length - scoreHistory.slice(0, 10).length + index + 1;
+      const assessmentNumber =
+        scoreHistory.length - scoreHistory.slice(0, 10).length + index + 1;
       return {
         assessment: `#${assessmentNumber}`,
         score: response.overall_score,
-        date: new Date(response.created_at).toLocaleDateString()
+        date: new Date(response.created_at).toLocaleDateString(),
       };
     });
 
   // Prepare histogram data for latest score using available fields
   const histogramData = [
-    { factor: "Budgeting", score: latestScore.budgeting_score || 0, fullMark: 100 },
+    {
+      factor: "Budgeting",
+      score: latestScore.budgeting_score || 0,
+      fullMark: 100,
+    },
     { factor: "Savings", score: latestScore.savings_score || 0, fullMark: 100 },
-    { factor: "Debt Mgmt", score: latestScore.debt_management_score || 0, fullMark: 100 },
-    { factor: "Planning", score: latestScore.financial_planning_score || 0, fullMark: 100 },
-    { factor: "Investment", score: latestScore.investment_knowledge_score || 0, fullMark: 100 },
+    {
+      factor: "Debt Mgmt",
+      score: latestScore.debt_management_score || 0,
+      fullMark: 100,
+    },
+    {
+      factor: "Planning",
+      score: latestScore.financial_planning_score || 0,
+      fullMark: 100,
+    },
+    {
+      factor: "Investment",
+      score: latestScore.investment_knowledge_score || 0,
+      fullMark: 100,
+    },
   ];
 
-  // Find the highest score to show a dot only on that pillar
-  const maxScore = Math.max(...histogramData.map(d => d.score));
-  const histogramDataWithDot = histogramData.map(item => ({
-    ...item,
-    highlight: item.score === maxScore ? item.score : null
-  }));
+  // Calculate average scores across all assessments for comparison
+  const averageScores = {
+    budgeting:
+      scoreHistory.reduce((sum, s) => sum + (s.budgeting_score || 0), 0) /
+      scoreHistory.length,
+    savings:
+      scoreHistory.reduce((sum, s) => sum + (s.savings_score || 0), 0) /
+      scoreHistory.length,
+    debt:
+      scoreHistory.reduce((sum, s) => sum + (s.debt_management_score || 0), 0) /
+      scoreHistory.length,
+    planning:
+      scoreHistory.reduce(
+        (sum, s) => sum + (s.financial_planning_score || 0),
+        0
+      ) / scoreHistory.length,
+    investment:
+      scoreHistory.reduce(
+        (sum, s) => sum + (s.investment_knowledge_score || 0),
+        0
+      ) / scoreHistory.length,
+  };
+
+  // Add average scores to histogram data
+  const histogramDataWithAverage = [
+    {
+      factor: "Budgeting",
+      score: latestScore.budgeting_score || 0,
+      average: averageScores.budgeting,
+      fullMark: 100,
+    },
+    {
+      factor: "Savings",
+      score: latestScore.savings_score || 0,
+      average: averageScores.savings,
+      fullMark: 100,
+    },
+    {
+      factor: "Debt Mgmt",
+      score: latestScore.debt_management_score || 0,
+      average: averageScores.debt,
+      fullMark: 100,
+    },
+    {
+      factor: "Planning",
+      score: latestScore.financial_planning_score || 0,
+      average: averageScores.planning,
+      fullMark: 100,
+    },
+    {
+      factor: "Investment",
+      score: latestScore.investment_knowledge_score || 0,
+      average: averageScores.investment,
+      fullMark: 100,
+    },
+  ];
 
   const handleDownloadPDF = async (responseId: number) => {
     try {
-      toast.info('Generating PDF report...');
-      
+      toast.info("Generating PDF report...");
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/financial-clinic/report/pdf`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             survey_response_id: responseId,
-            language: 'en'
-          })
+            language: "en",
+          }),
         }
       );
 
       if (response.ok) {
-        const contentType = response.headers.get('Content-Type');
-        
-        if (contentType?.includes('application/pdf')) {
+        const contentType = response.headers.get("Content-Type");
+
+        if (contentType?.includes("application/pdf")) {
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
+          const a = document.createElement("a");
           a.href = url;
           a.download = `financial-clinic-report-${responseId}.pdf`;
           document.body.appendChild(a);
           a.click();
           window.URL.revokeObjectURL(url);
           document.body.removeChild(a);
-          toast.success('PDF downloaded successfully!');
+          toast.success("PDF downloaded successfully!");
         } else {
           const data = await response.json();
-          toast.warning(data.message || 'PDF generation in progress');
+          toast.warning(data.message || "PDF generation in progress");
         }
       } else {
-        toast.error('Failed to generate PDF');
+        toast.error("Failed to generate PDF");
       }
     } catch (error) {
-      console.error('PDF download error:', error);
-      toast.error('Failed to download PDF');
+      console.error("PDF download error:", error);
+      toast.error("Failed to download PDF");
     }
   };
 
   const handleEmailReport = async (responseId: number) => {
     if (!userEmail) {
-      toast.error('Email address not available');
+      toast.error("Email address not available");
       return;
     }
 
     try {
-      toast.info('Sending email report...');
-      
+      toast.info("Sending email report...");
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/financial-clinic/report/email`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             survey_response_id: responseId,
             email: userEmail,
-            language: 'en'
-          })
+            language: "en",
+          }),
         }
       );
 
       const data = await response.json();
-      
+
       if (response.ok && data.success) {
-        toast.success('Email sent successfully!');
+        toast.success("Email sent successfully!");
       } else {
-        toast.warning(data.message || 'Email service being configured');
+        toast.warning(data.message || "Email service being configured");
       }
     } catch (error) {
-      console.error('Email error:', error);
-      toast.error('Failed to send email');
+      console.error("Email error:", error);
+      toast.error("Failed to send email");
     }
   };
 
   const getStatusColor = (statusBand: string) => {
     switch (statusBand.toLowerCase()) {
-      case 'excellent':
-        return 'text-green-600';
-      case 'good':
-        return 'text-blue-600';
-      case 'needs improvement':
-        return 'text-amber-600';
-      case 'at risk':
-        return 'text-red-600';
+      case "excellent":
+        return "text-green-600";
+      case "good":
+        return "text-blue-600";
+      case "needs improvement":
+        return "text-amber-600";
+      case "at risk":
+        return "text-red-600";
       default:
-        return 'text-muted-foreground';
+        return "text-muted-foreground";
     }
   };
 
@@ -190,11 +285,18 @@ export function FinancialClinicScoreHistory({
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
           <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-            <Button variant="outline" onClick={onBack} size="sm" className="shrink-0">
+            <Button
+              variant="outline"
+              onClick={onBack}
+              size="sm"
+              className="shrink-0"
+            >
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">Score History</h1>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">
+                Score History
+              </h1>
               <p className="text-xs sm:text-sm text-muted-foreground">
                 Track your financial health progress over time
                 {userEmail && (
@@ -205,9 +307,14 @@ export function FinancialClinicScoreHistory({
               </p>
             </div>
           </div>
-          
+
           {onLogout && (
-            <Button variant="outline" onClick={onLogout} size="sm" className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              onClick={onLogout}
+              size="sm"
+              className="w-full sm:w-auto"
+            >
               Sign Out
             </Button>
           )}
@@ -221,26 +328,43 @@ export function FinancialClinicScoreHistory({
                 <div className="text-3xl sm:text-4xl font-bold text-primary mb-2">
                   {Math.round(latestScore.overall_score)}
                 </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Current Score</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">
+                  Current Score
+                </div>
               </div>
-              
+
               {previousScore && (
                 <div className="text-center">
-                  <div className={`flex items-center justify-center gap-1 sm:gap-2 text-xl sm:text-2xl font-bold mb-2 ${
-                    scoreDiff > 0 ? 'text-green-600' : scoreDiff < 0 ? 'text-red-600' : 'text-muted-foreground'
-                  }`}>
-                    {scoreDiff > 0 ? <ChartLineUp className="w-5 h-5 sm:w-6 sm:h-6" /> : scoreDiff < 0 ? <ChartLineDown className="w-5 h-5 sm:w-6 sm:h-6" /> : null}
-                    {scoreDiff > 0 ? '+' : ''}{Math.round(scoreDiff)}
+                  <div
+                    className={`flex items-center justify-center gap-1 sm:gap-2 text-xl sm:text-2xl font-bold mb-2 ${
+                      scoreDiff > 0
+                        ? "text-green-600"
+                        : scoreDiff < 0
+                        ? "text-red-600"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {scoreDiff > 0 ? (
+                      <ChartLineUp className="w-5 h-5 sm:w-6 sm:h-6" />
+                    ) : scoreDiff < 0 ? (
+                      <ChartLineDown className="w-5 h-5 sm:w-6 sm:h-6" />
+                    ) : null}
+                    {scoreDiff > 0 ? "+" : ""}
+                    {Math.round(scoreDiff)}
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Change from Previous</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">
+                    Change from Previous
+                  </div>
                 </div>
               )}
-              
+
               <div className="text-center">
                 <div className="text-xl sm:text-2xl font-bold mb-2">
                   {scoreHistory.length}
                 </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Total Assessments</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">
+                  Total Assessments
+                </div>
               </div>
             </div>
           </CardContent>
@@ -251,7 +375,9 @@ export function FinancialClinicScoreHistory({
           {/* Score Trend */}
           <Card>
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="text-base sm:text-lg">Score Trend</CardTitle>
+              <CardTitle className="text-base sm:text-lg">
+                Score Trend
+              </CardTitle>
               <CardDescription className="text-xs sm:text-sm">
                 Your financial health score progression over time
               </CardDescription>
@@ -261,24 +387,22 @@ export function FinancialClinicScoreHistory({
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="assessment" 
-                      tick={{ fontSize: 10 }}
-                    />
-                    <YAxis 
-                      domain={[0, 100]}
-                      tick={{ fontSize: 10 }}
-                    />
-                    <Tooltip 
+                    <XAxis dataKey="assessment" tick={{ fontSize: 10 }} />
+                    <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
+                    <Tooltip
                       labelFormatter={(label) => `Assessment ${label}`}
-                      formatter={(value, name) => [value, 'Score']}
+                      formatter={(value, name) => [value, "Score"]}
                     />
-                    <Line 
-                      type="monotone" 
-                      dataKey="score" 
-                      stroke="hsl(var(--primary))" 
+                    <Line
+                      type="monotone"
+                      dataKey="score"
+                      stroke="hsl(var(--primary))"
                       strokeWidth={2}
-                      dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 3 }}
+                      dot={{
+                        fill: "hsl(var(--primary))",
+                        strokeWidth: 2,
+                        r: 3,
+                      }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -289,7 +413,9 @@ export function FinancialClinicScoreHistory({
           {/* Category Breakdown */}
           <Card>
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="text-base sm:text-lg">Current Pillar Analysis</CardTitle>
+              <CardTitle className="text-base sm:text-lg">
+                Current Pillar Analysis
+              </CardTitle>
               <CardDescription className="text-xs sm:text-sm">
                 Breakdown of your latest score by the 6 financial health pillars
               </CardDescription>
@@ -297,39 +423,63 @@ export function FinancialClinicScoreHistory({
             <CardContent className="p-4 sm:p-6">
               <div className="h-64 sm:h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={histogramDataWithDot} margin={{ top: 20, right: 10, left: 0, bottom: 80 }}>
+                  <ComposedChart
+                    data={histogramDataWithAverage}
+                    margin={{ top: 20, right: 10, left: 0, bottom: 80 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="factor" 
+                    <XAxis
+                      dataKey="factor"
                       tick={{ fontSize: 9 }}
                       angle={-45}
                       textAnchor="end"
                       height={100}
                     />
-                    <YAxis 
+                    <YAxis
                       domain={[0, 100]}
                       tick={{ fontSize: 10 }}
-                      label={{ value: 'Score (%)', angle: -90, position: 'insideLeft' }}
+                      label={{
+                        value: "Score (%)",
+                        angle: -90,
+                        position: "insideLeft",
+                      }}
                     />
-                    <Tooltip 
+                    <Tooltip
                       formatter={(value, name) => {
-                        if (name === 'highlight') return null; // Don't show highlight in tooltip
-                        return [`${Math.round(Number(value))}%`, 'Score'];
+                        if (name === "Current Score")
+                          return [
+                            `${Math.round(Number(value))}%`,
+                            "Current Score",
+                          ];
+                        if (name === "Average Score")
+                          return [
+                            `${Math.round(Number(value))}%`,
+                            "Average Score",
+                          ];
+                        return null;
                       }}
                       labelFormatter={(label) => `Category: ${label}`}
                     />
+                    <Legend
+                      verticalAlign="top"
+                      height={36}
+                      iconType="circle"
+                      wrapperStyle={{ fontSize: "12px" }}
+                    />
                     <Bar
                       dataKey="score"
-                      fill="hsl(var(--primary))"
+                      fill="#3b82f6"
+                      name="Current Score"
                       radius={[4, 4, 0, 0]}
                     />
-                    <Scatter
-                      dataKey="highlight"
-                      fill="#22c55e"
-                      stroke="#16a34a"
-                      strokeWidth={2}
-                      r={8}
-                      shape="circle"
+                    <Line
+                      type="monotone"
+                      dataKey="average"
+                      stroke="#f97316"
+                      strokeWidth={3}
+                      name="Average Score"
+                      dot={{ fill: "#f97316", strokeWidth: 2, r: 6 }}
+                      activeDot={{ r: 8 }}
                     />
                   </ComposedChart>
                 </ResponsiveContainer>
@@ -341,7 +491,9 @@ export function FinancialClinicScoreHistory({
         {/* Assessment History */}
         <Card>
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-base sm:text-lg">Assessment History</CardTitle>
+            <CardTitle className="text-base sm:text-lg">
+              Assessment History
+            </CardTitle>
             <CardDescription className="text-xs sm:text-sm">
               Detailed view of all your completed assessments
             </CardDescription>
@@ -350,50 +502,78 @@ export function FinancialClinicScoreHistory({
             <div className="space-y-3 sm:space-y-4">
               {scoreHistory.map((response, index) => {
                 const prevResponse = scoreHistory[index + 1];
-                const diff = prevResponse ? response.overall_score - prevResponse.overall_score : 0;
-                
+                const diff = prevResponse
+                  ? response.overall_score - prevResponse.overall_score
+                  : 0;
+
                 return (
-                  <div key={response.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+                  <div
+                    key={response.id}
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                  >
                     <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                       <div className="text-center shrink-0">
-                        <div className="text-xl sm:text-2xl font-bold">{Math.round(response.overall_score)}</div>
+                        <div className="text-xl sm:text-2xl font-bold">
+                          {Math.round(response.overall_score)}
+                        </div>
                         <div className="text-[10px] sm:text-xs text-muted-foreground">
-                          {new Date(response.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {new Date(response.created_at).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric" }
+                          )}
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-wrap items-center gap-2">
                         {index === 0 && (
-                          <Badge variant="default" className="text-[10px] sm:text-xs">Latest</Badge>
+                          <Badge
+                            variant="default"
+                            className="text-[10px] sm:text-xs"
+                          >
+                            Latest
+                          </Badge>
                         )}
-                        
+
                         {response.risk_tolerance && (
-                          <Badge variant="outline" className="text-[10px] sm:text-xs">
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] sm:text-xs"
+                          >
                             {response.risk_tolerance}
                           </Badge>
                         )}
-                        
+
                         {diff !== 0 && (
-                          <div className={`flex items-center gap-1 text-xs sm:text-sm ${
-                            diff > 0 ? 'text-green-600' : 'text-red-600'
-                          }`}>
-                            {diff > 0 ? <ChartLineUp className="w-3 h-3 sm:w-4 sm:h-4" /> : <ChartLineDown className="w-3 h-3 sm:w-4 sm:h-4" />}
-                            {diff > 0 ? '+' : ''}{Math.round(diff)}
+                          <div
+                            className={`flex items-center gap-1 text-xs sm:text-sm ${
+                              diff > 0 ? "text-green-600" : "text-red-600"
+                            }`}
+                          >
+                            {diff > 0 ? (
+                              <ChartLineUp className="w-3 h-3 sm:w-4 sm:h-4" />
+                            ) : (
+                              <ChartLineDown className="w-3 h-3 sm:w-4 sm:h-4" />
+                            )}
+                            {diff > 0 ? "+" : ""}
+                            {Math.round(diff)}
                           </div>
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                       <div className="text-left sm:text-right sm:mr-4">
                         <div className="text-xs sm:text-sm font-medium">
                           Assessment #{scoreHistory.length - index}
                         </div>
                         <div className="text-[10px] sm:text-xs text-muted-foreground">
-                          {new Date(response.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(response.created_at).toLocaleTimeString(
+                            "en-US",
+                            { hour: "2-digit", minute: "2-digit" }
+                          )}
                         </div>
                       </div>
-                      
+
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
@@ -404,7 +584,7 @@ export function FinancialClinicScoreHistory({
                           <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span className="hidden sm:inline">PDF</span>
                         </Button>
-                        
+
                         <Button
                           variant="outline"
                           size="sm"

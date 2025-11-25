@@ -279,6 +279,66 @@ export default function FinancialClinicPage({
     );
   };
 
+  const handleViewPreviousResults = async () => {
+    // Check if user has email in profile or localStorage
+    const storedProfile = localStorage.getItem("financialClinicProfile");
+    let email = profile.email;
+
+    if (!email && storedProfile) {
+      try {
+        const parsed = JSON.parse(storedProfile);
+        email = parsed.email;
+      } catch (e) {
+        console.error("Failed to parse stored profile");
+      }
+    }
+
+    if (!email) {
+      toast.error(
+        language === "ar"
+          ? "الرجاء إدخال بريدك الإلكتروني أولاً"
+          : "Please enter your email address first"
+      );
+      return;
+    }
+
+    // Check if user has any results
+    try {
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/financial-clinic/history/${encodeURIComponent(email)}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.length > 0) {
+          // User has results, navigate to history
+          router.push("/financial-clinic/history");
+        } else {
+          toast.info(
+            language === "ar"
+              ? "لا توجد نتائج سابقة. يرجى إكمال التقييم أولاً"
+              : "No previous results found. Please complete the assessment first"
+          );
+        }
+      } else {
+        toast.info(
+          language === "ar"
+            ? "لا توجد نتائج سابقة. يرجى إكمال التقييم أولاً"
+            : "No previous results found. Please complete the assessment first"
+        );
+      }
+    } catch (error) {
+      console.error("Error checking for results:", error);
+      toast.error(
+        language === "ar"
+          ? "فشل في التحقق من النتائج السابقة"
+          : "Failed to check for previous results"
+      );
+    }
+  };
+
   const handleStartSurvey = () => {
     // Clear all errors first
     setNameError("");
@@ -1132,15 +1192,29 @@ export default function FinancialClinicPage({
           </div>
         </div>
 
-        {/* Submit Button */}
-        <Button
-          onClick={handleStartSurvey}
-          className="h-auto mt-6 md:mt-12 px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 w-full md:w-auto"
-        >
-          <span className="font-[family-name:var(--font-poppins)] font-normal text-white text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
-            {language === "ar" ? "ابدأ فحصي" : "START MY CHECKUP"}
-          </span>
-        </Button>
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row gap-4 mt-6 md:mt-12 w-full md:w-auto">
+          <Button
+            onClick={handleStartSurvey}
+            className="h-auto px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 w-full md:w-auto"
+          >
+            <span className="font-[family-name:var(--font-poppins)] font-normal text-white text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
+              {language === "ar" ? "ابدأ فحصي" : "START MY CHECKUP"}
+            </span>
+          </Button>
+
+          <Button
+            onClick={handleViewPreviousResults}
+            variant="outline"
+            className="h-auto px-7 py-2.5 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto"
+          >
+            <span className="font-[family-name:var(--font-poppins)] font-normal text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
+              {language === "ar"
+                ? "عرض النتائج السابقة"
+                : "VIEW PREVIOUS RESULTS"}
+            </span>
+          </Button>
+        </div>
       </main>
 
       {/* Footer */}

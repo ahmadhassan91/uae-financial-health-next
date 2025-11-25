@@ -50,7 +50,7 @@ export function ConsultationRequestModal({
     email: "",
     phone_number: "",
     message: "",
-    preferred_contact_method: "email",
+    preferred_contact_method: "phone",
     preferred_time: "morning",
   });
 
@@ -219,12 +219,12 @@ export function ConsultationRequestModal({
           <div className="mb-6">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              {language === "ar" ? "تم الإرسال بنجاح!" : "Successfully Sent!"}
+              {language === "ar" ? "تم الإرسال بنجاح!" : "Request Submitted!"}
             </h3>
             <p className="text-gray-600">
               {language === "ar"
                 ? "شكراً لك على طلب الاستشارة. سيتواصل معك فريقنا خلال يوم عمل واحد."
-                : "Thank you for your consultation request. Our team will contact you within one business day."}
+                : "TThank you for your consultation request. Our team will contact you shortly."}
             </p>
           </div>
           <Button
@@ -252,7 +252,7 @@ export function ConsultationRequestModal({
             <p className="text-sm text-gray-600 mt-1">
               {language === "ar"
                 ? "احصل على استشارة شخصية مع خبرائنا الماليين"
-                : "Get personalized advice from our financial experts"}
+                : "Please fill in the below details & our customer service representative will contact you"}
             </p>
           </div>
           <Button
@@ -345,16 +345,6 @@ export function ConsultationRequestModal({
               }
               className="flex flex-col space-y-2"
             >
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <RadioGroupItem value="email" id="email-method" />
-                <Label
-                  htmlFor="email-method"
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <Mail className="w-4 h-4" />
-                  {language === "ar" ? "البريد الإلكتروني" : "Email"}
-                </Label>
-              </div>
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <RadioGroupItem value="phone" id="phone-method" />
                 <Label
@@ -480,15 +470,6 @@ export function ConsultationRequestModal({
             </Button>
           </div>
         </form>
-
-        {/* Disclaimer */}
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-          <p className="text-xs text-gray-600 text-center">
-            {language === "ar"
-              ? "سيتواصل معك فريق الاستشارات المالية خلال يوم عمل واحد. الاستشارة مجانية تماماً."
-              : "Our financial advisory team will contact you within one business day. The consultation is completely free."}
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -242,8 +242,32 @@ export function FinancialClinicResults({
             className="flex flex-col items-center px-4"
             style={{ width: "100%" }}
           >
-            {Object.entries(result.category_scores).map(
-              ([categoryName, category]: [string, any], index) => {
+            {Object.entries(result.category_scores)
+              .sort(([nameA, a]: [string, any], [nameB, b]: [string, any]) => {
+                // Sort by percentage (lowest to highest) - areas needing most attention first
+                const percentageA = (a.score / a.max_possible) * 100;
+                const percentageB = (b.score / b.max_possible) * 100;
+
+                // If percentages are different, sort by percentage
+                if (Math.abs(percentageA - percentageB) > 0.01) {
+                  return percentageA - percentageB;
+                }
+
+                // If percentages are the same, sort by predefined order
+                const categoryOrder = [
+                  "Income Stream",
+                  "Emergency Savings",
+                  "Savings Habit",
+                  "Retirement Planning",
+                  "Debt Management",
+                  "Protecting Your Family",
+                ];
+
+                const indexA = categoryOrder.indexOf(nameA);
+                const indexB = categoryOrder.indexOf(nameB);
+                return indexA - indexB;
+              })
+              .map(([categoryName, category]: [string, any], index) => {
                 const percentage =
                   (category.score / category.max_possible) * 100;
 
@@ -310,8 +334,7 @@ export function FinancialClinicResults({
                     )}
                   </div>
                 );
-              }
-            )}
+              })}
           </div>
         </div>
 
