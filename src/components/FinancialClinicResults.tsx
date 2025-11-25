@@ -93,6 +93,18 @@ export function FinancialClinicResults({
     return language === "ar" ? desc?.ar || "" : desc?.en || "";
   };
 
+  const getScoreBandText = (score: number): string => {
+    if (score >= 80) {
+      return language === "ar" ? "ممتاز" : "Excellent";
+    } else if (score >= 60) {
+      return language === "ar" ? "جيد" : "Good";
+    } else if (score >= 30) {
+      return language === "ar" ? "متوسط" : "Fair";
+    } else {
+      return language === "ar" ? "يحتاج إلى تحسين" : "Needs Improvement";
+    }
+  };
+
   const translateInsightCategory = (category: string): string => {
     // Map English insight category names to Arabic
     const categoryMap: Record<string, string> = {
@@ -129,7 +141,7 @@ export function FinancialClinicResults({
 
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "هذه لمحة سريعة، نظرة واضحة على مدى صحة أموالك اليوم"
+                ? "هذه لمحة عن وضعكم، عرضٌ واضح لمدى صحّة أوضاعكم المالية اليوم."
                 : "This is your snapshot; a clear view of how healthy your finances are today."}
             </p>
           </div>
@@ -137,13 +149,13 @@ export function FinancialClinicResults({
           <div className="flex flex-col items-center justify-center gap-1 md:gap-[3px] w-full px-4">
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "تعكس نتيجتك كيفية أدائك عبر المجالات الرئيسية."
+                ? "يعكس هذا التقييم أداءكم في خمسة مجالات رئيسية."
                 : "Your score reflects how you're doing across key areas."}
             </p>
 
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "استمر في تحسين عاداتك، وسوف تنمو رفاهيتك المالية بشكل أقوى مع مرور الوقت."
+                ? "استمرّوا في تحسين سلوكياتكم، وستلاحظون تحسّن جودة حياتكم المالية مع الوقت"
                 : "Keep improving your habits, and your financial wellbeing will grow stronger over time."}
             </p>
           </div>
@@ -151,6 +163,22 @@ export function FinancialClinicResults({
 
         {/* Score Display */}
         <div className="flex flex-col w-full max-w-[697px] items-center gap-3 md:gap-4 px-4">
+          <div 
+            className="font-semibold text-xl md:text-2xl lg:text-3xl text-center tracking-[0] leading-tight"
+            style={{
+              color:
+                result.total_score >= 80
+                  ? "#6cc922"
+                  : result.total_score >= 60
+                  ? "#fca924"
+                  : result.total_score >= 30
+                  ? "#fe6521"
+                  : "#f00c01",
+            }}
+          >
+            {getScoreBandText(result.total_score)}
+          </div>
+          
           <div
             className="font-normal text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]"
             style={{
@@ -242,8 +270,32 @@ export function FinancialClinicResults({
             className="flex flex-col items-center px-4"
             style={{ width: "100%" }}
           >
-            {Object.entries(result.category_scores).map(
-              ([categoryName, category]: [string, any], index) => {
+            {Object.entries(result.category_scores)
+              .sort(([nameA, a]: [string, any], [nameB, b]: [string, any]) => {
+                // Sort by percentage (lowest to highest) - areas needing most attention first
+                const percentageA = (a.score / a.max_possible) * 100;
+                const percentageB = (b.score / b.max_possible) * 100;
+
+                // If percentages are different, sort by percentage
+                if (Math.abs(percentageA - percentageB) > 0.01) {
+                  return percentageA - percentageB;
+                }
+
+                // If percentages are the same, sort by predefined order
+                const categoryOrder = [
+                  "Income Stream",
+                  "Emergency Savings",
+                  "Savings Habit",
+                  "Retirement Planning",
+                  "Debt Management",
+                  "Protecting Your Family",
+                ];
+
+                const indexA = categoryOrder.indexOf(nameA);
+                const indexB = categoryOrder.indexOf(nameB);
+                return indexA - indexB;
+              })
+              .map(([categoryName, category]: [string, any], index) => {
                 const percentage =
                   (category.score / category.max_possible) * 100;
 
@@ -310,8 +362,7 @@ export function FinancialClinicResults({
                     )}
                   </div>
                 );
-              }
-            )}
+              })}
           </div>
         </div>
 
@@ -319,13 +370,13 @@ export function FinancialClinicResults({
         <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
           <h2 className="font-semibold text-[#437749] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
             {language === "ar"
-              ? "خطة عملك الشخصية"
+              ? "خطة العمل المعدّة خصيصاً لكم"
               : "Your Personalized Action Plan"}
           </h2>
 
           <p className="font-normal text-sm md:text-base leading-5 md:leading-6 text-[#a1aeb7] text-center tracking-[0] max-w-[600px]">
             {language === "ar"
-              ? "التغييرات الصغيرة تحدث فرقًا كبيرًا. إليك كيفية تقوية نتيجتك."
+              ? "التغييرات البسيطة تُحدث فارقاً كبيراً. لتحسين نتيجتكم، ننصحكم بما يلي"
               : "Small changes make big differences. Here's how to strengthen your score."}
           </p>
         </div>

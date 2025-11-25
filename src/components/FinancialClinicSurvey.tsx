@@ -223,11 +223,11 @@ export function FinancialClinicSurvey({
         {/* Title Section */}
         <div className="flex flex-col items-center gap-1.5 mb-4 md:mb-6 lg:mb-8">
           <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
-            {language === "ar" ? "ملف العميل" : "Customer Profile"}
+            {language === "ar" ? "صفحة الفحص" : "Checkup Page"}
           </h1>
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
             {language === "ar"
-              ? "هل أنت مستعد لبدء الفحص الخاص بك؟"
+              ? "هل أنتم مستعدون لبدء التقييم؟"
               : "Ready to begin your checkup?"}
           </p>
         </div>
@@ -236,7 +236,7 @@ export function FinancialClinicSurvey({
         <div className="w-full max-w-[833px] mb-4 md:mb-6 lg:mb-8 px-2">
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
             {language === "ar"
-              ? "مرحباً بك في فحص العيادة المالية! دعنا نأخذ بضع دقائق لفهم عاداتك المالية - بدون أحكام، فقط رؤى."
+              ? "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
               : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits—no judgments, just insights."}
           </p>
         </div>
@@ -254,7 +254,9 @@ export function FinancialClinicSurvey({
             <div className="flex flex-col items-center justify-center gap-[3px]">
               <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
                 {language === "ar"
-                  ? `أنت ${Math.round(progress)}٪ من خلال فحصك - تقدم رائع!`
+                  ? `لقد أجَبْتم عن %${Math.round(
+                      progress
+                    )} من أسئلة التقييم - تقدّم ممتاز`
                   : `You're ${Math.round(
                       progress
                     )}% through your checkup—great progress!`}
@@ -268,7 +270,7 @@ export function FinancialClinicSurvey({
           <div className="w-full max-w-[1380px] px-1 sm:px-2">
             <h2
               className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${
-                isRTL ? "text-right" : "text-left"
+                isRTL ? "flex-row-reverse" : "flex-row"
               }`}
             >
               {language === "ar" ? "فئة الأسئلة: " : "Questions Category: "}
@@ -376,7 +378,7 @@ export function FinancialClinicSurvey({
           className={`flex flex-col sm:flex-row ${
             currentStep > 0 ? "sm:justify-between" : "sm:justify-end"
           } items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${
-            isRTL ? "sm:flex-row-reverse" : ""
+            isRTL ? "flex-row-reverse" : "flex-row"
           }`}
         >
           {/* Previous Button - Only show if not on first category */}

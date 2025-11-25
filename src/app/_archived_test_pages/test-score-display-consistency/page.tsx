@@ -1,23 +1,29 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle, XCircle, Warning } from '@phosphor-icons/react';
-import { ScoreCalculation, PillarScore } from '@/lib/types';
-import { PILLAR_DEFINITIONS } from '@/lib/survey-data';
-import { 
-  calculatePillarPercentage, 
-  formatPillarScore, 
-  formatPercentage, 
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CheckCircle, XCircle, Warning } from "@phosphor-icons/react";
+import { ScoreCalculation, PillarScore } from "@/lib/types";
+import { PILLAR_DEFINITIONS } from "@/lib/survey-data";
+import {
+  calculatePillarPercentage,
+  formatPillarScore,
+  formatPercentage,
   getPillarDisplayData,
-  isValidPillarScore 
-} from '@/lib/score-display-utils';
-import { ScoreResult } from '@/components/ScoreResult';
-import { ScoreHistory } from '@/components/ScoreHistory';
-import { PillarHistogram } from '@/components/admin/PillarHistogram';
+  isValidPillarScore,
+} from "@/lib/score-display-utils";
+import { ScoreResult } from "@/components/ScoreResult";
+import { ScoreHistory } from "@/components/ScoreHistory";
+import { PillarHistogram } from "@/components/admin/PillarHistogram";
 
 interface TestResult {
   name: string;
@@ -42,24 +48,24 @@ export default function ScoreDisplayConsistencyTest() {
     {
       name: "Perfect Scores",
       description: "All pillars at maximum score (5/5)",
-      pillarScores: Object.keys(PILLAR_DEFINITIONS).map(pillar => ({
+      pillarScores: Object.keys(PILLAR_DEFINITIONS).map((pillar) => ({
         pillar,
         score: 5,
         maxScore: 5,
-        percentage: 100
+        percentage: 100,
       })),
-      expectedPercentages: Array(7).fill(100)
+      expectedPercentages: Array(7).fill(100),
     },
     {
       name: "Zero Scores",
       description: "All pillars at minimum score (0/5)",
-      pillarScores: Object.keys(PILLAR_DEFINITIONS).map(pillar => ({
+      pillarScores: Object.keys(PILLAR_DEFINITIONS).map((pillar) => ({
         pillar,
         score: 0,
         maxScore: 5,
-        percentage: 0
+        percentage: 0,
       })),
-      expectedPercentages: Array(7).fill(0)
+      expectedPercentages: Array(7).fill(0),
     },
     {
       name: "Mixed Scores",
@@ -68,42 +74,43 @@ export default function ScoreDisplayConsistencyTest() {
         pillar,
         score: (index % 5) + 1, // Scores from 1-5
         maxScore: 5,
-        percentage: ((index % 5) + 1) * 20 // 20%, 40%, 60%, 80%, 100%
+        percentage: ((index % 5) + 1) * 20, // 20%, 40%, 60%, 80%, 100%
       })),
-      expectedPercentages: [20, 40, 60, 80, 100, 20, 40]
+      expectedPercentages: [20, 40, 60, 80, 100, 20, 40],
     },
     {
       name: "Backend Percentage Priority",
       description: "Backend percentage should override calculated percentage",
-      pillarScores: Object.keys(PILLAR_DEFINITIONS).map(pillar => ({
+      pillarScores: Object.keys(PILLAR_DEFINITIONS).map((pillar) => ({
         pillar,
         score: 3.75, // Would calculate to 75%
         maxScore: 5,
-        percentage: 85 // Backend says 85%, should use this
+        percentage: 85, // Backend says 85%, should use this
       })),
-      expectedPercentages: Array(7).fill(85)
+      expectedPercentages: Array(7).fill(85),
     },
     {
       name: "Missing Backend Percentage",
-      description: "Should calculate from score/maxScore when percentage is missing",
-      pillarScores: Object.keys(PILLAR_DEFINITIONS).map(pillar => ({
+      description:
+        "Should calculate from score/maxScore when percentage is missing",
+      pillarScores: Object.keys(PILLAR_DEFINITIONS).map((pillar) => ({
         pillar,
         score: 3.75,
-        maxScore: 5
+        maxScore: 5,
         // No percentage property - should calculate 75%
       })),
-      expectedPercentages: Array(7).fill(75)
+      expectedPercentages: Array(7).fill(75),
     },
     {
       name: "Invalid MaxScore Fallback",
       description: "Should use fallback maxScore of 5 when undefined",
-      pillarScores: Object.keys(PILLAR_DEFINITIONS).map(pillar => ({
+      pillarScores: Object.keys(PILLAR_DEFINITIONS).map((pillar) => ({
         pillar,
         score: 3,
-        maxScore: undefined as any // Should fallback to 5
+        maxScore: undefined as any, // Should fallback to 5
       })),
-      expectedPercentages: Array(7).fill(60) // 3/5 = 60%
-    }
+      expectedPercentages: Array(7).fill(60), // 3/5 = 60%
+    },
   ];
 
   const runTests = async () => {
@@ -135,10 +142,10 @@ export default function ScoreDisplayConsistencyTest() {
     try {
       // Test calculatePillarPercentage
       const testPillar: PillarScore = {
-        pillar: 'financial_planning',
+        pillar: "financial_planning",
         score: 3.75,
         maxScore: 5,
-        percentage: 85
+        percentage: 85,
       };
 
       const calculatedPercentage = calculatePillarPercentage(testPillar);
@@ -147,38 +154,42 @@ export default function ScoreDisplayConsistencyTest() {
           name: "Utility Functions - Backend Percentage Priority",
           passed: false,
           message: `Expected 85%, got ${calculatedPercentage}%`,
-          details: "calculatePillarPercentage should prioritize backend percentage"
+          details:
+            "calculatePillarPercentage should prioritize backend percentage",
         };
       }
 
       // Test fallback calculation
       const testPillarNoPercentage: PillarScore = {
-        pillar: 'financial_planning',
+        pillar: "financial_planning",
         score: 3.75,
-        maxScore: 5
+        maxScore: 5,
       };
 
-      const fallbackPercentage = calculatePillarPercentage(testPillarNoPercentage);
+      const fallbackPercentage = calculatePillarPercentage(
+        testPillarNoPercentage
+      );
       if (fallbackPercentage !== 75) {
         return {
           name: "Utility Functions - Fallback Calculation",
           passed: false,
           message: `Expected 75%, got ${fallbackPercentage}%`,
-          details: "Should calculate percentage from score/maxScore when backend percentage is missing"
+          details:
+            "Should calculate percentage from score/maxScore when backend percentage is missing",
         };
       }
 
       return {
         name: "Utility Functions",
         passed: true,
-        message: "All utility functions working correctly"
+        message: "All utility functions working correctly",
       };
     } catch (error) {
       return {
         name: "Utility Functions",
         passed: false,
         message: `Error: ${error}`,
-        details: "Utility functions threw an error"
+        details: "Utility functions threw an error",
       };
     }
   };
@@ -192,14 +203,19 @@ export default function ScoreDisplayConsistencyTest() {
       { score: 5, maxScore: 5, expected: 100, name: "Perfect Score" },
       { score: 2.5, maxScore: 5, expected: 50, name: "Half Score" },
       { score: 3.75, maxScore: 5, expected: 75, name: "Decimal Score" },
-      { score: 1, maxScore: undefined, expected: 20, name: "Undefined MaxScore" }
+      {
+        score: 1,
+        maxScore: undefined,
+        expected: 20,
+        name: "Undefined MaxScore",
+      },
     ];
 
-    edgeCases.forEach(testCase => {
+    edgeCases.forEach((testCase) => {
       const pillar: PillarScore = {
-        pillar: 'test_pillar',
+        pillar: "test_pillar",
         score: testCase.score,
-        maxScore: testCase.maxScore as number
+        maxScore: testCase.maxScore as number,
       };
 
       const percentage = calculatePillarPercentage(pillar);
@@ -208,10 +224,10 @@ export default function ScoreDisplayConsistencyTest() {
       results.push({
         name: `Edge Case - ${testCase.name}`,
         passed,
-        message: passed 
+        message: passed
           ? `Correctly calculated ${testCase.expected}%`
           : `Expected ${testCase.expected}%, got ${percentage}%`,
-        details: `Score: ${testCase.score}/${testCase.maxScore || 'undefined'}`
+        details: `Score: ${testCase.score}/${testCase.maxScore || "undefined"}`,
       });
     });
 
@@ -222,27 +238,31 @@ export default function ScoreDisplayConsistencyTest() {
     const results: TestResult[] = [];
 
     // Create test data
-    const testPillarScores: PillarScore[] = Object.keys(PILLAR_DEFINITIONS).map(pillar => ({
-      pillar,
-      score: 3.75,
-      maxScore: 5,
-      percentage: 75
-    }));
+    const testPillarScores: PillarScore[] = Object.keys(PILLAR_DEFINITIONS).map(
+      (pillar) => ({
+        pillar,
+        score: 3.75,
+        maxScore: 5,
+        percentage: 75,
+      })
+    );
 
     // Test that all components would display the same percentage
-    testPillarScores.forEach(pillarScore => {
+    testPillarScores.forEach((pillarScore) => {
       const utilityPercentage = calculatePillarPercentage(pillarScore);
       const displayData = getPillarDisplayData(pillarScore);
-      
+
       const passed = utilityPercentage === displayData.score;
-      
+
       results.push({
         name: `Cross-Component Consistency - ${pillarScore.pillar}`,
         passed,
-        message: passed 
+        message: passed
           ? "Consistent across utility functions"
           : `Inconsistent: utility=${utilityPercentage}%, display=${displayData.score}%`,
-        details: `Testing ${PILLAR_DEFINITIONS[pillarScore.pillar]?.name || pillarScore.pillar}`
+        details: `Testing ${
+          PILLAR_DEFINITIONS[pillarScore.pillar]?.name || pillarScore.pillar
+        }`,
       });
     });
 
@@ -254,15 +274,17 @@ export default function ScoreDisplayConsistencyTest() {
 
     // Test valid pillar score
     const validPillar: PillarScore = {
-      pillar: 'financial_planning',
+      pillar: "financial_planning",
       score: 3.75,
-      maxScore: 5
+      maxScore: 5,
     };
 
     results.push({
       name: "Data Validation - Valid Pillar",
       passed: isValidPillarScore(validPillar),
-      message: isValidPillarScore(validPillar) ? "Valid pillar score detected" : "Failed to validate valid pillar score"
+      message: isValidPillarScore(validPillar)
+        ? "Valid pillar score detected"
+        : "Failed to validate valid pillar score",
     });
 
     // Test invalid pillar scores
@@ -270,18 +292,23 @@ export default function ScoreDisplayConsistencyTest() {
       { data: null, name: "Null Data" },
       { data: undefined, name: "Undefined Data" },
       { data: {}, name: "Empty Object" },
-      { data: { pillar: 'test' }, name: "Missing Score" },
-      { data: { pillar: 'test', score: 'invalid' }, name: "Invalid Score Type" },
-      { data: { pillar: 'test', score: NaN }, name: "NaN Score" }
+      { data: { pillar: "test" }, name: "Missing Score" },
+      {
+        data: { pillar: "test", score: "invalid" },
+        name: "Invalid Score Type",
+      },
+      { data: { pillar: "test", score: NaN }, name: "NaN Score" },
     ];
 
-    invalidCases.forEach(testCase => {
+    invalidCases.forEach((testCase) => {
       const isValid = isValidPillarScore(testCase.data);
       results.push({
         name: `Data Validation - ${testCase.name}`,
         passed: !isValid, // Should be invalid
-        message: !isValid ? "Correctly rejected invalid data" : "Failed to reject invalid data",
-        details: `Testing: ${JSON.stringify(testCase.data)}`
+        message: !isValid
+          ? "Correctly rejected invalid data"
+          : "Failed to reject invalid data",
+        details: `Testing: ${JSON.stringify(testCase.data)}`,
       });
     });
 
@@ -296,22 +323,22 @@ export default function ScoreDisplayConsistencyTest() {
         return Math.abs(calculatedPercentage - expectedPercentage) < 0.1;
       });
 
-      const allPassed = results.every(result => result);
+      const allPassed = results.every((result) => result);
 
       return {
         name: `Scenario - ${scenario.name}`,
         passed: allPassed,
-        message: allPassed 
+        message: allPassed
           ? "All pillar percentages calculated correctly"
           : "Some pillar percentages were incorrect",
-        details: scenario.description
+        details: scenario.description,
       };
     } catch (error) {
       return {
         name: `Scenario - ${scenario.name}`,
         passed: false,
         message: `Error: ${error}`,
-        details: scenario.description
+        details: scenario.description,
       };
     }
   };
@@ -324,18 +351,22 @@ export default function ScoreDisplayConsistencyTest() {
     );
   };
 
-  const passedTests = testResults.filter(result => result.passed).length;
+  const passedTests = testResults.filter((result) => result.passed).length;
   const totalTests = testResults.length;
-  const passRate = totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0;
+  const passRate =
+    totalTests > 0 ? Math.round((passedTests / totalTests) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4">
       <div className="container mx-auto max-w-6xl py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Score Display Consistency Test</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            Score Display Consistency Test
+          </h1>
           <p className="text-muted-foreground">
-            Comprehensive testing of score calculation and display consistency across all components
+            Comprehensive testing of score calculation and display consistency
+            across all components
           </p>
         </div>
 
@@ -350,8 +381,8 @@ export default function ScoreDisplayConsistencyTest() {
           <CardContent>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Button 
-                  onClick={runTests} 
+                <Button
+                  onClick={runTests}
                   disabled={isRunning}
                   className="flex items-center gap-2"
                 >
@@ -361,13 +392,21 @@ export default function ScoreDisplayConsistencyTest() {
                       Running Tests...
                     </>
                   ) : (
-                    'Run All Tests'
+                    "Run All Tests"
                   )}
                 </Button>
-                
+
                 {testResults.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <Badge variant={passRate === 100 ? "default" : passRate >= 80 ? "secondary" : "destructive"}>
+                    <Badge
+                      variant={
+                        passRate === 100
+                          ? "default"
+                          : passRate >= 80
+                          ? "secondary"
+                          : "destructive"
+                      }
+                    >
                       {passedTests}/{totalTests} Passed ({passRate}%)
                     </Badge>
                   </div>
@@ -389,12 +428,17 @@ export default function ScoreDisplayConsistencyTest() {
             <CardContent>
               <div className="space-y-4">
                 {testResults.map((result, index) => (
-                  <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 p-4 border rounded-lg"
+                  >
                     {getTestIcon(result.passed)}
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <h4 className="font-medium">{result.name}</h4>
-                        <Badge variant={result.passed ? "default" : "destructive"}>
+                        <Badge
+                          variant={result.passed ? "default" : "destructive"}
+                        >
                           {result.passed ? "PASS" : "FAIL"}
                         </Badge>
                       </div>
@@ -416,21 +460,28 @@ export default function ScoreDisplayConsistencyTest() {
 
         {/* Test Summary */}
         {testResults.length > 0 && (
-          <Alert className={passRate === 100 ? "border-green-200 bg-green-50" : passRate >= 80 ? "border-yellow-200 bg-yellow-50" : "border-red-200 bg-red-50"}>
+          <Alert
+            className={
+              passRate === 100
+                ? "border-green-200 bg-green-50"
+                : passRate >= 80
+                ? "border-yellow-200 bg-yellow-50"
+                : "border-red-200 bg-red-50"
+            }
+          >
             {passRate === 100 ? (
               <CheckCircle className="h-4 w-4 text-green-600" />
             ) : (
               <Warning className="h-4 w-4 text-yellow-600" />
             )}
             <AlertDescription>
-              <strong>Test Summary:</strong> {passedTests} out of {totalTests} tests passed ({passRate}% success rate).
-              {passRate === 100 ? (
-                " All score display components are consistent!"
-              ) : passRate >= 80 ? (
-                " Most tests passed, but some issues need attention."
-              ) : (
-                " Multiple issues detected. Score display consistency needs improvement."
-              )}
+              <strong>Test Summary:</strong> {passedTests} out of {totalTests}{" "}
+              tests passed ({passRate}% success rate).
+              {passRate === 100
+                ? " All score display components are consistent!"
+                : passRate >= 80
+                ? " Most tests passed, but some issues need attention."
+                : " Multiple issues detected. Score display consistency needs improvement."}
             </AlertDescription>
           </Alert>
         )}

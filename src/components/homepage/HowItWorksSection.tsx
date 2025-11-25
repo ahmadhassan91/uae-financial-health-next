@@ -10,27 +10,27 @@ import { consentService } from "@/services/consentService";
 const steps = [
   {
     titleEn: "Step 1: Take Your Checkup",
-    titleAr: "الخطوة 1: قم بإجراء الفحص",
+    titleAr: "الخطوة الأولى: إجراء التقييم",
     descriptionEn:
       "Answer a few simple questions about your income, savings, spending, and goals.",
     descriptionAr:
-      "أجب على بعض الأسئلة البسيطة حول دخلك ومدخراتك وإنفاقك وأهدافك.",
+      "أجيبوا على مجموعة من الأسئلة البسيطة حول دخلكم، مدخراتكم، إنفاقكم، وأهدافكم المالية.",
   },
   {
     titleEn: "Step 2: Get Your Score",
-    titleAr: "الخطوة 2: احصل على درجتك",
+    titleAr: "الخطوة الثانية: الحصول على النتيجة",
     descriptionEn:
       "See your personalized Financial Health Score with a clear breakdown of strengths and improvement areas.",
     descriptionAr:
-      "شاهد درجة صحتك المالية الشخصية مع تفصيل واضح لنقاط القوة ومجالات التحسين.",
+      "اطّلعوا على التقييم الشخصي لصحّة أوضاعكم المالية، مع عرض واضح لنقاط القوة ومجالات التحسين الممكنة.",
   },
   {
     titleEn: "Step 3: Take Action",
-    titleAr: "الخطوة 3: اتخذ إجراءً",
+    titleAr: "الخطوة الثالثة: اتّخاذ الخطوات المناسبة",
     descriptionEn:
       "Receive tailored recommendations from financial habits to National Bonds solutions that can help you grow your wealth securely.",
     descriptionAr:
-      "احصل على توصيات مخصصة من العادات المالية إلى حلول صكوك الوطنية التي يمكن أن تساعدك على تنمية ثروتك بأمان.",
+      "احصلوا على توصيات مُعدّة خصيصاً لكم، تتنوّع ما بين السلوكيات المالية وحلول الصكوك الوطنية التي يُمكن أن تُساعدكم على تعزيز قيمة أموالكم بطريقة آمنة.",
   },
 ];
 
@@ -131,7 +131,7 @@ export function HowItWorksSection() {
       >
         <span className="w-fit mt-[-1.00px] font-normal text-white text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
           {language === "ar"
-            ? "ابدأ الفحص المالي"
+            ? "بدء تقييم وضعي المالي"
             : "START MY FINANCIAL CHECKUP"}
         </span>
       </Button>
