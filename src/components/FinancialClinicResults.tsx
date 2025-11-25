@@ -319,13 +319,13 @@ export function FinancialClinicResults({
         <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
           <h2 className="font-semibold text-[#437749] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
             {language === "ar"
-              ? "خطة عملك الشخصية"
+              ? "خطة العمل المعدّة خصيصاً لكم"
               : "Your Personalized Action Plan"}
           </h2>
 
           <p className="font-normal text-sm md:text-base leading-5 md:leading-6 text-[#a1aeb7] text-center tracking-[0] max-w-[600px]">
             {language === "ar"
-              ? "التغييرات الصغيرة تحدث فرقًا كبيرًا. إليك كيفية تقوية نتيجتك."
+              ? "التغييرات البسيطة تُحدث فارقاً كبيراً. لتحسين نتيجتكم، ننصحكم بما يلي"
               : "Small changes make big differences. Here's how to strengthen your score."}
           </p>
         </div>
