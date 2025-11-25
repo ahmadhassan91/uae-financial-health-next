@@ -227,7 +227,7 @@ export function FinancialClinicSurvey({
           </h1>
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
             {language === "ar"
-              ? "هل أنت مستعد لبدء الفحص الخاص بك؟"
+              ? "هل أنتم مستعدون لبدء التقييم؟"
               : "Ready to begin your checkup?"}
           </p>
         </div>
@@ -236,7 +236,7 @@ export function FinancialClinicSurvey({
         <div className="w-full max-w-[833px] mb-4 md:mb-6 lg:mb-8 px-2">
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
             {language === "ar"
-              ? "مرحباً بك في فحص العيادة المالية! دعنا نأخذ بضع دقائق لفهم عاداتك المالية - بدون أحكام، فقط رؤى."
+              ? "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
               : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits—no judgments, just insights."}
           </p>
         </div>
@@ -254,7 +254,9 @@ export function FinancialClinicSurvey({
             <div className="flex flex-col items-center justify-center gap-[3px]">
               <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
                 {language === "ar"
-                  ? `أنت ${Math.round(progress)}٪ من خلال فحصك - تقدم رائع!`
+                  ? `لقد أجَبْتم عن %${Math.round(
+                      progress
+                    )} من أسئلة التقييم - تقدّم ممتاز`
                   : `You're ${Math.round(
                       progress
                     )}% through your checkup—great progress!`}

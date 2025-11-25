@@ -452,7 +452,7 @@ export default function FinancialClinicPage({
           </h1>
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm text-center tracking-[0] leading-6">
             {language === "ar"
-              ? "هل أنت مستعد لبدء الفحص الخاص بك؟"
+              ? "هل أنتم مستعدون لبدء التقييم؟"
               : "Ready to begin your checkup?"}
           </p>
         </div>
@@ -461,12 +461,12 @@ export default function FinancialClinicPage({
         <div className="flex flex-col items-center gap-[3px] mb-4 md:mb-8 max-w-[833px] px-2">
           <p className="w-full font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm tracking-[0] leading-6 text-center">
             {language === "ar"
-              ? "أدخل اسمك وبريدك الإلكتروني للبدء."
+              ? "قوموا بإدخال الاسم والبريد الإلكتروني للبدء"
               : "Enter your name and email to start."}
           </p>
           <p className="w-full font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm tracking-[0] leading-6 text-center">
             {language === "ar"
-              ? "سنرسل لك تقريرك الشخصي والتوصيات المتابعة لإبقائك على المسار الصحيح."
+              ? "سنرسل إليكم التقرير الخاص بكم وبعض التوصيات لضمان التزامكم بالمسار الصحيح"
               : "We'll send you your personalized report and follow-up recommendations to keep you on track."}
           </p>
         </div>

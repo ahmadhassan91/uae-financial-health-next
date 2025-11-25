@@ -56,13 +56,13 @@ export function HeroSection() {
         <div className="inline-flex flex-col items-center">
           <h1 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-2xl md:text-[33px] tracking-[0] leading-[38px] text-center px-4">
             {language === "ar"
-              ? "إلهام عادات مالية أكثر صحة كل يوم"
+              ? "نحو سلوكيات مالية أفضل كلّ يوم"
               : "Inspiring healthier financial habits every day"}
           </h1>
 
           <p className="self-stretch font-normal text-[#437749] text-lg md:text-2xl text-center tracking-[0] leading-[38px]">
             {language === "ar"
-              ? "بدعم من صكوك الوطنية"
+              ? "بدعم من الصكوك الوطنية"
               : "Powered by National Bonds"}
           </p>
         </div>
@@ -70,13 +70,13 @@ export function HeroSection() {
         <div className="flex flex-col items-center justify-center gap-[3px] w-full max-w-[900px]">
           <p className="self-stretch mt-[-1.00px] font-normal text-[#a1aeb7] text-sm text-center tracking-[0] leading-6 px-4">
             {language === "ar"
-              ? "لأكثر من 18 عامًا، مكنت صكوك الوطنية الأفراد والعائلات في جميع أنحاء الإمارات من بناء مستقبل مالي أفضل."
+              ? "على مدى أكثر من 18 عاماً، مكّنت الصكوك الوطنية أفراداً وعائلات، في مختلف أنحاء الإمارات العربية المتحدة، من بناء مستقبل مالي أفضل"
               : "For over 18 years National Bonds has empowered individuals and families across the UAE to build a better financial future."}
           </p>
 
           <p className="w-fit font-normal text-[#a1aeb7] text-sm text-center tracking-[0] leading-6 px-4">
             {language === "ar"
-              ? "الآن، نجلب تلك الخبرة إلى عيادتك المالية؛ من خلال الجمع بين البصيرة المالية وعلوم السلوك لمساعدتك على اتخاذ قرارات أكثر ذكاءً وثقة."
+              ? "واليوم، نُقدّم هذه الخبرة في العيادة المالية؛ حيث نجمع بين الخبرة المالية وعلم السلوك لمساعدتكم على اتخاذ قرارات أذكى بثقة أكبر."
               : "Now, we bring that expertise into your Financial Clinic; combining financial insight with behavioral science to help you make smarter, more confident decisions."}
           </p>
         </div>
@@ -99,13 +99,13 @@ export function HeroSection() {
               <div className="flex flex-col items-start gap-[21px] w-full">
                 <h2 className="self-stretch mt-[-1.00px] font-semibold text-[#437749] text-2xl md:text-[33px] tracking-[0] leading-[38px]">
                   {language === "ar"
-                    ? "ما مدى صحة أموالك؟"
+                    ? "ما مدى صحة أوضاعكم المالية؟"
                     : "How healthy are your finances?"}
                 </h2>
 
                 <p className="self-stretch font-normal text-[#a1aeb7] text-sm tracking-[0] leading-6">
                   {language === "ar"
-                    ? "اكتشف درجة صحتك المالية في دقائق، واحصل على خطوات مخصصة لتعزيز مستقبلك."
+                    ? "احصلوا على تقييم صحّة أوضاعكم المالية في دقائق، وتعرّفوا على الخطوات المناسبة لتعزيز مستقبلكم المالي."
                     : "Discover your financial health score in minutes, and get personalized steps to strengthen your future."}
                 </p>
               </div>
@@ -116,7 +116,7 @@ export function HeroSection() {
               >
                 <span className="w-fit mt-[-1.00px] font-normal text-white text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
                   {language === "ar"
-                    ? "ابدأ الفحص المالي"
+                    ? "بدء تقييم وضعي المالي"
                     : "START MY FINANCIAL CHECKUP"}
                 </span>
               </Button>

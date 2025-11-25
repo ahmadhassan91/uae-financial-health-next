@@ -129,7 +129,7 @@ export function FinancialClinicResults({
 
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "هذه لمحة سريعة، نظرة واضحة على مدى صحة أموالك اليوم"
+                ? "هذه لمحة عن وضعكم، عرضٌ واضح لمدى صحّة أوضاعكم المالية اليوم."
                 : "This is your snapshot; a clear view of how healthy your finances are today."}
             </p>
           </div>
@@ -137,13 +137,13 @@ export function FinancialClinicResults({
           <div className="flex flex-col items-center justify-center gap-1 md:gap-[3px] w-full px-4">
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "تعكس نتيجتك كيفية أدائك عبر المجالات الرئيسية."
+                ? "يعكس هذا التقييم أداءكم في خمسة مجالات رئيسية."
                 : "Your score reflects how you're doing across key areas."}
             </p>
 
             <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "استمر في تحسين عاداتك، وسوف تنمو رفاهيتك المالية بشكل أقوى مع مرور الوقت."
+                ? "استمرّوا في تحسين سلوكياتكم، وستلاحظون تحسّن جودة حياتكم المالية مع الوقت"
                 : "Keep improving your habits, and your financial wellbeing will grow stronger over time."}
             </p>
           </div>
@@ -327,7 +327,7 @@ export function FinancialClinicResults({
             {language === "ar"
               ? "التغييرات الصغيرة تحدث فرقًا كبيرًا. إليك كيفية تقوية نتيجتك."
               : "Small changes make big differences. Here's how to strengthen your score."}
-          </p> 
+          </p>
         </div>
 
         <div className="flex flex-col w-full max-w-[948px] items-start gap-3 md:gap-3.5 px-4">

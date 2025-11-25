@@ -7,23 +7,23 @@ const features = [
   {
     icon: "/homepage/icons/chart.svg",
     textEn: "Understand where you stand&nbsp;financially",
-    textAr: "فهم وضعك المالي الحالي",
+    textAr: "معرفة وضعكم المالي&nbsp;الحالي",
   },
   {
     icon: "/homepage/images/group-3.png",
     textEn: "Identify habits that need&nbsp;improvement",
-    textAr: "تحديد العادات التي تحتاج إلى تحسين",
+    textAr: "تحديد السلوكيات التي لا بدّ من&nbsp;تحسينها",
   },
   {
     icon: "/homepage/images/group-2.png",
     textEn: "Receive easy, actionable steps to reach your&nbsp;goals",
-    textAr: "احصل على خطوات سهلة وقابلة للتنفيذ لتحقيق أهدافك",
+    textAr: "الحصول على خطوات سهلة وعملية لتحقيق&nbsp;أهدافكم",
   },
   {
     icon: "/homepage/icons/products.svg",
     textEn:
       "Discover products and tools designed to empower your financial&nbsp;journey",
-    textAr: "اكتشف المنتجات والأدوات المصممة لتمكين رحلتك المالية",
+    textAr: "اكتشاف البرامج والأدوات المُصممة لدعم رحلتكم&nbsp;المالية",
   },
 ];
 
@@ -36,7 +36,7 @@ export function FeaturesSection() {
         <div className="inline-flex flex-col items-center">
           <h2 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-2xl md:text-[35px] tracking-[0] leading-[38px] text-center">
             {language === "ar"
-              ? "لماذا يجب إجراء الفحص؟"
+              ? "ما أهميّة إجراء هذا التقييم؟"
               : "Why Take the Checkup?"}
           </h2>
         </div>
@@ -44,13 +44,13 @@ export function FeaturesSection() {
         <div className="flex flex-col items-center justify-center gap-[3px] w-full">
           <p className="self-stretch mt-[-1.00px] font-normal text-[#a1aeb7] text-base text-center tracking-[0] leading-6">
             {language === "ar"
-              ? "لأن رفاهيتك المالية تستحق فحصًا منتظمًا."
+              ? "لأنّ المراجعة الدورية لجودة أوضاعكم المالية أمرٌ ضروريّ."
               : "Because your financial wellbeing deserves a regular checkup."}
           </p>
 
           <p className="w-fit font-normal text-[#a1aeb7] text-base text-center tracking-[0] leading-6">
             {language === "ar"
-              ? "تمامًا مثل صحتك البدنية، تحتاج صحتك المالية إلى رعاية واهتمام."
+              ? "فصحّتكم المالية بحاجة إلى الرعاية والاهتمام، تماماً كصحّتكم الجسدية."
               : "Just like your physical health, your financial health needs care and attention."}
           </p>
         </div>
@@ -61,7 +61,7 @@ export function FeaturesSection() {
           <div className="inline-flex flex-col items-center">
             <h3 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-xl md:text-2xl tracking-[0] leading-[38px] text-center">
               {language === "ar"
-                ? "العيادة المالية تساعدك على"
+                ? "تساعدكم عيادتنا الماليّة على"
                 : "The Financial Clinic helps you"}
             </h3>
           </div>
@@ -82,7 +82,12 @@ export function FeaturesSection() {
 
               <span
                 className="self-stretch text-[#a1aeb7] tracking-[0] leading-6"
-                style={{ fontSize: "14px", fontWeight: 400 }}
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 400,
+                  textAlign: language === "ar" ? "right" : "left",
+                  marginRight: language === "ar" ? "70px" : "0",
+                }}
                 dangerouslySetInnerHTML={{
                   __html: language === "ar" ? feature.textAr : feature.textEn,
                 }}
