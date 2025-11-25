@@ -596,123 +596,127 @@ export default function FinancialClinicPage({
 
           {/* Gender and Nationality */}
           <div
-            className={`flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:justify-between ${
+            className={`flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-8 w-full md:justify-between ${
               language === "ar" ? "md:flex-row-reverse" : ""
             }`}
           >
-            <div
-              className={`flex items-center gap-6 md:gap-[35px] ${
-                language === "ar" ? "flex-row-reverse" : ""
-              }`}
-            >
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "الجنس" : "Gender"}{" "}
-                <span className="text-red-500">*</span>
-              </Label>
-
-              <RadioGroup
-                value={profile.gender}
-                onValueChange={handleGenderChange}
-                className={`flex items-center gap-[46px] ${
+            <div className="flex flex-col gap-2 flex-1">
+              <div
+                className={`flex items-center gap-6 md:gap-[35px] ${
                   language === "ar" ? "flex-row-reverse" : ""
                 }`}
               >
-                <div
-                  className={`flex items-center gap-[5px] ${
+                <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                  {language === "ar" ? "الجنس" : "Gender"}{" "}
+                  <span className="text-red-500">*</span>
+                </Label>
+
+                <RadioGroup
+                  value={profile.gender}
+                  onValueChange={handleGenderChange}
+                  className={`flex items-center gap-[46px] ${
                     language === "ar" ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <RadioGroupItem
-                    value="Male"
-                    id="male"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="male"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                  <div
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
-                    {language === "ar" ? "ذكر" : "Male"}
-                  </Label>
-                </div>
-                <div
-                  className={`flex items-center gap-[5px] ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
-                >
-                  <RadioGroupItem
-                    value="Female"
-                    id="female"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="female"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    <RadioGroupItem
+                      value="Male"
+                      id="male"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="male"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "ذكر" : "Male"}
+                    </Label>
+                  </div>
+                  <div
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
-                    {language === "ar" ? "أنثى" : "Female"}
-                  </Label>
-                </div>
-              </RadioGroup>
+                    <RadioGroupItem
+                      value="Female"
+                      id="female"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="female"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "أنثى" : "Female"}
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
               {genderError && (
-                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                <p className="text-red-500 text-xs font-[family-name:var(--font-poppins)]">
                   {genderError}
                 </p>
               )}
             </div>
 
-            <div
-              className={`flex items-center gap-[46px] ${
-                language === "ar" ? "flex-row-reverse" : ""
-              }`}
-            >
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "الجنسية" : "Nationality"}{" "}
-                <span className="text-red-500">*</span>
-              </Label>
-
-              <RadioGroup
-                value={profile.nationality}
-                onValueChange={handleNationalityChange}
+            <div className="flex flex-col gap-2 flex-1">
+              <div
                 className={`flex items-center gap-[46px] ${
                   language === "ar" ? "flex-row-reverse" : ""
                 }`}
               >
-                <div
-                  className={`flex items-center gap-[5px] ${
+                <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                  {language === "ar" ? "الجنسية" : "Nationality"}{" "}
+                  <span className="text-red-500">*</span>
+                </Label>
+
+                <RadioGroup
+                  value={profile.nationality}
+                  onValueChange={handleNationalityChange}
+                  className={`flex items-center gap-[46px] ${
                     language === "ar" ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <RadioGroupItem
-                    value="Emirati"
-                    id="emirati"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="emirati"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                  <div
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
-                    {language === "ar" ? "إماراتي" : "Emirati"}
-                  </Label>
-                </div>
-                <div
-                  className={`flex items-center gap-[5px] ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
-                >
-                  <RadioGroupItem
-                    value="Non-Emirati"
-                    id="non-emirati"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="non-emirati"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    <RadioGroupItem
+                      value="Emirati"
+                      id="emirati"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="emirati"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "إماراتي" : "Emirati"}
+                    </Label>
+                  </div>
+                  <div
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
-                    {language === "ar" ? "غير إماراتي" : "Non- Emirati"}
-                  </Label>
-                </div>
-              </RadioGroup>
+                    <RadioGroupItem
+                      value="Non-Emirati"
+                      id="non-emirati"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="non-emirati"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "غير إماراتي" : "Non- Emirati"}
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
               {nationalityError && (
-                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                <p className="text-red-500 text-xs font-[family-name:var(--font-poppins)]">
                   {nationalityError}
                 </p>
               )}
