@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { HomepageHeader } from "@/components/homepage/Header";
 import { HomepageFooter } from "@/components/homepage/Footer";
+import { getApiUrl, API } from "@/lib/api-config";
 
 interface CategoryScore {
   score: number;
@@ -53,16 +54,9 @@ export default function FinancialClinicHistoryPage() {
       try {
         setLoading(true);
 
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL ||
-          (typeof window !== "undefined" &&
-          window.location.origin.includes("localhost")
-            ? "http://localhost:8000/api/v1"
-            : "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1");
-
         // First check if user is authenticated
         if (session && isAuthenticated) {
-          const response = await fetch(`${apiUrl}/financial-clinic/history`, {
+          const response = await fetch(API.financialClinic.history(), {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${session.accessToken}`,
@@ -82,7 +76,10 @@ export default function FinancialClinicHistoryPage() {
           const data = await response.json();
 
           // Transform API response to match component interface
-          const transformedData = data.map((item: AssessmentHistory) => {
+          // Handle both array response and empty data
+          const dataArray = Array.isArray(data) ? data : [];
+          
+          const transformedData = dataArray.map((item: AssessmentHistory) => {
             const categoryScores = item.category_scores || {};
 
             return {
@@ -116,16 +113,17 @@ export default function FinancialClinicHistoryPage() {
 
               if (email) {
                 const response = await fetch(
-                  `${apiUrl}/financial-clinic/history/${encodeURIComponent(
-                    email
-                  )}`
+                  API.financialClinic.historyByEmail(email)
                 );
 
                 if (response.ok) {
                   const data = await response.json();
 
                   // Transform API response
-                  const transformedData = data.map((item: any) => {
+                  // Handle both array response and empty data
+                  const dataArray = Array.isArray(data) ? data : [];
+                  
+                  const transformedData = dataArray.map((item: any) => {
                     const categoryScores = item.category_scores || {};
 
                     return {
