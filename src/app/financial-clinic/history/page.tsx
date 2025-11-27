@@ -78,7 +78,7 @@ export default function FinancialClinicHistoryPage() {
           // Transform API response to match component interface
           // Handle both array response and empty data
           const dataArray = Array.isArray(data) ? data : [];
-          
+
           const transformedData = dataArray.map((item: AssessmentHistory) => {
             const categoryScores = item.category_scores || {};
 
@@ -103,7 +103,41 @@ export default function FinancialClinicHistoryPage() {
 
           setAssessments(transformedData);
         } else {
-          // For guest users, try to fetch using email from profile
+          // For guest users, first check if there's a current result in localStorage
+          const currentResult = localStorage.getItem("financialClinicResult");
+
+          if (currentResult) {
+            try {
+              const result = JSON.parse(currentResult);
+              const categoryScores = result.category_scores || {};
+
+              // Create a single assessment from the current result
+              const currentAssessment = {
+                id: Date.now(), // Use timestamp as temporary ID
+                overall_score: result.total_score || 0,
+                budgeting_score: categoryScores["Income Stream"]?.score || 0,
+                savings_score:
+                  (categoryScores["Savings Habit"]?.score || 0) +
+                  (categoryScores["Emergency Savings"]?.score || 0),
+                debt_management_score:
+                  categoryScores["Debt Management"]?.score || 0,
+                financial_planning_score:
+                  categoryScores["Retirement Planning"]?.score || 0,
+                investment_knowledge_score:
+                  categoryScores["Protecting Your Family"]?.score || 0,
+                risk_tolerance: result.status_band || "Unknown",
+                created_at: new Date().toISOString(),
+              };
+
+              setAssessments([currentAssessment]);
+              setLoading(false);
+              return;
+            } catch (error) {
+              console.error("Error parsing current result:", error);
+            }
+          }
+
+          // If no current result, try to fetch using email from profile
           const storedProfile = localStorage.getItem("financialClinicProfile");
 
           if (storedProfile) {
@@ -122,7 +156,7 @@ export default function FinancialClinicHistoryPage() {
                   // Transform API response
                   // Handle both array response and empty data
                   const dataArray = Array.isArray(data) ? data : [];
-                  
+
                   const transformedData = dataArray.map((item: any) => {
                     const categoryScores = item.category_scores || {};
 

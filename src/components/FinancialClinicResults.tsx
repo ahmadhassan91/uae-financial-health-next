@@ -40,18 +40,9 @@ export function FinancialClinicResults({
     !!localStorage.getItem("simpleAuthSession");
 
   const handleSaveOrHistory = () => {
-    if (isLoggedIn) {
-      // User is logged in - go to history
-      window.location.href = "/financial-clinic/history";
-    } else {
-      // Guest user - show account modal
-      if (onShowAccountModal) {
-        onShowAccountModal();
-      } else {
-        // Fallback: redirect to history (will show login)
-        window.location.href = "/financial-clinic/history";
-      }
-    }
+    // For both logged in and guest users, go to history page
+    // Guest users will see their current result displayed
+    window.location.href = "/financial-clinic/history";
   };
 
   const getCategoryTranslation = (category: string): string => {

@@ -181,8 +181,8 @@ class ApiClient {
         ...options.headers,
         ...(token && { Authorization: `Bearer ${token}` }),
       },
-      // Add timeout for production requests
-      signal: AbortSignal.timeout(30000), // 30 second timeout
+      // Remove timeout for now - can cause issues in some environments
+      // signal: AbortSignal.timeout(30000), // 30 second timeout
     };
 
     try {
