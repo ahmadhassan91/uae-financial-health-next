@@ -155,7 +155,7 @@ function FinancialClinicLoginContent() {
         className="flex-1 bg-white from-blue-50 to-white flex items-center justify-center p-4"
         dir={isRTL ? "rtl" : "ltr"}
       >
-        <div className="w-full max-w-md">
+        <div className="max-w-md" style={{ width: "100%" }}>
           {/* Logo/Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-blue-900 mb-2">
