@@ -1201,18 +1201,6 @@ export default function FinancialClinicPage({
               {language === "ar" ? "ابدأ فحصي" : "START MY CHECKUP"}
             </span>
           </Button>
-
-          <Button
-            onClick={handleViewPreviousResults}
-            variant="outline"
-            className="h-auto px-7 py-2.5 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto"
-          >
-            <span className="font-[family-name:var(--font-poppins)] font-normal text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
-              {language === "ar"
-                ? "عرض النتائج السابقة"
-                : "VIEW PREVIOUS RESULTS"}
-            </span>
-          </Button>
         </div>
       </main>
 
