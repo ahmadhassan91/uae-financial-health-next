@@ -409,7 +409,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
       // Fallback to simple static translations if not found in API
       if (!translation) {
         const languageTranslations = simpleTranslations?.[language] || simpleTranslations?.en || {};
-        translation = languageTranslations[key];
+        translation = (languageTranslations as Record<string, any>)[key];
       }
 
       // Final fallback to defaults
