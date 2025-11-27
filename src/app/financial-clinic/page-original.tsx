@@ -1000,7 +1000,7 @@ export default function FinancialClinicPage({
                     placeholder={
                       language === "ar"
                         ? "اختر نطاق دخل الأسرة الشهري"
-                        : "Select household monthly income range"
+                        : "Household monthly income range"
                     }
                     className="placeholder:text-[#a1aeb7]"
                   />
@@ -1125,20 +1125,19 @@ export default function FinancialClinicPage({
             </div>
 
             {/* Mobile Number Field with Label */}
-            <div className="flex-1">
+            <div className="flex-1 w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "رقم الجوال" : "Mobile Number"}{" "}
                 <span className="text-red-500">*</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full">
                 <Select value={countryCode} onValueChange={setCountryCode}>
                   <SelectTrigger
-                    className="w-full md:w-[220px] h-[50px] px-3 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6"
+                    className="w-[120px] md:w-[140px] h-[50px] px-2 md:px-3 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 shrink-0"
                     style={{ height: "50px" }}
                   >
                     <SelectValue>
-                      {en[countryCode as keyof typeof en] || countryCode} +
-                      {getCountryCallingCode(countryCode as any)}
+                      +{getCountryCallingCode(countryCode as any)}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px] w-full md:w-[320px]">

@@ -224,7 +224,7 @@ export function ConsultationRequestModal({
             <p className="text-gray-600">
               {language === "ar"
                 ? "شكراً لك على طلب الاستشارة. سيتواصل معك فريقنا خلال يوم عمل واحد."
-                : "TThank you for your consultation request. Our team will contact you shortly."}
+                : "Thank you for your consultation request. Our team will contact you shortly."}
             </p>
           </div>
           <Button
