@@ -43,14 +43,12 @@ import { ChildrenDistributionChart } from './admin/charts/ChildrenDistributionCh
 import { IncomeRangeDistributionChart } from './admin/charts/IncomeRangeDistributionChart';
 import { CompaniesAnalyticsTable } from './admin/CompaniesAnalyticsTable';
 import { ScoreAnalyticsTable } from './admin/ScoreAnalyticsTable';
-
-// Import existing admin components for other tabs
 import { CompanyManagement } from './CompanyManagement';
 import { LeadsManagement } from './LeadsManagement';
-import { SubmissionsTable } from './admin/SubmissionsTable';
 import { IncompleteSurveys } from './admin/IncompleteSurveys';
-import { RegistrationMetrics } from './admin/RegistrationMetrics';
 import { SystemManagement } from './admin/SystemManagement';
+import { SubmissionsTable } from './admin/SubmissionsTable';
+import { RegistrationMetrics } from './admin/RegistrationMetrics';
 
 interface FinancialClinicAdminDashboardProps {
   onBack?: () => void;
@@ -369,25 +367,22 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                           <Clock className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                          <div className="text-2xl font-bold">{overviewMetrics.total_responses || 0}</div>
+                          <div className="text-2xl font-bold">{overviewMetrics.total_submissions || 0}</div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            surveys completed today
+                            Total submissions
                           </p>
                         </CardContent>
                       </Card>
 
                       <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">This Month</CardTitle>
+                          <CardTitle className="text-sm font-medium">Average Score</CardTitle>
                           <Activity className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                          <div className="text-2xl font-bold">{overviewMetrics.total_responses || 0}</div>
+                          <div className="text-2xl font-bold">{overviewMetrics.average_score?.toFixed(1) || '0.0'}</div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            {overviewMetrics.total_responses > 0
-                              ? ((overviewMetrics.total_responses / overviewMetrics.total_submissions) * 100).toFixed(1)
-                              : 0}
-                            % of total
+                            Out of 100
                           </p>
                         </CardContent>
                       </Card>
@@ -458,12 +453,7 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
 
                     {/* Score Analytics Table */}
                     {scoreAnalyticsTable && (
-                      <ScoreAnalyticsTable
-                        rows={scoreAnalyticsTable.questions}
-                        totalQuestions={scoreAnalyticsTable.total_questions}
-                        questionSetType={scoreAnalyticsTable.question_set_type}
-                        variationSetName={scoreAnalyticsTable.variation_set_name}
-                      />
+                      <ScoreAnalyticsTable data={scoreAnalyticsTable} />
                     )}
                   </>
                 )}
@@ -475,24 +465,25 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
               </TabsContent>
 
               {/* Companies Tab */}
-              <TabsContent value="companies">
+              <TabsContent value="companies" className="space-y-6">
                 {companiesAnalytics && (
-                  <CompaniesAnalyticsTable companies={companiesAnalytics} />
+                  <CompaniesAnalyticsTable data={companiesAnalytics} />
                 )}
+                <CompanyManagement onCompanyCreated={loadFilterOptions} />
               </TabsContent>
 
               {/* Leads Tab */}
-              <TabsContent value="leads">
+              <TabsContent value="leads" className="space-y-6">
                 <LeadsManagement />
               </TabsContent>
 
               {/* Incomplete Tab */}
-              <TabsContent value="incomplete">
+              <TabsContent value="incomplete" className="space-y-6">
                 <IncompleteSurveys />
               </TabsContent>
 
               {/* System Tab */}
-              <TabsContent value="system">
+              <TabsContent value="system" className="space-y-6">
                 <SystemManagement />
               </TabsContent>
             </Tabs>

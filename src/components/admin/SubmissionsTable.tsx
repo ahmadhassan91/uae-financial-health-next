@@ -117,7 +117,7 @@ export function SubmissionsTable() {
 
   const loadCompanies = async () => {
     try {
-      const response = await apiClient.request('/admin/simple/filter-options');
+      const response = await apiClient.request('/admin/simple/filter-options') as any;
       setCompanies(response.companies || []);
     } catch (error) {
       console.error('Error loading companies:', error);
@@ -137,7 +137,7 @@ export function SubmissionsTable() {
       if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
       if (companyFilter !== 'all') params.append('company_id', companyFilter);
 
-      const response = await apiClient.request(`/admin/simple/submissions?${params}`);
+      const response = await apiClient.request(`/admin/simple/submissions?${params}`) as any;
       setSubmissions(response.submissions || []);
       setTotalPages(response.total_pages || 1);
     } catch (error) {
@@ -150,7 +150,7 @@ export function SubmissionsTable() {
 
   const loadStats = async () => {
     try {
-      const data = await apiClient.request('/admin/simple/submissions/stats');
+      const data = await apiClient.request('/admin/simple/submissions/stats') as any;
       setStats(data);
     } catch (error) {
       console.error('Error loading stats:', error);
