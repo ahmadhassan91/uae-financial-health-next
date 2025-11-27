@@ -152,7 +152,7 @@ function FinancialClinicLoginContent() {
     <div className="min-h-screen flex flex-col">
       <HomepageHeader />
       <div
-        className="flex-1 bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4"
+        className="flex-1 bg-white from-blue-50 to-white flex items-center justify-center p-4"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="w-full max-w-md">
