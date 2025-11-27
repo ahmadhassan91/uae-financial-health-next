@@ -56,13 +56,13 @@ export function HeroSection() {
         <div className="inline-flex flex-col items-center">
           <h1 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-2xl md:text-[33px] tracking-[0] leading-[38px] text-center px-4">
             {language === "ar"
-              ? "نحو سلوكيات مالية أفضل كلّ يوم"
+              ? "لبناء عادات مالية أكثر صحة كل يوم"
               : "Inspiring healthier financial habits every day"}
           </h1>
 
           <p className="self-stretch font-normal text-[#437749] text-lg md:text-2xl text-center tracking-[0] leading-[38px]">
             {language === "ar"
-              ? "بدعم من الصكوك الوطنية"
+              ? "مع الصكوك الوطنية."
               : "Powered by National Bonds"}
           </p>
         </div>
@@ -70,13 +70,13 @@ export function HeroSection() {
         <div className="flex flex-col items-center justify-center gap-[3px] w-full max-w-[900px]">
           <p className="self-stretch mt-[-1.00px] font-normal text-[#a1aeb7] text-sm text-center tracking-[0] leading-6 px-4">
             {language === "ar"
-              ? "على مدى أكثر من 18 عاماً، مكّنت الصكوك الوطنية أفراداً وعائلات، في مختلف أنحاء الإمارات العربية المتحدة، من بناء مستقبل مالي أفضل"
+              ? "ساعدت الصكوك الوطنية الأفراد والعائلات في مختلف أنحاء الإمارات على بناء مستقبل مالي أفضل لأكثر من 18 عامًا."
               : "For over 18 years National Bonds has empowered individuals and families across the UAE to build a better financial future."}
           </p>
 
           <p className="w-fit font-normal text-[#a1aeb7] text-sm text-center tracking-[0] leading-6 px-4">
             {language === "ar"
-              ? "واليوم، نُقدّم هذه الخبرة في العيادة المالية؛ حيث نجمع بين الخبرة المالية وعلم السلوك لمساعدتكم على اتخاذ قرارات أذكى بثقة أكبر."
+              ? "واليوم، نضع هذه الخبرة بين أيديكم عبر عيادتكم المالية؛ الطريقة التي تجمع بين الرؤية المالية وعلم السلوك لمساعدتكم على اتخاذ قرارات أذكى وأكثر ثقة."
               : "Now, we bring that expertise into your Financial Clinic; combining financial insight with behavioral science to help you make smarter, more confident decisions."}
           </p>
         </div>
