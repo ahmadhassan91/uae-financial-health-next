@@ -170,7 +170,7 @@ const buildQueryParams = (
   if (filters?.companies && filters.companies.length > 0) {
     params.append('companies', filters.companies.join(','));
   }
-  
+
   // Add unique users filter
   if (filters?.unique_users_only) {
     params.append('unique_users_only', 'true');
@@ -199,7 +199,7 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch filter options');
     const data = await response.json();
-    
+
     // Convert snake_case backend response to camelCase
     return {
       ageGroups: data.age_groups || [],
@@ -243,11 +243,11 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch score distribution');
     const data = await response.json();
-    
+
     // Transform backend response
     const total = data.total || 0;
     const distribution = data.distribution || [];
-    
+
     return distribution.map((item: any) => ({
       status: item.status_band,
       count: item.count,
@@ -269,10 +269,10 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch category performance');
     const data = await response.json();
-    
+
     // Transform backend response
     const categories = data.categories || [];
-    
+
     return categories.map((item: any) => ({
       category: item.category,
       average_score: item.average_score || 0,  // Changed from avg_score
@@ -296,10 +296,10 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch time series data');
     const data = await response.json();
-    
+
     // Transform backend response
     const timeSeries = data.time_series || [];
-    
+
     return timeSeries.map((item: any) => ({
       period: item.period,
       submissions: item.count || 0,
@@ -321,10 +321,10 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch nationality breakdown');
     const data = await response.json();
-    
+
     // Transform backend response to array format
     const result: NationalityBreakdown[] = [];
-    
+
     if (data.emirati && data.emirati.count > 0) {
       result.push({
         nationality: 'Emirati',
@@ -336,7 +336,7 @@ export const adminApi = {
         average_score: data.emirati.avg_score || 0,
       });
     }
-    
+
     if (data.non_emirati && data.non_emirati.count > 0) {
       result.push({
         nationality: 'Non-Emirati',
@@ -348,7 +348,7 @@ export const adminApi = {
         average_score: data.non_emirati.avg_score || 0,
       });
     }
-    
+
     return result;
   },
 
@@ -366,11 +366,11 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch age breakdown');
     const data = await response.json();
-    
+
     // Transform backend response
     const ageGroups = data.age_groups || [];
     const total = data.total || 0;
-    
+
     return ageGroups.map((item: any) => ({
       age_group: item.age_group,
       total: item.count,
@@ -393,10 +393,10 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch companies analytics');
     const data = await response.json();
-    
+
     // Transform backend response
     const companies = data.companies || [];
-    
+
     return companies.map((item: any) => ({
       company: item.company_name || item.company || 'Unknown',
       total_submissions: item.total_responses || 0,
@@ -422,7 +422,7 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to fetch score analytics table');
     const data = await response.json();
-    
+
     // Backend now returns object with metadata
     if (Array.isArray(data)) {
       // Legacy format - wrap in new format
@@ -442,7 +442,7 @@ export const adminApi = {
         filtered: false,
       };
     }
-    
+
     // New format with metadata
     return {
       questions: (data.questions || []).map((item: any) => ({
@@ -491,5 +491,91 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error('Failed to export Excel');
     return response.blob();
+  },
+
+  /**
+   * Get employment status breakdown
+   */
+  async getEmploymentBreakdown(
+    filters?: DemographicFilters,
+    dateParams?: DateRangeParams
+  ): Promise<{ status: string, count: number }[]> {
+    const queryString = buildQueryParams(filters, dateParams);
+    const response = await fetch(
+      `${getBackendUrl()}/admin/simple/employment-breakdown?${queryString}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error('Failed to fetch employment breakdown');
+    const data = await response.json();
+    return data.breakdown || [];
+  },
+
+  /**
+   * Get emirate breakdown
+   */
+  async getEmirateBreakdown(
+    filters?: DemographicFilters,
+    dateParams?: DateRangeParams
+  ): Promise<{ emirate: string, count: number }[]> {
+    const queryString = buildQueryParams(filters, dateParams);
+    const response = await fetch(
+      `${getBackendUrl()}/admin/simple/emirate-breakdown?${queryString}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error('Failed to fetch emirate breakdown');
+    const data = await response.json();
+    return data.breakdown || [];
+  },
+
+  /**
+   * Get children count breakdown
+   */
+  async getChildrenBreakdown(
+    filters?: DemographicFilters,
+    dateParams?: DateRangeParams
+  ): Promise<{ count_label: string, count: number }[]> {
+    const queryString = buildQueryParams(filters, dateParams);
+    const response = await fetch(
+      `${getBackendUrl()}/admin/simple/children-breakdown?${queryString}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error('Failed to fetch children breakdown');
+    const data = await response.json();
+    return data.breakdown || [];
+  },
+
+  /**
+   * Get income range breakdown
+   */
+  async getIncomeRangeBreakdown(
+    filters?: DemographicFilters,
+    dateParams?: DateRangeParams
+  ): Promise<{ range: string, count: number }[]> {
+    const queryString = buildQueryParams(filters, dateParams);
+    const response = await fetch(
+      `${getBackendUrl()}/admin/simple/income-breakdown?${queryString}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error('Failed to fetch income breakdown');
+    const data = await response.json();
+    return data.breakdown || [];
+  },
+
+
+  /**
+   * Get gender breakdown
+   */
+  async getGenderBreakdown(
+    filters?: DemographicFilters,
+    dateParams?: DateRangeParams
+  ): Promise<{ gender: string, count: number, percentage: number }[]> {
+    const queryString = buildQueryParams(filters, dateParams);
+    const response = await fetch(
+      `${getBackendUrl()}/admin/simple/gender-breakdown?${queryString}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error('Failed to fetch gender breakdown');
+    const data = await response.json();
+    return data.breakdown || [];
   },
 };

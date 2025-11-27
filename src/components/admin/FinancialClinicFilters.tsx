@@ -179,7 +179,7 @@ export function FinancialClinicFilters({
                     return (
                       date > today ||
                       date < minDate ||
-                      (startDate && date < startDate)
+                      !!(startDate && date < startDate)
                     );
                   }}
                 />
@@ -217,7 +217,7 @@ export function FinancialClinicFilters({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="space-y-4">
             {/* Age Group Filter */}
             <div>
               <Label className="text-xs font-semibold mb-2 block">

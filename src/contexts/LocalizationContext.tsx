@@ -2,14 +2,14 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { 
-  SupportedLanguage, 
-  ContentType, 
-  LocalizedContent, 
-  ContentStats, 
-  CacheStats, 
-  ContentCache, 
-  LoadingState 
+import {
+  SupportedLanguage,
+  ContentType,
+  LocalizedContent,
+  ContentStats,
+  CacheStats,
+  ContentCache,
+  LoadingState
 } from '@/lib/types';
 import { translations as simpleTranslations } from '@/lib/simple-translations';
 import { apiClient } from '@/lib/api-client';
@@ -59,7 +59,7 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'begin_assessment_now': 'Begin Assessment Now',
   'access_previous_results': 'Access Previous Results',
   'view_previous_results': 'View Previous Results',
-  
+
   // Assessment and Scoring
   'financial_health_score': 'Financial Health Score',
   'recommendations': 'Recommendations',
@@ -74,7 +74,7 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'retirement_planning': 'Retirement Planning',
   'protection': 'Protecting Your Assets & Loved Ones',
   'future_planning': 'Planning for Your Future & Siblings',
-  
+
   // Score Interpretations
   'excellent': 'Excellent',
   'good': 'Good',
@@ -82,7 +82,7 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'needs_improvement': 'Needs Improvement',
   'poor': 'Poor',
   'at_risk': 'At Risk',
-  
+
   // Personal Information
   'personal_information': 'Personal Information',
   'first_name': 'First Name',
@@ -106,7 +106,7 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'no': 'No',
   'email': 'Email Address',
   'phone_number': 'Phone Number',
-  
+
   // Actions
   'save': 'Save',
   'cancel': 'Cancel',
@@ -117,21 +117,21 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'continue': 'Continue',
   'complete': 'Complete',
   'skip': 'Skip',
-  
+
   // Status Messages
   'loading': 'Loading...',
   'error': 'Error',
   'success': 'Success',
   'warning': 'Warning',
   'info': 'Information',
-  
+
   // Authentication
   'sign_in': 'Sign In',
   'sign_out': 'Sign Out',
   'sign_up': 'Sign Up',
   'welcome_back': 'Welcome back!',
   'date_of_birth': 'Date of Birth',
-  
+
   // Landing Page
   'financial_health_assessment': 'Financial Health Assessment',
   'trusted_uae_institution': 'A trusted UAE financial institution providing transparent, science-based financial wellness assessment.',
@@ -144,7 +144,7 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'uae_specific_insights': 'UAE-Specific Insights',
   'ready_to_improve': 'Ready to Improve Your Financial Health?',
   'join_thousands': 'Join thousands of UAE residents who have strengthened their financial future with our comprehensive assessment.',
-  
+
   // Assessment Flow
   'progress_overview': 'Progress Overview',
   'questions_total': 'questions total',
@@ -157,7 +157,7 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'neutral': 'Neutral',
   'disagree': 'Disagree',
   'strongly_disagree': 'Strongly Disagree',
-  
+
   // Results and Reports
   'overall_score': 'Overall Score',
   'pillar_breakdown': 'Pillar Breakdown',
@@ -167,19 +167,19 @@ const DEFAULT_TRANSLATIONS: Record<string, string> = {
   'download_report': 'Download Report',
   'email_report': 'Email Report',
   'share_results': 'Share Results',
-  
+
   // Error Messages
   'error_loading_questions': 'Error loading questions. Please try again.',
   'error_saving_response': 'Error saving response. Please try again.',
   'error_generating_report': 'Error generating report. Please try again.',
   'network_error': 'Network error. Please check your connection.',
-  
+
   // Validation Messages
   'field_required': 'This field is required',
   'invalid_email': 'Please enter a valid email address',
   'invalid_date': 'Please enter a valid date',
   'please_select_option': 'Please select an option',
-  
+
   // Additional UI
   'of': 'of',
 };
@@ -225,13 +225,13 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
   useEffect(() => {
     // Check if we're on an admin route - if so, don't apply RTL
     const isAdminRoute = pathname?.startsWith('/admin') || pathname?.startsWith('/login');
-    
+
     const isRTL = language === 'ar' && !isAdminRoute;
-    
+
     // Only apply RTL if not on admin routes
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
-    
+
     // Update CSS custom properties for RTL support (only if not admin)
     if (!isAdminRoute) {
       document.documentElement.style.setProperty('--text-align-start', isRTL ? 'right' : 'left');
@@ -249,7 +249,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
       document.documentElement.style.setProperty('--padding-start', 'padding-left');
       document.documentElement.style.setProperty('--padding-end', 'padding-right');
     }
-    
+
     // Load Arabic fonts when switching to Arabic (regardless of admin route)
     if (language === 'ar' && !document.querySelector('link[href*="Noto+Sans+Arabic"]')) {
       const link = document.createElement('link');
@@ -280,19 +280,19 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
   const clearExpiredCache = () => {
     const cache = cacheRef.current;
     const now = Date.now();
-    
+
     Object.keys(cache).forEach(key => {
       if (now - cache[key].timestamp > cache[key].ttl) {
         delete cache[key];
       }
     });
-    
+
     cacheStatsRef.current.size = Object.keys(cache).length;
   };
 
   // Enhanced content loading with retry logic
   const loadContentWithRetry = async (
-    url: string, 
+    url: string,
     retries: number = RETRY_ATTEMPTS
   ): Promise<any> => {
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -311,7 +311,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
             return {};
           }
         }
-        
+
         if (attempt === retries) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -319,7 +319,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
         if (attempt === retries) {
           throw error;
         }
-        
+
         // Wait before retrying
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * attempt));
       }
@@ -329,12 +329,12 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
   const loadTranslations = async (lang: SupportedLanguage) => {
     setIsLoading(true);
     setLoadingState({ isLoading: true, progress: 0 });
-    
+
     try {
       // Check cache first
       const cacheKey = getCacheKey('ui', lang);
       const cachedData = cacheRef.current[cacheKey];
-      
+
       if (cachedData && isCacheValid(cachedData)) {
         setTranslations({ ...DEFAULT_TRANSLATIONS, ...cachedData.data });
         cachedData.hits++;
@@ -342,19 +342,19 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
         console.log(`Loaded ${Object.keys(cachedData.data).length} translations for ${lang} from cache`);
         return;
       }
-      
+
       updateCacheStats(false);
       setLoadingState({ isLoading: true, progress: 25 });
-      
+
       // Load from API with retry logic
       const apiTranslations = await apiClient.getUITranslations(lang);
-      
+
       setLoadingState({ isLoading: true, progress: 75 });
-      
+
       // Merge with defaults, API translations take precedence
       const mergedTranslations = { ...DEFAULT_TRANSLATIONS, ...apiTranslations };
       setTranslations(mergedTranslations);
-      
+
       // Cache the results
       clearExpiredCache();
       if (Object.keys(cacheRef.current).length >= MAX_CACHE_SIZE) {
@@ -363,27 +363,27 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
           .sort((a, b) => cacheRef.current[a].timestamp - cacheRef.current[b].timestamp)[0];
         delete cacheRef.current[oldestKey];
       }
-      
+
       cacheRef.current[cacheKey] = {
         data: apiTranslations,
         timestamp: Date.now(),
         ttl: CACHE_TTL,
         hits: 1
       };
-      
+
       cacheStatsRef.current.size = Object.keys(cacheRef.current).length;
-      
+
       console.log(`Loaded ${Object.keys(apiTranslations).length} translations for ${lang} from API`);
-      
+
     } catch (error) {
       console.error(`Error loading ${lang} translations:`, error);
-      setLoadingState({ 
-        isLoading: false, 
-        error: `Failed to load ${lang} translations: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      setLoadingState({
+        isLoading: false,
+        error: `Failed to load ${lang} translations: ${error instanceof Error ? error.message : 'Unknown error'}`
       });
-      
-      // Use default translations as fallback (empty object so t() function will use simple translations)
-      setTranslations({});
+
+      // Use default translations as fallback instead of empty object
+      setTranslations(DEFAULT_TRANSLATIONS);
     } finally {
       setIsLoading(false);
       setLoadingState({ isLoading: false, progress: 100 });
@@ -405,25 +405,25 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
     try {
       // Priority order: API translations > simple static translations > defaults
       let translation = translations[key]; // API translations first
-      
+
       // Fallback to simple static translations if not found in API
       if (!translation) {
         const languageTranslations = simpleTranslations?.[language] || simpleTranslations?.en || {};
         translation = languageTranslations[key];
       }
-      
+
       // Final fallback to defaults
       if (!translation) {
         translation = DEFAULT_TRANSLATIONS[key] || key;
       }
-      
+
       // Simple parameter substitution
       if (params && translation) {
         Object.entries(params).forEach(([paramKey, value]) => {
           translation = translation.replace(`{{${paramKey}}}`, String(value));
         });
       }
-      
+
       return translation || key;
     } catch (error) {
       console.warn('Translation error for key:', key, error);
@@ -443,7 +443,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
       cacheRef.current = {};
       cacheStatsRef.current.lastCleared = new Date();
     }
-    
+
     // Reload current language translations
     await loadTranslations(language);
   }, [language]);
@@ -454,13 +454,13 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
         const cacheKey = getCacheKey(type, language);
         if (!cacheRef.current[cacheKey] || !isCacheValid(cacheRef.current[cacheKey])) {
           const content = await apiClient.getLocalizedContent(language, type);
-          
+
           // Transform to key-value pairs for caching
           const keyValuePairs: Record<string, string> = {};
           content.forEach((item: LocalizedContent) => {
             keyValuePairs[item.content_id] = item.text;
           });
-          
+
           cacheRef.current[cacheKey] = {
             data: keyValuePairs,
             timestamp: Date.now(),
@@ -472,7 +472,7 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
         console.error(`Error preloading ${type} content:`, error);
       }
     });
-    
+
     await Promise.all(promises);
     cacheStatsRef.current.size = Object.keys(cacheRef.current).length;
   }, [language]);
@@ -510,12 +510,12 @@ export function LocalizationProvider({ children, defaultLanguage = 'en' }: Local
   const getTranslationCoverage = useCallback(() => {
     const enContent = allContent.filter(item => item.language === 'en' && item.is_active);
     const arContent = allContent.filter(item => item.language === 'ar' && item.is_active);
-    
+
     const enKeys = new Set(enContent.map(item => item.content_id));
     const arKeys = new Set(arContent.map(item => item.content_id));
-    
+
     const missing = Array.from(enKeys).filter(key => !arKeys.has(key));
-    
+
     return {
       en: enContent.length,
       ar: arContent.length,
