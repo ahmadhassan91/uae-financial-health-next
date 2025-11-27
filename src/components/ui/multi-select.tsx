@@ -79,10 +79,13 @@ export function MultiSelect({
                   className="mr-1 text-xs"
                 >
                   {option.label}
-                  <button
-                    className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring cursor-pointer"
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
                         handleUnselect(option.value);
                       }
                     }}
@@ -97,7 +100,7 @@ export function MultiSelect({
                     }}
                   >
                     <X className="h-3 w-3 hover:text-destructive" />
-                  </button>
+                  </div>
                 </Badge>
               ))
             )}
@@ -110,8 +113,16 @@ export function MultiSelect({
                     className="mr-1 text-xs"
                   >
                     {option.label}
-                    <button
-                      className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring cursor-pointer"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleUnselect(option.value);
+                        }
+                      }}
                       onMouseDown={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -123,7 +134,7 @@ export function MultiSelect({
                       }}
                     >
                       <X className="h-3 w-3 hover:text-destructive" />
-                    </button>
+                    </div>
                   </Badge>
                 ))}
                 <Badge variant="secondary" className="text-xs">
