@@ -67,6 +67,13 @@ interface FinancialClinicSubmission {
   };
   created_at: string;
   completed_at: string | null;
+  insights?: {
+    category: string;
+    status_level: string;
+    text: string;
+    text_ar: string;
+    priority: number;
+  }[];
 }
 
 interface SubmissionStats {
@@ -238,18 +245,18 @@ export function SubmissionsTable() {
 
   const getCategoryScore = (categoryScores: any, categoryName: string) => {
     if (!categoryScores) return 0;
-    
+
     // Handle nested structure: categoryScores[categoryName].score
     const categoryData = categoryScores[categoryName];
     if (categoryData && typeof categoryData === 'object' && 'score' in categoryData) {
       return categoryData.score;
     }
-    
+
     // Fallback for direct numeric values
     if (typeof categoryData === 'number') {
       return categoryData;
     }
-    
+
     return 0;
   };
 
@@ -656,6 +663,30 @@ export function SubmissionsTable() {
                 </div>
               </div>
 
+
+              {/* Insights */}
+              {selectedSubmission.insights && selectedSubmission.insights.length > 0 && (
+                <div>
+                  <h3 className="font-semibold mb-3 flex items-center gap-2">
+                    <Award className="w-4 h-4" />
+                    Key Insights
+                  </h3>
+                  <div className="space-y-3">
+                    {selectedSubmission.insights.map((insight, index) => (
+                      <div key={index} className="p-3 border rounded-lg bg-blue-50/50 border-blue-100">
+                        <div className="flex justify-between items-start mb-1">
+                          <h4 className="font-semibold text-blue-900">{insight.category}</h4>
+                          <Badge variant="outline" className="text-xs bg-white capitalize">
+                            {insight.status_level.replace('_', ' ')}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-700">{insight.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Dates */}
               <div>
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
@@ -679,6 +710,6 @@ export function SubmissionsTable() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </div >
   );
 }
