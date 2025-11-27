@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useLocalization } from "@/contexts/LocalizationContext";
 import { toast } from "sonner";
+import { getApiUrl } from "@/lib/api-config";
 
 export function HomepageHeader() {
   const { language, setLanguage } = useLocalization();
@@ -30,72 +31,9 @@ export function HomepageHeader() {
       return;
     }
 
-    // Try to get email from localStorage
-    const storedProfile = localStorage.getItem("financialClinicProfile");
-    let email = "";
-
-    if (storedProfile) {
-      try {
-        const profile = JSON.parse(storedProfile);
-        email = profile.email;
-      } catch (e) {
-        console.error("Failed to parse stored profile");
-      }
-    }
-
-    if (!email) {
-      // No email found but user is logged in, redirect to login
-      toast.info(
-        language === "ar"
-          ? "الرجاء تسجيل الدخول لعرض النتائج السابقة"
-          : "Please login to view previous assessments"
-      );
-      router.push("/financial-clinic/login");
-      return;
-    }
-
-    // Check if user has any results
-    try {
-      const apiUrl =
-        process.env.NEXT_PUBLIC_API_URL ||
-        (typeof window !== "undefined" &&
-        window.location.origin.includes("localhost")
-          ? "http://localhost:8000/api/v1"
-          : "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1");
-
-      const response = await fetch(
-        `${apiUrl}/financial-clinic/history/${encodeURIComponent(email)}`
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data && data.length > 0) {
-          // User has results, navigate to Score History page
-          router.push("/financial-clinic/history");
-        } else {
-          toast.info(
-            language === "ar"
-              ? "لا توجد نتائج سابقة. يرجى إكمال التقييم أولاً"
-              : "No previous results found. Please complete the assessment first"
-          );
-          router.push("/financial-clinic");
-        }
-      } else {
-        toast.info(
-          language === "ar"
-            ? "لا توجد نتائج سابقة. يرجى إكمال التقييم أولاً"
-            : "No previous results found. Please complete the assessment first"
-        );
-        router.push("/financial-clinic");
-      }
-    } catch (error) {
-      console.error("Error checking for results:", error);
-      toast.error(
-        language === "ar"
-          ? "فشل في التحقق من النتائج السابقة"
-          : "Failed to check for previous results"
-      );
-    }
+    // User is logged in, navigate directly to history page
+    // The history page will handle authentication and data fetching
+    router.push("/financial-clinic/history");
   };
 
   return (
