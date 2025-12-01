@@ -835,12 +835,28 @@ export default function FinancialClinicPage({
                     {language === "ar" ? "العين" : "Al Ain"}
                   </SelectItem>
                   <SelectItem
-                    value="Ras Al Khaimah / Fujairah / UAQ / Outside UAE"
+                    value="Ras Al Khaimah"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar"
-                      ? "رأس الخيمة / الفجيرة / أم القيوين / خارج الإمارات"
-                      : "Ras Al Khaimah / Fujairah / UAQ / Outside UAE"}
+                    {language === "ar" ? "رأس الخيمة" : "Ras Al Khaimah"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Fujairah"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "الفجيرة" : "Fujairah"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Umm Al Quwain"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "أم القيوين" : "Umm Al Quwain"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Outside UAE"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "خارج الإمارات" : "Outside UAE"}
                   </SelectItem>
                 </SelectContent>
               </Select>
