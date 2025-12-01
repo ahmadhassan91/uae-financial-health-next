@@ -64,6 +64,11 @@ export function FinancialClinicSurvey({
     loadQuestions();
   }, [profile.children]); // Re-fetch if children count changes
 
+  // Auto-scroll to top when navigating between categories
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
+
   // Group questions by category
   const questionsByCategory: { [key: string]: FinancialClinicQuestion[] } = {};
   questions.forEach((q) => {
@@ -101,7 +106,7 @@ export function FinancialClinicSurvey({
         <div className="flex-1 flex items-center justify-center px-4">
           <div className="text-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#437749] mx-auto"></div>
-            <p className="text-[#a1aeb7]">
+            <p className="text-[#575757]">
               {language === "ar"
                 ? "جاري تحميل الأسئلة..."
                 : "Loading questions..."}
@@ -128,7 +133,7 @@ export function FinancialClinicSurvey({
                 ? "خطأ في تحميل الأسئلة"
                 : "Error Loading Questions"}
             </h3>
-            <p className="text-[#a1aeb7]">{error}</p>
+            <p className="text-[#575757]">{error}</p>
             <Button
               onClick={() => window.location.reload()}
               className="bg-[#3fab4c] hover:bg-[#3fab4c]/90"
@@ -148,7 +153,7 @@ export function FinancialClinicSurvey({
       <div className="w-full min-h-screen flex flex-col bg-white">
         <HomepageHeader />
         <div className="flex-1 flex items-center justify-center px-4">
-          <p className="text-[#a1aeb7]">
+          <p className="text-[#575757]">
             {language === "ar"
               ? "لا توجد أسئلة متاحة"
               : "No questions available"}
@@ -225,7 +230,7 @@ export function FinancialClinicSurvey({
           <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
             {language === "ar" ? "صفحة الفحص" : "Checkup Page"}
           </h1>
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
             {language === "ar"
               ? "هل أنتم مستعدون لبدء التقييم؟"
               : "Ready to begin your checkup?"}
@@ -234,7 +239,7 @@ export function FinancialClinicSurvey({
 
         {/* Welcome Text */}
         <div className="w-full max-w-[833px] mb-4 md:mb-6 lg:mb-8 px-2">
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
             {language === "ar"
               ? "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
               : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits—no judgments, just insights."}
@@ -252,14 +257,14 @@ export function FinancialClinicSurvey({
 
             {/* Progress Text */}
             <div className="flex flex-col items-center justify-center gap-[3px]">
-              <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
+              <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
                 {language === "ar"
                   ? `لقد أجَبْتم عن %${Math.round(
-                      progress
-                    )} من أسئلة التقييم - تقدّم ممتاز`
+                    progress
+                  )} من أسئلة التقييم - تقدّم ممتاز`
                   : `You're ${Math.round(
-                      progress
-                    )}% through your checkup—great progress!`}
+                    progress
+                  )}% through your checkup—great progress!`}
               </p>
             </div>
           </div>
@@ -269,9 +274,8 @@ export function FinancialClinicSurvey({
         {currentCategoryQuestions.length > 0 && (
           <div className="w-full max-w-[1380px] px-1 sm:px-2">
             <h2
-              className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${
-                isRTL ? "flex-row-reverse" : "flex-row"
-              }`}
+              className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${isRTL ? "flex-row-reverse" : "flex-row"
+                }`}
             >
               {language === "ar" ? "فئة الأسئلة: " : "Questions Category: "}
               {getCategoryDisplay(currentCategory)}
@@ -300,9 +304,8 @@ export function FinancialClinicSurvey({
                       {/* Question Content */}
                       <div className="flex flex-col items-start gap-2 flex-1 w-full min-w-0">
                         <h3
-                          className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a3f4a] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${
-                            isRTL ? "text-right" : "text-left"
-                          }`}
+                          className={`font-[family-name:var(--font-poppins)] font-semibold text-[#575757] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${isRTL ? "text-right" : "text-left"
+                            }`}
                         >
                           {questionText}
                         </h3>
@@ -329,9 +332,8 @@ export function FinancialClinicSurvey({
                             return (
                               <div
                                 key={option.value}
-                                className={`flex items-start gap-2.5 md:gap-3 ${
-                                  isRTL ? "flex-row-reverse" : "flex-row"
-                                } min-h-[24px]`}
+                                className={`flex items-start gap-2.5 md:gap-3 ${isRTL ? "flex-row-reverse" : "flex-row"
+                                  } min-h-[24px]`}
                                 style={{
                                   display: "flex",
                                   justifyContent: "end",
@@ -344,17 +346,16 @@ export function FinancialClinicSurvey({
                                 />
                                 <Label
                                   htmlFor={`${question.id}-${option.value}`}
-                                  className={`font-[family-name:var(--font-poppins)] font-normal text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 cursor-pointer flex-1 min-w-0 break-words ${
-                                    isSelected
-                                      ? "text-[#2a3f4a]"
-                                      : "text-[#6b7c8a]"
-                                  } ${isRTL ? "text-right" : "text-left"}`}
+                                  className={`font-[family-name:var(--font-poppins)] font-normal text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 cursor-pointer flex-1 min-w-0 break-words ${isSelected
+                                    ? "text-[#575757]"
+                                    : "text-[#575757]"
+                                    } ${isRTL ? "text-right" : "text-left"}`}
                                   style={
                                     isRTL
                                       ? {
-                                          display: "flex",
-                                          justifyContent: "end",
-                                        }
+                                        display: "flex",
+                                        justifyContent: "end",
+                                      }
                                       : undefined
                                   }
                                 >
@@ -375,11 +376,9 @@ export function FinancialClinicSurvey({
 
         {/* Navigation Buttons */}
         <div
-          className={`flex flex-col sm:flex-row ${
-            currentStep > 0 ? "sm:justify-between" : "sm:justify-end"
-          } items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${
-            isRTL ? "flex-row-reverse" : "flex-row"
-          }`}
+          className={`flex flex-col sm:flex-row ${currentStep > 0 ? "sm:justify-between" : "sm:justify-end"
+            } items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${isRTL ? "flex-row-reverse" : "flex-row"
+            }`}
         >
           {/* Previous Button - Only show if not on first category */}
           {currentStep > 0 && (
@@ -406,8 +405,8 @@ export function FinancialClinicSurvey({
                   ? "إكمال التقييم"
                   : "COMPLETE"
                 : language === "ar"
-                ? "الفئة التالية"
-                : "NEXT"}
+                  ? "الفئة التالية"
+                  : "NEXT"}
             </span>
           </Button>
         </div>

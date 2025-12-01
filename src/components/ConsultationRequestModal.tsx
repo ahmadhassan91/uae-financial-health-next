@@ -138,6 +138,19 @@ export function ConsultationRequestModal({
       );
       return false;
     }
+
+    // UAE Phone Validation: +971 or 05 followed by digits
+    const phoneRegex = /^(?:\+971|00971|0)?(?:50|51|52|54|55|56|58)[0-9]{7}$/;
+    // Allow international numbers too generally, but if it looks like UAE, enforce format
+    // Or just check if it has at least 9 digits
+    const generalPhoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+
+    if (!generalPhoneRegex.test(formData.phone_number.replace(/\s/g, ''))) {
+      toast.error(
+        language === "ar" ? "رقم الهاتف غير صحيح" : "Invalid phone number format"
+      );
+      return false;
+    }
     return true;
   };
 
@@ -465,8 +478,8 @@ export function ConsultationRequestModal({
                   ? "جاري الإرسال..."
                   : "Sending..."
                 : language === "ar"
-                ? "إرسال الطلب"
-                : "Send Request"}
+                  ? "إرسال الطلب"
+                  : "Send Request"}
             </Button>
           </div>
         </form>

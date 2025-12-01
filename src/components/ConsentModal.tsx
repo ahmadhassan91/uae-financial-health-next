@@ -152,83 +152,85 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
                 : "The content and information contained within National Bonds Corporation Sole Proprietorship PSC website or delivered to you in connection with your use of National Bond's website is the property of National Bonds and any other third party (where applicable). The trademark, trade names and logos (the 'Trade Marks') that are used and displayed on National Bonds Corporation Sole Proprietorship PSC  website include registered and unregistered Trade Marks of National Bonds Corporation Sole Proprietorship PSC  and other third parties. Nothing on National Bonds Corporation Sole Proprietorship PSC website should be construed as granting any licence or right to use any Trade Marks displayed on National Bonds Corporation Sole Proprietorship PSC website. National Bonds Corporation Sole Proprietorship PSC retains all proprietary rights on its website. Users are prohibited from using the same without written permission of National Bonds Corporation Sole Proprietorship PSC  of such or such other parties. The materials on this website are protected by copyright and no part of such materials may be modified, reproduced, stored in a retrieval system, transmitted (in any form or by any means), copied, distributed, used for creating derivative works or used in any other way for commercial or public purposes without National Bonds Corporation Sole Proprietorship PSC prior written consent"}
             </p>
           </div>
-        </div>
 
-        {/* Required Consents - Fixed section without scroll */}
-        <div className="px-8 py-6 border-t border-gray-100 flex-shrink-0">
-          <div className="space-y-4">
-            <h3 className="font-normal text-[#565d63] text-base leading-6">
-              {language === "ar"
-                ? "الموافقة والتأكيد المطلوبان"
-                : "Required Consent & Confirmation"}
-            </h3>
 
-            {/* Profiling Consent */}
-            <div className="space-y-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 transition-colors">
-              
-              <div className="flex items-start gap-4">
-                <Checkbox
-                  id="profiling-consent"
-                  checked={profilingConsent}
-                  onCheckedChange={(checked) =>
-                    setProfilingConsent(checked as boolean)
-                  }
-                  className="mt-1 h-5 w-5 border-2 border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
-                />
-                <label
-                  htmlFor="profiling-consent"
-                  className="flex-1 font-normal text-[#495565] text-sm leading-[22.8px] cursor-pointer"
-                >
-                  {language === "ar"
-                    ? "أوافق على المعالجة الآلية لإجاباتي بهدف تحديد درجة صحتي المالية، وتقديم رؤى مرتبطة بها، بما في ذلك جمع بياناتي الشخصية وتخزينها ومعالجتها"
-                    : "I consent to the automated processing of my responses to generate a financial health score and related insights including the collection, storage, and processing of my personal data."}
-                </label>
+          {/* Required Consents - Moved inside scrollable area */}
+          <div className="px-8 py-6 border-t border-gray-100">
+            <div className="space-y-4">
+              <h3 className="font-normal text-[#565d63] text-base leading-6">
+                {language === "ar"
+                  ? "الموافقة والتأكيد المطلوبان"
+                  : "Required Consent & Confirmation"}
+              </h3>
+
+              {/* Profiling Consent */}
+              <div className="space-y-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 transition-colors">
+
+                <div className="flex items-start gap-4">
+                  <Checkbox
+                    id="profiling-consent"
+                    checked={profilingConsent}
+                    onCheckedChange={(checked) =>
+                      setProfilingConsent(checked as boolean)
+                    }
+                    className="mt-1 h-5 w-5 border-2 border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                  />
+                  <label
+                    htmlFor="profiling-consent"
+                    className="flex-1 font-normal text-[#495565] text-sm leading-[22.8px] cursor-pointer"
+                  >
+                    {language === "ar"
+                      ? "أوافق على المعالجة الآلية لإجاباتي بهدف تحديد درجة صحتي المالية، وتقديم رؤى مرتبطة بها، بما في ذلك جمع بياناتي الشخصية وتخزينها ومعالجتها"
+                      : "I consent to the automated processing of my responses to generate a financial health score and related insights including the collection, storage, and processing of my personal data."}
+                  </label>
+                </div>
               </div>
-            </div>
 
-            {/* Data Processing Consent */}
-            <div className="space-y-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 transition-colors">
-              
-              <div className="flex items-start gap-4">
-                <Checkbox
-                  id="data-processing-consent"
-                  checked={dataProcessingConsent}
-                  onCheckedChange={(checked) =>
-                    setDataProcessingConsent(checked as boolean)
-                  }
-                  className="mt-1 h-5 w-5 border-2 border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
-                />
-                <label
-                  htmlFor="data-processing-consent"
-                  className="flex-1 font-normal text-[#495565] text-sm leading-[22.8px] cursor-pointer"
-                >
-                  {language === "ar"
-                    ? "أُقرّ بأن المعلومات المقدّمة لا تُعدّ مشورة مالية أو مهنية ولا ينبغي اعتبارها كذلك."
-                    : " I confirm that the information provided is not to be take as financial or professional advice"}
-                </label>
+              {/* Data Processing Consent */}
+              <div className="space-y-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 transition-colors">
+
+                <div className="flex items-start gap-4">
+                  <Checkbox
+                    id="data-processing-consent"
+                    checked={dataProcessingConsent}
+                    onCheckedChange={(checked) =>
+                      setDataProcessingConsent(checked as boolean)
+                    }
+                    className="mt-1 h-5 w-5 border-2 border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                  />
+                  <label
+                    htmlFor="data-processing-consent"
+                    className="flex-1 font-normal text-[#495565] text-sm leading-[22.8px] cursor-pointer"
+                  >
+                    {language === "ar"
+                      ? "أُقرّ بأن المعلومات المقدّمة لا تُعدّ مشورة مالية أو مهنية ولا ينبغي اعتبارها كذلك."
+                      : " I confirm that the information provided is not to be take as financial or professional advice"}
+                  </label>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+
 
         {/* Footer Actions */}
         <div className="bg-white px-6 py-4 flex items-center justify-center gap-4 flex-shrink-0">
           <Button
             onClick={handleGrantConsent}
             disabled={!canProceed || isSubmitting}
-            className={`flex-1 max-w-[296px] h-9 font-normal text-white text-sm rounded-lg ${
-              canProceed && !isSubmitting
+            className={`flex-1 max-w-[296px] h-9 font-normal text-white text-sm rounded-lg ${canProceed && !isSubmitting
                 ? "bg-[#1e2939] hover:bg-[#1e2939]/90 cursor-pointer"
                 : "bg-gray-300 cursor-not-allowed"
-            }`}
+              }`}
           >
             {isSubmitting
               ? language === "ar"
                 ? "جاري الحفظ..."
                 : "Saving..."
               : language === "ar"
-              ? "أمنح الموافقة والمتابعة"
-              : "I GRANT CONSENT & CONTINUE"}
+                ? "أمنح الموافقة والمتابعة"
+                : "I GRANT CONSENT & CONTINUE"}
           </Button>
 
           <Button

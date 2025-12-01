@@ -37,7 +37,7 @@ export interface FinancialClinicProfile {
   income_range: string; // "Below 5K", "5K-10K", etc.
   emirate: string; // "Dubai", "Abu Dhabi", etc.
   email: string;
-  
+
   // Optional fields
   mobile_number?: string;
 }
@@ -70,6 +70,7 @@ export interface FinancialClinicInsight {
   category: string;
   status_level: "at_risk" | "good" | "excellent";
   text: string;
+  text_ar?: string;
   priority: number;
 }
 
@@ -99,7 +100,7 @@ export interface FinancialClinicCalculateRequest {
   profile: FinancialClinicProfile;
 }
 
-export interface FinancialClinicCalculateResponse extends FinancialClinicResult {}
+export interface FinancialClinicCalculateResponse extends FinancialClinicResult { }
 
 // ==================== Survey State Types ====================
 
