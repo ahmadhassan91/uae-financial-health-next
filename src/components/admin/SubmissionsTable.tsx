@@ -99,6 +99,8 @@ export function SubmissionsTable() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [nationalityFilter, setNationalityFilter] = useState<string>('all');
   const [companyFilter, setCompanyFilter] = useState<string>('all');
+  const [incomeFilter, setIncomeFilter] = useState<string>('all');
+  const [ageGroupFilter, setAgeGroupFilter] = useState<string>('all');
   const [selectedSubmission, setSelectedSubmission] = useState<FinancialClinicSubmission | null>(null);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -113,7 +115,7 @@ export function SubmissionsTable() {
   useEffect(() => {
     loadSubmissions();
     loadStats();
-  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter]);
+  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, incomeFilter, ageGroupFilter]);
 
   const loadCompanies = async () => {
     try {
@@ -136,6 +138,8 @@ export function SubmissionsTable() {
       if (statusFilter !== 'all') params.append('status_band', statusFilter);
       if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
       if (companyFilter !== 'all') params.append('company_id', companyFilter);
+      if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
+      if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
       const response = await apiClient.request(`/admin/simple/submissions?${params}`) as any;
       setSubmissions(response.submissions || []);
@@ -183,6 +187,8 @@ export function SubmissionsTable() {
       if (statusFilter !== 'all') params.append('status_band', statusFilter);
       if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
       if (companyFilter !== 'all') params.append('company_id', companyFilter);
+      if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
+      if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
       const token = localStorage.getItem('admin_access_token');
       const response = await fetch(
@@ -336,53 +342,89 @@ export function SubmissionsTable() {
         </CardHeader>
         <CardContent>
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search by name, email, or phone..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    placeholder="Search by name, email, or phone..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
               </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="Excellent">Excellent</SelectItem>
+                  <SelectItem value="Good">Good</SelectItem>
+                  <SelectItem value="Needs Improvement">Needs Improvement</SelectItem>
+                  <SelectItem value="At Risk">At Risk</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={nationalityFilter} onValueChange={setNationalityFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Filter by nationality" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Nationalities</SelectItem>
+                  <SelectItem value="Emirati">Emirati</SelectItem>
+                  <SelectItem value="Non-Emirati">Non-Emirati</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={companyFilter} onValueChange={setCompanyFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Filter by company" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Companies</SelectItem>
+                  {companies.map((company) => (
+                    <SelectItem key={company.id} value={company.id.toString()}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Excellent">Excellent</SelectItem>
-                <SelectItem value="Good">Good</SelectItem>
-                <SelectItem value="Needs Improvement">Needs Improvement</SelectItem>
-                <SelectItem value="At Risk">At Risk</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={nationalityFilter} onValueChange={setNationalityFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Filter by nationality" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Nationalities</SelectItem>
-                <SelectItem value="Emirati">Emirati</SelectItem>
-                <SelectItem value="Non-Emirati">Non-Emirati</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={companyFilter} onValueChange={setCompanyFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Filter by company" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Companies</SelectItem>
-                {companies.map((company) => (
-                  <SelectItem key={company.id} value={company.id.toString()}>
-                    {company.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
+            {/* Additional Demographic Filters Row */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Select value={incomeFilter} onValueChange={setIncomeFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Income Range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Income Ranges</SelectItem>
+                  <SelectItem value="Below 5K">Below 5K</SelectItem>
+                  <SelectItem value="5K-10K">5K-10K</SelectItem>
+                  <SelectItem value="10K-15K">10K-15K</SelectItem>
+                  <SelectItem value="15K-20K">15K-20K</SelectItem>
+                  <SelectItem value="20K-30K">20K-30K</SelectItem>
+                  <SelectItem value="30K-50K">30K-50K</SelectItem>
+                  <SelectItem value="Above 50K">Above 50K</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={ageGroupFilter} onValueChange={setAgeGroupFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Age Group" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Age Groups</SelectItem>
+                  <SelectItem value="< 18">&lt; 18</SelectItem>
+                  <SelectItem value="18-25">18-25</SelectItem>
+                  <SelectItem value="26-35">26-35</SelectItem>
+                  <SelectItem value="36-45">36-45</SelectItem>
+                  <SelectItem value="46-60">46-60</SelectItem>
+                  <SelectItem value="60+">60+</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Table */}

@@ -50,9 +50,14 @@ export function LeadsManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sourceFilter, setSourceFilter] = useState<string>('all');
+  const [incomeFilter, setIncomeFilter] = useState<string>('all');
+  const [nationalityFilter, setNationalityFilter] = useState<string>('all');
+  const [ageGroupFilter, setAgeGroupFilter] = useState<string>('all');
+  const [companyFilter, setCompanyFilter] = useState<string>('all');
   const [selectedLead, setSelectedLead] = useState<ConsultationRequest | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [companies, setCompanies] = useState<{ id: number, name: string }[]>([]);
 
 
 
@@ -62,6 +67,10 @@ export function LeadsManagement() {
       const params = new URLSearchParams();
       if (statusFilter !== 'all') params.append('status', statusFilter);
       if (sourceFilter !== 'all') params.append('source', sourceFilter);
+      if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
+      if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
+      if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
+      if (companyFilter !== 'all') params.append('company_id', companyFilter);
       if (searchTerm) params.append('search', searchTerm);
 
       const data = await apiClient.request(`/consultations/admin/list?${params}`) as ConsultationRequest[];
@@ -83,16 +92,29 @@ export function LeadsManagement() {
     }
   };
 
+  const loadCompanies = async () => {
+    try {
+      const response = await apiClient.request('/admin/simple/filter-options') as any;
+      setCompanies(response.companies || []);
+    } catch (error) {
+      console.error('Error loading companies:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadCompanies();
+  }, []);
+
   useEffect(() => {
     loadLeads();
     loadStats();
-  }, [statusFilter, sourceFilter, searchTerm]);
+  }, [statusFilter, sourceFilter, incomeFilter, nationalityFilter, ageGroupFilter, companyFilter, searchTerm]);
 
   const handleStatusUpdate = async (id: number, newStatus: string, notes?: string) => {
     try {
       await apiClient.request(`/consultations/admin/${id}`, {
         method: 'PUT',
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           status: newStatus,
           notes: notes || selectedLead?.notes
         })
@@ -292,38 +314,99 @@ export function LeadsManagement() {
         </CardHeader>
         <CardContent>
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1">
-              <Input
-                placeholder="Search by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-              />
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Search by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="contacted">Contacted</SelectItem>
+                  <SelectItem value="scheduled">Scheduled</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Filter by source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="financial_clinic_results">Clinic Results</SelectItem>
+                  <SelectItem value="website">Website</SelectItem>
+                  <SelectItem value="landing_page">Landing Page</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="contacted">Contacted</SelectItem>
-                <SelectItem value="scheduled">Scheduled</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={sourceFilter} onValueChange={setSourceFilter}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="Filter by source" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Sources</SelectItem>
-                <SelectItem value="financial_clinic_results">Clinic Results</SelectItem>
-                <SelectItem value="website">Website</SelectItem>
-                <SelectItem value="landing_page">Landing Page</SelectItem>
-              </SelectContent>
-            </Select>
+
+            {/* Demographic Filters Row */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Select value={incomeFilter} onValueChange={setIncomeFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Income Range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Income Ranges</SelectItem>
+                  <SelectItem value="Below 5K">Below 5K</SelectItem>
+                  <SelectItem value="5K-10K">5K-10K</SelectItem>
+                  <SelectItem value="10K-15K">10K-15K</SelectItem>
+                  <SelectItem value="15K-20K">15K-20K</SelectItem>
+                  <SelectItem value="20K-30K">20K-30K</SelectItem>
+                  <SelectItem value="30K-50K">30K-50K</SelectItem>
+                  <SelectItem value="Above 50K">Above 50K</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={nationalityFilter} onValueChange={setNationalityFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Nationality" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Nationalities</SelectItem>
+                  <SelectItem value="Emirati">Emirati</SelectItem>
+                  <SelectItem value="Non-Emirati">Non-Emirati</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={ageGroupFilter} onValueChange={setAgeGroupFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Age Group" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Age Groups</SelectItem>
+                  <SelectItem value="< 18">&lt; 18</SelectItem>
+                  <SelectItem value="18-25">18-25</SelectItem>
+                  <SelectItem value="26-35">26-35</SelectItem>
+                  <SelectItem value="36-45">36-45</SelectItem>
+                  <SelectItem value="46-60">46-60</SelectItem>
+                  <SelectItem value="60+">60+</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={companyFilter} onValueChange={setCompanyFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Company" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Companies</SelectItem>
+                  {companies.map((company) => (
+                    <SelectItem key={company.id} value={company.id.toString()}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Table */}
@@ -439,7 +522,7 @@ export function LeadsManagement() {
               Update the status and notes for this consultation request.
             </DialogDescription>
           </DialogHeader>
-          
+
           {selectedLead && (
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
@@ -460,7 +543,7 @@ export function LeadsManagement() {
                   <div className="text-sm text-gray-900">{selectedLead.source.replace('_', ' ')}</div>
                 </div>
               </div>
-              
+
               {selectedLead.message && (
                 <div>
                   <Label className="text-sm font-medium">Message</Label>
@@ -472,9 +555,9 @@ export function LeadsManagement() {
 
               <div>
                 <Label htmlFor="status">Status</Label>
-                <Select 
-                  value={selectedLead.status} 
-                  onValueChange={(value) => setSelectedLead({...selectedLead, status: value as any})}
+                <Select
+                  value={selectedLead.status}
+                  onValueChange={(value) => setSelectedLead({ ...selectedLead, status: value as any })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -492,7 +575,7 @@ export function LeadsManagement() {
                 <Label htmlFor="notes">Internal Notes</Label>
                 <Textarea
                   value={selectedLead.notes || ''}
-                  onChange={(e) => setSelectedLead({...selectedLead, notes: e.target.value})}
+                  onChange={(e) => setSelectedLead({ ...selectedLead, notes: e.target.value })}
                   placeholder="Add internal notes about this lead..."
                   rows={3}
                 />
@@ -504,7 +587,7 @@ export function LeadsManagement() {
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={() => selectedLead && handleStatusUpdate(selectedLead.id, selectedLead.status, selectedLead.notes)}
             >
               Save Changes
