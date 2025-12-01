@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Users, TrendingUp, Clock, Activity, Download, User, LogOut, FileSpreadsheet, Loader2, Funnel } from 'lucide-react';
+import { Users, TrendingUp, Clock, Activity, Download, User, LogOut, FileSpreadsheet, Loader2, Funnel, Menu, X } from 'lucide-react';
 import { useAdminAuth } from '../hooks/use-admin-auth';
 import { toast } from 'sonner';
 import {
@@ -57,6 +57,7 @@ interface FinancialClinicAdminDashboardProps {
 export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDashboardProps) {
   const { user, logout } = useAdminAuth();
   const [selectedTab, setSelectedTab] = useState('overview');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // State for filters and date range
   const [filters, setFilters] = useState<DemographicFilters>({});
@@ -74,8 +75,8 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
   const [ageBreakdown, setAgeBreakdown] = useState<AgeBreakdown[]>([]);
   const [employmentBreakdown, setEmploymentBreakdown] = useState<{ status: string, count: number }[]>([]);
   const [emirateBreakdown, setEmirateBreakdown] = useState<{ emirate: string, count: number }[]>([]);
-  const [childrenBreakdown, setChildrenBreakdown] = useState<{ count_label: string, count: number }[]>([]);
-  const [incomeBreakdown, setIncomeBreakdown] = useState<{ range: string, count: number }[]>([]);
+  const [childrenBreakdown, setChildrenBreakdown] = useState<{ count_label: string, count: number, average_score: number }[]>([]);
+  const [incomeBreakdown, setIncomeBreakdown] = useState<{ range: string, count: number, average_score: number }[]>([]);
   const [genderBreakdown, setGenderBreakdown] = useState<{ gender: string, count: number, percentage: number }[]>([]);
   const [companiesAnalytics, setCompaniesAnalytics] = useState<CompanyAnalytics[]>([]);
   const [scoreAnalyticsTable, setScoreAnalyticsTable] = useState<ScoreAnalyticsResponse | null>(null);
@@ -115,22 +116,8 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
   const loadAllAnalytics = async () => {
     setLoading(true);
     try {
-      // Load all analytics in parallel
-      const [
-        metrics,
-        scoreDist,
-        catPerf,
-        timeSeries,
-        natBreakdown,
-        ageBreakdownData,
-        empBreakdown,
-        emirBreakdown,
-        childBreakdown,
-        incBreakdown,
-        compAnalytics,
-        scoreTable,
-        genBreakdown
-      ] = await Promise.all([
+      // Load all analytics in parallel with individual error handling
+      const results = await Promise.allSettled([
         adminApi.getOverviewMetrics(filters, dateParams),
         adminApi.getScoreDistribution(filters, dateParams),
         adminApi.getCategoryPerformance(filters, dateParams),
@@ -146,19 +133,58 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
         adminApi.getGenderBreakdown(filters, dateParams),
       ]);
 
-      setOverviewMetrics(metrics);
-      setScoreDistribution(scoreDist);
-      setCategoryPerformance(catPerf);
-      setTimeSeriesData(timeSeries);
-      setNationalityBreakdown(natBreakdown);
-      setAgeBreakdown(ageBreakdownData);
-      setEmploymentBreakdown(empBreakdown);
-      setEmirateBreakdown(emirBreakdown);
-      setChildrenBreakdown(childBreakdown);
-      setIncomeBreakdown(incBreakdown);
-      setCompaniesAnalytics(compAnalytics);
-      setScoreAnalyticsTable(scoreTable);
-      setGenderBreakdown(genBreakdown);
+      // Extract successful results
+      const [
+        metrics,
+        scoreDist,
+        catPerf,
+        timeSeries,
+        natBreakdown,
+        ageBreakdownData,
+        empBreakdown,
+        emirBreakdown,
+        childBreakdown,
+        incBreakdown,
+        compAnalytics,
+        scoreTable,
+        genBreakdown
+      ] = results.map((result, index) => {
+        if (result.status === 'fulfilled') {
+          return result.value;
+        } else {
+          console.error(`Failed to load analytics item ${index}:`, result.reason);
+          return null;
+        }
+      }) as [
+          OverviewMetrics | null,
+          ScoreDistribution[] | null,
+          CategoryPerformance[] | null,
+          TimeSeriesData[] | null,
+          NationalityBreakdown[] | null,
+          AgeBreakdown[] | null,
+          { status: string; count: number }[] | null,
+          { emirate: string; count: number }[] | null,
+          { count_label: string; count: number; average_score: number }[] | null,
+          { range: string; count: number; average_score: number }[] | null,
+          CompanyAnalytics[] | null,
+          ScoreAnalyticsResponse | null,
+          { gender: string; count: number; percentage: number }[] | null
+        ];
+
+      // Set data only if successfully loaded
+      if (metrics) setOverviewMetrics(metrics);
+      if (scoreDist) setScoreDistribution(scoreDist);
+      if (catPerf) setCategoryPerformance(catPerf);
+      if (timeSeries) setTimeSeriesData(timeSeries);
+      if (natBreakdown) setNationalityBreakdown(natBreakdown);
+      if (ageBreakdownData) setAgeBreakdown(ageBreakdownData);
+      if (empBreakdown) setEmploymentBreakdown(empBreakdown);
+      if (emirBreakdown) setEmirateBreakdown(emirBreakdown);
+      if (childBreakdown) setChildrenBreakdown(childBreakdown);
+      if (incBreakdown) setIncomeBreakdown(incBreakdown);
+      if (compAnalytics) setCompaniesAnalytics(compAnalytics);
+      if (scoreTable) setScoreAnalyticsTable(scoreTable);
+      if (genBreakdown) setGenderBreakdown(genBreakdown);
     } catch (error) {
       console.error('Failed to load analytics:', error);
       toast.error('Failed to load analytics data');
@@ -230,14 +256,34 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
-      <div className="flex">
+      <div className="flex relative">
+        {/* Mobile Overlay */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar for Filters */}
-        <aside className="w-80 h-screen sticky top-0 overflow-y-auto border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="p-4 border-b">
+        <aside className={`
+          fixed lg:sticky top-0 h-screen overflow-y-auto border-r bg-background z-50
+          w-80 transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}>
+          <div className="p-4 border-b flex items-center justify-between">
             <h2 className="font-semibold text-lg flex items-center gap-2">
               <Funnel className="w-5 h-5" />
               Filters
             </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <X className="w-5 h-5" />
+            </Button>
           </div>
           <div className="p-4">
             <FinancialClinicFilters
@@ -251,96 +297,106 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
         </aside>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-x-hidden">
+        <div className="flex-1 overflow-x-hidden w-full lg:w-auto">
           <div className="container mx-auto max-w-7xl p-4 py-8">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-              <div className="flex items-center gap-4">
-                {onBack && (
-                  <Button variant="outline" onClick={onBack} className="flex items-center gap-2">
-                    ← Back
-                  </Button>
-                )}
+            <div className="flex flex-col gap-4 mb-8">
+              {/* Mobile Menu Button */}
+              <div className="flex items-center gap-2 lg:hidden">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsSidebarOpen(true)}
+                  className="flex items-center gap-2"
+                >
+                  <Menu className="w-4 h-4" />
+                  Filters
+                </Button>
+              </div>
+
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-3xl font-bold">Financial Clinic Dashboard</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold">Financial Clinic Dashboard</h1>
                     <Badge variant="destructive" className="text-xs">ADMIN</Badge>
                   </div>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm md:text-base text-muted-foreground">
                     National Bonds Corporation - Financial Health Analytics
                   </p>
                 </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
-                {/* Export Buttons */}
-                <Button
-                  variant="outline"
-                  onClick={() => handleExport('csv')}
-                  disabled={exporting}
-                  className="flex items-center gap-2"
-                >
-                  {exporting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Download className="w-4 h-4" />
-                  )}
-                  Export CSV
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleExport('excel')}
-                  disabled={exporting}
-                  className="flex items-center gap-2"
-                >
-                  {exporting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <FileSpreadsheet className="w-4 h-4" />
-                  )}
-                  Export Excel
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
+                  {/* Export Buttons */}
+                  <Button
+                    variant="outline"
+                    onClick={() => handleExport('csv')}
+                    disabled={exporting}
+                    className="flex items-center gap-2"
+                  >
+                    {exporting ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4" />
+                    )}
+                    Export CSV
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleExport('excel')}
+                    disabled={exporting}
+                    className="flex items-center gap-2"
+                  >
+                    {exporting ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <FileSpreadsheet className="w-4 h-4" />
+                    )}
+                    Export Excel
+                  </Button>
 
-                {/* Admin Profile Dropdown */}
-                {user && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        <div className="text-left">
-                          <div className="font-medium text-sm">{user.username}</div>
-                          <div className="text-xs text-muted-foreground">Admin</div>
+                  {/* Admin Profile Dropdown */}
+                  {user && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="flex items-center gap-2">
+                          <User className="w-4 h-4" />
+                          <div className="text-left">
+                            <div className="font-medium text-sm">{user.username}</div>
+                            <div className="text-xs text-muted-foreground">Admin</div>
+                          </div>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-56">
+                        <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <div className="px-2 py-1.5 text-sm">
+                          <div className="font-medium">{user.username}</div>
+                          <div className="text-xs text-muted-foreground">{user.email}</div>
                         </div>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
-                      <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <div className="px-2 py-1.5 text-sm">
-                        <div className="font-medium">{user.username}</div>
-                        <div className="text-xs text-muted-foreground">{user.email}</div>
-                      </div>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Logout
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Logout
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Tabs */}
             <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-6">
-                <TabsTrigger value="overview">Overview & Analytics</TabsTrigger>
-                <TabsTrigger value="submissions">Submissions</TabsTrigger>
-                <TabsTrigger value="companies">Companies</TabsTrigger>
-                <TabsTrigger value="leads">Leads</TabsTrigger>
-                <TabsTrigger value="incomplete">Incomplete</TabsTrigger>
-                <TabsTrigger value="system">System</TabsTrigger>
-              </TabsList>
+              <div className="w-full overflow-x-auto pb-2">
+                <TabsList className="inline-flex w-auto min-w-full lg:grid lg:grid-cols-6 gap-1">
+                  <TabsTrigger value="overview" className="text-xs sm:text-sm whitespace-nowrap">Overview</TabsTrigger>
+                  <TabsTrigger value="submissions" className="text-xs sm:text-sm whitespace-nowrap">Submissions</TabsTrigger>
+                  <TabsTrigger value="companies" className="text-xs sm:text-sm whitespace-nowrap">Companies</TabsTrigger>
+                  <TabsTrigger value="leads" className="text-xs sm:text-sm whitespace-nowrap">Leads</TabsTrigger>
+                  <TabsTrigger value="incomplete" className="text-xs sm:text-sm whitespace-nowrap">Incomplete</TabsTrigger>
+                  <TabsTrigger value="system" className="text-xs sm:text-sm whitespace-nowrap">System</TabsTrigger>
+                </TabsList>
+              </div>
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="space-y-6">
