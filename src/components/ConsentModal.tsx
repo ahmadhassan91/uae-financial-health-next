@@ -154,7 +154,7 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
           </div>
         </div>
 
-        {/* Required Consents - Fixed section without scroll */}
+        {/* Required Consents - Fixed section outside scrollable area */}
         <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6 border-t border-gray-100 flex-shrink-0">
           <div className="space-y-2 sm:space-y-3">
             <h3 className="font-normal text-[#565d63] text-sm sm:text-base leading-5 sm:leading-6">
@@ -214,7 +214,7 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
           <Button
             onClick={handleGrantConsent}
             disabled={!canProceed || isSubmitting}
-            className={`w-full sm:flex-1 sm:max-w-[296px] h-10 sm:h-9 font-normal text-white text-xs sm:text-sm rounded-lg ${
+            className={`flex-1 max-w-[296px] h-9 font-normal text-white text-sm rounded-lg ${
               canProceed && !isSubmitting
                 ? "bg-[#1e2939] hover:bg-[#1e2939]/90 cursor-pointer"
                 : "bg-gray-300 cursor-not-allowed"

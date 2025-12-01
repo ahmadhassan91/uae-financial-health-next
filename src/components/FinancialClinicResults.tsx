@@ -130,7 +130,7 @@ export function FinancialClinicResults({
                 : "Here's your Financial Health Score!"}
             </h1>
 
-            <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
+            <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "هذه لمحة عن وضعكم، عرضٌ واضح لمدى صحّة أوضاعكم المالية اليوم."
                 : "This is your snapshot; a clear view of how healthy your finances are today."}
@@ -138,13 +138,13 @@ export function FinancialClinicResults({
           </div>
 
           <div className="flex flex-col items-center justify-center gap-1 md:gap-[3px] w-full px-4">
-            <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
+            <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "يعكس هذا التقييم أداءكم في خمسة مجالات رئيسية."
                 : "Your score reflects how you're doing across key areas."}
             </p>
 
-            <p className="font-normal text-[#a1aeb7] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
+            <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "استمرّوا في تحسين سلوكياتكم، وستلاحظون تحسّن جودة حياتكم المالية مع الوقت"
                 : "Keep improving your habits, and your financial wellbeing will grow stronger over time."}
@@ -161,10 +161,10 @@ export function FinancialClinicResults({
                 result.total_score >= 80
                   ? "#6cc922"
                   : result.total_score >= 60
-                  ? "#fca924"
-                  : result.total_score >= 30
-                  ? "#fe6521"
-                  : "#f00c01",
+                    ? "#fca924"
+                    : result.total_score >= 30
+                      ? "#fe6521"
+                      : "#f00c01",
             }}
           >
             {getScoreBandText(result.total_score)}
@@ -177,10 +177,10 @@ export function FinancialClinicResults({
                 result.total_score >= 80
                   ? "#6cc922"
                   : result.total_score >= 60
-                  ? "#fca924"
-                  : result.total_score >= 30
-                  ? "#fe6521"
-                  : "#f00c01",
+                    ? "#fca924"
+                    : result.total_score >= 30
+                      ? "#fe6521"
+                      : "#f00c01",
             }}
           >
             {Math.round(result.total_score)}%
@@ -206,13 +206,11 @@ export function FinancialClinicResults({
                 {SCORE_BANDS.map((band, index) => (
                   <div
                     key={index}
-                    className={`flex flex-1 h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-2.5 p-1.5 md:p-2.5 ${
-                      band.bgColor
-                    } ${
-                      index < SCORE_BANDS.length - 1
+                    className={`flex flex-1 h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-2.5 p-1.5 md:p-2.5 ${band.bgColor
+                      } ${index < SCORE_BANDS.length - 1
                         ? "border-r-2 [border-right-style:solid] border-white"
                         : ""
-                    }`}
+                      }`}
                   >
                     <div className="font-semibold text-white text-sm md:text-lg lg:text-2xl text-center tracking-[0] leading-tight md:leading-7">
                       {band.range}
@@ -228,10 +226,10 @@ export function FinancialClinicResults({
                     key={index}
                     className="flex flex-col flex-1 items-start md:items-center px-2 md:px-3 py-0 w-full md:w-auto"
                   >
-                    <div className="font-semibold text-[#a1aeb7] text-xs md:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
+                    <div className="font-semibold text-[#575757] text-xs md:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
                       {band.title[language]}
                     </div>
-                    <div className="font-normal text-[#a1aeb7] text-xs md:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
+                    <div className="font-normal text-[#575757] text-xs md:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
                       {band.description[language]}
                     </div>
                   </div>
@@ -250,9 +248,9 @@ export function FinancialClinicResults({
                 : "Financial Pillar Scores"}
             </h2>
 
-            <p className="font-normal text-[#a1aeb7] text-sm md:text-base text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
+            <p className="font-normal text-[#575757] text-sm md:text-base text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "أدائك عبر 7 مجالات رئيسية للصحة المالية"
+                ? "أدائك عبر مجالات رئيسية للصحة المالية"
                 : "Your performance across the key areas of financial health"}
             </p>
           </div>
@@ -312,7 +310,7 @@ export function FinancialClinicResults({
                               {getCategoryTranslation(categoryName)}
                             </div>
 
-                            <div className="font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-right">
+                            <div className="font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-right">
                               {getCategoryDescription(categoryName)}
                             </div>
                           </div>
@@ -332,7 +330,7 @@ export function FinancialClinicResults({
                               {getCategoryTranslation(categoryName)}
                             </div>
 
-                            <div className="font-normal text-[#a1aeb7] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-left">
+                            <div className="font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-left">
                               {getCategoryDescription(categoryName)}
                             </div>
                           </div>
@@ -349,8 +347,8 @@ export function FinancialClinicResults({
 
                     {index <
                       Object.entries(result.category_scores).length - 1 && (
-                      <Separator className="w-full" />
-                    )}
+                        <Separator className="w-full" />
+                      )}
                   </div>
                 );
               })}
@@ -365,7 +363,7 @@ export function FinancialClinicResults({
               : "Your Personalized Action Plan"}
           </h2>
 
-          <p className="font-normal text-sm md:text-base leading-5 md:leading-6 text-[#a1aeb7] text-center tracking-[0] max-w-[600px]">
+          <p className="font-normal text-sm md:text-base leading-5 md:leading-6 text-[#575757] text-center tracking-[0] max-w-[600px]">
             {language === "ar"
               ? "التغييرات البسيطة تُحدث فارقاً كبيراً. لتحسين نتيجتكم، ننصحكم بما يلي"
               : "Small changes make big differences. Here's how to strengthen your score."}
@@ -385,9 +383,8 @@ export function FinancialClinicResults({
                 result.insights.slice(0, 5).map((insight, index) => (
                   <div
                     key={index}
-                    className={`flex gap-2 w-full items-start ${
-                      isRTL ? "flex-row-reverse" : "flex-row"
-                    }`}
+                    className={`flex gap-2 w-full items-start ${isRTL ? "flex-row-reverse" : "flex-row"
+                      }`}
                   >
                     {!isRTL && (
                       <div className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7 flex-shrink-0">
@@ -396,9 +393,8 @@ export function FinancialClinicResults({
                     )}
 
                     <div
-                      className={`flex-1 ${
-                        isRTL ? "flex-row-reverse" : "flex-row"
-                      }`}
+                      className={`flex-1 ${isRTL ? "flex-row-reverse" : "flex-row"
+                        }`}
                     >
                       <span className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
                         {translateInsightCategory(insight.category)}:{" "}
@@ -495,8 +491,8 @@ export function FinancialClinicResults({
                 ? "عرض تاريخ التقييمات"
                 : "View Assessment History"
               : language === "ar"
-              ? "الوصول إلى السجل"
-              : "Access My History"}
+                ? "الوصول إلى السجل"
+                : "Access My History"}
           </Button>
 
           {onRetake && (

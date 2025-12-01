@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectSeparator } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Badge } from '@/components/ui/badge';
 import { User, Briefcase, MapPin } from '@phosphor-icons/react';
@@ -23,7 +23,7 @@ export function CustomerProfileForm({ onComplete, existingProfile }: CustomerPro
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!profile.name?.trim()) newErrors.name = t('name_required');
     if (!profile.age || profile.age < 18 || profile.age > 100) newErrors.age = t('valid_age_required');
     if (!profile.gender) newErrors.gender = t('gender_required');
@@ -78,7 +78,7 @@ export function CustomerProfileForm({ onComplete, existingProfile }: CustomerPro
                 {t('basic_demographic_information')}
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               {/* Name */}
               <div className="space-y-2">
@@ -174,7 +174,7 @@ export function CustomerProfileForm({ onComplete, existingProfile }: CustomerPro
                 {t('professional_financial_background')}
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               {/* Employment Status */}
               <div className="space-y-2">
@@ -252,7 +252,7 @@ export function CustomerProfileForm({ onComplete, existingProfile }: CustomerPro
                 {t('contact_details_location')}
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               {/* Email */}
               <div className="space-y-2">
@@ -283,7 +283,8 @@ export function CustomerProfileForm({ onComplete, existingProfile }: CustomerPro
                     <SelectItem value="Ras Al Khaimah">{t('ras_al_khaimah')}</SelectItem>
                     <SelectItem value="Fujairah">{t('fujairah')}</SelectItem>
                     <SelectItem value="Umm Al Quwain">{t('umm_al_quwain')}</SelectItem>
-                    <SelectItem value="Other">{t('other')}</SelectItem>
+                    <SelectSeparator className="my-2" />
+                    <SelectItem value="Outside UAE">{isRTL ? "خارج الدولة" : "Outside UAE"}</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.residence && <p className="text-sm text-destructive">{t('residence_required')}</p>}

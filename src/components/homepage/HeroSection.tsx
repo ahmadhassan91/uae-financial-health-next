@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useLocalization } from "@/contexts/LocalizationContext";
 import { ConsentModal } from "@/components/ConsentModal";
 import { consentService } from "@/services/consentService";
+import { toast } from "sonner";
 
 export function HeroSection() {
   const router = useRouter();
@@ -37,6 +38,25 @@ export function HeroSection() {
     // } else {
     //   router.push('/financial-clinic');
     // }
+  };
+
+  const handleViewResults = async () => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem("simpleAuthSession");
+
+    if (!isLoggedIn) {
+      // User is not logged in, redirect to login page
+      toast.info(
+        language === "ar"
+          ? "الرجاء تسجيل الدخول لعرض النتائج السابقة"
+          : "Please login to view previous assessments"
+      );
+      router.push("/financial-clinic/login");
+      return;
+    }
+
+    // User is logged in, navigate directly to history page
+    router.push("/financial-clinic/history");
   };
 
   const handleConsent = () => {
@@ -90,12 +110,11 @@ export function HeroSection() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div
-          className={`absolute ${
-            language === "ar" ? "left-0" : "right-0"
-          } w-full md:max-w-[647px] h-full flex bg-[#ffffffe6] opacity-90`}
+          className={`absolute ${language === "ar" ? "left-0" : "right-0"
+            } w-full md:max-w-[647px] h-full flex bg-[#ffffffe6] opacity-90`}
         >
           <div className="flex w-full items-center justify-center px-6 md:px-[59px] py-[79px]">
-            <div className="flex flex-col w-full max-w-[494px] items-start gap-7">
+            <div className="flex flex-col w-full max-w-[494px] items-start gap-4">
               <div className="flex flex-col items-start gap-[21px] w-full">
                 <h2 className="self-stretch mt-[-1.00px] font-semibold text-[#437749] text-2xl md:text-[33px] tracking-[0] leading-[38px]">
                   {language === "ar"
@@ -118,6 +137,18 @@ export function HeroSection() {
                   {language === "ar"
                     ? "بدء تقييم وضعي المالي"
                     : "START MY FINANCIAL CHECKUP"}
+                </span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                onClick={handleViewResults}
+                className="h-auto w-auto items-center justify-center gap-2.5 p-0 hover:bg-transparent text-[#3fab4c] hover:text-[#3fab4c]/80"
+              >
+                <span className="w-fit mt-[-1.00px] font-normal text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap underline">
+                  {language === "ar"
+                    ? "النتائج السابقة"
+                    : "View Previous Assessment"}
                 </span>
               </Button>
             </div>
