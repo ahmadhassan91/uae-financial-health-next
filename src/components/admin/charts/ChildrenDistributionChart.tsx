@@ -16,6 +16,7 @@ interface ChildrenDistributionChartProps {
     data: {
         count_label: string;
         count: number;
+        average_score: number;
     }[];
 }
 
@@ -26,7 +27,7 @@ export function ChildrenDistributionChart({ data }: ChildrenDistributionChartPro
         <Card>
             <CardHeader>
                 <CardTitle>Children</CardTitle>
-                <CardDescription>Number of children per participant</CardDescription>
+                <CardDescription>Average score by number of children</CardDescription>
             </CardHeader>
             <CardContent>
                 {data.length === 0 ? (
@@ -46,15 +47,16 @@ export function ChildrenDistributionChart({ data }: ChildrenDistributionChartPro
                                         return (
                                             <div className="bg-background border rounded-lg p-3 shadow-lg">
                                                 <p className="font-semibold">{data.count_label}</p>
-                                                <p className="text-sm">Count: {data.count}</p>
+                                                <p className="text-sm">Average Score: {data.average_score}</p>
+                                                <p className="text-xs text-muted-foreground">Count: {data.count}</p>
                                             </div>
                                         );
                                     }
                                     return null;
                                 }}
                             />
-                            <Bar dataKey="count" radius={[8, 8, 0, 0]}>
-                                <LabelList dataKey="count" position="top" fontSize={12} />
+                            <Bar dataKey="average_score" radius={[8, 8, 0, 0]}>
+                                <LabelList dataKey="average_score" position="top" fontSize={12} />
                                 {data.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}

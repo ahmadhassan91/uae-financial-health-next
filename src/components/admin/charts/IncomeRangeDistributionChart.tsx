@@ -16,6 +16,7 @@ interface IncomeRangeDistributionChartProps {
     data: {
         range: string;
         count: number;
+        average_score: number;
     }[];
 }
 
@@ -26,7 +27,7 @@ export function IncomeRangeDistributionChart({ data }: IncomeRangeDistributionCh
         <Card>
             <CardHeader>
                 <CardTitle>Income Range</CardTitle>
-                <CardDescription>Household monthly income distribution</CardDescription>
+                <CardDescription>Average score by household monthly income</CardDescription>
             </CardHeader>
             <CardContent>
                 {data.length === 0 ? (
@@ -53,15 +54,16 @@ export function IncomeRangeDistributionChart({ data }: IncomeRangeDistributionCh
                                         return (
                                             <div className="bg-background border rounded-lg p-3 shadow-lg">
                                                 <p className="font-semibold">{data.range}</p>
-                                                <p className="text-sm">Count: {data.count}</p>
+                                                <p className="text-sm">Average Score: {data.average_score}</p>
+                                                <p className="text-xs text-muted-foreground">Count: {data.count}</p>
                                             </div>
                                         );
                                     }
                                     return null;
                                 }}
                             />
-                            <Bar dataKey="count" radius={[8, 8, 0, 0]}>
-                                <LabelList dataKey="count" position="top" fontSize={12} />
+                            <Bar dataKey="average_score" radius={[8, 8, 0, 0]}>
+                                <LabelList dataKey="average_score" position="top" fontSize={12} />
                                 {data.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
