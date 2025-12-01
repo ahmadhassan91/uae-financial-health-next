@@ -533,7 +533,7 @@ export const adminApi = {
   async getChildrenBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ count_label: string, count: number }[]> {
+  ): Promise<{ count_label: string, count: number, average_score: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/children-breakdown?${queryString}`,
@@ -550,7 +550,7 @@ export const adminApi = {
   async getIncomeRangeBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ range: string, count: number }[]> {
+  ): Promise<{ range: string, count: number, average_score: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/income-breakdown?${queryString}`,

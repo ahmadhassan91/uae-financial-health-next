@@ -50,17 +50,15 @@ export const formatChartDate = (
 
 /**
  * Group age from number into standardized slabs
- * New slabs: <18, 18-25, 24-35, 36-45, 46-60, 60+
- * 
- * Note: There's overlap between 18-25 and 24-35 at ages 24-25
+ * New slabs: < 18, 18-25, 26-35, 36-45, 46-60, 60+
  * 
  * @param age - Age in years
  * @returns Age group string
  */
 export const getAgeGroup = (age: number): string => {
-  if (age < 18) return '<18';
+  if (age < 18) return '< 18';
   if (age >= 18 && age <= 25) return '18-25';
-  if (age >= 24 && age <= 35) return '24-35';
+  if (age >= 26 && age <= 35) return '26-35';
   if (age >= 36 && age <= 45) return '36-45';
   if (age >= 46 && age <= 60) return '46-60';
   return '60+';
@@ -71,7 +69,7 @@ export const getAgeGroup = (age: number): string => {
  * @returns Array of age group strings in order
  */
 export const getOrderedAgeGroups = (): string[] => {
-  return ['<18', '18-25', '24-35', '36-45', '46-60', '60+'];
+  return ['< 18', '18-25', '26-35', '36-45', '46-60', '60+'];
 };
 
 /**
@@ -83,21 +81,21 @@ export const calculateAgeFromDOB = (dob: string): number => {
   try {
     const parts = dob.split('/');
     if (parts.length !== 3) return 0;
-    
+
     const day = parseInt(parts[0], 10);
     const month = parseInt(parts[1], 10) - 1; // JS months are 0-indexed
     const year = parseInt(parts[2], 10);
-    
+
     const birthDate = new Date(year, month, day);
     const today = new Date();
-    
+
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    
+
     return age;
   } catch (error) {
     console.error('Error calculating age:', error);
@@ -125,7 +123,7 @@ export const filterFinancialKnowledge = <T extends { category: string }>(
   categories: T[]
 ): T[] => {
   return categories.filter(
-    cat => cat.category !== 'financial_knowledge' && 
-           cat.category !== 'Financial Knowledge'
+    cat => cat.category !== 'financial_knowledge' &&
+      cat.category !== 'Financial Knowledge'
   );
 };
