@@ -12,6 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectSeparator,
 } from "@/components/ui/select";
 import { DatePickerComponent } from "@/components/ui/date-picker";
 import { useLocalization } from "@/contexts/LocalizationContext";
@@ -129,8 +130,8 @@ export default function FinancialClinicPage({
       // Navigate to survey with company parameter if present
       const surveyUrl = restoredSession.company_url
         ? `/financial-clinic/survey?company=${encodeURIComponent(
-            restoredSession.company_url
-          )}`
+          restoredSession.company_url
+        )}`
         : "/financial-clinic/survey";
 
       setTimeout(() => {
@@ -305,8 +306,7 @@ export default function FinancialClinicPage({
     // Check if user has any results
     try {
       const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL
+        `${process.env.NEXT_PUBLIC_API_URL
         }/financial-clinic/history/${encodeURIComponent(email)}`
       );
 
@@ -603,11 +603,9 @@ export default function FinancialClinicPage({
                     setNameError("");
                   }
                 }}
-                className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
-                  nameError ? "border-red-500" : "border-[#c2d1d9]"
-                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
-                  language === "ar" ? "flex-row-reverse" : "flex-row"
-                }`}
+                className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${nameError ? "border-red-500" : "border-[#c2d1d9]"
+                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
               />
               {nameError && (
                 <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
@@ -656,15 +654,13 @@ export default function FinancialClinicPage({
 
           {/* Gender and Nationality */}
           <div
-            className={`flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-8 w-full md:justify-between ${
-              language === "ar" ? "md:flex-row-reverse" : ""
-            }`}
+            className={`flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-8 w-full md:justify-between ${language === "ar" ? "md:flex-row-reverse" : ""
+              }`}
           >
             <div className="flex flex-col gap-2 flex-1">
               <div
-                className={`flex items-center gap-6 md:gap-[35px] ${
-                  language === "ar" ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center gap-6 md:gap-[35px] ${language === "ar" ? "flex-row-reverse" : ""
+                  }`}
               >
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   {language === "ar" ? "الجنس" : "Gender"}{" "}
@@ -674,14 +670,12 @@ export default function FinancialClinicPage({
                 <RadioGroup
                   value={profile.gender}
                   onValueChange={handleGenderChange}
-                  className={`flex items-center gap-[46px] ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-[46px] ${language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div
-                    className={`flex items-center gap-[5px] ${
-                      language === "ar" ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <RadioGroupItem
                       value="Male"
@@ -696,9 +690,8 @@ export default function FinancialClinicPage({
                     </Label>
                   </div>
                   <div
-                    className={`flex items-center gap-[5px] ${
-                      language === "ar" ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <RadioGroupItem
                       value="Female"
@@ -723,9 +716,8 @@ export default function FinancialClinicPage({
 
             <div className="flex flex-col gap-2 flex-1">
               <div
-                className={`flex items-center gap-[46px] ${
-                  language === "ar" ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center gap-[46px] ${language === "ar" ? "flex-row-reverse" : ""
+                  }`}
               >
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   {language === "ar" ? "الجنسية" : "Nationality"}{" "}
@@ -735,14 +727,12 @@ export default function FinancialClinicPage({
                 <RadioGroup
                   value={profile.nationality}
                   onValueChange={handleNationalityChange}
-                  className={`flex items-center gap-[46px] ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-[46px] ${language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div
-                    className={`flex items-center gap-[5px] ${
-                      language === "ar" ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <RadioGroupItem
                       value="Emirati"
@@ -757,9 +747,8 @@ export default function FinancialClinicPage({
                     </Label>
                   </div>
                   <div
-                    className={`flex items-center gap-[5px] ${
-                      language === "ar" ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <RadioGroupItem
                       value="Non-Emirati"
@@ -796,9 +785,8 @@ export default function FinancialClinicPage({
                 onValueChange={handleEmirateChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                    language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                    }`}
                 >
                   <SelectValue
                     placeholder={
@@ -841,12 +829,29 @@ export default function FinancialClinicPage({
                     {language === "ar" ? "العين" : "Al Ain"}
                   </SelectItem>
                   <SelectItem
-                    value="Ras Al Khaimah / Fujairah / UAQ / Outside UAE"
+                    value="Ras Al Khaimah"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar"
-                      ? "رأس الخيمة / الفجيرة / أم القيوين / خارج الإمارات"
-                      : "Ras Al Khaimah / Fujairah / UAQ / Outside UAE"}
+                    {language === "ar" ? "رأس الخيمة" : "Ras Al Khaimah"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Fujairah"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "الفجيرة" : "Fujairah"}
+                  </SelectItem>
+                  <SelectItem
+                    value="Umm Al Quwain"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "أم القيوين" : "Umm Al Quwain"}
+                  </SelectItem>
+                  <SelectSeparator className="my-2" />
+                  <SelectItem
+                    value="Outside UAE"
+                    className={language === "ar" ? "flex-row-reverse" : ""}
+                  >
+                    {language === "ar" ? "خارج الدولة" : "Outside UAE"}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -869,9 +874,8 @@ export default function FinancialClinicPage({
                 onValueChange={handleChildrenChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                    language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                    }`}
                 >
                   <SelectValue
                     placeholder={
@@ -938,9 +942,8 @@ export default function FinancialClinicPage({
                 onValueChange={handleEmploymentChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                    language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                    }`}
                 >
                   <SelectValue
                     placeholder={
@@ -992,9 +995,8 @@ export default function FinancialClinicPage({
                 onValueChange={handleIncomeChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                    language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                    }`}
                 >
                   <SelectValue
                     placeholder={
@@ -1111,11 +1113,9 @@ export default function FinancialClinicPage({
                     setEmailError("");
                   }
                 }}
-                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
-                  emailError ? "border-red-500" : "border-[#c2d1d9]"
-                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
-                  language === "ar" ? "flex-row-reverse" : "flex-row"
-                }`}
+                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${emailError ? "border-red-500" : "border-[#c2d1d9]"
+                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
               />
               {emailError && (
                 <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
@@ -1175,11 +1175,9 @@ export default function FinancialClinicPage({
                       setPhoneError("");
                     }
                   }}
-                  className={`flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
-                    phoneError ? "border-red-500" : "border-[#c2d1d9]"
-                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
-                    language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
+                  className={`flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${phoneError ? "border-red-500" : "border-[#c2d1d9]"
+                    } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                    }`}
                 />
               </div>
               {phoneError && (
