@@ -531,44 +531,6 @@ export default function FinancialClinicPage({
           </p>
         </div>
 
-        {/* Company Tracking Indicator */}
-        {companyTracking?.active && (
-          <div className="mb-4 md:mb-6 p-3 md:p-4 bg-[#f0f4f1] border-2 border-[#3fab4c] rounded-lg shadow-md max-w-[850px] w-full">
-            <div className="flex items-center justify-center gap-3">
-              <svg
-                className="w-6 h-6 text-[#437749]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
-              <div className="text-center">
-                <div className="font-semibold text-[#437749]">
-                  {language === "ar"
-                    ? "🏢 التقييم المقدم من شركة"
-                    : "🏢 Company Assessment"}
-                </div>
-                {companyTracking.companyName && (
-                  <div className="text-sm text-[#3fab4c] mt-1">
-                    {companyTracking.companyName}
-                  </div>
-                )}
-                <div className="text-xs text-[#a1aeb7] mt-1">
-                  {language === "ar"
-                    ? "سيتم تتبع نتائجك تلقائياً لتحليل الشركة"
-                    : "Your results will be automatically tracked for company analytics"}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Form */}
         <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[850px]">
           {/* Name and Date of Birth */}
