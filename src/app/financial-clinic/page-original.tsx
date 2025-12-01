@@ -1225,10 +1225,11 @@ export default function FinancialClinicPage({
             </span>
           </Button>
         </div>
-      </main>
-
-      {/* Footer */}
-      <HomepageFooter />
     </div>
+      </main >
+
+    {/* Footer */ }
+    < HomepageFooter />
+    </div >
   );
 }
