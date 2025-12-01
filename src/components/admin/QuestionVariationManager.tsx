@@ -11,8 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { 
-  Plus, Edit, Trash2, TestTube, BarChart3, 
+import {
+  Plus, Edit, Trash2, TestTube, BarChart3,
   Languages, Building2, AlertTriangle, CheckCircle,
   Eye, Copy, Download
 } from 'lucide-react';
@@ -80,7 +80,7 @@ export function QuestionVariationManager() {
   const [analytics, setAnalytics] = useState<VariationAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('list');
-  
+
   // Filters
   const [filters, setFilters] = useState({
     base_question_id: 'all',
@@ -89,7 +89,7 @@ export function QuestionVariationManager() {
     page: 1,
     limit: 20
   });
-  
+
   // Form state
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingVariation, setEditingVariation] = useState<QuestionVariation | null>(null);
@@ -122,7 +122,7 @@ export function QuestionVariationManager() {
     company_ids: null,
     is_active: true
   });
-  
+
   // Validation state
   const [validation, setValidation] = useState<ValidationResult | null>(null);
   const [testingVariation, setTestingVariation] = useState(false);
@@ -131,12 +131,12 @@ export function QuestionVariationManager() {
   const getFormCompletionPercentage = () => {
     let completed = 0;
     let total = 4; // 4 required steps
-    
+
     if (formData.base_question_id) completed++;
     if (formData.variation_name.trim()) completed++;
     if (formData.text_en?.trim() && formData.text_ar?.trim()) completed++;  // Both languages required
     if (formData.options.every(opt => opt.label_en?.trim() && opt.label_ar?.trim())) completed++;  // Bilingual options
-    
+
     return Math.round((completed / total) * 100);
   };
 
@@ -147,7 +147,7 @@ export function QuestionVariationManager() {
   const loadData = async () => {
     try {
       setLoading(true);
-      
+
       // Load variations
       const apiFilters = {
         ...filters,
@@ -157,13 +157,13 @@ export function QuestionVariationManager() {
         limit: filters.limit.toString(),
         active_only: filters.active_only.toString()
       };
-      
+
       const variationsResponse = await adminApiCall(
         `/admin/question-variations?${new URLSearchParams(apiFilters)}`
       );
-      
+
       console.log('Variations response status:', variationsResponse.status);
-      
+
       if (variationsResponse.ok) {
         const variationsData = await variationsResponse.json();
         console.log('Variations data received:', variationsData);
@@ -173,12 +173,12 @@ export function QuestionVariationManager() {
         console.error('Failed to load variations:', variationsResponse.status, await variationsResponse.text());
         toast.error('Failed to load question variations');
       }
-      
+
       // Load base questions
       console.log('Loading base questions...');
       const baseQuestionsResponse = await adminApiCall('/admin/question-variations/base-questions');
       console.log('Base questions response status:', baseQuestionsResponse.status);
-      
+
       if (baseQuestionsResponse.ok) {
         const baseQuestionsData = await baseQuestionsResponse.json();
         console.log('Base questions loaded:', baseQuestionsData);
@@ -188,14 +188,14 @@ export function QuestionVariationManager() {
         console.error('Failed to load base questions:', errorText);
         toast.error('Failed to load base questions');
       }
-      
+
       // Load analytics
       const analyticsResponse = await adminApiCall('/admin/question-variations/analytics/overview');
       if (analyticsResponse.ok) {
         const analyticsData = await analyticsResponse.json();
         setAnalytics(analyticsData);
       }
-      
+
     } catch (error) {
       console.error('Error loading data:', error);
       toast.error('Failed to load question variations');
@@ -211,7 +211,7 @@ export function QuestionVariationManager() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      
+
       if (response.ok) {
         toast.success('Question variation created successfully');
         setShowCreateDialog(false);
@@ -237,13 +237,13 @@ export function QuestionVariationManager() {
         company_ids: formData.company_ids,
         is_active: formData.is_active
       };
-      
+
       const response = await adminApiCall(`/admin/question-variations/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateData)
       });
-      
+
       if (response.ok) {
         toast.success('Question variation updated successfully');
         setEditingVariation(null);
@@ -261,12 +261,12 @@ export function QuestionVariationManager() {
 
   const handleDeleteVariation = async (id: number) => {
     if (!confirm('Are you sure you want to delete this variation?')) return;
-    
+
     try {
       const response = await adminApiCall(`/admin/question-variations/${id}`, {
         method: 'DELETE'
       });
-      
+
       if (response.ok) {
         toast.success('Question variation deleted successfully');
         loadData();
@@ -283,25 +283,28 @@ export function QuestionVariationManager() {
   const handleTestVariation = async () => {
     try {
       setTestingVariation(true);
-      
+
+      // Determine which text to validate based on language
+      const textToValidate = formData.language === 'en' ? formData.text_en : formData.text_ar;
+
       const testRequest = {
         base_question_id: formData.base_question_id,
-        text: formData.text,
+        text: textToValidate,  // Use the appropriate language text
         options: formData.options,
         language: formData.language,
         demographic_rules: formData.demographic_rules
       };
-      
+
       const response = await adminApiCall('/admin/question-variations/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(testRequest)
       });
-      
+
       if (response.ok) {
         const result = await response.json();
         setValidation(result.validation);
-        
+
         if (result.validation.is_valid) {
           toast.success(`Variation is valid (consistency: ${(result.validation.consistency_score * 100).toFixed(1)}%)`);
         } else {
@@ -383,7 +386,7 @@ export function QuestionVariationManager() {
             Create and manage question variations for different demographics and companies
           </p>
         </div>
-        
+
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button onClick={resetForm}>
@@ -391,7 +394,7 @@ export function QuestionVariationManager() {
               Create Variation
             </Button>
           </DialogTrigger>
-          <DialogContent 
+          <DialogContent
             className="w-[95vw] max-w-[1400px] max-h-[90vh] overflow-y-auto"
             style={{ width: '95vw', maxWidth: '1400px' }}
           >
@@ -401,7 +404,7 @@ export function QuestionVariationManager() {
                 Create a new variation of an existing question for specific demographics or companies
               </DialogDescription>
             </DialogHeader>
-            
+
             {/* Progress Indicator */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
@@ -409,13 +412,13 @@ export function QuestionVariationManager() {
                 <span className="font-medium">{getFormCompletionPercentage()}%</span>
               </div>
               <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                <div 
+                <div
                   className="bg-primary h-full transition-all duration-300 ease-in-out"
                   style={{ width: `${getFormCompletionPercentage()}%` }}
                 />
               </div>
             </div>
-            
+
             <div className="space-y-6">
               {/* Step 1: Base Question Selection */}
               <Card className="border-2">
@@ -434,12 +437,12 @@ export function QuestionVariationManager() {
                       </AlertDescription>
                     </Alert>
                   ) : (
-                    <Select 
-                      value={formData.base_question_id} 
+                    <Select
+                      value={formData.base_question_id}
                       onValueChange={(value) => {
                         const selectedQuestion = baseQuestions.find(q => q.id === value);
-                        setFormData({ 
-                          ...formData, 
+                        setFormData({
+                          ...formData,
                           base_question_id: value,
                           // Auto-populate variation name suggestion
                           variation_name: formData.variation_name || `${selectedQuestion?.factor || 'Custom'} Variation`
@@ -469,7 +472,7 @@ export function QuestionVariationManager() {
                       </SelectContent>
                     </Select>
                   )}
-                  
+
                   {formData.base_question_id && (
                     <Alert className="bg-blue-50 border-blue-200">
                       <AlertDescription className="text-sm">
@@ -479,7 +482,7 @@ export function QuestionVariationManager() {
                   )}
                 </CardContent>
               </Card>
-              
+
               {/* Step 2: Variation Details */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
@@ -505,14 +508,14 @@ export function QuestionVariationManager() {
                         Give this variation a descriptive name
                       </p>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="language" className="flex items-center gap-2">
                         Language
                         <Badge variant="outline" className="text-xs">Required</Badge>
                       </Label>
-                      <Select 
-                        value={formData.language} 
+                      <Select
+                        value={formData.language}
                         onValueChange={(value) => setFormData({ ...formData, language: value })}
                       >
                         <SelectTrigger>
@@ -540,7 +543,7 @@ export function QuestionVariationManager() {
                   </div>
                 </CardContent>
               </Card>
-              
+
               {/* Step 3: Question Text (Bilingual) */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
@@ -600,7 +603,7 @@ export function QuestionVariationManager() {
                   </p>
                 </CardContent>
               </Card>
-              
+
               {/* Step 4: Answer Options (Bilingual) */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
@@ -621,7 +624,7 @@ export function QuestionVariationManager() {
                             Option {index + 1}
                           </span>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-2">
                           {/* English Label */}
                           <div className="space-y-1">
@@ -660,7 +663,7 @@ export function QuestionVariationManager() {
                   </p>
                 </CardContent>
               </Card>
-              
+
               {/* Step 5: Validation */}
               {validation && (
                 <Card className={`border-2 ${validation.is_valid ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'}`}>
@@ -700,7 +703,7 @@ export function QuestionVariationManager() {
                           </ul>
                         </div>
                       )}
-                      
+
                       {validation.warnings.length > 0 && (
                         <div className="space-y-2">
                           <p className="font-medium text-yellow-700 flex items-center gap-2">
@@ -717,7 +720,7 @@ export function QuestionVariationManager() {
                           </ul>
                         </div>
                       )}
-                      
+
                       {validation.is_valid && validation.errors.length === 0 && validation.warnings.length === 0 && (
                         <div className="text-sm text-green-700 flex items-center gap-2 bg-white border border-green-200 rounded p-3">
                           <CheckCircle className="w-4 h-4" />
@@ -728,27 +731,27 @@ export function QuestionVariationManager() {
                   </CardContent>
                 </Card>
               )}
-              
+
               {/* Actions */}
               <div className="flex items-center justify-between pt-2 border-t">
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     onClick={handleTestVariation}
-                    disabled={!formData.base_question_id || !formData.text || !formData.variation_name || testingVariation}
+                    disabled={!formData.base_question_id || !formData.text_en || !formData.text_ar || !formData.variation_name || testingVariation}
                     className="gap-2"
                   >
                     <TestTube className="w-4 h-4" />
                     {testingVariation ? 'Validating...' : 'Validate Variation'}
                   </Button>
-                  
-                  {!validation && formData.base_question_id && formData.text && formData.variation_name && (
+
+                  {!validation && formData.base_question_id && formData.text_en && formData.text_ar && formData.variation_name && (
                     <span className="text-xs text-muted-foreground">
                       Click "Validate" to check your variation
                     </span>
                   )}
                 </div>
-                
+
                 <div className="flex gap-2">
                   <Button variant="outline" onClick={() => {
                     setShowCreateDialog(false);
@@ -756,7 +759,7 @@ export function QuestionVariationManager() {
                   }}>
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleCreateVariation}
                     disabled={!validation?.is_valid}
                     className="gap-2"
@@ -795,8 +798,8 @@ export function QuestionVariationManager() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <Label>Base Question</Label>
-                  <Select 
-                    value={filters.base_question_id} 
+                  <Select
+                    value={filters.base_question_id}
                     onValueChange={(value) => setFilters({ ...filters, base_question_id: value })}
                   >
                     <SelectTrigger>
@@ -812,11 +815,11 @@ export function QuestionVariationManager() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Language</Label>
-                  <Select 
-                    value={filters.language} 
+                  <Select
+                    value={filters.language}
                     onValueChange={(value) => setFilters({ ...filters, language: value })}
                   >
                     <SelectTrigger>
@@ -829,7 +832,7 @@ export function QuestionVariationManager() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="flex items-center space-x-2 pt-6">
                   <Switch
                     id="active_only"
@@ -946,7 +949,7 @@ export function QuestionVariationManager() {
                     </p>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium">Usage Rate</CardTitle>
@@ -960,7 +963,7 @@ export function QuestionVariationManager() {
                     </p>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium">Languages</CardTitle>
@@ -974,7 +977,7 @@ export function QuestionVariationManager() {
                     </p>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium">Company Specific</CardTitle>
@@ -987,7 +990,7 @@ export function QuestionVariationManager() {
                   </CardContent>
                 </Card>
               </div>
-              
+
               {/* Top Variations */}
               <Card>
                 <CardHeader>
@@ -1025,7 +1028,7 @@ export function QuestionVariationManager() {
       {/* Edit Dialog */}
       {editingVariation && (
         <Dialog open={!!editingVariation} onOpenChange={() => setEditingVariation(null)}>
-          <DialogContent 
+          <DialogContent
             className="w-[95vw] max-w-[1400px] max-h-[90vh] overflow-y-auto"
             style={{ width: '95vw', maxWidth: '1400px' }}
           >
@@ -1035,7 +1038,7 @@ export function QuestionVariationManager() {
                 Modify the question variation details
               </DialogDescription>
             </DialogHeader>
-            
+
             <div className="space-y-4">
               {/* Variation Details */}
               <div className="grid grid-cols-2 gap-4">
@@ -1047,7 +1050,7 @@ export function QuestionVariationManager() {
                     onChange={(e) => setFormData({ ...formData, variation_name: e.target.value })}
                   />
                 </div>
-                
+
                 <div className="flex items-center space-x-2 pt-6">
                   <Switch
                     id="edit_is_active"
@@ -1057,7 +1060,7 @@ export function QuestionVariationManager() {
                   <Label htmlFor="edit_is_active">Active</Label>
                 </div>
               </div>
-              
+
               {/* Question Text (Bilingual) */}
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -1101,7 +1104,7 @@ export function QuestionVariationManager() {
                   />
                 </div>
               </div>
-              
+
               {/* Answer Options (Bilingual) */}
               <div className="space-y-2">
                 <Label>Answer Options (Bilingual)</Label>
@@ -1116,7 +1119,7 @@ export function QuestionVariationManager() {
                           Option {index + 1}
                         </span>
                       </div>
-                      
+
                       <div className="grid grid-cols-2 gap-2">
                         {/* English Label */}
                         <div className="space-y-1">
@@ -1151,7 +1154,7 @@ export function QuestionVariationManager() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setEditingVariation(null)}>
                   Cancel

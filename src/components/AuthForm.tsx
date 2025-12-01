@@ -27,7 +27,7 @@ export function AuthForm({ onSuccess, onBack }: AuthFormProps) {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
-  
+
   const { login, register, loading } = useAuth();
 
   const validateForm = () => {
@@ -79,7 +79,7 @@ export function AuthForm({ onSuccess, onBack }: AuthFormProps) {
       } else {
         await register(formData.email, formData.username, formData.password);
       }
-      
+
       onSuccess?.();
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'Authentication failed');
@@ -106,7 +106,7 @@ export function AuthForm({ onSuccess, onBack }: AuthFormProps) {
               {mode === 'login' ? 'Welcome Back' : 'Create Account'}
             </CardTitle>
             <CardDescription>
-              {mode === 'login' 
+              {mode === 'login'
                 ? 'Sign in to access your financial health dashboard'
                 : 'Join our platform to start your financial wellness journey'
               }
