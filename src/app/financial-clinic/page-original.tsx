@@ -98,6 +98,32 @@ export default function FinancialClinicPage({
     return "123456789";
   };
 
+  // Validate phone number based on country
+  const validatePhoneNumber = (
+    phoneNumber: string,
+    country: string
+  ): { isValid: boolean; expectedLength?: number } => {
+    const cleanedNumber = phoneNumber.replace(/[^0-9]/g, "");
+
+    try {
+      const exampleNumber = getExampleNumber(country as any, examples);
+      if (exampleNumber) {
+        const expectedLength = exampleNumber.nationalNumber.toString().length;
+        return {
+          isValid: cleanedNumber.length === expectedLength,
+          expectedLength: expectedLength,
+        };
+      }
+    } catch (error) {
+      console.log("No validation for country:", country);
+    }
+
+    // Fallback to general validation
+    return {
+      isValid: cleanedNumber.length >= 7 && cleanedNumber.length <= 15,
+    };
+  };
+
   // Handle restored session data
   useEffect(() => {
     if (restoredSession && restoredSession.profile) {
@@ -433,13 +459,19 @@ export default function FinancialClinicPage({
       );
       hasError = true;
     } else {
-      const cleanedNumber = profile.mobile_number.replace(/[^0-9]/g, "");
-      if (cleanedNumber.length < 7 || cleanedNumber.length > 15) {
-        setPhoneError(
-          language === "ar"
-            ? "يرجى إدخال رقم جوال صحيح (7-15 رقم)"
-            : "Please enter a valid mobile number (7-15 digits)"
-        );
+      const validation = validatePhoneNumber(
+        profile.mobile_number,
+        countryCode
+      );
+      if (!validation.isValid) {
+        const errorMsg = validation.expectedLength
+          ? language === "ar"
+            ? `يرجى إدخال رقم جوال صحيح (${validation.expectedLength} رقم)`
+            : `Please enter a valid mobile number (${validation.expectedLength} digits)`
+          : language === "ar"
+          ? "يرجى إدخال رقم جوال صحيح"
+          : "Please enter a valid mobile number";
+        setPhoneError(errorMsg);
         hasError = true;
       }
     }
@@ -1127,12 +1159,23 @@ export default function FinancialClinicPage({
                   }}
                   onBlur={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, "");
-                    if (value && (value.length < 7 || value.length > 15)) {
-                      setPhoneError(
-                        language === "ar"
-                          ? "يرجى إدخال رقم جوال صحيح (7-15 رقم)"
-                          : "Please enter a valid mobile number (7-15 digits)"
+                    if (value) {
+                      const validation = validatePhoneNumber(
+                        value,
+                        countryCode
                       );
+                      if (!validation.isValid) {
+                        const errorMsg = validation.expectedLength
+                          ? language === "ar"
+                            ? `يرجى إدخال رقم جوال صحيح (${validation.expectedLength} رقم)`
+                            : `Please enter a valid mobile number (${validation.expectedLength} digits)`
+                          : language === "ar"
+                          ? "يرجى إدخال رقم جوال صحيح"
+                          : "Please enter a valid mobile number";
+                        setPhoneError(errorMsg);
+                      } else {
+                        setPhoneError("");
+                      }
                     } else {
                       setPhoneError("");
                     }
