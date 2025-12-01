@@ -99,6 +99,32 @@ export default function FinancialClinicPage({
     return "123456789";
   };
 
+  // Validate phone number based on country
+  const validatePhoneNumber = (
+    phoneNumber: string,
+    country: string
+  ): { isValid: boolean; expectedLength?: number } => {
+    const cleanedNumber = phoneNumber.replace(/[^0-9]/g, "");
+
+    try {
+      const exampleNumber = getExampleNumber(country as any, examples);
+      if (exampleNumber) {
+        const expectedLength = exampleNumber.nationalNumber.toString().length;
+        return {
+          isValid: cleanedNumber.length === expectedLength,
+          expectedLength: expectedLength,
+        };
+      }
+    } catch (error) {
+      console.log("No validation for country:", country);
+    }
+
+    // Fallback to general validation
+    return {
+      isValid: cleanedNumber.length >= 7 && cleanedNumber.length <= 15,
+    };
+  };
+
   // Handle restored session data
   useEffect(() => {
     if (restoredSession && restoredSession.profile) {
@@ -130,8 +156,8 @@ export default function FinancialClinicPage({
       // Navigate to survey with company parameter if present
       const surveyUrl = restoredSession.company_url
         ? `/financial-clinic/survey?company=${encodeURIComponent(
-          restoredSession.company_url
-        )}`
+            restoredSession.company_url
+          )}`
         : "/financial-clinic/survey";
 
       setTimeout(() => {
@@ -306,7 +332,8 @@ export default function FinancialClinicPage({
     // Check if user has any results
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL
+        `${
+          process.env.NEXT_PUBLIC_API_URL
         }/financial-clinic/history/${encodeURIComponent(email)}`
       );
 
@@ -433,13 +460,19 @@ export default function FinancialClinicPage({
       );
       hasError = true;
     } else {
-      const cleanedNumber = profile.mobile_number.replace(/[^0-9]/g, "");
-      if (cleanedNumber.length < 7 || cleanedNumber.length > 15) {
-        setPhoneError(
-          language === "ar"
-            ? "يرجى إدخال رقم جوال صحيح (7-15 رقم)"
-            : "Please enter a valid mobile number (7-15 digits)"
-        );
+      const validation = validatePhoneNumber(
+        profile.mobile_number,
+        countryCode
+      );
+      if (!validation.isValid) {
+        const errorMsg = validation.expectedLength
+          ? language === "ar"
+            ? `يرجى إدخال رقم جوال صحيح (${validation.expectedLength} رقم)`
+            : `Please enter a valid mobile number (${validation.expectedLength} digits)`
+          : language === "ar"
+          ? "يرجى إدخال رقم جوال صحيح"
+          : "Please enter a valid mobile number";
+        setPhoneError(errorMsg);
         hasError = true;
       }
     }
@@ -531,44 +564,6 @@ export default function FinancialClinicPage({
           </p>
         </div>
 
-        {/* Company Tracking Indicator */}
-        {companyTracking?.active && (
-          <div className="mb-4 md:mb-6 p-3 md:p-4 bg-[#f0f4f1] border-2 border-[#3fab4c] rounded-lg shadow-md max-w-[850px] w-full">
-            <div className="flex items-center justify-center gap-3">
-              <svg
-                className="w-6 h-6 text-[#437749]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
-              <div className="text-center">
-                <div className="font-semibold text-[#437749]">
-                  {language === "ar"
-                    ? "🏢 التقييم المقدم من شركة"
-                    : "🏢 Company Assessment"}
-                </div>
-                {companyTracking.companyName && (
-                  <div className="text-sm text-[#3fab4c] mt-1">
-                    {companyTracking.companyName}
-                  </div>
-                )}
-                <div className="text-xs text-[#a1aeb7] mt-1">
-                  {language === "ar"
-                    ? "سيتم تتبع نتائجك تلقائياً لتحليل الشركة"
-                    : "Your results will be automatically tracked for company analytics"}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Form */}
         <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[850px]">
           {/* Name and Date of Birth */}
@@ -603,9 +598,11 @@ export default function FinancialClinicPage({
                     setNameError("");
                   }
                 }}
-                className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${nameError ? "border-red-500" : "border-[#c2d1d9]"
-                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
+                className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                  nameError ? "border-red-500" : "border-[#c2d1d9]"
+                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
               />
               {nameError && (
                 <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
@@ -654,13 +651,15 @@ export default function FinancialClinicPage({
 
           {/* Gender and Nationality */}
           <div
-            className={`flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-8 w-full md:justify-between ${language === "ar" ? "md:flex-row-reverse" : ""
-              }`}
+            className={`flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-8 w-full md:justify-between ${
+              language === "ar" ? "md:flex-row-reverse" : ""
+            }`}
           >
             <div className="flex flex-col gap-2 flex-1">
               <div
-                className={`flex items-center gap-6 md:gap-[35px] ${language === "ar" ? "flex-row-reverse" : ""
-                  }`}
+                className={`flex items-center gap-6 md:gap-[35px] ${
+                  language === "ar" ? "flex-row-reverse" : ""
+                }`}
               >
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   {language === "ar" ? "الجنس" : "Gender"}{" "}
@@ -670,12 +669,14 @@ export default function FinancialClinicPage({
                 <RadioGroup
                   value={profile.gender}
                   onValueChange={handleGenderChange}
-                  className={`flex items-center gap-[46px] ${language === "ar" ? "flex-row-reverse" : ""
-                    }`}
+                  className={`flex items-center gap-[46px] ${
+                    language === "ar" ? "flex-row-reverse" : ""
+                  }`}
                 >
                   <div
-                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
-                      }`}
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
                     <RadioGroupItem
                       value="Male"
@@ -690,8 +691,9 @@ export default function FinancialClinicPage({
                     </Label>
                   </div>
                   <div
-                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
-                      }`}
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
                     <RadioGroupItem
                       value="Female"
@@ -716,8 +718,9 @@ export default function FinancialClinicPage({
 
             <div className="flex flex-col gap-2 flex-1">
               <div
-                className={`flex items-center gap-[46px] ${language === "ar" ? "flex-row-reverse" : ""
-                  }`}
+                className={`flex items-center gap-[46px] ${
+                  language === "ar" ? "flex-row-reverse" : ""
+                }`}
               >
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   {language === "ar" ? "الجنسية" : "Nationality"}{" "}
@@ -727,12 +730,14 @@ export default function FinancialClinicPage({
                 <RadioGroup
                   value={profile.nationality}
                   onValueChange={handleNationalityChange}
-                  className={`flex items-center gap-[46px] ${language === "ar" ? "flex-row-reverse" : ""
-                    }`}
+                  className={`flex items-center gap-[46px] ${
+                    language === "ar" ? "flex-row-reverse" : ""
+                  }`}
                 >
                   <div
-                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
-                      }`}
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
                     <RadioGroupItem
                       value="Emirati"
@@ -747,8 +752,9 @@ export default function FinancialClinicPage({
                     </Label>
                   </div>
                   <div
-                    className={`flex items-center gap-[5px] ${language === "ar" ? "flex-row-reverse" : ""
-                      }`}
+                    className={`flex items-center gap-[5px] ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
                     <RadioGroupItem
                       value="Non-Emirati"
@@ -785,8 +791,9 @@ export default function FinancialClinicPage({
                 onValueChange={handleEmirateChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
-                    }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
                 >
                   <SelectValue
                     placeholder={
@@ -851,7 +858,7 @@ export default function FinancialClinicPage({
                     value="Outside UAE"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar" ? "خارج الدولة" : "Outside UAE"}
+                    {language === "ar" ? "خارج الإمارات" : "Outside UAE"}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -874,8 +881,9 @@ export default function FinancialClinicPage({
                 onValueChange={handleChildrenChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
-                    }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
                 >
                   <SelectValue
                     placeholder={
@@ -942,8 +950,9 @@ export default function FinancialClinicPage({
                 onValueChange={handleEmploymentChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
-                    }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
                 >
                   <SelectValue
                     placeholder={
@@ -995,8 +1004,9 @@ export default function FinancialClinicPage({
                 onValueChange={handleIncomeChange}
               >
                 <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${language === "ar" ? "flex-row-reverse" : "flex-row"
-                    }`}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
                 >
                   <SelectValue
                     placeholder={
@@ -1113,9 +1123,11 @@ export default function FinancialClinicPage({
                     setEmailError("");
                   }
                 }}
-                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${emailError ? "border-red-500" : "border-[#c2d1d9]"
-                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
+                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                  emailError ? "border-red-500" : "border-[#c2d1d9]"
+                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
               />
               {emailError && (
                 <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
@@ -1165,19 +1177,32 @@ export default function FinancialClinicPage({
                   }}
                   onBlur={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, "");
-                    if (value && (value.length < 7 || value.length > 15)) {
-                      setPhoneError(
-                        language === "ar"
-                          ? "يرجى إدخال رقم جوال صحيح (7-15 رقم)"
-                          : "Please enter a valid mobile number (7-15 digits)"
+                    if (value) {
+                      const validation = validatePhoneNumber(
+                        value,
+                        countryCode
                       );
+                      if (!validation.isValid) {
+                        const errorMsg = validation.expectedLength
+                          ? language === "ar"
+                            ? `يرجى إدخال رقم جوال صحيح (${validation.expectedLength} رقم)`
+                            : `Please enter a valid mobile number (${validation.expectedLength} digits)`
+                          : language === "ar"
+                          ? "يرجى إدخال رقم جوال صحيح"
+                          : "Please enter a valid mobile number";
+                        setPhoneError(errorMsg);
+                      } else {
+                        setPhoneError("");
+                      }
                     } else {
                       setPhoneError("");
                     }
                   }}
-                  className={`flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${phoneError ? "border-red-500" : "border-[#c2d1d9]"
-                    } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"
-                    }`}
+                  className={`flex-1 h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                    phoneError ? "border-red-500" : "border-[#c2d1d9]"
+                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
                 />
               </div>
               {phoneError && (
