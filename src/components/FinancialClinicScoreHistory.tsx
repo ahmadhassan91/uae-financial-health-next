@@ -336,13 +336,12 @@ export function FinancialClinicScoreHistory({
               {previousScore && (
                 <div className="text-center">
                   <div
-                    className={`flex items-center justify-center gap-1 sm:gap-2 text-xl sm:text-2xl font-bold mb-2 ${
-                      scoreDiff > 0
-                        ? "text-green-600"
-                        : scoreDiff < 0
+                    className={`flex items-center justify-center gap-1 sm:gap-2 text-xl sm:text-2xl font-bold mb-2 ${scoreDiff > 0
+                      ? "text-green-600"
+                      : scoreDiff < 0
                         ? "text-red-600"
                         : "text-muted-foreground"
-                    }`}
+                      }`}
                   >
                     {scoreDiff > 0 ? (
                       <ChartLineUp className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -421,11 +420,11 @@ export function FinancialClinicScoreHistory({
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
-              <div className="h-64 sm:h-80">
+              <div className="h-96 sm:h-[420px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart
                     data={histogramDataWithAverage}
-                    margin={{ top: 20, right: 10, left: 0, bottom: 80 }}
+                    margin={{ top: 20, right: 10, left: 0, bottom: 50 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
@@ -545,9 +544,8 @@ export function FinancialClinicScoreHistory({
 
                         {diff !== 0 && (
                           <div
-                            className={`flex items-center gap-1 text-xs sm:text-sm ${
-                              diff > 0 ? "text-green-600" : "text-red-600"
-                            }`}
+                            className={`flex items-center gap-1 text-xs sm:text-sm ${diff > 0 ? "text-green-600" : "text-red-600"
+                              }`}
                           >
                             {diff > 0 ? (
                               <ChartLineUp className="w-3 h-3 sm:w-4 sm:h-4" />

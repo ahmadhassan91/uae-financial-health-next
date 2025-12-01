@@ -12,6 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectSeparator,
 } from "@/components/ui/select";
 import { DatePickerComponent } from "@/components/ui/date-picker";
 import { useLocalization } from "@/contexts/LocalizationContext";
@@ -852,6 +853,7 @@ export default function FinancialClinicPage({
                   >
                     {language === "ar" ? "أم القيوين" : "Umm Al Quwain"}
                   </SelectItem>
+                  <SelectSeparator className="my-2" />
                   <SelectItem
                     value="Outside UAE"
                     className={language === "ar" ? "flex-row-reverse" : ""}
