@@ -37,8 +37,7 @@ export default function FinancialClinicResultsPage() {
       if (email) {
         try {
           const response = await fetch(
-            `${
-              process.env.NEXT_PUBLIC_API_URL
+            `${process.env.NEXT_PUBLIC_API_URL
             }/financial-clinic/latest/${encodeURIComponent(email)}`
           );
 
