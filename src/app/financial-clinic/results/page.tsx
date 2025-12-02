@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FinancialClinicResults } from "@/components/FinancialClinicResults";
 import { FinancialClinicAccountModal } from "@/components/FinancialClinicAccountModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLocalization } from "@/contexts/LocalizationContext";
 import type { FinancialClinicResult } from "@/lib/financial-clinic-types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { toast } from "sonner";
 export default function FinancialClinicResultsPage() {
   const router = useRouter();
   const { isAuthenticated, session, user } = useAuth();
+  const { language } = useLocalization();
   const [result, setResult] = useState<FinancialClinicResult | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -158,7 +160,7 @@ export default function FinancialClinicResultsPage() {
             profile: JSON.parse(
               localStorage.getItem("financialClinicProfile") || "{}"
             ),
-            language: "en", // Could be from localization context
+            language: language,
           }),
         }
       );
