@@ -66,7 +66,13 @@ export function FinancialClinicSurvey({
 
   // Auto-scroll to top when navigating between categories
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Add small delay to ensure content is fully rendered before scrolling
+    // This is especially important on mobile for questions with more complex layouts
+    const scrollTimer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+
+    return () => clearTimeout(scrollTimer);
   }, [currentStep]);
 
   // Group questions by category

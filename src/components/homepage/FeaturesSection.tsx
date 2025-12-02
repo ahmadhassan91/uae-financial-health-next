@@ -85,8 +85,7 @@ export function FeaturesSection() {
                 style={{
                   fontSize: "14px",
                   fontWeight: 400,
-                  textAlign: language === "ar" ? "right" : "left",
-                  marginRight: language === "ar" ? "70px" : "0",
+                  textAlign: "center",
                 }}
                 dangerouslySetInnerHTML={{
                   __html: language === "ar" ? feature.textAr : feature.textEn,
