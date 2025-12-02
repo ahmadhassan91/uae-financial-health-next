@@ -120,7 +120,9 @@ export function FinancialClinicResults({
     >
       <HomepageHeader />
 
-      <section className="flex flex-col items-center gap-6 md:gap-12 lg:gap-[65px] px-3 md:px-6 lg:px-8 py-4 md:py-8 lg:py-12 w-full">
+      <section
+        className="flex flex-col items-center gap-6 md:gap-12 lg:gap-[65px] px-3 md:px-6 lg:px-8 py-4 md:py-8 lg:py-12 w-full"
+      >
         {/* Hero Section */}
         <div className="flex flex-col items-center gap-3 md:gap-4 lg:gap-[22px] w-full">
           <div className="inline-flex flex-col items-center gap-1.5 px-4">

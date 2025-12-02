@@ -1,14 +1,40 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Users, TrendingUp, Clock, Activity, Download, User, LogOut, FileSpreadsheet, Loader2, Funnel, Menu, X } from 'lucide-react';
-import { useAdminAuth } from '../hooks/use-admin-auth';
-import { toast } from 'sonner';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Users,
+  TrendingUp,
+  Clock,
+  Activity,
+  Download,
+  User,
+  LogOut,
+  FileSpreadsheet,
+  Loader2,
+  Funnel,
+  Menu,
+  X,
+} from "lucide-react";
+import { useAdminAuth } from "../hooks/use-admin-auth";
+import { notify } from "@/lib/notifications";
 import {
   adminApi,
   FilterOptions,
@@ -23,63 +49,90 @@ import {
   CompanyAnalytics,
   ScoreAnalyticsRow,
   ScoreAnalyticsResponse,
-} from '../lib/admin-api';
+} from "../lib/admin-api";
 
 // Import chart components
-import { FinancialClinicFilters } from './admin/FinancialClinicFilters';
-import { SubmissionsChart } from './admin/charts/SubmissionsChart';
-import { AverageScoreChart } from './admin/charts/AverageScoreChart';
-import { ScoreDistributionChart } from './admin/charts/ScoreDistributionChart';
-import { CategoryPerformanceChart } from './admin/charts/CategoryPerformanceChart';
-import { NationalityBreakdownChart } from './admin/charts/NationalityBreakdownChart';
-import { AgeBreakdownChart } from './admin/charts/AgeBreakdownChart';
-import { CompletedSurveysChart } from './admin/charts/CompletedSurveysChart';
-import { NationalityPieChart } from './admin/charts/NationalityPieChart';
-import { AgeGroupDistributionChart } from './admin/charts/AgeGroupDistributionChart';
-import { GenderDistributionChart } from './admin/charts/GenderDistributionChart';
-import { EmploymentDistributionChart } from './admin/charts/EmploymentDistributionChart';
-import { EmirateDistributionChart } from './admin/charts/EmirateDistributionChart';
-import { ChildrenDistributionChart } from './admin/charts/ChildrenDistributionChart';
-import { IncomeRangeDistributionChart } from './admin/charts/IncomeRangeDistributionChart';
-import { CompaniesAnalyticsTable } from './admin/CompaniesAnalyticsTable';
-import { ScoreAnalyticsTable } from './admin/ScoreAnalyticsTable';
-import { CompanyManagement } from './CompanyManagement';
-import { LeadsManagement } from './LeadsManagement';
-import { IncompleteSurveys } from './admin/IncompleteSurveys';
-import { SystemManagement } from './admin/SystemManagement';
-import { SubmissionsTable } from './admin/SubmissionsTable';
-import { RegistrationMetrics } from './admin/RegistrationMetrics';
+import { FinancialClinicFilters } from "./admin/FinancialClinicFilters";
+import { SubmissionsChart } from "./admin/charts/SubmissionsChart";
+import { AverageScoreChart } from "./admin/charts/AverageScoreChart";
+import { ScoreDistributionChart } from "./admin/charts/ScoreDistributionChart";
+import { CategoryPerformanceChart } from "./admin/charts/CategoryPerformanceChart";
+import { NationalityBreakdownChart } from "./admin/charts/NationalityBreakdownChart";
+import { AgeBreakdownChart } from "./admin/charts/AgeBreakdownChart";
+import { CompletedSurveysChart } from "./admin/charts/CompletedSurveysChart";
+import { NationalityPieChart } from "./admin/charts/NationalityPieChart";
+import { AgeGroupDistributionChart } from "./admin/charts/AgeGroupDistributionChart";
+import { GenderDistributionChart } from "./admin/charts/GenderDistributionChart";
+import { EmploymentDistributionChart } from "./admin/charts/EmploymentDistributionChart";
+import { EmirateDistributionChart } from "./admin/charts/EmirateDistributionChart";
+import { ChildrenDistributionChart } from "./admin/charts/ChildrenDistributionChart";
+import { IncomeRangeDistributionChart } from "./admin/charts/IncomeRangeDistributionChart";
+import { CompaniesAnalyticsTable } from "./admin/CompaniesAnalyticsTable";
+import { ScoreAnalyticsTable } from "./admin/ScoreAnalyticsTable";
+import { CompanyManagement } from "./CompanyManagement";
+import { LeadsManagement } from "./LeadsManagement";
+import { IncompleteSurveys } from "./admin/IncompleteSurveys";
+import { SystemManagement } from "./admin/SystemManagement";
+import { SubmissionsTable } from "./admin/SubmissionsTable";
+import { RegistrationMetrics } from "./admin/RegistrationMetrics";
 
 interface FinancialClinicAdminDashboardProps {
   onBack?: () => void;
 }
 
-export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDashboardProps) {
+export function FinancialClinicAdminDashboard({
+  onBack,
+}: FinancialClinicAdminDashboardProps) {
   const { user, logout } = useAdminAuth();
-  const [selectedTab, setSelectedTab] = useState('overview');
+  const [selectedTab, setSelectedTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // State for filters and date range
   const [filters, setFilters] = useState<DemographicFilters>({});
-  const [dateParams, setDateParams] = useState<DateRangeParams>({ dateRange: '30d' });
-  const [availableOptions, setAvailableOptions] = useState<FilterOptions | null>(null);
+  const [dateParams, setDateParams] = useState<DateRangeParams>({
+    dateRange: "30d",
+  });
+  const [availableOptions, setAvailableOptions] =
+    useState<FilterOptions | null>(null);
 
   // State for analytics data
   const [loading, setLoading] = useState(true);
-  const [overviewMetrics, setOverviewMetrics] = useState<OverviewMetrics | null>(null);
-  const [scoreDistribution, setScoreDistribution] = useState<ScoreDistribution[]>([]);
-  const [categoryPerformance, setCategoryPerformance] = useState<CategoryPerformance[]>([]);
+  const [overviewMetrics, setOverviewMetrics] =
+    useState<OverviewMetrics | null>(null);
+  const [scoreDistribution, setScoreDistribution] = useState<
+    ScoreDistribution[]
+  >([]);
+  const [categoryPerformance, setCategoryPerformance] = useState<
+    CategoryPerformance[]
+  >([]);
   const [timeSeriesData, setTimeSeriesData] = useState<TimeSeriesData[]>([]);
-  const [timeSeriesGroupBy, setTimeSeriesGroupBy] = useState<'day' | 'week' | 'month' | 'quarter' | 'year'>('day');
-  const [nationalityBreakdown, setNationalityBreakdown] = useState<NationalityBreakdown[]>([]);
+  const [timeSeriesGroupBy, setTimeSeriesGroupBy] = useState<
+    "day" | "week" | "month" | "quarter" | "year"
+  >("day");
+  const [nationalityBreakdown, setNationalityBreakdown] = useState<
+    NationalityBreakdown[]
+  >([]);
   const [ageBreakdown, setAgeBreakdown] = useState<AgeBreakdown[]>([]);
-  const [employmentBreakdown, setEmploymentBreakdown] = useState<{ status: string, count: number }[]>([]);
-  const [emirateBreakdown, setEmirateBreakdown] = useState<{ emirate: string, count: number }[]>([]);
-  const [childrenBreakdown, setChildrenBreakdown] = useState<{ count_label: string, count: number, average_score: number }[]>([]);
-  const [incomeBreakdown, setIncomeBreakdown] = useState<{ range: string, count: number, average_score: number }[]>([]);
-  const [genderBreakdown, setGenderBreakdown] = useState<{ gender: string, count: number, percentage: number }[]>([]);
-  const [companiesAnalytics, setCompaniesAnalytics] = useState<CompanyAnalytics[]>([]);
-  const [scoreAnalyticsTable, setScoreAnalyticsTable] = useState<ScoreAnalyticsResponse | null>(null);
+  const [employmentBreakdown, setEmploymentBreakdown] = useState<
+    { status: string; count: number }[]
+  >([]);
+  const [emirateBreakdown, setEmirateBreakdown] = useState<
+    { emirate: string; count: number }[]
+  >([]);
+  const [childrenBreakdown, setChildrenBreakdown] = useState<
+    { count_label: string; count: number; average_score: number }[]
+  >([]);
+  const [incomeBreakdown, setIncomeBreakdown] = useState<
+    { range: string; count: number; average_score: number }[]
+  >([]);
+  const [genderBreakdown, setGenderBreakdown] = useState<
+    { gender: string; count: number; percentage: number }[]
+  >([]);
+  const [companiesAnalytics, setCompaniesAnalytics] = useState<
+    CompanyAnalytics[]
+  >([]);
+  const [scoreAnalyticsTable, setScoreAnalyticsTable] =
+    useState<ScoreAnalyticsResponse | null>(null);
 
   // State for export
   const [exporting, setExporting] = useState(false);
@@ -108,8 +161,8 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
       const options = await adminApi.getFilterOptions();
       setAvailableOptions(options);
     } catch (error) {
-      console.error('Failed to load filter options:', error);
-      toast.error('Failed to load filter options');
+      console.error("Failed to load filter options:", error);
+      toast.error("Failed to load filter options");
     }
   };
 
@@ -147,29 +200,32 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
         incBreakdown,
         compAnalytics,
         scoreTable,
-        genBreakdown
+        genBreakdown,
       ] = results.map((result, index) => {
-        if (result.status === 'fulfilled') {
+        if (result.status === "fulfilled") {
           return result.value;
         } else {
-          console.error(`Failed to load analytics item ${index}:`, result.reason);
+          console.error(
+            `Failed to load analytics item ${index}:`,
+            result.reason
+          );
           return null;
         }
       }) as [
-          OverviewMetrics | null,
-          ScoreDistribution[] | null,
-          CategoryPerformance[] | null,
-          TimeSeriesData[] | null,
-          NationalityBreakdown[] | null,
-          AgeBreakdown[] | null,
-          { status: string; count: number }[] | null,
-          { emirate: string; count: number }[] | null,
-          { count_label: string; count: number; average_score: number }[] | null,
-          { range: string; count: number; average_score: number }[] | null,
-          CompanyAnalytics[] | null,
-          ScoreAnalyticsResponse | null,
-          { gender: string; count: number; percentage: number }[] | null
-        ];
+        OverviewMetrics | null,
+        ScoreDistribution[] | null,
+        CategoryPerformance[] | null,
+        TimeSeriesData[] | null,
+        NationalityBreakdown[] | null,
+        AgeBreakdown[] | null,
+        { status: string; count: number }[] | null,
+        { emirate: string; count: number }[] | null,
+        { count_label: string; count: number; average_score: number }[] | null,
+        { range: string; count: number; average_score: number }[] | null,
+        CompanyAnalytics[] | null,
+        ScoreAnalyticsResponse | null,
+        { gender: string; count: number; percentage: number }[] | null
+      ];
 
       // Set data only if successfully loaded
       if (metrics) setOverviewMetrics(metrics);
@@ -186,8 +242,8 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
       if (scoreTable) setScoreAnalyticsTable(scoreTable);
       if (genBreakdown) setGenderBreakdown(genBreakdown);
     } catch (error) {
-      console.error('Failed to load analytics:', error);
-      toast.error('Failed to load analytics data');
+      console.error("Failed to load analytics:", error);
+      toast.error("Failed to load analytics data");
     } finally {
       setLoading(false);
     }
@@ -195,11 +251,15 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
 
   const loadTimeSeries = async () => {
     try {
-      const data = await adminApi.getTimeSeries(timeSeriesGroupBy, filters, dateParams);
+      const data = await adminApi.getTimeSeries(
+        timeSeriesGroupBy,
+        filters,
+        dateParams
+      );
       setTimeSeriesData(data);
     } catch (error) {
-      console.error('Failed to load time series:', error);
-      toast.error('Failed to load time series data');
+      console.error("Failed to load time series:", error);
+      toast.error("Failed to load time series data");
     }
   };
 
@@ -210,18 +270,21 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
     }
   };
 
-  const handleExport = async (format: 'csv' | 'excel') => {
+  const handleExport = async (format: "csv" | "excel") => {
     setExporting(true);
     try {
-      const blob = format === 'csv'
-        ? await adminApi.exportCSV(filters, dateParams)
-        : await adminApi.exportExcel(filters, dateParams);
+      const blob =
+        format === "csv"
+          ? await adminApi.exportCSV(filters, dateParams)
+          : await adminApi.exportExcel(filters, dateParams);
 
       // Create download link
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `financial-clinic-export-${new Date().toISOString().split('T')[0]}.${format === 'csv' ? 'csv' : 'xlsx'}`;
+      a.download = `financial-clinic-export-${
+        new Date().toISOString().split("T")[0]
+      }.${format === "csv" ? "csv" : "xlsx"}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -237,10 +300,11 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
   };
 
   const getStatusBadge = (score: number) => {
-    if (score >= 65) return { variant: 'default' as const, label: 'Excellent' };
-    if (score >= 50) return { variant: 'secondary' as const, label: 'Good' };
-    if (score >= 35) return { variant: 'outline' as const, label: 'Needs Improvement' };
-    return { variant: 'destructive' as const, label: 'At Risk' };
+    if (score >= 65) return { variant: "default" as const, label: "Excellent" };
+    if (score >= 50) return { variant: "secondary" as const, label: "Good" };
+    if (score >= 35)
+      return { variant: "outline" as const, label: "Needs Improvement" };
+    return { variant: "destructive" as const, label: "At Risk" };
   };
 
   if (loading && !overviewMetrics) {
@@ -248,7 +312,9 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary/20">
         <div className="text-center">
           <Loader2 className="animate-spin h-12 w-12 mx-auto text-primary" />
-          <p className="mt-4 text-muted-foreground">Loading dashboard data...</p>
+          <p className="mt-4 text-muted-foreground">
+            Loading dashboard data...
+          </p>
         </div>
       </div>
     );
@@ -266,11 +332,17 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
         )}
 
         {/* Sidebar for Filters */}
-        <aside className={`
+        <aside
+          className={`
           fixed lg:sticky top-0 h-screen overflow-y-auto border-r bg-background z-50
           w-80 transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}>
+          ${
+            isSidebarOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          }
+        `}
+        >
           <div className="p-4 border-b flex items-center justify-between">
             <h2 className="font-semibold text-lg flex items-center gap-2">
               <Funnel className="w-5 h-5" />
@@ -317,8 +389,12 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-2xl md:text-3xl font-bold">Financial Clinic Dashboard</h1>
-                    <Badge variant="destructive" className="text-xs">ADMIN</Badge>
+                    <h1 className="text-2xl md:text-3xl font-bold">
+                      Financial Clinic Dashboard
+                    </h1>
+                    <Badge variant="destructive" className="text-xs">
+                      ADMIN
+                    </Badge>
                   </div>
                   <p className="text-sm md:text-base text-muted-foreground">
                     National Bonds Corporation - Financial Health Analytics
@@ -329,7 +405,7 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                   {/* Export Buttons */}
                   <Button
                     variant="outline"
-                    onClick={() => handleExport('csv')}
+                    onClick={() => handleExport("csv")}
                     disabled={exporting}
                     className="flex items-center gap-2"
                   >
@@ -342,7 +418,7 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => handleExport('excel')}
+                    onClick={() => handleExport("excel")}
                     disabled={exporting}
                     className="flex items-center gap-2"
                   >
@@ -358,11 +434,18 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                   {user && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          className="flex items-center gap-2"
+                        >
                           <User className="w-4 h-4" />
                           <div className="text-left">
-                            <div className="font-medium text-sm">{user.username}</div>
-                            <div className="text-xs text-muted-foreground">Admin</div>
+                            <div className="font-medium text-sm">
+                              {user.username}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Admin
+                            </div>
                           </div>
                         </Button>
                       </DropdownMenuTrigger>
@@ -371,10 +454,15 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                         <DropdownMenuSeparator />
                         <div className="px-2 py-1.5 text-sm">
                           <div className="font-medium">{user.username}</div>
-                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {user.email}
+                          </div>
                         </div>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                        <DropdownMenuItem
+                          onClick={handleLogout}
+                          className="text-red-600"
+                        >
                           <LogOut className="w-4 h-4 mr-2" />
                           Logout
                         </DropdownMenuItem>
@@ -386,15 +474,49 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
             </div>
 
             {/* Tabs */}
-            <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
+            <Tabs
+              value={selectedTab}
+              onValueChange={setSelectedTab}
+              className="space-y-6"
+            >
               <div className="w-full overflow-x-auto pb-2">
                 <TabsList className="inline-flex w-auto min-w-full lg:grid lg:grid-cols-6 gap-1">
-                  <TabsTrigger value="overview" className="text-xs sm:text-sm whitespace-nowrap">Overview</TabsTrigger>
-                  <TabsTrigger value="submissions" className="text-xs sm:text-sm whitespace-nowrap">Submissions</TabsTrigger>
-                  <TabsTrigger value="companies" className="text-xs sm:text-sm whitespace-nowrap">Companies</TabsTrigger>
-                  <TabsTrigger value="leads" className="text-xs sm:text-sm whitespace-nowrap">Leads</TabsTrigger>
-                  <TabsTrigger value="incomplete" className="text-xs sm:text-sm whitespace-nowrap">Incomplete</TabsTrigger>
-                  <TabsTrigger value="system" className="text-xs sm:text-sm whitespace-nowrap">System</TabsTrigger>
+                  <TabsTrigger
+                    value="overview"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    Overview
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="submissions"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    Submissions
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="companies"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    Companies
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="leads"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    Leads
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="incomplete"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    Incomplete
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="system"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    System
+                  </TabsTrigger>
                 </TabsList>
               </div>
 
@@ -406,24 +528,35 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Total Submissions</CardTitle>
+                          <CardTitle className="text-sm font-medium">
+                            Total Submissions
+                          </CardTitle>
                           <Users className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                          <div className="text-2xl font-bold">{overviewMetrics.total_submissions}</div>
+                          <div className="text-2xl font-bold">
+                            {overviewMetrics.total_submissions}
+                          </div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            {overviewMetrics.cases_completed_percentage?.toFixed(1) ?? '0.0'}% completion rate
+                            {overviewMetrics.cases_completed_percentage?.toFixed(
+                              1
+                            ) ?? "0.0"}
+                            % completion rate
                           </p>
                         </CardContent>
                       </Card>
 
                       <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Today</CardTitle>
+                          <CardTitle className="text-sm font-medium">
+                            Today
+                          </CardTitle>
                           <Clock className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                          <div className="text-2xl font-bold">{overviewMetrics.total_submissions || 0}</div>
+                          <div className="text-2xl font-bold">
+                            {overviewMetrics.total_submissions || 0}
+                          </div>
                           <p className="text-xs text-muted-foreground mt-1">
                             Total submissions
                           </p>
@@ -432,11 +565,15 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
 
                       <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Average Score</CardTitle>
+                          <CardTitle className="text-sm font-medium">
+                            Average Score
+                          </CardTitle>
                           <Activity className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                          <div className="text-2xl font-bold">{overviewMetrics.average_score?.toFixed(1) || '0.0'}</div>
+                          <div className="text-2xl font-bold">
+                            {overviewMetrics.average_score?.toFixed(1) || "0.0"}
+                          </div>
                           <p className="text-xs text-muted-foreground mt-1">
                             Out of 100
                           </p>
@@ -473,24 +610,24 @@ export function FinancialClinicAdminDashboard({ onBack }: FinancialClinicAdminDa
                     {/* New Submissions Analytics Charts - Moved above Score Analytics Table */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <CompletedSurveysChart
-                        data={timeSeriesData.map(item => ({
+                        data={timeSeriesData.map((item) => ({
                           date: item.period,
-                          count: item.submissions
+                          count: item.submissions,
                         }))}
                       />
                       <NationalityPieChart
-                        data={nationalityBreakdown.map(item => ({
+                        data={nationalityBreakdown.map((item) => ({
                           nationality: item.nationality,
-                          count: item.total
+                          count: item.total,
                         }))}
                       />
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <AgeGroupDistributionChart
-                        data={ageBreakdown.map(item => ({
+                        data={ageBreakdown.map((item) => ({
                           age_group: item.age_group,
-                          count: item.total
+                          count: item.total,
                         }))}
                       />
                       <GenderDistributionChart data={genderBreakdown} />
