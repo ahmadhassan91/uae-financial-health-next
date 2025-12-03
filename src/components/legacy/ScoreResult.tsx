@@ -160,7 +160,7 @@ export function ScoreResult({ scoreCalculation, onRetake, onViewHistory }: Score
             <CardHeader>
               <CardTitle>Financial Pillar Scores</CardTitle>
               <CardDescription>
-                Your performance across the 7 key areas of financial health
+                Your performance across key areas of financial health
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
