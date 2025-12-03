@@ -3,7 +3,7 @@
  * Handles consent storage, retrieval, and backend synchronization
  */
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export interface ConsentData {
   profiling: boolean;
@@ -34,13 +34,14 @@ export interface ConsentStatusResponse {
 }
 
 class ConsentService {
-  private readonly API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-  private readonly CONSENT_VERSION = '1.0';
+  private readonly API_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  private readonly CONSENT_VERSION = "1.0";
   private sessionId: string;
 
   constructor() {
     // Generate or retrieve session ID
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       this.sessionId = this.getOrCreateSessionId();
     } else {
       this.sessionId = uuidv4();
@@ -51,13 +52,13 @@ class ConsentService {
    * Get or create a unique session ID for tracking consent
    */
   private getOrCreateSessionId(): string {
-    const stored = localStorage.getItem('consentSessionId');
+    const stored = localStorage.getItem("consentSessionId");
     if (stored) {
       return stored;
     }
-    
+
     const newSessionId = uuidv4();
-    localStorage.setItem('consentSessionId', newSessionId);
+    localStorage.setItem("consentSessionId", newSessionId);
     return newSessionId;
   }
 
@@ -76,7 +77,7 @@ class ConsentService {
       const status = await this.getConsentStatus();
       return status.has_profiling_consent && status.has_data_processing_consent;
     } catch (error) {
-      console.error('Error checking consent status:', error);
+      console.error("Error checking consent status:", error);
       return false;
     }
   }
@@ -85,15 +86,15 @@ class ConsentService {
    * Get consent data from localStorage
    */
   getLocalConsent(): ConsentData | null {
-    if (typeof window === 'undefined') return null;
-    
-    const stored = localStorage.getItem('userConsent');
+    if (typeof window === "undefined") return null;
+
+    const stored = localStorage.getItem("userConsent");
     if (!stored) return null;
 
     try {
       return JSON.parse(stored);
     } catch (error) {
-      console.error('Error parsing consent data:', error);
+      console.error("Error parsing consent data:", error);
       return null;
     }
   }
@@ -111,26 +112,26 @@ class ConsentService {
       timestamp: new Date().toISOString(),
       language,
       sessionId: this.sessionId,
-      userId
+      userId,
     };
 
     // Store in localStorage immediately
-    localStorage.setItem('userConsent', JSON.stringify(consentData));
+    localStorage.setItem("userConsent", JSON.stringify(consentData));
 
     // Sync with backend
     try {
       // Grant profiling consent
-      await this.grantConsentToBackend('profiling', language);
-      
+      await this.grantConsentToBackend("profiling", language);
+
       // Grant data processing consent
-      await this.grantConsentToBackend('data_processing', language);
+      await this.grantConsentToBackend("data_processing", language);
 
       return { success: true };
     } catch (error: any) {
-      console.error('Error granting consent to backend:', error);
-      return { 
-        success: false, 
-        error: error.message || 'Failed to save consent to server' 
+      console.error("Error granting consent to backend:", error);
+      return {
+        success: false,
+        error: error.message || "Failed to save consent to server",
       };
     }
   }
@@ -143,23 +144,24 @@ class ConsentService {
     language: string
   ): Promise<ConsentResponse> {
     const response = await fetch(`${this.API_URL}/consent/grant`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify({
         consent_type: consentType,
         consent_version: this.CONSENT_VERSION,
         consent_language: language,
         session_id: this.sessionId,
-        source_page: typeof window !== 'undefined' ? window.location.pathname : undefined
-      })
+        source_page:
+          typeof window !== "undefined" ? window.location.pathname : undefined,
+      }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Failed to grant consent');
+      throw new Error(error.detail || "Failed to grant consent");
     }
 
     return response.json();
@@ -170,18 +172,18 @@ class ConsentService {
    */
   async getConsentStatus(): Promise<ConsentStatusResponse> {
     const url = new URL(`${this.API_URL}/consent/status`);
-    url.searchParams.append('session_id', this.sessionId);
+    url.searchParams.append("session_id", this.sessionId);
 
     const response = await fetch(url.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include'
+      credentials: "include",
     });
 
     if (!response.ok) {
-      throw new Error('Failed to get consent status');
+      throw new Error("Failed to get consent status");
     }
 
     return response.json();
@@ -198,40 +200,40 @@ class ConsentService {
       const response = await fetch(
         `${this.API_URL}/consent/withdraw/${consentType}`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          credentials: 'include',
+          credentials: "include",
           body: JSON.stringify({
             consent_type: consentType,
-            reason
-          })
+            reason,
+          }),
         }
       );
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Failed to withdraw consent');
+        throw new Error(error.detail || "Failed to withdraw consent");
       }
 
       // Update localStorage
       const localConsent = this.getLocalConsent();
       if (localConsent) {
-        if (consentType === 'profiling') {
+        if (consentType === "profiling") {
           localConsent.profiling = false;
-        } else if (consentType === 'data_processing') {
+        } else if (consentType === "data_processing") {
           localConsent.dataProcessing = false;
         }
-        localStorage.setItem('userConsent', JSON.stringify(localConsent));
+        localStorage.setItem("userConsent", JSON.stringify(localConsent));
       }
 
       return { success: true };
     } catch (error: any) {
-      console.error('Error withdrawing consent:', error);
+      console.error("Error withdrawing consent:", error);
       return {
         success: false,
-        error: error.message || 'Failed to withdraw consent'
+        error: error.message || "Failed to withdraw consent",
       };
     }
   }
@@ -241,15 +243,15 @@ class ConsentService {
    */
   async getConsentHistory(): Promise<any> {
     const response = await fetch(`${this.API_URL}/consent/history`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include'
+      credentials: "include",
     });
 
     if (!response.ok) {
-      throw new Error('Failed to get consent history');
+      throw new Error("Failed to get consent history");
     }
 
     return response.json();
@@ -259,9 +261,9 @@ class ConsentService {
    * Clear local consent data (for testing/logout)
    */
   clearLocalConsent(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('userConsent');
-      localStorage.removeItem('consentSessionId');
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("userConsent");
+      localStorage.removeItem("consentSessionId");
     }
   }
 

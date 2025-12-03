@@ -32,6 +32,12 @@ function FinancialClinicLoginContent() {
   const language = (searchParams?.get("lang") as "en" | "ar") || "en";
   const { login: authLogin, isAuthenticated } = useAuth();
 
+  // Debug: Log the language
+  useEffect(() => {
+    console.log("🌐 Login Page Language:", language);
+    console.log("📍 URL Params:", searchParams?.toString());
+  }, [language, searchParams]);
+
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
