@@ -253,7 +253,7 @@ export function FinancialClinicResults({
             <p className="font-normal text-[#575757] text-sm md:text-base text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "أدائك عبر مجالات رئيسية للصحة المالية"
-                : "Your performance across the key areas of financial health"}
+                : "Your performance across key areas of financial health"}
             </p>
           </div>
 

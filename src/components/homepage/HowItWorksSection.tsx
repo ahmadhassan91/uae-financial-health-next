@@ -77,13 +77,10 @@ export function HowItWorksSection() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-[65px] py-12">
-      <div
-        className="w-full flex flex-col md:flex-row items-stretch gap-0 rounded-lg overflow-hidden"
-        style={{ width: "100%", alignItems: "center" }}
-      >
+    <div className="w-full flex flex-col items-center gap-8 sm:gap-12 md:gap-[65px] py-8 sm:py-12 px-4">
+      <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-stretch gap-0 rounded-lg overflow-hidden">
         {/* Left Side - Image */}
-        <div style={{ width: "50%", padding: "1%" }}>
+        <div className="w-full lg:w-1/2 min-h-[250px] sm:min-h-[300px] lg:min-h-0">
           <img
             src="/homepage/images/frame-12.png"
             alt="How it works background"
@@ -92,44 +89,42 @@ export function HowItWorksSection() {
         </div>
 
         {/* Right Side - Content */}
-        <div style={{ padding: "5%" }}>
-          <div>
-            <div className="flex flex-col items-start gap-[46px] w-full">
-              <h2 className="self-stretch font-semibold text-[#437749] text-2xl md:text-[33px] tracking-[0] leading-[38px]">
-                {language === "ar" ? "كيف يعمل" : "How It Works"}
-              </h2>
+        <div className="w-full lg:w-1/2 p-6 sm:p-8 md:p-12 lg:p-[5%] bg-white">
+          <div className="flex flex-col items-start gap-6 sm:gap-8 md:gap-[46px] w-full">
+            <h2 className="self-stretch font-semibold text-[#437749] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px]">
+              {language === "ar" ? "كيف يعمل" : "How It Works"}
+            </h2>
 
-              {steps.map((step, index) => (
-                <div key={index} className="items-start gap-3 flex w-full">
-                  <img
-                    className="flex-shrink-0 w-6 h-6"
-                    alt="Tick circle"
-                    src="/homepage/icons/tick.svg"
-                  />
+            {steps.map((step, index) => (
+              <div key={index} className="items-start gap-3 flex w-full">
+                <img
+                  className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 mt-0.5"
+                  alt="Tick circle"
+                  src="/homepage/icons/tick.svg"
+                />
 
-                  <div className="flex flex-col items-start justify-center gap-1.5 flex-1">
-                    <h4 className="w-full font-semibold text-[#437749] text-sm tracking-[0] leading-6">
-                      {language === "ar" ? step.titleAr : step.titleEn}
-                    </h4>
+                <div className="flex flex-col items-start justify-center gap-1.5 flex-1">
+                  <h4 className="w-full font-semibold text-[#437749] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6">
+                    {language === "ar" ? step.titleAr : step.titleEn}
+                  </h4>
 
-                    <p className="self-stretch font-normal text-[#a1aeb7] text-sm tracking-[0] leading-[21px]">
-                      {language === "ar"
-                        ? step.descriptionAr
-                        : step.descriptionEn}
-                    </p>
-                  </div>
+                  <p className="self-stretch font-normal text-[#a1aeb7] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-[21px]">
+                    {language === "ar"
+                      ? step.descriptionAr
+                      : step.descriptionEn}
+                  </p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       <Button
         onClick={handleStartCheckup}
-        className="h-auto inline-flex items-center justify-center gap-2.5 px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90"
+        className="h-auto w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90"
       >
-        <span className="w-fit mt-[-1.00px] font-normal text-white text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
+        <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
           {language === "ar"
             ? "بدء تقييم وضعي المالي"
             : "START MY FINANCIAL CHECKUP"}

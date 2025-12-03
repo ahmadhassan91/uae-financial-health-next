@@ -31,24 +31,24 @@ export function FeaturesSection() {
   const { language } = useLocalization();
 
   return (
-    <div className="flex flex-col w-full max-w-[1200px] mx-auto items-start gap-[43px] px-4 py-12">
-      <div className="flex-col items-center gap-[22px] flex w-full">
+    <div className="flex flex-col w-full max-w-[1200px] mx-auto items-start gap-6 sm:gap-8 md:gap-[43px] px-4 py-8 sm:py-12">
+      <div className="flex-col items-center gap-4 sm:gap-[22px] flex w-full">
         <div className="inline-flex flex-col items-center">
-          <h2 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-2xl md:text-[35px] tracking-[0] leading-[38px] text-center">
+          <h2 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-xl sm:text-2xl md:text-[35px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
             {language === "ar"
               ? "ما أهميّة إجراء هذا التقييم؟"
               : "Why Take the Checkup?"}
           </h2>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-[3px] w-full">
-          <p className="self-stretch mt-[-1.00px] font-normal text-[#a1aeb7] text-base text-center tracking-[0] leading-6">
+        <div className="flex flex-col items-center justify-center gap-2 sm:gap-[3px] w-full">
+          <p className="self-stretch mt-[-1.00px] font-normal text-[#a1aeb7] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
               ? "لأنّ المراجعة الدورية لجودة أوضاعكم المالية أمرٌ ضروريّ."
               : "Because your financial wellbeing deserves a regular checkup."}
           </p>
 
-          <p className="w-fit font-normal text-[#a1aeb7] text-base text-center tracking-[0] leading-6">
+          <p className="w-fit font-normal text-[#a1aeb7] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
               ? "فصحّتكم المالية بحاجة إلى الرعاية والاهتمام، تماماً كصحّتكم الجسدية."
               : "Just like your physical health, your financial health needs care and attention."}
@@ -56,10 +56,10 @@ export function FeaturesSection() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-[27px] w-full">
-        <div className="flex-col items-center gap-[22px] flex w-full">
+      <div className="flex flex-col items-center gap-4 sm:gap-6 md:gap-[27px] w-full">
+        <div className="flex-col items-center gap-4 sm:gap-[22px] flex w-full">
           <div className="inline-flex flex-col items-center">
-            <h3 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-xl md:text-2xl tracking-[0] leading-[38px] text-center">
+            <h3 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-lg sm:text-xl md:text-2xl tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
               {language === "ar"
                 ? "تساعدكم عيادتنا الماليّة على"
                 : "The Financial Clinic helps you"}
@@ -67,26 +67,20 @@ export function FeaturesSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-2 w-full">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col w-full items-start gap-3 p-3"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              className="flex flex-col w-full items-center justify-start gap-3 p-4 sm:p-3"
             >
-              <img className="w-8 h-8" alt="Feature icon" src={feature.icon} />
+              <img
+                className="w-8 h-8 flex-shrink-0"
+                alt="Feature icon"
+                src={feature.icon}
+              />
 
               <span
-                className="self-stretch text-[#a1aeb7] tracking-[0] leading-6"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: 400,
-                  textAlign: "center",
-                }}
+                className="self-stretch text-[#a1aeb7] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6 text-center"
                 dangerouslySetInnerHTML={{
                   __html: language === "ar" ? feature.textAr : feature.textEn,
                 }}
