@@ -120,9 +120,7 @@ export function FinancialClinicResults({
     >
       <HomepageHeader />
 
-      <section
-        className="flex flex-col items-center gap-6 md:gap-12 lg:gap-[65px] px-3 md:px-6 lg:px-8 py-4 md:py-8 lg:py-12 w-full"
-      >
+      <section className="flex flex-col items-center gap-6 md:gap-12 lg:gap-[65px] px-3 md:px-6 lg:px-8 py-4 md:py-8 lg:py-12 w-full">
         {/* Hero Section */}
         <div className="flex flex-col items-center gap-3 md:gap-4 lg:gap-[22px] w-full">
           <div className="inline-flex flex-col items-center gap-1.5 px-4">
@@ -163,10 +161,10 @@ export function FinancialClinicResults({
                 result.total_score >= 80
                   ? "#6cc922"
                   : result.total_score >= 60
-                    ? "#fca924"
-                    : result.total_score >= 30
-                      ? "#fe6521"
-                      : "#f00c01",
+                  ? "#fca924"
+                  : result.total_score >= 30
+                  ? "#fe6521"
+                  : "#f00c01",
             }}
           >
             {getScoreBandText(result.total_score)}
@@ -179,10 +177,10 @@ export function FinancialClinicResults({
                 result.total_score >= 80
                   ? "#6cc922"
                   : result.total_score >= 60
-                    ? "#fca924"
-                    : result.total_score >= 30
-                      ? "#fe6521"
-                      : "#f00c01",
+                  ? "#fca924"
+                  : result.total_score >= 30
+                  ? "#fe6521"
+                  : "#f00c01",
             }}
           >
             {Math.round(result.total_score)}%
@@ -208,13 +206,15 @@ export function FinancialClinicResults({
                 {SCORE_BANDS.map((band, index) => (
                   <div
                     key={index}
-                    className={`flex flex-1 h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-2.5 p-1.5 md:p-2.5 ${band.bgColor
-                      } ${index < SCORE_BANDS.length - 1
+                    className={`flex flex-1 h-[50px] sm:h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-1 sm:gap-2.5 p-1 sm:p-1.5 md:p-2.5 ${
+                      band.bgColor
+                    } ${
+                      index < SCORE_BANDS.length - 1
                         ? "border-r-2 [border-right-style:solid] border-white"
                         : ""
-                      }`}
+                    }`}
                   >
-                    <div className="font-semibold text-white text-sm md:text-lg lg:text-2xl text-center tracking-[0] leading-tight md:leading-7">
+                    <div className="font-semibold text-white text-xs sm:text-sm md:text-lg lg:text-2xl text-center tracking-[0] leading-tight md:leading-7 px-0.5">
                       {band.range}
                     </div>
                   </div>
@@ -226,12 +226,12 @@ export function FinancialClinicResults({
                 {SCORE_BANDS.map((band, index) => (
                   <div
                     key={index}
-                    className="flex flex-col flex-1 items-start md:items-center px-2 md:px-3 py-0 w-full md:w-auto"
+                    className="flex flex-col flex-1 items-start md:items-center px-1 sm:px-2 md:px-3 py-0 w-full md:w-auto"
                   >
-                    <div className="font-semibold text-[#575757] text-xs md:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
+                    <div className="font-semibold text-[#575757] text-xs sm:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
                       {band.title[language]}
                     </div>
-                    <div className="font-normal text-[#575757] text-xs md:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
+                    <div className="font-normal text-[#575757] text-[10px] sm:text-xs md:text-sm text-left md:text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full">
                       {band.description[language]}
                     </div>
                   </div>
@@ -257,10 +257,7 @@ export function FinancialClinicResults({
             </p>
           </div>
 
-          <div
-            className="flex flex-col items-center px-4"
-            style={{ width: "100%" }}
-          >
+          <div className="flex flex-col items-center w-full px-4 gap-6">
             {Object.entries(result.category_scores)
               .sort(([nameA, a]: [string, any], [nameB, b]: [string, any]) => {
                 // Sort by percentage (lowest to highest) - areas needing most attention first
@@ -293,64 +290,37 @@ export function FinancialClinicResults({
                 return (
                   <div
                     key={index}
-                    className="flex flex-col items-center gap-4 w-full max-w-[1000px]"
+                    className="flex flex-col items-start gap-3 w-full max-w-[1000px]"
                   >
-                    <div
-                      className="flex flex-col md:flex-row items-start md:items-center gap-4"
-                      style={{
-                        flexDirection: isRTL ? "row-reverse" : "row",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
-                      }}
-                    >
-                      {isRTL ? (
-                        <>
-                          {/* Title and description (on the right in RTL) */}
-                          <div className="flex flex-col justify-center gap-1.5 items-start order-2 md:order-2">
-                            <div className="font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full">
-                              {getCategoryTranslation(categoryName)}
-                            </div>
-
-                            <div className="font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-right">
-                              {getCategoryDescription(categoryName)}
-                            </div>
-                          </div>
-
-                          {/* Progress bar (on the left in RTL) */}
-                          <StripedProgress
-                            value={percentage}
-                            className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0 order-1 md:order-1"
-                            scoreBasedColor={true}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          {/* Title and description (on the left in LTR) */}
-                          <div className="flex flex-col w-full md:max-w-[400px] lg:max-w-[506px] justify-center gap-1.5 items-start">
-                            <div className="font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 w-full text-left">
-                              {getCategoryTranslation(categoryName)}
-                            </div>
-
-                            <div className="font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-[21px] w-full text-left">
-                              {getCategoryDescription(categoryName)}
-                            </div>
-                          </div>
-
-                          {/* Progress bar (on the right in LTR) */}
-                          <StripedProgress
-                            value={percentage}
-                            className="w-full md:max-w-[300px] lg:max-w-[476px] h-[10px] md:h-[12.29px] flex-shrink-0"
-                            scoreBasedColor={true}
-                          />
-                        </>
-                      )}
+                    {/* Title and description */}
+                    <div className="flex flex-col gap-1 w-full">
+                      <div
+                        className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${
+                          isRTL ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {getCategoryTranslation(categoryName)}
+                      </div>
+                      <div
+                        className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
+                          isRTL ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {getCategoryDescription(categoryName)}
+                      </div>
                     </div>
+
+                    {/* Progress bar - full width on mobile */}
+                    <StripedProgress
+                      value={percentage}
+                      className="w-full h-[12px] md:h-[14px]"
+                      scoreBasedColor={true}
+                    />
 
                     {index <
                       Object.entries(result.category_scores).length - 1 && (
-                        <Separator className="w-full" />
-                      )}
+                      <Separator className="w-full mt-3" />
+                    )}
                   </div>
                 );
               })}
@@ -385,8 +355,9 @@ export function FinancialClinicResults({
                 result.insights.slice(0, 5).map((insight, index) => (
                   <div
                     key={index}
-                    className={`flex gap-2 w-full items-start ${isRTL ? "flex-row-reverse" : "flex-row"
-                      }`}
+                    className={`flex gap-2 w-full items-start ${
+                      isRTL ? "flex-row-reverse" : "flex-row"
+                    }`}
                   >
                     {!isRTL && (
                       <div className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7 flex-shrink-0">
@@ -395,8 +366,9 @@ export function FinancialClinicResults({
                     )}
 
                     <div
-                      className={`flex-1 ${isRTL ? "flex-row-reverse" : "flex-row"
-                        }`}
+                      className={`flex-1 ${
+                        isRTL ? "flex-row-reverse" : "flex-row"
+                      }`}
                     >
                       <span className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
                         {translateInsightCategory(insight.category)}:{" "}
@@ -493,8 +465,8 @@ export function FinancialClinicResults({
                 ? "عرض تاريخ التقييمات"
                 : "View Assessment History"
               : language === "ar"
-                ? "الوصول إلى السجل"
-                : "Access My History"}
+              ? "الوصول إلى السجل"
+              : "Access My History"}
           </Button>
 
           {onRetake && (
