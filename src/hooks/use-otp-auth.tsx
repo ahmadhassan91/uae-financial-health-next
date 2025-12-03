@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
-import { toast } from 'sonner';
+import { useState, useCallback } from "react";
+import { toast } from "sonner";
 
 interface OTPAuthState {
   loading: boolean;
@@ -27,12 +27,12 @@ interface OTPVerifyResponse {
     email: string;
     user_id: number;
     created_at: string;
-    access_token: string;  // JWT token for API authentication
+    access_token: string; // JWT token for API authentication
     token_type: string;
   };
 }
 
-export function useOTPAuth(language: 'en' | 'ar' = 'en') {
+export function useOTPAuth(language: "en" | "ar" = "en") {
   const [state, setState] = useState<OTPAuthState>({
     loading: false,
     error: null,
@@ -40,120 +40,147 @@ export function useOTPAuth(language: 'en' | 'ar' = 'en') {
     otpExpiry: null,
   });
 
-  const requestOTP = useCallback(async (email: string): Promise<boolean> => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+  const requestOTP = useCallback(
+    async (email: string): Promise<boolean> => {
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/otp/request`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, language }),
-      });
+      try {
+        // Debug: Log the language being sent
+        console.log(
+          "🌐 useOTPAuth - Sending OTP request with language:",
+          language
+        );
+        console.log("📧 useOTPAuth - Email:", email);
 
-      const data: OTPRequestResponse = await response.json();
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/otp/request`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, language }),
+          }
+        );
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to send OTP');
+        const data: OTPRequestResponse = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to send OTP");
+        }
+
+        setState({
+          loading: false,
+          error: null,
+          otpSent: true,
+          otpExpiry: new Date(data.expires_at),
+        });
+
+        toast.success(
+          language === "ar"
+            ? "تم إرسال رمز التحقق إلى بريدك الإلكتروني"
+            : "Verification code sent to your email"
+        );
+
+        return true;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to send OTP";
+        setState((prev) => ({ ...prev, loading: false, error: errorMessage }));
+
+        toast.error(
+          language === "ar"
+            ? "فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى."
+            : "Failed to send verification code. Please try again."
+        );
+
+        return false;
       }
+    },
+    [language]
+  );
 
-      setState({
-        loading: false,
-        error: null,
-        otpSent: true,
-        otpExpiry: new Date(data.expires_at),
-      });
+  const verifyOTP = useCallback(
+    async (
+      email: string,
+      code: string,
+      surveyResponseId?: number,
+      profile?: any
+    ): Promise<OTPVerifyResponse | null> => {
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-      toast.success(
-        language === 'ar'
-          ? 'تم إرسال رمز التحقق إلى بريدك الإلكتروني'
-          : 'Verification code sent to your email'
-      );
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/otp/verify`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              code,
+              survey_response_id: surveyResponseId,
+              profile,
+            }),
+          }
+        );
 
-      return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP';
-      setState(prev => ({ ...prev, loading: false, error: errorMessage }));
-      
-      toast.error(
-        language === 'ar'
-          ? 'فشل إرسال رمز التحقق. يرجى المحاولة مرة أخرى.'
-          : 'Failed to send verification code. Please try again.'
-      );
+        const data: OTPVerifyResponse = await response.json();
 
-      return false;
-    }
-  }, [language]);
+        if (!response.ok) {
+          throw new Error(data.message || "Invalid verification code");
+        }
 
-  const verifyOTP = useCallback(async (
-    email: string,
-    code: string,
-    surveyResponseId?: number,
-    profile?: any
-  ): Promise<OTPVerifyResponse | null> => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+        // Save session to localStorage with access token
+        localStorage.setItem(
+          "simpleAuthSession",
+          JSON.stringify({
+            email: data.session.email,
+            userId: data.session.user_id,
+            createdAt: data.session.created_at,
+            accessToken: data.session.access_token, // Store JWT token
+            tokenType: data.session.token_type,
+          })
+        );
 
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/otp/verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          code,
-          survey_response_id: surveyResponseId,
-          profile,
-        }),
-      });
+        setState({
+          loading: false,
+          error: null,
+          otpSent: false,
+          otpExpiry: null,
+        });
 
-      const data: OTPVerifyResponse = await response.json();
+        toast.success(
+          language === "ar"
+            ? "تم تسجيل الدخول بنجاح!"
+            : "Successfully logged in!"
+        );
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Invalid verification code');
+        return data;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Invalid verification code";
+        setState((prev) => ({ ...prev, loading: false, error: errorMessage }));
+
+        toast.error(
+          language === "ar"
+            ? "رمز التحقق غير صحيح أو منتهي الصلاحية"
+            : "Invalid or expired verification code"
+        );
+
+        return null;
       }
+    },
+    [language]
+  );
 
-      // Save session to localStorage with access token
-      localStorage.setItem('simpleAuthSession', JSON.stringify({
-        email: data.session.email,
-        userId: data.session.user_id,
-        createdAt: data.session.created_at,
-        accessToken: data.session.access_token,  // Store JWT token
-        tokenType: data.session.token_type,
-      }));
-
-      setState({
-        loading: false,
-        error: null,
-        otpSent: false,
-        otpExpiry: null,
-      });
-
-      toast.success(
-        language === 'ar'
-          ? 'تم تسجيل الدخول بنجاح!'
-          : 'Successfully logged in!'
-      );
-
-      return data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Invalid verification code';
-      setState(prev => ({ ...prev, loading: false, error: errorMessage }));
-      
-      toast.error(
-        language === 'ar'
-          ? 'رمز التحقق غير صحيح أو منتهي الصلاحية'
-          : 'Invalid or expired verification code'
-      );
-
-      return null;
-    }
-  }, [language]);
-
-  const resendOTP = useCallback(async (email: string): Promise<boolean> => {
-    return await requestOTP(email);
-  }, [requestOTP]);
+  const resendOTP = useCallback(
+    async (email: string): Promise<boolean> => {
+      return await requestOTP(email);
+    },
+    [requestOTP]
+  );
 
   const resetState = useCallback(() => {
     setState({

@@ -51,7 +51,7 @@ export function HeroSection() {
           ? "الرجاء تسجيل الدخول لعرض النتائج السابقة"
           : "Please login to view previous assessments"
       );
-      router.push("/financial-clinic/login");
+      router.push(`/financial-clinic/login?lang=${language}`);
       return;
     }
 

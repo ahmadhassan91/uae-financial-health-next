@@ -13,7 +13,14 @@ export function HomepageHeader() {
   const router = useRouter();
 
   const toggleLanguage = () => {
-    setLanguage(language === "en" ? "ar" : "en");
+    const newLanguage = language === "en" ? "ar" : "en";
+    setLanguage(newLanguage);
+
+    // Update URL with language parameter
+    const currentPath = window.location.pathname;
+    const currentSearch = new URLSearchParams(window.location.search);
+    currentSearch.set("lang", newLanguage);
+    router.push(`${currentPath}?${currentSearch.toString()}`);
   };
 
   const handleViewResults = async () => {
@@ -27,7 +34,7 @@ export function HomepageHeader() {
           ? "الرجاء تسجيل الدخول لعرض النتائج السابقة"
           : "Please login to view previous assessments"
       );
-      router.push("/financial-clinic/login");
+      router.push(`/financial-clinic/login?lang=${language}`);
       return;
     }
 
