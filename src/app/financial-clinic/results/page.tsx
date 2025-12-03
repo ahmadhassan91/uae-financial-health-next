@@ -39,7 +39,8 @@ export default function FinancialClinicResultsPage() {
       if (email) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL
+            `${
+              process.env.NEXT_PUBLIC_API_URL
             }/financial-clinic/latest/${encodeURIComponent(email)}`
           );
 
@@ -76,12 +77,20 @@ export default function FinancialClinicResultsPage() {
           }
         } catch (error) {
           console.error("Failed to parse result:", error);
-          toast.error("Failed to load results. Please retake the assessment.");
+          toast.error(
+            language === "ar"
+              ? "فشل تحميل النتائج. يرجى إعادة التقييم."
+              : "Failed to load results. Please retake the assessment."
+          );
           router.push("/financial-clinic");
         }
       } else {
         // No result found - redirect to start
-        toast.error("No results found. Please complete the assessment first.");
+        toast.error(
+          language === "ar"
+            ? "لم يتم العثور على نتائج. يرجى إكمال التقييم أولاً."
+            : "No results found. Please complete the assessment first."
+        );
         router.push("/financial-clinic");
       }
 
@@ -99,7 +108,11 @@ export default function FinancialClinicResultsPage() {
     // Update login status
     setShowAccountModal(false);
 
-    toast.success("Your results have been saved to your account!");
+    toast.success(
+      language === "ar"
+        ? "تم حفظ نتائجك في حسابك!"
+        : "Your results have been saved to your account!"
+    );
 
     // Optionally update result with user info
     if (result && user) {
@@ -128,19 +141,29 @@ export default function FinancialClinicResultsPage() {
     // Redirect to start
     router.push("/financial-clinic");
 
-    toast.success("Starting new assessment...");
+    toast.success(
+      language === "ar" ? "بدء تقييم جديد..." : "Starting new assessment..."
+    );
   };
 
   const handleViewProducts = () => {
     // TODO: Implement product catalog page
-    toast.info("Product catalog coming soon!");
+    toast.info(
+      language === "ar"
+        ? "كتالوج المنتجات قريباً!"
+        : "Product catalog coming soon!"
+    );
   };
 
   const handleDownloadPDF = async () => {
     if (!result) return;
 
     try {
-      toast.info("Generating PDF report...");
+      toast.info(
+        language === "ar"
+          ? "جاري إنشاء تقرير PDF..."
+          : "Generating PDF report..."
+      );
 
       // Add aggressive cache-busting to force fresh request
       const cacheBuster = `?t=${Date.now()}&r=${Math.random()}`;
@@ -191,11 +214,19 @@ export default function FinancialClinicResultsPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      toast.success("PDF report downloaded successfully!");
+      toast.success(
+        language === "ar"
+          ? "تم تنزيل تقرير PDF بنجاح!"
+          : "PDF report downloaded successfully!"
+      );
     } catch (error) {
       console.error("PDF download error:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to download PDF report"
+        error instanceof Error
+          ? error.message
+          : language === "ar"
+          ? "فشل تنزيل تقرير PDF"
+          : "Failed to download PDF report"
       );
     }
   };
@@ -216,19 +247,27 @@ export default function FinancialClinicResultsPage() {
       if (!email) {
         email = prompt("Please enter your email address:") || "";
         if (!email) {
-          toast.error("Email address is required");
+          toast.error(
+            language === "ar"
+              ? "عنوان البريد الإلكتروني مطلوب"
+              : "Email address is required"
+          );
           return;
         }
       }
 
-      toast.info("Sending email report...");
+      toast.info(
+        language === "ar"
+          ? "جاري إرسال التقرير بالبريد الإلكتروني..."
+          : "Sending email report..."
+      );
 
       // Prepare request payload
       const payload = {
         result: result,
         profile: JSON.parse(storedProfile || "{}"),
         email: email,
-        language: "en", // Could be from localization context
+        language: language, // Use actual language from localization context
       };
 
       // Debug: Log what we're sending
@@ -266,12 +305,20 @@ export default function FinancialClinicResultsPage() {
       if (data.note) {
         toast.info(data.note);
       } else if (data.success) {
-        toast.success(`Email report will be sent to ${email}!`);
+        toast.success(
+          language === "ar"
+            ? `سيتم إرسال التقرير بالبريد الإلكتروني إلى ${email}!`
+            : `Email report will be sent to ${email}!`
+        );
       }
     } catch (error) {
       console.error("Email send error:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to send email report"
+        error instanceof Error
+          ? error.message
+          : language === "ar"
+          ? "فشل إرسال التقرير بالبريد الإلكتروني"
+          : "Failed to send email report"
       );
     }
   };
