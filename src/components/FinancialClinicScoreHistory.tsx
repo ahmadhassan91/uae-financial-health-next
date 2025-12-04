@@ -103,81 +103,97 @@ export function FinancialClinicScoreHistory({
   // Prepare histogram data for latest score using available fields
   const histogramData = [
     {
-      factor: "Budgeting",
+      factor: "Income Stream",
       score: latestScore.budgeting_score || 0,
       fullMark: 100,
     },
-    { factor: "Savings", score: latestScore.savings_score || 0, fullMark: 100 },
     {
-      factor: "Debt Mgmt",
+      factor: "Saving Habits",
+      score: latestScore.savings_score || 0,
+      fullMark: 100,
+    },
+    {
+      factor: "Emergency Savings",
       score: latestScore.debt_management_score || 0,
       fullMark: 100,
     },
     {
-      factor: "Planning",
+      factor: "Debt Management",
       score: latestScore.financial_planning_score || 0,
       fullMark: 100,
     },
     {
-      factor: "Investment",
+      factor: "Retirement Planning",
       score: latestScore.investment_knowledge_score || 0,
+      fullMark: 100,
+    },
+    {
+      factor: "Family Protection",
+      score: 0,
       fullMark: 100,
     },
   ];
 
   // Calculate average scores across all assessments for comparison
   const averageScores = {
-    budgeting:
+    incomeStream:
       scoreHistory.reduce((sum, s) => sum + (s.budgeting_score || 0), 0) /
       scoreHistory.length,
-    savings:
+    savingHabits:
       scoreHistory.reduce((sum, s) => sum + (s.savings_score || 0), 0) /
       scoreHistory.length,
-    debt:
+    emergencySavings:
       scoreHistory.reduce((sum, s) => sum + (s.debt_management_score || 0), 0) /
       scoreHistory.length,
-    planning:
+    debtManagement:
       scoreHistory.reduce(
         (sum, s) => sum + (s.financial_planning_score || 0),
         0
       ) / scoreHistory.length,
-    investment:
+    retirementPlanning:
       scoreHistory.reduce(
         (sum, s) => sum + (s.investment_knowledge_score || 0),
         0
       ) / scoreHistory.length,
+    familyProtection: 0,
   };
 
   // Add average scores to histogram data
   const histogramDataWithAverage = [
     {
-      factor: "Budgeting",
+      factor: "Income Stream",
       score: latestScore.budgeting_score || 0,
-      average: averageScores.budgeting,
+      average: averageScores.incomeStream,
       fullMark: 100,
     },
     {
-      factor: "Savings",
+      factor: "Saving Habits",
       score: latestScore.savings_score || 0,
-      average: averageScores.savings,
+      average: averageScores.savingHabits,
       fullMark: 100,
     },
     {
-      factor: "Debt Mgmt",
+      factor: "Emergency Savings",
       score: latestScore.debt_management_score || 0,
-      average: averageScores.debt,
+      average: averageScores.emergencySavings,
       fullMark: 100,
     },
     {
-      factor: "Planning",
+      factor: "Debt Management",
       score: latestScore.financial_planning_score || 0,
-      average: averageScores.planning,
+      average: averageScores.debtManagement,
       fullMark: 100,
     },
     {
-      factor: "Investment",
+      factor: "Retirement Planning",
       score: latestScore.investment_knowledge_score || 0,
-      average: averageScores.investment,
+      average: averageScores.retirementPlanning,
+      fullMark: 100,
+    },
+    {
+      factor: "Family Protection",
+      score: 0,
+      average: averageScores.familyProtection,
       fullMark: 100,
     },
   ];
@@ -336,12 +352,13 @@ export function FinancialClinicScoreHistory({
               {previousScore && (
                 <div className="text-center">
                   <div
-                    className={`flex items-center justify-center gap-1 sm:gap-2 text-xl sm:text-2xl font-bold mb-2 ${scoreDiff > 0
-                      ? "text-green-600"
-                      : scoreDiff < 0
+                    className={`flex items-center justify-center gap-1 sm:gap-2 text-xl sm:text-2xl font-bold mb-2 ${
+                      scoreDiff > 0
+                        ? "text-green-600"
+                        : scoreDiff < 0
                         ? "text-red-600"
                         : "text-muted-foreground"
-                      }`}
+                    }`}
                   >
                     {scoreDiff > 0 ? (
                       <ChartLineUp className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -544,8 +561,9 @@ export function FinancialClinicScoreHistory({
 
                         {diff !== 0 && (
                           <div
-                            className={`flex items-center gap-1 text-xs sm:text-sm ${diff > 0 ? "text-green-600" : "text-red-600"
-                              }`}
+                            className={`flex items-center gap-1 text-xs sm:text-sm ${
+                              diff > 0 ? "text-green-600" : "text-red-600"
+                            }`}
                           >
                             {diff > 0 ? (
                               <ChartLineUp className="w-3 h-3 sm:w-4 sm:h-4" />
