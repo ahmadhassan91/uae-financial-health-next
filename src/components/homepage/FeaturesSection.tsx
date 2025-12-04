@@ -42,13 +42,13 @@ export function FeaturesSection() {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-2 sm:gap-[3px] w-full">
-          <p className="self-stretch mt-[-1.00px] font-normal text-[#a1aeb7] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4">
+          <p className="self-stretch mt-[-1.00px] font-normal text-[#575757] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
               ? "لأنّ المراجعة الدورية لجودة أوضاعكم المالية أمرٌ ضروريّ."
               : "Because your financial wellbeing deserves a regular checkup."}
           </p>
 
-          <p className="w-fit font-normal text-[#a1aeb7] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4">
+          <p className="w-fit font-normal text-[#575757] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
               ? "فصحّتكم المالية بحاجة إلى الرعاية والاهتمام، تماماً كصحّتكم الجسدية."
               : "Just like your physical health, your financial health needs care and attention."}
@@ -80,7 +80,7 @@ export function FeaturesSection() {
               />
 
               <span
-                className="self-stretch text-[#a1aeb7] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6 text-center"
+                className="self-stretch text-[#575757] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6 text-center"
                 dangerouslySetInnerHTML={{
                   __html: language === "ar" ? feature.textAr : feature.textEn,
                 }}

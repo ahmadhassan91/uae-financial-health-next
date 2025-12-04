@@ -108,7 +108,7 @@ export function HowItWorksSection() {
                     {language === "ar" ? step.titleAr : step.titleEn}
                   </h4>
 
-                  <p className="self-stretch font-normal text-[#a1aeb7] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-[21px]">
+                  <p className="self-stretch font-normal text-[#575757] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-[21px]">
                     {language === "ar"
                       ? step.descriptionAr
                       : step.descriptionEn}
