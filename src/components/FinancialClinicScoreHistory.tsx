@@ -59,6 +59,7 @@ export function FinancialClinicScoreHistory({
   userEmail,
 }: FinancialClinicScoreHistoryProps) {
   const router = useRouter();
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
 
   if (!scoreHistory || scoreHistory.length === 0) {
     return (
@@ -327,11 +328,20 @@ export function FinancialClinicScoreHistory({
           {onLogout && (
             <Button
               variant="outline"
-              onClick={onLogout}
+              onClick={() => {
+                setIsSigningOut(true);
+                toast.loading("Signing out...", { id: "signout" });
+                // Add a small delay to show the message
+                setTimeout(() => {
+                  onLogout();
+                  toast.success("Signed out successfully", { id: "signout" });
+                }, 500);
+              }}
               size="sm"
               className="w-full sm:w-auto"
+              disabled={isSigningOut}
             >
-              Sign Out
+              {isSigningOut ? "Signing out..." : "Sign Out"}
             </Button>
           )}
         </div>
