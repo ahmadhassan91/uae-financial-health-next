@@ -88,13 +88,13 @@ export function HeroSection() {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-2 sm:gap-[3px] w-full max-w-[900px]">
-          <p className="self-stretch mt-[-1.00px] font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
+          <p className="self-stretch mt-[-1.00px] font-normal text-[#a1aeb7] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
               ? "ساعدت الصكوك الوطنية الأفراد والعائلات في مختلف أنحاء الإمارات على بناء مستقبل مالي أفضل لأكثر من 18 عامًا."
               : "For over 18 years National Bonds has empowered individuals and families across the UAE to build a better financial future."}
           </p>
 
-          <p className="w-fit font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
+          <p className="w-fit font-normal text-[#a1aeb7] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
               ? "واليوم، نضع هذه الخبرة بين أيديكم عبر عيادتكم المالية؛ الطريقة التي تجمع بين الرؤية المالية وعلم السلوك لمساعدتكم على اتخاذ قرارات أذكى وأكثر ثقة."
               : "Now, we bring that expertise into your Financial Clinic; combining financial insight with behavioral science to help you make smarter, more confident decisions."}
@@ -123,7 +123,7 @@ export function HeroSection() {
                     : "How healthy are your finances?"}
                 </h2>
 
-                <p className="self-stretch font-normal text-[#575757] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6">
+                <p className="self-stretch font-normal text-[#a1aeb7] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6">
                   {language === "ar"
                     ? "احصلوا على تقييم صحّة أوضاعكم المالية في دقائق، وتعرّفوا على الخطوات المناسبة لتعزيز مستقبلكم المالي."
                     : "Discover your financial health score in minutes, and get personalized steps to strengthen your future."}
