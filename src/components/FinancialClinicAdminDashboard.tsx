@@ -395,6 +395,14 @@ export function FinancialClinicAdminDashboard({
                     <Badge variant="destructive" className="text-xs">
                       ADMIN
                     </Badge>
+                    {user?.admin_role === "view_only" && (
+                      <Badge
+                        variant="outline"
+                        className="text-xs border-amber-500 text-amber-600"
+                      >
+                        VIEW ONLY
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-sm md:text-base text-muted-foreground">
                     National Bonds Corporation - Financial Health Analytics
@@ -457,6 +465,11 @@ export function FinancialClinicAdminDashboard({
                           <div className="text-xs text-muted-foreground">
                             {user.email}
                           </div>
+                          {user.admin_role === "view_only" && (
+                            <div className="text-xs text-amber-600 font-medium mt-1">
+                              View-Only Access
+                            </div>
+                          )}
                         </div>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -480,7 +493,13 @@ export function FinancialClinicAdminDashboard({
               className="space-y-6"
             >
               <div className="w-full overflow-x-auto pb-2">
-                <TabsList className="inline-flex w-auto min-w-full lg:grid lg:grid-cols-6 gap-1">
+                <TabsList
+                  className={`inline-flex w-auto min-w-full lg:grid ${
+                    user?.admin_role === "view_only"
+                      ? "lg:grid-cols-4"
+                      : "lg:grid-cols-6"
+                  } gap-1`}
+                >
                   <TabsTrigger
                     value="overview"
                     className="text-xs sm:text-sm whitespace-nowrap"
@@ -493,12 +512,14 @@ export function FinancialClinicAdminDashboard({
                   >
                     Submissions
                   </TabsTrigger>
-                  <TabsTrigger
-                    value="companies"
-                    className="text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    Companies
-                  </TabsTrigger>
+                  {user?.admin_role !== "view_only" && (
+                    <TabsTrigger
+                      value="companies"
+                      className="text-xs sm:text-sm whitespace-nowrap"
+                    >
+                      Companies
+                    </TabsTrigger>
+                  )}
                   <TabsTrigger
                     value="leads"
                     className="text-xs sm:text-sm whitespace-nowrap"
@@ -511,12 +532,14 @@ export function FinancialClinicAdminDashboard({
                   >
                     Incomplete
                   </TabsTrigger>
-                  <TabsTrigger
-                    value="system"
-                    className="text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    System
-                  </TabsTrigger>
+                  {user?.admin_role !== "view_only" && (
+                    <TabsTrigger
+                      value="system"
+                      className="text-xs sm:text-sm whitespace-nowrap"
+                    >
+                      System
+                    </TabsTrigger>
+                  )}
                 </TabsList>
               </div>
 
@@ -657,13 +680,15 @@ export function FinancialClinicAdminDashboard({
                 <SubmissionsTable />
               </TabsContent>
 
-              {/* Companies Tab */}
-              <TabsContent value="companies" className="space-y-6">
-                {companiesAnalytics && (
-                  <CompaniesAnalyticsTable data={companiesAnalytics} />
-                )}
-                <CompanyManagement onCompanyCreated={loadFilterOptions} />
-              </TabsContent>
+              {/* Companies Tab - Only for full admins */}
+              {user?.admin_role !== "view_only" && (
+                <TabsContent value="companies" className="space-y-6">
+                  {companiesAnalytics && (
+                    <CompaniesAnalyticsTable data={companiesAnalytics} />
+                  )}
+                  <CompanyManagement onCompanyCreated={loadFilterOptions} />
+                </TabsContent>
+              )}
 
               {/* Leads Tab */}
               <TabsContent value="leads" className="space-y-6">
@@ -675,10 +700,12 @@ export function FinancialClinicAdminDashboard({
                 <IncompleteSurveys />
               </TabsContent>
 
-              {/* System Tab */}
-              <TabsContent value="system" className="space-y-6">
-                <SystemManagement />
-              </TabsContent>
+              {/* System Tab - Only for full admins */}
+              {user?.admin_role !== "view_only" && (
+                <TabsContent value="system" className="space-y-6">
+                  <SystemManagement />
+                </TabsContent>
+              )}
             </Tabs>
           </div>
         </div>
