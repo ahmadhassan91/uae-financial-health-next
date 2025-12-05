@@ -292,33 +292,30 @@ export function FinancialClinicResults({
                     key={index}
                     className="flex flex-col items-start gap-3 w-full max-w-[1000px]"
                   >
-                    {/* Title and Progress bar on same line */}
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full">
-                      {/* Title and description */}
-                      <div className="flex flex-col gap-1 w-full md:w-[200px] md:flex-shrink-0">
-                        <div
-                          className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${
-                            isRTL ? "text-right" : "text-left"
-                          }`}
-                        >
-                          {getCategoryTranslation(categoryName)}
-                        </div>
-                        <div
-                          className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
-                            isRTL ? "text-right" : "text-left"
-                          }`}
-                        >
-                          {getCategoryDescription(categoryName)}
-                        </div>
+                    {/* Title and description */}
+                    <div className="flex flex-col gap-1 w-full">
+                      <div
+                        className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${
+                          isRTL ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {getCategoryTranslation(categoryName)}
                       </div>
-
-                      {/* Progress bar - inline on desktop */}
-                      <StripedProgress
-                        value={percentage}
-                        className="w-full h-[12px] md:h-[14px]"
-                        scoreBasedColor={true}
-                      />
+                      <div
+                        className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
+                          isRTL ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {getCategoryDescription(categoryName)}
+                      </div>
                     </div>
+
+                    {/* Progress bar - full width on mobile */}
+                    <StripedProgress
+                      value={percentage}
+                      className="w-full h-[12px] md:h-[14px]"
+                      scoreBasedColor={true}
+                    />
 
                     {index <
                       Object.entries(result.category_scores).length - 1 && (

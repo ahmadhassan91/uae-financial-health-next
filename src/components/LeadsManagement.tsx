@@ -12,10 +12,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { toast } from 'sonner';
 import {
   Users, Download, Mail, Phone, MessageCircle, Calendar,
-  Eye, Edit, Trash2, Filter, Search, RefreshCw, MoreVertical, Clock
+  Eye, Edit, Trash2, Filter, Search, RefreshCw, MoreVertical
 } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
-import { ScheduleEmailModal } from '@/components/ScheduleEmailModal';
 
 interface ConsultationRequest {
   id: number;
@@ -59,7 +58,6 @@ export function LeadsManagement() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [companies, setCompanies] = useState<{ id: number, name: string }[]>([]);
-  const [isScheduleEmailModalOpen, setIsScheduleEmailModalOpen] = useState(false);
 
 
 
@@ -306,10 +304,6 @@ export function LeadsManagement() {
               <Button onClick={loadLeads} variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh
-              </Button>
-              <Button onClick={() => setIsScheduleEmailModalOpen(true)} variant="outline" size="sm">
-                <Clock className="w-4 h-4 mr-2" />
-                Schedule Email
               </Button>
               <Button onClick={handleExport} disabled={isExporting} size="sm">
                 <Download className="w-4 h-4 mr-2" />
@@ -601,16 +595,6 @@ export function LeadsManagement() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Schedule Email Modal */}
-      <ScheduleEmailModal
-        open={isScheduleEmailModalOpen}
-        onOpenChange={setIsScheduleEmailModalOpen}
-        currentFilters={{
-          statusFilter: statusFilter,
-          sourceFilter: sourceFilter
-        }}
-      />
     </div>
   );
 }
