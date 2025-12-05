@@ -293,9 +293,13 @@ export function FinancialClinicResults({
                     className="flex flex-col items-start gap-3 w-full max-w-[1000px]"
                   >
                     {/* Title and Progress bar on same line */}
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 w-full">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6 w-full">
                       {/* Title and description */}
-                      <div className="flex flex-col gap-1 w-full md:w-[185px] md:flex-shrink-0">
+                      <div
+                        className={`flex flex-col gap-1 w-full md:flex-shrink-0 ${
+                          isRTL ? "md:w-[190px]" : "md:w-[300px]"
+                        }`}
+                      >
                         <div
                           className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${
                             isRTL ? "text-right" : "text-left"
