@@ -31,6 +31,7 @@ export function ScheduleEmailModal({ open, onOpenChange, currentFilters }: Sched
     };
 
     const handleAddEmail = () => {
+        
         const trimmedEmail = emailInput.trim();
 
         if (!trimmedEmail) {
