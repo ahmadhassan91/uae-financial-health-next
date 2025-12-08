@@ -265,9 +265,8 @@ export function FinancialClinicAdminDashboard({
 
   const handleLogout = () => {
     logout();
-    if (onBack) {
-      onBack();
-    }
+    // Don't call onBack() - let the auth hook handle the redirect
+    // The page will automatically show the login form when user is logged out
   };
 
   const handleExport = async (format: "csv" | "excel") => {

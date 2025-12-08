@@ -1,15 +1,21 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { FinancialClinicAdminDashboard } from '@/components/FinancialClinicAdminDashboard';
-import { AdminLoginForm } from '@/components/AdminLoginForm';
-import { useAdminAuth, AdminAuthProvider } from '@/hooks/use-admin-auth';
-import { AdminLocalizationProvider } from '@/contexts/AdminLocalizationContext';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FinancialClinicAdminDashboard } from "@/components/FinancialClinicAdminDashboard";
+import { AdminLoginForm } from "@/components/AdminLoginForm";
+import { useAdminAuth, AdminAuthProvider } from "@/hooks/use-admin-auth";
+import { AdminLocalizationProvider } from "@/contexts/AdminLocalizationContext";
 
-import { toast } from 'sonner';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Loader2 } from 'lucide-react';
+import { toast } from "sonner";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Shield, Loader2 } from "lucide-react";
 
 function AuthenticatedAdminDashboard({ onBack }: { onBack: () => void }) {
   // The new FinancialClinicAdminDashboard handles all data fetching internally
@@ -34,7 +40,11 @@ function AdminPageContent() {
   };
 
   const handleBackToHome = () => {
-    router.push('/');
+    // Only navigate to home if explicitly requested (from login page)
+    // Don't navigate on logout - stay on admin page
+    if (isAuthenticated) {
+      router.push("/");
+    }
   };
 
   if (!isMounted || authLoading) {
@@ -59,7 +69,7 @@ function AdminPageContent() {
   // Show login form if not authenticated
   if (!isAuthenticated) {
     return (
-      <AdminLoginForm 
+      <AdminLoginForm
         onSuccess={handleLoginSuccess}
         onBack={handleBackToHome}
       />
