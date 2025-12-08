@@ -200,9 +200,18 @@ export function AdminAuthProvider({ children }: AdminAuthProviderProps) {
       }
     }
 
-    // Redirect to admin login page
+    // Only redirect if not already on admin page
     if (typeof window !== "undefined") {
-      window.location.href = "/admin";
+      const currentPath = window.location.pathname;
+
+      // If already on /admin or /admin/, just reload to show login
+      if (currentPath === "/admin" || currentPath === "/admin/") {
+        window.location.reload();
+      } else if (currentPath.startsWith("/admin")) {
+        // If on a sub-page of admin, redirect to admin login
+        window.location.href = "/admin";
+      }
+      // If not on admin page at all, don't redirect (shouldn't happen)
     }
   };
 
