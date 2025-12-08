@@ -12,11 +12,9 @@
 
 # Admin routes - ensure admin pages are served correctly
 /admin/*  /admin/index.html  200
-/admin  /admin/  301
 
 # Company admin routes
 /company-admin/*  /company-admin/index.html  200
-/company-admin  /company-admin/  301
 
 # Test routes (for development/testing purposes)
 /test-*  /test-:splat/index.html  200
