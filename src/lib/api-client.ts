@@ -113,12 +113,12 @@ class ApiClient {
     let code = "UNKNOWN_ERROR";
     let retryable = false;
 
-    if (error.name === "TypeError" && error.message.includes("fetch")) {
+    if (error.name === "TypeError" && error.message?.includes("fetch")) {
       detail =
         "Network connection failed. Please check your internet connection.";
       code = "NETWORK_ERROR";
       retryable = true;
-    } else if (error.message.includes("CORS")) {
+    } else if (error.message?.includes("CORS")) {
       detail =
         "Cross-origin request blocked. This may be a temporary server issue.";
       code = "CORS_ERROR";
@@ -356,10 +356,7 @@ class ApiClient {
     });
   }
 
-  async login(credentials: {
-    email: string;
-    password: string;
-  }): Promise<{
+  async login(credentials: { email: string; password: string }): Promise<{
     access_token: string;
     refresh_token: string;
     token_type: string;
