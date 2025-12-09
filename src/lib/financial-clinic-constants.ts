@@ -38,37 +38,37 @@ export const SCORE_BANDS = [
   {
     range: "1-29",
     bgColor: "bg-[#f00c01]",
-    title: { en: "Needs Improvement", ar: "يحتاج إلى تحسين" },
+    title: { en: "Needs Improvement", ar: "بحاجة إلى تحسين" },
     description: {
       en: "Focus on building basic financial habits",
-      ar: "ركز على بناء عادات مالية أساسية",
+      ar: "ركّزوا على اكتساب السلوكيّات الماليّة الأساسيّة",
     },
   },
   {
     range: "30-59",
     bgColor: "bg-[#fe6521]",
-    title: { en: "Fair", ar: "متوسط" },
+    title: { en: "Fair", ar: "مقبولة" },
     description: {
-      en: "Good Foundation, room for growth",
-      ar: "أساس جيد، مجال للنمو",
+      en: "Good foundation, room for growth",
+      ar: "أساس متين مع إمكانيّة للتطوّر",
     },
   },
   {
     range: "60-79",
     bgColor: "bg-[#fca924]",
-    title: { en: "Good", ar: "جيد" },
+    title: { en: "Good", ar: "جيّدة" },
     description: {
       en: "Strong Financial Health",
-      ar: "صحة مالية قوية",
+      ar: "صحّة ماليّة قويّة",
     },
   },
   {
     range: "80-100",
     bgColor: "bg-[#6cc922]",
-    title: { en: "Excellent", ar: "ممتاز" },
+    title: { en: "Excellent", ar: "ممتازة" },
     description: {
       en: "Outstanding financial wellness",
-      ar: "رفاهية مالية متميزة",
+      ar: "رفاهية ماليّة ملحوظة",
     },
   },
 ] as const;
@@ -76,7 +76,7 @@ export const SCORE_BANDS = [
 export const CATEGORY_DESCRIPTIONS = {
   "Income Stream": {
     en: "Stability and diversity of income sources",
-    ar: "استقرار وتنوع مصادر الدخل",
+    ar: "استقرار وتنوّع في مصادر الدخل",
   },
   "Monthly Expenses Management": {
     en: "Budgeting and expense control",
@@ -84,19 +84,19 @@ export const CATEGORY_DESCRIPTIONS = {
   },
   "Savings Habit": {
     en: "Saving behavior and emergency preparedness",
-    ar: "سلوك الادخار والتأهب للطوارئ",
+    ar: "عادات الادخار والاستعداد لحالات الطوارئ",
   },
   "Emergency Savings": {
     en: "Emergency fund readiness",
-    ar: "جاهزية صندوق الطوارئ",
+    ar: "الاستعداد للادخار في حالات الطوارئ",
   },
   "Debt Management": {
     en: "Debt control and debit health",
-    ar: "السيطرة على الديون وصحة الديون",
+    ar: "التحكّم في الديون والصحّة الائتمانية",
   },
   "Retirement Planning": {
     en: "Long-term financial security",
-    ar: "الأمن المالي طويل الأجل",
+    ar: "الأمان المالي الطويل الأمد",
   },
   "Protecting Your Assets | Loved Ones": {
     en: "Insurance and risk management",
