@@ -141,7 +141,9 @@ export function FinancialClinicAdminDashboard({
   useEffect(() => {
     loadFilterOptions();
   }, []);
-
+  useEffect(() => {
+    console.log("overviewMetrics:", overviewMetrics);
+  }, [overviewMetrics]);
   // Load all analytics data when filters or date range changes
   useEffect(() => {
     if (availableOptions) {
@@ -578,10 +580,17 @@ export function FinancialClinicAdminDashboard({
                         </CardHeader>
                         <CardContent>
                           <div className="text-2xl font-bold">
-                            {overviewMetrics.total_submissions || 0}
+                            {overviewMetrics.today_submissions ??
+                              overviewMetrics.total_submissions ??
+                              0}
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            Total submissions
+                            {new Date().toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}{" "}
+                            - Submitted results
                           </p>
                         </CardContent>
                       </Card>
