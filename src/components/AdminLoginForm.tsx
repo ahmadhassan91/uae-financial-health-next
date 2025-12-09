@@ -167,31 +167,6 @@ export function AdminLoginForm({ onSuccess, onBack }: AdminLoginFormProps) {
               )}
             </div>
           </form>
-
-          <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-            <h4 className="font-medium text-sm mb-2">
-              Demo Admin Credentials:
-            </h4>
-            <div className="text-sm text-muted-foreground space-y-1">
-              <div>
-                <strong>Email:</strong> admin@nationalbonds.ae
-              </div>
-              <div>
-                <strong>Password:</strong> admin123
-              </div>
-            </div>
-            <h4 className="font-medium text-sm mb-2">
-              Demo View Only Admin Credentials:
-            </h4>
-            <div className="text-sm text-muted-foreground space-y-1">
-              <div>
-                <strong>Email:</strong> viewonly@nationalbonds.ae
-              </div>
-              <div>
-                <strong>Password:</strong> viewonly123
-              </div>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>

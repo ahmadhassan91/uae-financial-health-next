@@ -1,17 +1,17 @@
-/**
+ /**
  * Admin Analytics API Service
  * Handles all API calls to the Financial Clinic admin endpoints
  */
 
 const getBackendUrl = () => {
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 };
 
 const getAuthHeaders = () => {
-  const token = localStorage.getItem('admin_access_token');
+  const token = localStorage.getItem("admin_access_token");
   return {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
   };
 };
 
@@ -45,7 +45,7 @@ export interface DemographicFilters {
 }
 
 export interface DateRangeParams {
-  dateRange?: '7d' | '30d' | '90d' | '1y' | 'ytd' | 'all';
+  dateRange?: "7d" | "30d" | "90d" | "1y" | "ytd" | "all";
   startDate?: string;
   endDate?: string;
 }
@@ -60,6 +60,7 @@ export interface OverviewMetrics {
   unique_completions: number;
   cases_completed_percentage: number;
   unique_completion_percentage: number;
+  today_submissions: number;
 }
 
 export interface ScoreDistribution {
@@ -121,7 +122,7 @@ export interface ScoreAnalyticsRow {
 export interface ScoreAnalyticsResponse {
   questions: ScoreAnalyticsRow[];
   total_questions: number;
-  question_set_type: 'default' | 'company_variation';
+  question_set_type: "default" | "company_variation";
   variation_set_name: string | null;
   filtered: boolean;
 }
@@ -136,44 +137,44 @@ const buildQueryParams = (
 
   // Add date range parameters
   if (dateParams?.dateRange) {
-    params.append('date_range', dateParams.dateRange);
+    params.append("date_range", dateParams.dateRange);
   }
   if (dateParams?.startDate) {
-    params.append('start_date', dateParams.startDate);
+    params.append("start_date", dateParams.startDate);
   }
   if (dateParams?.endDate) {
-    params.append('end_date', dateParams.endDate);
+    params.append("end_date", dateParams.endDate);
   }
 
   // Add demographic filters (comma-separated for multi-select)
   if (filters?.ageGroups && filters.ageGroups.length > 0) {
-    params.append('age_groups', filters.ageGroups.join(','));
+    params.append("age_groups", filters.ageGroups.join(","));
   }
   if (filters?.genders && filters.genders.length > 0) {
-    params.append('genders', filters.genders.join(','));
+    params.append("genders", filters.genders.join(","));
   }
   if (filters?.nationalities && filters.nationalities.length > 0) {
-    params.append('nationalities', filters.nationalities.join(','));
+    params.append("nationalities", filters.nationalities.join(","));
   }
   if (filters?.emirates && filters.emirates.length > 0) {
-    params.append('emirates', filters.emirates.join(','));
+    params.append("emirates", filters.emirates.join(","));
   }
   if (filters?.employmentStatuses && filters.employmentStatuses.length > 0) {
-    params.append('employment_statuses', filters.employmentStatuses.join(','));
+    params.append("employment_statuses", filters.employmentStatuses.join(","));
   }
   if (filters?.incomeRanges && filters.incomeRanges.length > 0) {
-    params.append('income_ranges', filters.incomeRanges.join(','));
+    params.append("income_ranges", filters.incomeRanges.join(","));
   }
   if (filters?.children && filters.children.length > 0) {
-    params.append('children', filters.children.join(','));
+    params.append("children", filters.children.join(","));
   }
   if (filters?.companies && filters.companies.length > 0) {
-    params.append('companies', filters.companies.join(','));
+    params.append("companies", filters.companies.join(","));
   }
 
   // Add unique users filter
   if (filters?.unique_users_only) {
-    params.append('unique_users_only', 'true');
+    params.append("unique_users_only", "true");
   }
 
   // Add any extra parameters
@@ -197,7 +198,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/filter-options`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch filter options');
+    if (!response.ok) throw new Error("Failed to fetch filter options");
     const data = await response.json();
 
     // Convert snake_case backend response to camelCase
@@ -225,7 +226,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/overview-metrics?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch overview metrics');
+    if (!response.ok) throw new Error("Failed to fetch overview metrics");
     return response.json();
   },
 
@@ -241,7 +242,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/score-distribution?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch score distribution');
+    if (!response.ok) throw new Error("Failed to fetch score distribution");
     const data = await response.json();
 
     // Transform backend response
@@ -267,7 +268,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/category-performance?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch category performance');
+    if (!response.ok) throw new Error("Failed to fetch category performance");
     const data = await response.json();
 
     // Transform backend response
@@ -275,9 +276,9 @@ export const adminApi = {
 
     return categories.map((item: any) => ({
       category: item.category,
-      average_score: item.average_score || 0,  // Changed from avg_score
-      max_possible: item.max_possible || 100,  // Get from API response
-      percentage: item.percentage || 0,        // Changed to use API percentage
+      average_score: item.average_score || 0, // Changed from avg_score
+      max_possible: item.max_possible || 100, // Get from API response
+      percentage: item.percentage || 0, // Changed to use API percentage
     }));
   },
 
@@ -285,16 +286,18 @@ export const adminApi = {
    * Get time series data (submissions over time)
    */
   async getTimeSeries(
-    groupBy: 'day' | 'week' | 'month' | 'quarter' | 'year' = 'day',
+    groupBy: "day" | "week" | "month" | "quarter" | "year" = "day",
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
   ): Promise<TimeSeriesData[]> {
-    const queryString = buildQueryParams(filters, dateParams, { group_by: groupBy });
+    const queryString = buildQueryParams(filters, dateParams, {
+      group_by: groupBy,
+    });
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/time-series?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch time series data');
+    if (!response.ok) throw new Error("Failed to fetch time series data");
     const data = await response.json();
 
     // Transform backend response
@@ -319,7 +322,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/nationality-breakdown?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch nationality breakdown');
+    if (!response.ok) throw new Error("Failed to fetch nationality breakdown");
     const data = await response.json();
 
     // Transform backend response to array format
@@ -327,7 +330,7 @@ export const adminApi = {
 
     if (data.emirati && data.emirati.count > 0) {
       result.push({
-        nationality: 'Emirati',
+        nationality: "Emirati",
         total: data.emirati.count,
         excellent: 0, // TODO: Backend should provide this
         good: 0,
@@ -339,7 +342,7 @@ export const adminApi = {
 
     if (data.non_emirati && data.non_emirati.count > 0) {
       result.push({
-        nationality: 'Non-Emirati',
+        nationality: "Non-Emirati",
         total: data.non_emirati.count,
         excellent: 0,
         good: 0,
@@ -364,7 +367,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/age-breakdown?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch age breakdown');
+    if (!response.ok) throw new Error("Failed to fetch age breakdown");
     const data = await response.json();
 
     // Transform backend response
@@ -391,14 +394,14 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/companies-analytics?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch companies analytics');
+    if (!response.ok) throw new Error("Failed to fetch companies analytics");
     const data = await response.json();
 
     // Transform backend response
     const companies = data.companies || [];
 
     return companies.map((item: any) => ({
-      company: item.company_name || item.company || 'Unknown',
+      company: item.company_name || item.company || "Unknown",
       total_submissions: item.total_responses || 0,
       average_score: item.avg_score || 0,
       excellent: item.excellent_count || 0,
@@ -420,7 +423,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/score-analytics-table?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch score analytics table');
+    if (!response.ok) throw new Error("Failed to fetch score analytics table");
     const data = await response.json();
 
     // Backend now returns object with metadata
@@ -429,15 +432,15 @@ export const adminApi = {
       return {
         questions: data.map((item: any) => ({
           question_number: item.question_number || 0,
-          question_text: item.question_text || '',
-          category: item.category || 'Unknown',
+          question_text: item.question_text || "",
+          category: item.category || "Unknown",
           emirati_avg: item.emirati_avg ?? null,
           non_emirati_avg: item.non_emirati_avg ?? null,
           emirati_count: item.emirati_count || 0,
           non_emirati_count: item.non_emirati_count || 0,
         })),
         total_questions: data.length,
-        question_set_type: 'default',
+        question_set_type: "default",
         variation_set_name: null,
         filtered: false,
       };
@@ -447,15 +450,15 @@ export const adminApi = {
     return {
       questions: (data.questions || []).map((item: any) => ({
         question_number: item.question_number || 0,
-        question_text: item.question_text || '',
-        category: item.category || 'Unknown',
+        question_text: item.question_text || "",
+        category: item.category || "Unknown",
         emirati_avg: item.emirati_avg ?? null,
         non_emirati_avg: item.non_emirati_avg ?? null,
         emirati_count: item.emirati_count || 0,
         non_emirati_count: item.non_emirati_count || 0,
       })),
       total_questions: data.total_questions || 0,
-      question_set_type: data.question_set_type || 'default',
+      question_set_type: data.question_set_type || "default",
       variation_set_name: data.variation_set_name || null,
       filtered: data.filtered || false,
     };
@@ -473,7 +476,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/export-csv?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to export CSV');
+    if (!response.ok) throw new Error("Failed to export CSV");
     return response.blob();
   },
 
@@ -489,7 +492,7 @@ export const adminApi = {
       `${getBackendUrl()}/admin/simple/export-excel?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to export Excel');
+    if (!response.ok) throw new Error("Failed to export Excel");
     return response.blob();
   },
 
@@ -499,13 +502,13 @@ export const adminApi = {
   async getEmploymentBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ status: string, count: number }[]> {
+  ): Promise<{ status: string; count: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/employment-breakdown?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch employment breakdown');
+    if (!response.ok) throw new Error("Failed to fetch employment breakdown");
     const data = await response.json();
     return data.breakdown || [];
   },
@@ -516,13 +519,13 @@ export const adminApi = {
   async getEmirateBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ emirate: string, count: number }[]> {
+  ): Promise<{ emirate: string; count: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/emirate-breakdown?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch emirate breakdown');
+    if (!response.ok) throw new Error("Failed to fetch emirate breakdown");
     const data = await response.json();
     return data.breakdown || [];
   },
@@ -533,13 +536,13 @@ export const adminApi = {
   async getChildrenBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ count_label: string, count: number, average_score: number }[]> {
+  ): Promise<{ count_label: string; count: number; average_score: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/children-breakdown?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch children breakdown');
+    if (!response.ok) throw new Error("Failed to fetch children breakdown");
     const data = await response.json();
     return data.breakdown || [];
   },
@@ -550,17 +553,16 @@ export const adminApi = {
   async getIncomeRangeBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ range: string, count: number, average_score: number }[]> {
+  ): Promise<{ range: string; count: number; average_score: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/income-breakdown?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch income breakdown');
+    if (!response.ok) throw new Error("Failed to fetch income breakdown");
     const data = await response.json();
     return data.breakdown || [];
   },
-
 
   /**
    * Get gender breakdown
@@ -568,13 +570,13 @@ export const adminApi = {
   async getGenderBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ gender: string, count: number, percentage: number }[]> {
+  ): Promise<{ gender: string; count: number; percentage: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/gender-breakdown?${queryString}`,
       { headers: getAuthHeaders() }
     );
-    if (!response.ok) throw new Error('Failed to fetch gender breakdown');
+    if (!response.ok) throw new Error("Failed to fetch gender breakdown");
     const data = await response.json();
     return data.breakdown || [];
   },

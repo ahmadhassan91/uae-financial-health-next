@@ -468,13 +468,26 @@ export function LeadsManagement() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Income Ranges</SelectItem>
-                  <SelectItem value="Below 5K">Below 5K</SelectItem>
-                  <SelectItem value="5K-10K">5K-10K</SelectItem>
-                  <SelectItem value="10K-15K">10K-15K</SelectItem>
-                  <SelectItem value="15K-20K">15K-20K</SelectItem>
-                  <SelectItem value="20K-30K">20K-30K</SelectItem>
-                  <SelectItem value="30K-50K">30K-50K</SelectItem>
-                  <SelectItem value="Above 50K">Above 50K</SelectItem>
+                  <SelectItem value="Below 5,000">Below 5,000</SelectItem>
+                  <SelectItem value="5,000 to 10,000">
+                    5,000 to 10,000
+                  </SelectItem>
+                  <SelectItem value="10,000 to 20,000">
+                    10,000 to 20,000
+                  </SelectItem>
+                  <SelectItem value="20,000 to 30,000">
+                    20,000 to 30,000
+                  </SelectItem>
+                  <SelectItem value="30,000 to 40,000">
+                    30,000 to 40,000
+                  </SelectItem>
+                  <SelectItem value="40,000 to 50,000">
+                    40,000 to 50,000
+                  </SelectItem>
+                  <SelectItem value="50,000 to 100,000">
+                    50,000 to 100,000
+                  </SelectItem>
+                  <SelectItem value="Above 100,000">Above 100,000</SelectItem>
                 </SelectContent>
               </Select>
 
