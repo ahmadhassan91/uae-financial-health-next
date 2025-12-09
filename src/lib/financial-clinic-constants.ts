@@ -6,6 +6,11 @@ export const RESULTS_COLORS = {
   primaryGreen: "#437749",
   accentGreen: "#3fab4c",
   darkGreen: "#456237",
+  
+  // Golden accent color - Financial Clinic brand
+  golden: "#bd912e",
+  goldenLight: "#d4a84a",
+  goldenDark: "#9a7625",
 
   // Text colors
   darkText: "#424b5a",
@@ -41,7 +46,7 @@ export const SCORE_BANDS = [
     title: { en: "Needs Improvement", ar: "بحاجة إلى تحسين" },
     description: {
       en: "Focus on building basic financial habits",
-      ar: "ركّزوا على اكتساب السلوكيّات الماليّة الأساسيّة",
+      ar: "ركّزوا على اكتساب السلوكيات المالية الأساسية",
     },
   },
   {
@@ -50,7 +55,7 @@ export const SCORE_BANDS = [
     title: { en: "Fair", ar: "مقبولة" },
     description: {
       en: "Good foundation, room for growth",
-      ar: "أساس متين مع إمكانيّة للتطوّر",
+      ar: "أساس متين مع إمكانية للتطوّر",
     },
   },
   {
@@ -58,17 +63,17 @@ export const SCORE_BANDS = [
     bgColor: "bg-[#fca924]",
     title: { en: "Good", ar: "جيّدة" },
     description: {
-      en: "Strong Financial Health",
-      ar: "صحّة ماليّة قويّة",
+      en: "Strong financial health",
+      ar: "صحّة مالية قويّة",
     },
   },
   {
-    range: "80-100",
+    range: "85-100",
     bgColor: "bg-[#6cc922]",
     title: { en: "Excellent", ar: "ممتازة" },
     description: {
       en: "Outstanding financial wellness",
-      ar: "رفاهية ماليّة ملحوظة",
+      ar: "رفاهية مالية ملحوظة",
     },
   },
 ] as const;
@@ -88,11 +93,19 @@ export const CATEGORY_DESCRIPTIONS = {
   },
   "Emergency Savings": {
     en: "Emergency fund readiness",
+<<<<<<< HEAD
     ar: "الاستعداد للادخار في حالات الطوارئ",
   },
   "Debt Management": {
     en: "Debt control and debit health",
     ar: "التحكّم في الديون والصحّة الائتمانية",
+=======
+    ar: "مدخرات الطوارئ والاستعداد للادخار في حالات الطوارئ",
+  },
+  "Debt Management": {
+    en: "Debt control and credit health",
+    ar: "التحكم في الديون والصحّة الائتمانية",
+>>>>>>> f4f96e0 (feat: Implement golden color theme (#bd912e) across Financial Clinic)
   },
   "Retirement Planning": {
     en: "Long-term financial security",

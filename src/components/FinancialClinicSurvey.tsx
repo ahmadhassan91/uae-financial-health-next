@@ -300,9 +300,9 @@ export function FinancialClinicSurvey({
                     className="w-full bg-[#f8fbfd] border border-solid border-[#bdcdd6] overflow-hidden"
                   >
                     <CardContent className="flex flex-col sm:flex-row items-start gap-3 md:gap-4 lg:gap-6 p-3 sm:p-4 md:p-5 lg:p-8">
-                      {/* Question Number Circle */}
-                      <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#c2d1d9] rounded-[100px] flex-shrink-0 self-center sm:self-start">
-                        <div className="font-[family-name:var(--font-poppins)] font-normal text-[#4a5a68] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
+                      {/* Question Number Circle - Golden accent */}
+                      <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#bd912e]/20 border-2 border-[#bd912e] rounded-[100px] flex-shrink-0 self-center sm:self-start">
+                        <div className="font-[family-name:var(--font-poppins)] font-semibold text-[#bd912e] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
                           {question.number}
                         </div>
                       </div>

@@ -10,12 +10,12 @@ const features = [
     textAr: "معرفة وضعكم المالي&nbsp;الحالي",
   },
   {
-    icon: "/homepage/images/group-3.png",
+    icon: "/homepage/icons/improvement.svg",
     textEn: "Identify habits that need&nbsp;improvement",
     textAr: "تحديد السلوكيات التي لا بدّ من&nbsp;تحسينها",
   },
   {
-    icon: "/homepage/images/group-2.png",
+    icon: "/homepage/icons/steps.svg",
     textEn: "Receive easy, actionable steps to reach your&nbsp;goals",
     textAr: "الحصول على خطوات سهلة وعملية لتحقيق&nbsp;أهدافكم",
   },

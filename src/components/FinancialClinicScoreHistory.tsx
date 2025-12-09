@@ -341,7 +341,7 @@ export function FinancialClinicScoreHistory({
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center col-span-2 md:col-span-1">
-                <div className="text-3xl sm:text-4xl font-bold text-primary mb-2">
+                <div className="text-3xl sm:text-4xl font-bold text-[#bd912e] mb-2">
                   {Math.round(latestScore.overall_score)}
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground">
@@ -375,7 +375,7 @@ export function FinancialClinicScoreHistory({
               )}
 
               <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold mb-2">
+                <div className="text-xl sm:text-2xl font-bold text-[#bd912e] mb-2">
                   {scoreHistory.length}
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground">
@@ -529,7 +529,7 @@ export function FinancialClinicScoreHistory({
                   >
                     <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                       <div className="text-center shrink-0">
-                        <div className="text-xl sm:text-2xl font-bold">
+                        <div className="text-xl sm:text-2xl font-bold text-[#bd912e]">
                           {Math.round(response.overall_score)}
                         </div>
                         <div className="text-[10px] sm:text-xs text-muted-foreground">

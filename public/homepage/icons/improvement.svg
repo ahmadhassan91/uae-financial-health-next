@@ -1,0 +1,8 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Improvement/Chart icon - represents identifying habits that need improvement -->
+  <path d="M4 24L12 16L18 22L28 8" stroke="#bd912e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 8H28V16" stroke="#bd912e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="12" cy="16" r="2" fill="#bd912e"/>
+  <circle cx="18" cy="22" r="2" fill="#bd912e"/>
+  <circle cx="4" cy="24" r="2" fill="#bd912e"/>
+</svg>

@@ -21,8 +21,9 @@ export function StripedProgress({ value, className = '', scoreBasedColor = false
     return '#f00c01'; // Needs Improvement - Red
   };
   
-  const fillColor = scoreBasedColor ? getScoreColor(percentage) : '#6CA854';
-  const stripeColor = scoreBasedColor ? getScoreColor(percentage) : '#456237';
+  // Golden color for Financial Clinic branding
+  const fillColor = scoreBasedColor ? getScoreColor(percentage) : '#bd912e';
+  const stripeColor = scoreBasedColor ? getScoreColor(percentage) : '#9a7625';
   
   return (
     <div className={`relative rounded-full overflow-hidden ${className}`}>

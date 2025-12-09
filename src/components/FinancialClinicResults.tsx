@@ -23,6 +23,14 @@ interface FinancialClinicResultsProps {
   onShowAccountModal?: () => void;
 }
 
+// Helper function to detect if user is on mobile device
+const isMobileDevice = (): boolean => {
+  if (typeof window === "undefined") return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+};
+
 export function FinancialClinicResults({
   result,
   onRetake,
@@ -33,6 +41,14 @@ export function FinancialClinicResults({
 }: FinancialClinicResultsProps) {
   const { t, isRTL, language } = useLocalization();
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+
+  // Handle National Bonds redirect - web vs mobile
+  const handleNationalBondsClick = () => {
+    const url = isMobileDevice()
+      ? "https://nationalbonds.onelink.me/NAu3/9m8huddj" // Mobile app link
+      : "https://nationalbonds.ae/"; // Web link
+    window.open(url, "_blank");
+  };
 
   // Check if user is logged in
   const isLoggedIn =
@@ -47,12 +63,12 @@ export function FinancialClinicResults({
 
   const getCategoryTranslation = (category: string): string => {
     const categoryMap: Record<string, { en: string; ar: string }> = {
-      "Income Stream": { en: "Income Stream", ar: "تدفق الدخل" },
+      "Income Stream": { en: "Income Stream", ar: "موارد الدخل" },
       "Monthly Expenses Management": {
         en: "Monthly Expenses Management",
         ar: "إدارة النفقات الشهرية",
       },
-      "Savings Habit": { en: "Saving Habits", ar: "عادات الادخار" },
+      "Savings Habit": { en: "Savings Habit", ar: "السلوك الادخاري" },
       "Emergency Savings": { en: "Emergency Savings", ar: "مدخرات الطوارئ" },
       "Debt Management": { en: "Debt Management", ar: "إدارة الديون" },
       "Retirement Planning": {
@@ -189,7 +205,7 @@ export function FinancialClinicResults({
           <StripedProgress
             value={result.total_score}
             className="w-full h-[14px] md:h-[18px]"
-            scoreBasedColor={true}
+            scoreBasedColor={false}
           />
         </div>
 
@@ -228,10 +244,10 @@ export function FinancialClinicResults({
                     key={index}
                     className="flex flex-col flex-1 items-start md:items-center px-1 sm:px-2 md:px-3 py-0 w-full md:w-auto"
                   >
-                    <div className="font-semibold text-[#575757] text-xs sm:text-sm text-left md:text-center tracking-[0] leading-4 md:leading-5 w-full">
+                    <div className={`font-semibold text-[#575757] text-xs sm:text-sm md:text-center tracking-[0] leading-4 md:leading-5 w-full ${isRTL ? 'text-right' : 'text-left'}`}>
                       {band.title[language]}
                     </div>
-                    <div className="font-normal text-[#575757] text-[10px] sm:text-xs md:text-sm text-left md:text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full">
+                    <div className={`font-normal text-[#575757] text-[10px] sm:text-xs md:text-sm md:text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full ${isRTL ? 'text-right' : 'text-left'}`}>
                       {band.description[language]}
                     </div>
                   </div>
@@ -259,28 +275,22 @@ export function FinancialClinicResults({
 
           <div className="flex flex-col items-center w-full px-4 gap-6">
             {Object.entries(result.category_scores)
-              .sort(([nameA, a]: [string, any], [nameB, b]: [string, any]) => {
-                // Sort by percentage (lowest to highest) - areas needing most attention first
-                const percentageA = (a.score / a.max_possible) * 100;
-                const percentageB = (b.score / b.max_possible) * 100;
-
-                // If percentages are different, sort by percentage
-                if (Math.abs(percentageA - percentageB) > 0.01) {
-                  return percentageA - percentageB;
-                }
-
-                // If percentages are the same, sort by predefined order
+              .sort(([nameA]: [string, any], [nameB]: [string, any]) => {
+                // Fixed order as per design specification
                 const categoryOrder = [
                   "Income Stream",
-                  "Emergency Savings",
                   "Savings Habit",
-                  "Retirement Planning",
+                  "Emergency Savings",
                   "Debt Management",
+                  "Retirement Planning",
                   "Protecting Your Family",
                 ];
 
                 const indexA = categoryOrder.indexOf(nameA);
                 const indexB = categoryOrder.indexOf(nameB);
+                // Put unknown categories at the end
+                if (indexA === -1) return 1;
+                if (indexB === -1) return -1;
                 return indexA - indexB;
               })
               .map(([categoryName, category]: [string, any], index) => {
@@ -419,12 +429,7 @@ export function FinancialClinicResults({
           </Button>
 
           <Button
-            onClick={() =>
-              window.open(
-                "https://nationalbonds.onelink.me/NAu3/9m8huddj",
-                "_blank"
-              )
-            }
+            onClick={handleNationalBondsClick}
             className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 h-auto w-full md:w-auto"
           >
             <span className="font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px]">
