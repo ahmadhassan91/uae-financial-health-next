@@ -45,8 +45,6 @@ export function HomepageHeader() {
 
   return (
     <header className="flex flex-col w-full bg-white border-b border-[#c2d1d9]">
-      {/* Golden accent line at top */}
-      <div className="w-full h-1 bg-[#bd912e]" />
       {/* Top row: Menu items aligned right */}
       <div className="flex w-full items-center justify-end px-4 sm:px-6 md:px-[90px] py-2 sm:py-3 gap-2 sm:gap-4 md:gap-6">
         <Link href="/">
@@ -92,6 +90,9 @@ export function HomepageHeader() {
           </Link>
         </div>
       </div>
+      
+      {/* Golden accent line below logos */}
+      <div className="w-full h-1 bg-[#bd912e]" />
     </header>
   );
 }
