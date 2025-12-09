@@ -93,19 +93,11 @@ export const CATEGORY_DESCRIPTIONS = {
   },
   "Emergency Savings": {
     en: "Emergency fund readiness",
-<<<<<<< HEAD
     ar: "الاستعداد للادخار في حالات الطوارئ",
   },
   "Debt Management": {
     en: "Debt control and debit health",
     ar: "التحكّم في الديون والصحّة الائتمانية",
-=======
-    ar: "مدخرات الطوارئ والاستعداد للادخار في حالات الطوارئ",
-  },
-  "Debt Management": {
-    en: "Debt control and credit health",
-    ar: "التحكم في الديون والصحّة الائتمانية",
->>>>>>> f4f96e0 (feat: Implement golden color theme (#bd912e) across Financial Clinic)
   },
   "Retirement Planning": {
     en: "Long-term financial security",
