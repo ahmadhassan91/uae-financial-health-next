@@ -72,6 +72,12 @@ interface ConsultationRequest {
   contacted_at?: string;
   scheduled_at?: string;
   updated_at?: string;
+  has_profile?: boolean;
+  profile_data?: {
+    age?: number;
+    income_range?: string;
+    nationality?: string;
+  };
 }
 
 interface LeadsStats {
@@ -459,6 +465,18 @@ export function LeadsManagement() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Info message for demographic filters */}
+            {(ageGroupFilter !== "all" ||
+              incomeFilter !== "all" ||
+              nationalityFilter !== "all" ||
+              companyFilter !== "all") && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                <strong>Note:</strong> Demographic filters only show leads from
+                users who completed the Financial Clinic survey. Select "All" to
+                see all consultation requests.
+              </div>
+            )}
 
             {/* Demographic Filters Row */}
             <div className="flex flex-col sm:flex-row gap-4">
