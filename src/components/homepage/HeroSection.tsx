@@ -80,7 +80,7 @@ export function HeroSection() {
               : "Inspiring healthier financial habits every day"}
           </h1>
 
-          <p className="self-stretch font-normal text-[#437749] text-base sm:text-lg md:text-2xl text-center tracking-[0] leading-tight sm:leading-[38px]">
+          <p className="self-stretch font-normal text-[#bd912e] text-base sm:text-lg md:text-2xl text-center tracking-[0] leading-tight sm:leading-[38px]">
             {language === "ar"
               ? "مع الصكوك الوطنية."
               : "Powered by National Bonds"}

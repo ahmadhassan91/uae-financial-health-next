@@ -90,6 +90,9 @@ export function HomepageHeader() {
           </Link>
         </div>
       </div>
+      
+      {/* Golden accent line below logos */}
+      <div className="w-full h-1 bg-[#bd912e]" />
     </header>
   );
 }

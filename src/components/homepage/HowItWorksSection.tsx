@@ -104,7 +104,7 @@ export function HowItWorksSection() {
                 />
 
                 <div className="flex flex-col items-start justify-center gap-1.5 flex-1">
-                  <h4 className="w-full font-semibold text-[#437749] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6">
+                  <h4 className="w-full font-semibold text-[#bd912e] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6">
                     {language === "ar" ? step.titleAr : step.titleEn}
                   </h4>
 

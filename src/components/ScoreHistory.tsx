@@ -123,7 +123,7 @@ export function ScoreHistory({ scoreHistory, onBack, onLogout, userEmail }: Scor
           <CardContent className="p-6">
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-2">
+                <div className="text-4xl font-bold text-[#bd912e] mb-2">
                   {latestScore.totalScore}
                 </div>
                 <div className="text-sm text-muted-foreground">Current Score</div>
@@ -142,7 +142,7 @@ export function ScoreHistory({ scoreHistory, onBack, onLogout, userEmail }: Scor
               )}
               
               <div className="text-center">
-                <div className="text-2xl font-bold mb-2">
+                <div className="text-2xl font-bold text-[#bd912e] mb-2">
                   {scoreHistory.length}
                 </div>
                 <div className="text-sm text-muted-foreground">Total Assessments</div>
@@ -262,7 +262,7 @@ export function ScoreHistory({ scoreHistory, onBack, onLogout, userEmail }: Scor
                   <div key={calc.id || `calc-${index}`} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold">{calc.totalScore || 0}</div>
+                        <div className="text-2xl font-bold text-[#bd912e]">{calc.totalScore || 0}</div>
                         <div className="text-xs text-muted-foreground">
                           {calc.createdAt ? new Date(calc.createdAt).toLocaleDateString() : 'Unknown date'}
                         </div>

@@ -8,7 +8,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Financial Clinic - Clean Green Theme (Based on Homepage Design) */
+/* Financial Clinic - Clean Green Theme with Golden Accents (Based on Homepage Design) */
 @layer base {
   :root {
     /* Clean white background */
@@ -22,6 +22,11 @@
     /* Primary Green - Main CTA color from homepage */
     --primary: 142 71% 45%; /* Vibrant green #4CAF50 */
     --primary-foreground: 0 0% 100%;
+    
+    /* Golden Accent - Financial Clinic brand color #bd912e */
+    --golden: 38 62% 46%;
+    --golden-light: 38 62% 56%;
+    --golden-dark: 38 62% 36%;
     
     /* Secondary - Softer green for accents */
     --secondary: 142 40% 60%; /* Light green */
