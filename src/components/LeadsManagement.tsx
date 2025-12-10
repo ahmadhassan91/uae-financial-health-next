@@ -466,18 +466,6 @@ export function LeadsManagement() {
               </Select>
             </div>
 
-            {/* Info message for demographic filters */}
-            {(ageGroupFilter !== "all" ||
-              incomeFilter !== "all" ||
-              nationalityFilter !== "all" ||
-              companyFilter !== "all") && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-                <strong>Note:</strong> Demographic filters only show leads from
-                users who completed the Financial Clinic survey. Select "All" to
-                see all consultation requests.
-              </div>
-            )}
-
             {/* Demographic Filters Row */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Select value={incomeFilter} onValueChange={setIncomeFilter}>
