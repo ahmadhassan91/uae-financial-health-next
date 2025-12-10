@@ -73,6 +73,7 @@ import { CompanyManagement } from "./CompanyManagement";
 import { LeadsManagement } from "./LeadsManagement";
 import { IncompleteSurveys } from "./admin/IncompleteSurveys";
 import { SystemManagement } from "./admin/SystemManagement";
+import { CompanyVariationControl } from "./admin/CompanyVariationControl";
 import { SubmissionsTable } from "./admin/SubmissionsTable";
 import { RegistrationMetrics } from "./admin/RegistrationMetrics";
 
@@ -499,7 +500,7 @@ export function FinancialClinicAdminDashboard({
                   className={`inline-flex w-auto min-w-full lg:grid ${
                     user?.admin_role === "view_only"
                       ? "lg:grid-cols-4"
-                      : "lg:grid-cols-6"
+                      : "lg:grid-cols-7"
                   } gap-1`}
                 >
                   <TabsTrigger
@@ -520,6 +521,14 @@ export function FinancialClinicAdminDashboard({
                       className="text-xs sm:text-sm whitespace-nowrap"
                     >
                       Companies
+                    </TabsTrigger>
+                  )}
+                  {user?.admin_role !== "view_only" && (
+                    <TabsTrigger
+                      value="variations"
+                      className="text-xs sm:text-sm whitespace-nowrap"
+                    >
+                      Variations
                     </TabsTrigger>
                   )}
                   <TabsTrigger
@@ -696,6 +705,13 @@ export function FinancialClinicAdminDashboard({
                     <CompaniesAnalyticsTable data={companiesAnalytics} />
                   )}
                   <CompanyManagement onCompanyCreated={loadFilterOptions} />
+                </TabsContent>
+              )}
+
+              {/* Variation Control Tab - Only for full admins */}
+              {user?.admin_role !== "view_only" && (
+                <TabsContent value="variations" className="space-y-6">
+                  <CompanyVariationControl />
                 </TabsContent>
               )}
 
