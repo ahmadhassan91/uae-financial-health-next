@@ -50,6 +50,7 @@ import {
   ScoreAnalyticsRow,
   ScoreAnalyticsResponse,
 } from "../lib/admin-api";
+import { toast } from "sonner";
 
 // Import chart components
 import { FinancialClinicFilters } from "./admin/FinancialClinicFilters";
