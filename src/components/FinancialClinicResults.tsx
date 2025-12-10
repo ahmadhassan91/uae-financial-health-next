@@ -156,13 +156,13 @@ export function FinancialClinicResults({
           <div className="flex flex-col items-center justify-center gap-1 md:gap-[3px] w-full px-4">
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "يعكس هذا التقييم أداءكم في خمسة مجالات رئيسية."
+                ? "تشير نتيجتكم إلى مستوى أدائكم في الجوانب الرئيسية."
                 : "Your score reflects how you're doing across key areas."}
             </p>
 
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "استمرّوا في تحسين سلوكياتكم، وستلاحظون تحسّن جودة حياتكم المالية مع الوقت"
+                ? "تابعوا تحسين سلوكيّاتكم المالية لتتعزّز جودة حياتكم المالية تدريجياً مع الوقت."
                 : "Keep improving your habits, and your financial wellbeing will grow stronger over time."}
             </p>
           </div>
@@ -244,10 +244,18 @@ export function FinancialClinicResults({
                     key={index}
                     className="flex flex-col flex-1 items-start md:items-center px-1 sm:px-2 md:px-3 py-0 w-full md:w-auto"
                   >
-                    <div className={`font-semibold text-[#575757] text-xs sm:text-sm md:text-center tracking-[0] leading-4 md:leading-5 w-full ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <div
+                      className={`font-semibold text-[#575757] text-xs sm:text-sm md:text-center tracking-[0] leading-4 md:leading-5 w-full ${
+                        isRTL ? "text-right" : "text-left"
+                      }`}
+                    >
                       {band.title[language]}
                     </div>
-                    <div className={`font-normal text-[#575757] text-[10px] sm:text-xs md:text-sm md:text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <div
+                      className={`font-normal text-[#575757] text-[10px] sm:text-xs md:text-sm md:text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full ${
+                        isRTL ? "text-right" : "text-left"
+                      }`}
+                    >
                       {band.description[language]}
                     </div>
                   </div>
