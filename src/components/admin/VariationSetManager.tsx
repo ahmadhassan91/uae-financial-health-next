@@ -507,6 +507,16 @@ export function VariationSetManager() {
             </AlertDescription>
           </Alert>
 
+          {/* Variation Control Info */}
+          <Alert className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              <strong>New Feature:</strong> Variations must now be explicitly enabled for each company. 
+              Companies with variations disabled will see default questions regardless of company URL.
+              Use the API endpoints to manage variation settings per company.
+            </AlertDescription>
+          </Alert>
+
           {/* Table */}
           {loading ? (
             <div className="text-center py-8">Loading variation sets...</div>
