@@ -46,7 +46,7 @@ export function FinancialClinicResults({
   const handleNationalBondsClick = () => {
     const url = isMobileDevice()
       ? "https://nationalbonds.onelink.me/NAu3/9m8huddj" // Mobile app link
-      : "https://nationalbonds.ae/"; // Web link
+      : "https://www.nationalbonds.ae/"; // Web link
     window.open(url, "_blank");
   };
 
