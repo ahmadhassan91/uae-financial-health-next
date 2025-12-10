@@ -74,7 +74,7 @@ export function HeroSection() {
       {/* Tagline */}
       <div className="flex flex-col w-full max-w-[1199px] items-center gap-4 sm:gap-[22px]">
         <div className="inline-flex flex-col items-center">
-          <h1 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
+          <h1 className="w-fit mt-[-1.00px] font-semibold text-[##5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
             {language === "ar"
               ? "لبناء عادات مالية أكثر صحة كل يوم"
               : "Inspiring healthier financial habits every day"}
@@ -117,7 +117,7 @@ export function HeroSection() {
           <div className="flex w-full items-center justify-center px-4 sm:px-6 md:px-[59px] py-8 sm:py-12 md:py-[79px]">
             <div className="flex flex-col w-full max-w-[494px] items-start gap-3 sm:gap-4">
               <div className="flex flex-col items-start gap-3 sm:gap-[21px] w-full">
-                <h2 className="self-stretch mt-[-1.00px] font-semibold text-[#437749] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px]">
+                <h2 className="self-stretch mt-[-1.00px] font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px]">
                   {language === "ar"
                     ? "ما مدى صحة أوضاعكم المالية؟"
                     : "How healthy are your finances?"}
@@ -130,28 +130,29 @@ export function HeroSection() {
                 </p>
               </div>
 
-              <Button
-                onClick={handleStartCheckup}
-                className="h-auto w-full sm:w-auto items-center justify-center gap-2.5 p-2.5 px-4 sm:px-6 bg-[#3fab4c] hover:bg-[#3fab4c]/90"
-              >
-                <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
-                  {language === "ar"
-                    ? "بدء تقييم وضعي المالي"
-                    : "START MY FINANCIAL CHECKUP"}
-                </span>
-              </Button>
+              <div className="flex flex-row flex-wrap gap-3 w-full">
+                <Button
+                  onClick={handleStartCheckup}
+                  className="h-auto items-center justify-center gap-2.5 p-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 whitespace-nowrap"
+                >
+                  <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
+                    {language === "ar"
+                      ? "بدء تقييم وضعي المالي"
+                      : "START MY FINANCIAL CHECKUP"}
+                  </span>
+                </Button>
 
-              <Button
-                variant="ghost"
-                onClick={handleViewResults}
-                className="h-auto w-full sm:w-auto items-center justify-center gap-2.5 p-0 hover:bg-transparent text-[#3fab4c] hover:text-[#3fab4c]/80"
-              >
-                <span className="w-fit mt-[-1.00px] font-normal text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap underline">
-                  {language === "ar"
-                    ? "النتائج السابقة"
-                    : "View Previous Assessment"}
-                </span>
-              </Button>
+                <Button
+                  onClick={handleViewResults}
+                  className="h-auto items-center justify-center gap-2.5 p-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5EF]/90 whitespace-nowrap"
+                >
+                  <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
+                    {language === "ar"
+                      ? "النتائج السابقة"
+                      : "View Previous Assessment"}
+                  </span>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

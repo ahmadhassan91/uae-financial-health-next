@@ -540,7 +540,7 @@ export default function FinancialClinicPage({
       <main className="flex flex-col items-center px-3 md:px-6 py-4 md:py-8 flex-1">
         {/* Title Section */}
         <div className="flex flex-col items-center gap-1.5 mb-4 md:mb-8">
-          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
+          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#5E5E5E] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
             {language === "ar" ? "ملف العميل" : "Customer Profile"}
           </h1>
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm text-center tracking-[0] leading-6">
@@ -1218,7 +1218,7 @@ export default function FinancialClinicPage({
         <div className="flex flex-col md:flex-row gap-4 mt-6 md:mt-12 w-full md:w-auto">
           <Button
             onClick={handleStartSurvey}
-            className="h-auto px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 w-full md:w-auto"
+            className="h-auto px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 w-full md:w-auto"
           >
             <span className="font-[family-name:var(--font-poppins)] font-normal text-white text-sm text-center tracking-[0] leading-[18px] whitespace-nowrap">
               {language === "ar" ? "ابدأ فحصي" : "START MY CHECKUP"}

@@ -268,7 +268,7 @@ export function FinancialClinicResults({
         {/* Financial Pillar Scores */}
         <div className="flex flex-col items-start gap-8 md:gap-[60px] w-full">
           <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
-            <h2 className="font-semibold text-[#437749] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
+            <h2 className="font-semibold text-[#424b5a] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
               {language === "ar"
                 ? "درجات الركائز المالية"
                 : "Financial Pillar Scores"}
@@ -354,7 +354,7 @@ export function FinancialClinicResults({
 
         {/* Your Personalized Action Plan */}
         <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
-          <h2 className="font-semibold text-[#437749] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
+          <h2 className="font-semibold text-[#424b5a] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
             {language === "ar"
               ? "خطة العمل المعدّة خصيصاً لكم"
               : "Your Personalized Action Plan"}
@@ -368,7 +368,7 @@ export function FinancialClinicResults({
         </div>
 
         <div className="flex flex-col w-full max-w-[948px] items-start gap-3 md:gap-3.5 px-4">
-          <h3 className="font-semibold text-[#437749] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
+          <h3 className="font-semibold text-[#424b5a] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
             {language === "ar"
               ? "فئات التوصيات:"
               : "Recommendation Categories:"}
