@@ -34,7 +34,7 @@ export function FeaturesSection() {
     <div className="flex flex-col w-full max-w-[1200px] mx-auto items-start gap-6 sm:gap-8 md:gap-[43px] px-4 py-8 sm:py-12">
       <div className="flex-col items-center gap-4 sm:gap-[22px] flex w-full">
         <div className="inline-flex flex-col items-center">
-          <h2 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-xl sm:text-2xl md:text-[35px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
+          <h2 className="w-fit mt-[-1.00px] font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[35px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
             {language === "ar"
               ? "ما أهميّة إجراء هذا التقييم؟"
               : "Why Take the Checkup?"}
@@ -59,7 +59,7 @@ export function FeaturesSection() {
       <div className="flex flex-col items-center gap-4 sm:gap-6 md:gap-[27px] w-full">
         <div className="flex-col items-center gap-4 sm:gap-[22px] flex w-full">
           <div className="inline-flex flex-col items-center">
-            <h3 className="w-fit mt-[-1.00px] font-semibold text-[#437749] text-lg sm:text-xl md:text-2xl tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
+            <h3 className="w-fit mt-[-1.00px] font-semibold text-[#5E5E5E] text-lg sm:text-xl md:text-2xl tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
               {language === "ar"
                 ? "تساعدكم عيادتنا الماليّة على"
                 : "The Financial Clinic helps you"}

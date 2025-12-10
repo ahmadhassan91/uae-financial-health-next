@@ -91,7 +91,7 @@ export function HowItWorksSection() {
         {/* Right Side - Content */}
         <div className="w-full lg:w-1/2 p-6 sm:p-8 md:p-12 lg:p-[5%] bg-white">
           <div className="flex flex-col items-start gap-6 sm:gap-8 md:gap-[46px] w-full">
-            <h2 className="self-stretch font-semibold text-[#437749] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px]">
+            <h2 className="self-stretch font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px]">
               {language === "ar" ? "كيف يعمل" : "How It Works"}
             </h2>
 
@@ -122,7 +122,7 @@ export function HowItWorksSection() {
 
       <Button
         onClick={handleStartCheckup}
-        className="h-auto w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90"
+        className="h-auto w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[5E5E5E]/90"
       >
         <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
           {language === "ar"
