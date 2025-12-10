@@ -68,7 +68,7 @@ export const SCORE_BANDS = [
     },
   },
   {
-    range: "85-100",
+    range: "80-100",
     bgColor: "bg-[#6cc922]",
     title: { en: "Excellent", ar: "ممتازة" },
     description: {
