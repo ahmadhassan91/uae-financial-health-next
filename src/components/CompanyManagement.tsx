@@ -62,7 +62,7 @@ export function CompanyManagement({
   onBack,
   onCompanyCreated,
 }: CompanyManagementProps) {
-  const { companies, loading, createCompany, deleteCompany, generateLink, loadCompanies } =
+  const { companies, loading, createCompany, updateCompany, deleteCompany, generateLink, loadCompanies } =
     useCompanyManagement();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -238,7 +238,7 @@ export function CompanyManagement({
         variation_set_id: null,
       });
       // Refresh companies list
-      window.location.reload();
+      loadCompanies(!showInactive);
     } catch (error: any) {
       toast.error(error.message || "Failed to update company");
     }
@@ -256,7 +256,7 @@ export function CompanyManagement({
           : "Company deactivated - survey link disabled"
       );
       // Refresh companies list
-      window.location.reload();
+      loadCompanies(!showInactive);
     } catch (error: any) {
       toast.error(error.message || "Failed to toggle company status");
     }
@@ -265,7 +265,7 @@ export function CompanyManagement({
   const handleToggleVariations = async (company: any, enable: boolean) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/variations/companies/${company.id}/toggle`,
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/variations/companies/${company.id}/toggle`,
         {
           method: 'POST',
           headers: {
@@ -281,9 +281,11 @@ export function CompanyManagement({
 
       if (response.ok) {
         toast.success(`Variations ${enable ? 'enabled' : 'disabled'} successfully`);
-        window.location.reload();
+        // Use updateCompany to update local state immediately
+        await updateCompany(company.id, { enable_variations: enable });
       } else {
-        toast.error('Failed to update variation settings');
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.detail || 'Failed to update variation settings');
       }
     } catch (error: any) {
       toast.error(error.message || 'Failed to update variation settings');
