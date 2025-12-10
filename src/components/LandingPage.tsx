@@ -121,7 +121,7 @@ export function LandingPage({ onStartSurvey, onAdminAccess, onLogin, onLogout, u
           <Card className="border-none shadow-lg">
             <CardHeader className="text-center">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <ChartLine className="w-6 h-6 text-primary" />
+                <ChartLine className="w-6 h-6 text-golden" />
               </div>
               <CardTitle className="text-lg">{t('transparent_scoring')}</CardTitle>
             </CardHeader>
@@ -135,7 +135,7 @@ export function LandingPage({ onStartSurvey, onAdminAccess, onLogin, onLogout, u
           <Card className="border-none shadow-lg">
             <CardHeader className="text-center">
               <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-6 h-6 text-accent" />
+                <Shield className="w-6 h-6 text-golden" />
               </div>
               <CardTitle className="text-lg">{t('privacy_protected')}</CardTitle>
             </CardHeader>
@@ -149,7 +149,7 @@ export function LandingPage({ onStartSurvey, onAdminAccess, onLogin, onLogout, u
           <Card className="border-none shadow-lg">
             <CardHeader className="text-center">
               <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-green-500" />
+                <Users className="w-6 h-6 text-golden" />
               </div>
               <CardTitle className="text-lg">{t('personalized_insights')}</CardTitle>
             </CardHeader>
@@ -163,7 +163,7 @@ export function LandingPage({ onStartSurvey, onAdminAccess, onLogin, onLogout, u
           <Card className="border-none shadow-lg">
             <CardHeader className="text-center">
               <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <FileText className="w-6 h-6 text-blue-500" />
+                <FileText className="w-6 h-6 text-golden" />
               </div>
               <CardTitle className="text-lg">{t('progress_tracking')}</CardTitle>
             </CardHeader>
