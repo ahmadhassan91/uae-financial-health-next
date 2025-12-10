@@ -403,7 +403,7 @@ export const adminApi = {
     return companies.map((item: any) => ({
       company: item.company_name || item.company || "Unknown",
       total_submissions: item.total_responses || 0,
-      average_score: item.avg_score || 0,
+      average_score: item.average_score || item.avg_score || 0,
       excellent: item.excellent_count || 0,
       good: item.good_count || 0,
       needs_improvement: item.needs_improvement_count || 0,
