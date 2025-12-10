@@ -440,6 +440,7 @@ export function FinancialClinicAdminDashboard({
               dateParams={dateParams}
               onDateParamsChange={setDateParams}
               availableOptions={availableOptions}
+              loading={loading}
             />
           </div>
         </aside>
@@ -568,6 +569,16 @@ export function FinancialClinicAdminDashboard({
                 </div>
               </div>
             </div>
+
+            {/* Loading Banner - shown when filters are being applied */}
+            {loading && overviewMetrics && (
+              <div className="mb-4 p-3 bg-primary/10 border border-primary/20 rounded-lg flex items-center gap-3">
+                <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                <span className="text-sm text-primary font-medium">
+                  Updating dashboard with new filters...
+                </span>
+              </div>
+            )}
 
             {/* Tabs */}
             <Tabs

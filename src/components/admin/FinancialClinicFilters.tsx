@@ -13,7 +13,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { CalendarIcon, X, Funnel } from "lucide-react";
+import { CalendarIcon, X, Funnel, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import {
   DemographicFilters,
@@ -27,6 +27,7 @@ interface FinancialClinicFiltersProps {
   dateParams: DateRangeParams;
   onDateParamsChange: (params: DateRangeParams) => void;
   availableOptions: FilterOptions | null;
+  loading?: boolean;
 }
 
 const DATE_RANGE_PRESETS = [
@@ -45,6 +46,7 @@ export function FinancialClinicFilters({
   dateParams,
   onDateParamsChange,
   availableOptions,
+  loading = false,
 }: FinancialClinicFiltersProps) {
   const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
   const [startDate, setStartDate] = useState<Date | undefined>();
@@ -125,7 +127,17 @@ export function FinancialClinicFilters({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative">
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
+          <div className="flex flex-col items-center gap-2">
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            <span className="text-sm text-muted-foreground">Applying filters...</span>
+          </div>
+        </div>
+      )}
+      
       {/* Date Range Selector */}
       <Card>
         <CardHeader className="pb-3">
