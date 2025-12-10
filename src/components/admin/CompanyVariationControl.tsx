@@ -32,7 +32,7 @@ export function CompanyVariationControl() {
     try {
       const token = localStorage.getItem('admin_access_token');
       const response = await fetch(
-        'https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1/admin/variations/companies',
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/variations/companies`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ export function CompanyVariationControl() {
     try {
       const token = localStorage.getItem('admin_access_token');
       const response = await fetch(
-        `https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1/admin/variations/companies/${companyId}/toggle`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/variations/companies/${companyId}/toggle`,
         {
           method: 'POST',
           headers: {

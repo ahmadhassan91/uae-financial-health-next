@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -19,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -29,14 +31,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Building2,
   Plus,
@@ -66,17 +62,22 @@ export function CompanyManagement({
   onBack,
   onCompanyCreated,
 }: CompanyManagementProps) {
-  const { companies, loading, createCompany, deleteCompany, generateLink } =
+  const { companies, loading, createCompany, deleteCompany, generateLink, loadCompanies } =
     useCompanyManagement();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [editingCompany, setEditingCompany] = useState<any>(null);
+  const [showInactive, setShowInactive] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<string>("");
   const [showQRPreview, setShowQRPreview] = useState(false);
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const qrCodeInstance = useRef<any>(null);
+
+  useEffect(() => {
+    loadCompanies(!showInactive);
+  }, [showInactive, loadCompanies]);
 
   const [newCompany, setNewCompany] = useState({
     company_name: "",
@@ -258,6 +259,34 @@ export function CompanyManagement({
       window.location.reload();
     } catch (error: any) {
       toast.error(error.message || "Failed to toggle company status");
+    }
+  };
+
+  const handleToggleVariations = async (company: any, enable: boolean) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/variations/companies/${company.id}/toggle`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('admin_access_token')}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            enable_variations: enable,
+            reason: enable ? 'Admin enabled variations' : 'Admin disabled variations'
+          }),
+        }
+      );
+
+      if (response.ok) {
+        toast.success(`Variations ${enable ? 'enabled' : 'disabled'} successfully`);
+        window.location.reload();
+      } else {
+        toast.error('Failed to update variation settings');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update variation settings');
     }
   };
 
@@ -606,6 +635,35 @@ export function CompanyManagement({
         </DialogContent>
       </Dialog>
 
+      {/* Variations Info */}
+      <Alert>
+        <AlertDescription>
+          <strong>Variations Control:</strong> Toggle variations to enable/disable custom questions for each company. 
+          When disabled, companies will see default questions regardless of assigned variation sets.
+        </AlertDescription>
+      </Alert>
+
+      {/* Filter Controls */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium">Company Filter</h3>
+              <p className="text-sm text-muted-foreground">
+                Show {showInactive ? "all companies" : "active companies only"}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm">Active Only</span>
+              <Switch
+                checked={!showInactive}
+                onCheckedChange={(checked) => setShowInactive(!checked)}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
@@ -702,6 +760,7 @@ export function CompanyManagement({
                   <TableHead>Link</TableHead>
                   <TableHead>Question Set</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Variations</TableHead>
                   <TableHead>Assessments</TableHead>
                   <TableHead>Avg Score</TableHead>
                   <TableHead>Actions</TableHead>
@@ -761,6 +820,19 @@ export function CompanyManagement({
                       >
                         {company.is_active ? "Active" : "Inactive"}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={company.enable_variations ? "default" : "secondary"}>
+                          {company.enable_variations ? "Enabled" : "Disabled"}
+                        </Badge>
+                        <Switch
+                          checked={company.enable_variations || false}
+                          onCheckedChange={(checked) => 
+                            handleToggleVariations(company, checked)
+                          }
+                        />
+                      </div>
                     </TableCell>
                     <TableCell>{company.total_assessments}</TableCell>
                     <TableCell>

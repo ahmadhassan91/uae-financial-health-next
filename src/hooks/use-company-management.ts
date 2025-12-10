@@ -18,6 +18,10 @@ interface Company {
   question_variation_mapping?: Record<string, number>;
   created_at: string;
   updated_at?: string;
+  enable_variations?: boolean;
+  variation_set_id?: number | null;
+  variations_enabled_at?: string | null;
+  variations_enabled_by?: number | null;
 }
 
 interface CompanyLink {
@@ -32,12 +36,12 @@ export function useCompanyManagement() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadCompanies = useCallback(async () => {
+  const loadCompanies = useCallback(async (activeOnly: boolean = true) => {
     try {
       setLoading(true);
       setError(null);
       
-      const companiesData = await apiClient.getCompanies();
+      const companiesData = await apiClient.getCompanies(0, 100, activeOnly);
       setCompanies(companiesData);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load companies';

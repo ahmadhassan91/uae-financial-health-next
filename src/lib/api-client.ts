@@ -634,8 +634,8 @@ class ApiClient {
   }
 
   // Company management endpoints (Admin only)
-  async getCompanies(skip: number = 0, limit: number = 100): Promise<any[]> {
-    return this.request(`/companies/?skip=${skip}&limit=${limit}`);
+  async getCompanies(skip: number = 0, limit: number = 100, activeOnly: boolean = true): Promise<any[]> {
+    return this.request(`/companies/?skip=${skip}&limit=${limit}&active_only=${activeOnly}`);
   }
 
   async createCompany(companyData: {
