@@ -69,7 +69,7 @@ export function FinancialClinicSurvey({
     // Add small delay to ensure content is fully rendered before scrolling
     // This is especially important on mobile for questions with more complex layouts
     const scrollTimer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }, 100);
 
     return () => clearTimeout(scrollTimer);
@@ -233,7 +233,7 @@ export function FinancialClinicSurvey({
       <main className="flex-1 flex flex-col items-center px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-8 lg:py-12">
         {/* Title Section */}
         <div className="flex flex-col items-center gap-1.5 mb-4 md:mb-6 lg:mb-8">
-          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
+          <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#5E5E5E] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
             {language === "ar" ? "صفحة الفحص" : "Checkup Page"}
           </h1>
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
@@ -266,11 +266,11 @@ export function FinancialClinicSurvey({
               <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6">
                 {language === "ar"
                   ? `لقد أجَبْتم عن %${Math.round(
-                    progress
-                  )} من أسئلة التقييم - تقدّم ممتاز`
+                      progress
+                    )} من أسئلة التقييم - تقدّم ممتاز`
                   : `You're ${Math.round(
-                    progress
-                  )}% through your checkup—great progress!`}
+                      progress
+                    )}% through your checkup—great progress!`}
               </p>
             </div>
           </div>
@@ -280,8 +280,9 @@ export function FinancialClinicSurvey({
         {currentCategoryQuestions.length > 0 && (
           <div className="w-full max-w-[1380px] px-1 sm:px-2">
             <h2
-              className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${isRTL ? "flex-row-reverse" : "flex-row"
-                }`}
+              className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${
+                isRTL ? "flex-row-reverse" : "flex-row"
+              }`}
             >
               {language === "ar" ? "فئة الأسئلة: " : "Questions Category: "}
               {getCategoryDisplay(currentCategory)}
@@ -301,8 +302,8 @@ export function FinancialClinicSurvey({
                   >
                     <CardContent className="flex flex-col sm:flex-row items-start gap-3 md:gap-4 lg:gap-6 p-3 sm:p-4 md:p-5 lg:p-8">
                       {/* Question Number Circle - Golden accent */}
-                      <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#bd912e]/20 border-2 border-[#bd912e] rounded-[100px] flex-shrink-0 self-center sm:self-start">
-                        <div className="font-[family-name:var(--font-poppins)] font-semibold text-[#bd912e] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
+                      <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#64717C]/20 border-2 rounded-[100px] flex-shrink-0 self-center sm:self-start">
+                        <div className="font-[family-name:var(--font-poppins)] font-semibold text-[#64717C] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
                           {question.number}
                         </div>
                       </div>
@@ -310,8 +311,9 @@ export function FinancialClinicSurvey({
                       {/* Question Content */}
                       <div className="flex flex-col items-start gap-2 flex-1 w-full min-w-0">
                         <h3
-                          className={`font-[family-name:var(--font-poppins)] font-semibold text-[#575757] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${isRTL ? "text-right" : "text-left"
-                            }`}
+                          className={`font-[family-name:var(--font-poppins)] font-semibold text-[#575757] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${
+                            isRTL ? "text-right" : "text-left"
+                          }`}
                         >
                           {questionText}
                         </h3>
@@ -338,8 +340,9 @@ export function FinancialClinicSurvey({
                             return (
                               <div
                                 key={option.value}
-                                className={`flex items-start gap-2.5 md:gap-3 ${isRTL ? "flex-row-reverse" : "flex-row"
-                                  } min-h-[24px]`}
+                                className={`flex items-start gap-2.5 md:gap-3 ${
+                                  isRTL ? "flex-row-reverse" : "flex-row"
+                                } min-h-[24px]`}
                                 style={{
                                   display: "flex",
                                   justifyContent: "end",
@@ -352,16 +355,17 @@ export function FinancialClinicSurvey({
                                 />
                                 <Label
                                   htmlFor={`${question.id}-${option.value}`}
-                                  className={`font-[family-name:var(--font-poppins)] font-normal text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 cursor-pointer flex-1 min-w-0 break-words ${isSelected
-                                    ? "text-[#575757]"
-                                    : "text-[#575757]"
-                                    } ${isRTL ? "text-right" : "text-left"}`}
+                                  className={`font-[family-name:var(--font-poppins)] font-normal text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 cursor-pointer flex-1 min-w-0 break-words ${
+                                    isSelected
+                                      ? "text-[#575757]"
+                                      : "text-[#575757]"
+                                  } ${isRTL ? "text-right" : "text-left"}`}
                                   style={
                                     isRTL
                                       ? {
-                                        display: "flex",
-                                        justifyContent: "end",
-                                      }
+                                          display: "flex",
+                                          justifyContent: "end",
+                                        }
                                       : undefined
                                   }
                                 >
@@ -382,9 +386,12 @@ export function FinancialClinicSurvey({
 
         {/* Navigation Buttons */}
         <div
-          className={`flex flex-col sm:flex-row ${currentStep > 0 ? "sm:justify-between" : "sm:justify-end"
-            } items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${isRTL ? "flex-row-reverse" : "flex-row"
-            }`}
+          className={`flex flex-col sm:flex-row ${
+            currentStep > 0 ? "sm:justify-between" : "sm:justify-end"
+          } items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${
+            isRTL ? "flex-row-reverse" : "flex-row"
+          }`}
+          style={{ display: "flex", justifyContent: "center" }}
         >
           {/* Previous Button - Only show if not on first category */}
           {currentStep > 0 && (
@@ -394,7 +401,7 @@ export function FinancialClinicSurvey({
               className="h-auto border-[#c2d1d9] text-[#767f87] hover:bg-[#f8fbfd] hover:text-[#505d68] hover:border-[#a1aeb7] px-4 md:px-6 lg:px-7 py-3 sm:py-2 md:py-2.5 w-full sm:w-auto min-w-0 flex-1 sm:flex-initial transition-colors"
             >
               <span className="font-[family-name:var(--font-poppins)] font-normal text-xs md:text-sm text-center tracking-[0] leading-[18px] truncate">
-                {language === "ar" ? "الفئة السابقة" : "PREVIOUS"}
+                {language === "ar" ? "الفئة السابقة" : "PREVIOUS QUESTIONS"}
               </span>
             </Button>
           )}
@@ -403,7 +410,7 @@ export function FinancialClinicSurvey({
           <Button
             onClick={handleNext}
             disabled={!allCurrentQuestionsAnswered}
-            className="h-auto bg-[#3fab4c] hover:bg-[#3fab4c]/90 px-4 md:px-6 lg:px-7 py-3 sm:py-2 md:py-2.5 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto min-w-0 flex-1 sm:flex-initial order-first sm:order-last"
+            className="h-auto bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 px-4 md:px-6 lg:px-7 py-3 sm:py-2 md:py-2.5 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto min-w-0 flex-1 sm:flex-initial order-first sm:order-last"
           >
             <span className="font-[family-name:var(--font-poppins)] font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px] truncate">
               {isLastCategory
@@ -411,8 +418,8 @@ export function FinancialClinicSurvey({
                   ? "إكمال التقييم"
                   : "COMPLETE"
                 : language === "ar"
-                  ? "الفئة التالية"
-                  : "NEXT"}
+                ? "الفئة التالية"
+                : "NEXT QUESTIONS"}
             </span>
           </Button>
         </div>

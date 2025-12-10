@@ -140,7 +140,7 @@ export function FinancialClinicResults({
         {/* Hero Section */}
         <div className="flex flex-col items-center gap-3 md:gap-4 lg:gap-[22px] w-full">
           <div className="inline-flex flex-col items-center gap-1.5 px-4">
-            <h1 className="font-semibold text-[#437749] text-2xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight md:leading-[38px] text-center">
+            <h1 className="font-semibold text-[#5E5E5E] text-2xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight md:leading-[38px] text-center">
               {language === "ar"
                 ? "إليك درجة صحتك المالية!"
                 : "Here's your Financial Health Score!"}
@@ -268,7 +268,7 @@ export function FinancialClinicResults({
         {/* Financial Pillar Scores */}
         <div className="flex flex-col items-start gap-8 md:gap-[60px] w-full">
           <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
-            <h2 className="font-semibold text-[#424b5a] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
+            <h2 className="font-semibold text-[#5E5E5E] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
               {language === "ar"
                 ? "درجات الركائز المالية"
                 : "Financial Pillar Scores"}
@@ -354,7 +354,7 @@ export function FinancialClinicResults({
 
         {/* Your Personalized Action Plan */}
         <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
-          <h2 className="font-semibold text-[#424b5a] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
+          <h2 className="font-semibold text-[#5E5E5E] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
             {language === "ar"
               ? "خطة العمل المعدّة خصيصاً لكم"
               : "Your Personalized Action Plan"}
@@ -368,7 +368,7 @@ export function FinancialClinicResults({
         </div>
 
         <div className="flex flex-col w-full max-w-[948px] items-start gap-3 md:gap-3.5 px-4">
-          <h3 className="font-semibold text-[#424b5a] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
+          <h3 className="font-semibold text-[#5E5E5E] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
             {language === "ar"
               ? "فئات التوصيات:"
               : "Recommendation Categories:"}
@@ -424,10 +424,10 @@ export function FinancialClinicResults({
         </div>
 
         {/* Main Action Buttons - Design Spec */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 lg:gap-8 flex-wrap justify-center px-4 w-full max-w-[900px]">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]">
           <Button
             onClick={() => setIsConsultationModalOpen(true)}
-            className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 h-auto w-full md:w-auto"
+            className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"
           >
             <span className="font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px]">
               {language === "ar"
@@ -438,7 +438,7 @@ export function FinancialClinicResults({
 
           <Button
             onClick={handleNationalBondsClick}
-            className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 h-auto w-full md:w-auto"
+            className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"
           >
             <span className="font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px]">
               {language === "ar"
@@ -450,7 +450,7 @@ export function FinancialClinicResults({
           {onDownloadPDF && (
             <Button
               onClick={onDownloadPDF}
-              className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#3fab4c] hover:bg-[#3fab4c]/90 h-auto w-full md:w-auto"
+              className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"
             >
               <span className="font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px]">
                 {language === "ar"
@@ -467,7 +467,7 @@ export function FinancialClinicResults({
             <Button
               onClick={onEmailReport}
               variant="outline"
-              className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
+              className="gap-2 border-[#5E5E5E] text-[#5E5E5E] hover:bg-[#5E5E5E] hover:text-white w-full md:w-auto text-sm"
             >
               {language === "ar"
                 ? "إرسال التقرير بالبريد الإلكتروني"
@@ -478,7 +478,7 @@ export function FinancialClinicResults({
           <Button
             onClick={handleSaveOrHistory}
             variant="outline"
-            className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
+            className="gap-2 border-[#5E5E5E] text-[#5E5E5E] hover:bg-[#5E5E5E] hover:text-white w-full md:w-auto text-sm"
           >
             {isLoggedIn
               ? language === "ar"
@@ -493,7 +493,7 @@ export function FinancialClinicResults({
             <Button
               onClick={onRetake}
               variant="outline"
-              className="gap-2 border-[#3fab4c] text-[#3fab4c] hover:bg-[#3fab4c] hover:text-white w-full md:w-auto text-sm"
+              className="gap-2 border-[#5E5E5E] text-[#5E5E5E] hover:bg-[#5E5E5E] hover:text-white w-full md:w-auto text-sm"
             >
               {language === "ar" ? "إعادة التقييم" : "Retake Assessment"}
             </Button>
