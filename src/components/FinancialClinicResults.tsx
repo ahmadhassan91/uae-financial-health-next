@@ -47,12 +47,12 @@ export function FinancialClinicResults({
 
   const getCategoryTranslation = (category: string): string => {
     const categoryMap: Record<string, { en: string; ar: string }> = {
-      "Income Stream": { en: "Income Stream", ar: "تدفق الدخل" },
+      "Income Stream": { en: "Income Stream", ar: "موارد الدخل" },
       "Monthly Expenses Management": {
         en: "Monthly Expenses Management",
         ar: "إدارة النفقات الشهرية",
       },
-      "Savings Habit": { en: "Saving Habits", ar: "عادات الادخار" },
+      "Savings Habit": { en: "Saving Habits", ar: "السلوك الادخاري" },
       "Emergency Savings": { en: "Emergency Savings", ar: "مدخرات الطوارئ" },
       "Debt Management": { en: "Debt Management", ar: "إدارة الديون" },
       "Retirement Planning": {
@@ -61,7 +61,7 @@ export function FinancialClinicResults({
       },
       "Protecting Your Assets | Loved Ones": {
         en: "Protecting Your Assets | Loved Ones",
-        ar: "حماية أصولك | أحبائك",
+        ar: "حماية عائلتك| أحبائك",
       },
       "Planning for Your Future | Siblings": {
         en: "Planning for Your Future | Siblings",
@@ -132,7 +132,7 @@ export function FinancialClinicResults({
 
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "هذه لمحة عن وضعكم، عرضٌ واضح لمدى صحّة أوضاعكم المالية اليوم."
+                ? ""
                 : "This is your snapshot; a clear view of how healthy your finances are today."}
             </p>
           </div>
@@ -140,13 +140,13 @@ export function FinancialClinicResults({
           <div className="flex flex-col items-center justify-center gap-1 md:gap-[3px] w-full px-4">
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "يعكس هذا التقييم أداءكم في خمسة مجالات رئيسية."
+                ? "تشير نتيجتكم إلى مستوى أدائكم في الجوانب الرئيسية."
                 : "Your score reflects how you're doing across key areas."}
             </p>
 
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "استمرّوا في تحسين سلوكياتكم، وستلاحظون تحسّن جودة حياتكم المالية مع الوقت"
+                ? "تابعوا تحسين سلوكيّاتكم المالية لتتعزّز جودة حياتكم المالية تدريجياً مع الوقت."
                 : "Keep improving your habits, and your financial wellbeing will grow stronger over time."}
             </p>
           </div>
