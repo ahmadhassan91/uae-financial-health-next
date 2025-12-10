@@ -313,7 +313,7 @@ export function FinancialClinicAdminDashboard({
     setChangingPassword(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/change-password`,
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/simple/change-password`,
         {
           method: "POST",
           headers: {
@@ -323,6 +323,7 @@ export function FinancialClinicAdminDashboard({
           body: JSON.stringify({
             current_password: passwordData.currentPassword,
             new_password: passwordData.newPassword,
+            confirm_new_password: passwordData.confirmPassword,
           }),
         }
       );
