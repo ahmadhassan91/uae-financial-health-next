@@ -68,7 +68,7 @@ export function FinancialClinicResults({
         en: "Monthly Expenses Management",
         ar: "إدارة النفقات الشهرية",
       },
-      "Savings Habit": { en: "Savings Habit", ar: "السلوك الادخاري" },
+      "Savings Habit": { en: "Saving Habits", ar: "السلوك الادخاري" },
       "Emergency Savings": { en: "Emergency Savings", ar: "مدخرات الطوارئ" },
       "Debt Management": { en: "Debt Management", ar: "إدارة الديون" },
       "Retirement Planning": {
@@ -77,7 +77,7 @@ export function FinancialClinicResults({
       },
       "Protecting Your Assets | Loved Ones": {
         en: "Protecting Your Assets | Loved Ones",
-        ar: "حماية أصولك | أحبائك",
+        ar: "حماية عائلتك| أحبائك",
       },
       "Planning for Your Future | Siblings": {
         en: "Planning for Your Future | Siblings",
@@ -148,7 +148,7 @@ export function FinancialClinicResults({
 
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "هذه لمحة عن وضعكم، عرضٌ واضح لمدى صحّة أوضاعكم المالية اليوم."
+                ? ""
                 : "This is your snapshot; a clear view of how healthy your finances are today."}
             </p>
           </div>
