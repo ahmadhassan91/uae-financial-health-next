@@ -32,14 +32,24 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+interface CategoryScore {
+  score: number;
+  max_possible: number;
+  percentage: number;
+  status_level: string;
+}
+
 interface FinancialClinicResponse {
   id: number;
   overall_score: number;
-  budgeting_score: number;
-  savings_score: number;
-  debt_management_score: number;
-  financial_planning_score: number;
-  investment_knowledge_score: number;
+  category_scores: {
+    "Income Stream": CategoryScore;
+    "Savings Habit": CategoryScore;
+    "Emergency Savings": CategoryScore;
+    "Debt Management": CategoryScore;
+    "Retirement Planning": CategoryScore;
+    "Protecting Your Family": CategoryScore;
+  };
   risk_tolerance: string;
   created_at: string;
   completion_time?: string;
@@ -59,6 +69,19 @@ export function FinancialClinicScoreHistory({
   userEmail,
 }: FinancialClinicScoreHistoryProps) {
   const router = useRouter();
+
+  // Helper function to safely get category score percentage
+  const getCategoryPercentage = (
+    response: FinancialClinicResponse,
+    categoryName: string
+  ): number => {
+    if (!response.category_scores) return 0;
+    const categoryScore =
+      response.category_scores[
+        categoryName as keyof typeof response.category_scores
+      ];
+    return categoryScore?.percentage || 0;
+  };
 
   if (!scoreHistory || scoreHistory.length === 0) {
     return (
@@ -86,6 +109,22 @@ export function FinancialClinicScoreHistory({
     ? latestScore.overall_score - previousScore.overall_score
     : 0;
 
+  console.log("=== Score History Debug ===");
+  console.log("latestScore:", latestScore);
+  console.log("latestScore.category_scores:", latestScore.category_scores);
+  console.log("previousScore:", previousScore);
+
+  // Check if category_scores exists and has data
+  if (
+    !latestScore.category_scores ||
+    Object.keys(latestScore.category_scores).length === 0
+  ) {
+    console.warn("⚠️ WARNING: category_scores is missing or empty!");
+    console.warn(
+      "This might be old localStorage data. Try taking a new assessment."
+    );
+  }
+
   // Prepare data for line chart (latest on the right)
   const chartData = scoreHistory
     .slice(0, 10) // Show last 10 scores
@@ -100,36 +139,36 @@ export function FinancialClinicScoreHistory({
       };
     });
 
-  // Prepare histogram data for latest score using available fields
+  // Prepare histogram data for latest score using category scores from API
   const histogramData = [
     {
       factor: "Income Stream",
-      score: latestScore.budgeting_score || 0,
+      score: getCategoryPercentage(latestScore, "Income Stream"),
       fullMark: 100,
     },
     {
-      factor: "Saving Habits",
-      score: latestScore.savings_score || 0,
+      factor: "Savings Habit",
+      score: getCategoryPercentage(latestScore, "Savings Habit"),
       fullMark: 100,
     },
     {
       factor: "Emergency Savings",
-      score: latestScore.debt_management_score || 0,
+      score: getCategoryPercentage(latestScore, "Emergency Savings"),
       fullMark: 100,
     },
     {
       factor: "Debt Management",
-      score: latestScore.financial_planning_score || 0,
+      score: getCategoryPercentage(latestScore, "Debt Management"),
       fullMark: 100,
     },
     {
       factor: "Retirement Planning",
-      score: latestScore.investment_knowledge_score || 0,
+      score: getCategoryPercentage(latestScore, "Retirement Planning"),
       fullMark: 100,
     },
     {
-      factor: "Family Protection",
-      score: 0,
+      factor: "Protecting Your Family",
+      score: getCategoryPercentage(latestScore, "Protecting Your Family"),
       fullMark: 100,
     },
   ];
@@ -137,62 +176,72 @@ export function FinancialClinicScoreHistory({
   // Calculate average scores across all assessments for comparison
   const averageScores = {
     incomeStream:
-      scoreHistory.reduce((sum, s) => sum + (s.budgeting_score || 0), 0) /
-      scoreHistory.length,
+      scoreHistory.reduce(
+        (sum, s) => sum + getCategoryPercentage(s, "Income Stream"),
+        0
+      ) / scoreHistory.length,
     savingHabits:
-      scoreHistory.reduce((sum, s) => sum + (s.savings_score || 0), 0) /
-      scoreHistory.length,
+      scoreHistory.reduce(
+        (sum, s) => sum + getCategoryPercentage(s, "Savings Habit"),
+        0
+      ) / scoreHistory.length,
     emergencySavings:
-      scoreHistory.reduce((sum, s) => sum + (s.debt_management_score || 0), 0) /
-      scoreHistory.length,
+      scoreHistory.reduce(
+        (sum, s) => sum + getCategoryPercentage(s, "Emergency Savings"),
+        0
+      ) / scoreHistory.length,
     debtManagement:
       scoreHistory.reduce(
-        (sum, s) => sum + (s.financial_planning_score || 0),
+        (sum, s) => sum + getCategoryPercentage(s, "Debt Management"),
         0
       ) / scoreHistory.length,
     retirementPlanning:
       scoreHistory.reduce(
-        (sum, s) => sum + (s.investment_knowledge_score || 0),
+        (sum, s) => sum + getCategoryPercentage(s, "Retirement Planning"),
         0
       ) / scoreHistory.length,
-    familyProtection: 0,
+    familyProtection:
+      scoreHistory.reduce(
+        (sum, s) => sum + getCategoryPercentage(s, "Protecting Your Family"),
+        0
+      ) / scoreHistory.length,
   };
 
   // Add average scores to histogram data
   const histogramDataWithAverage = [
     {
       factor: "Income Stream",
-      score: latestScore.budgeting_score || 0,
+      score: getCategoryPercentage(latestScore, "Income Stream"),
       average: averageScores.incomeStream,
       fullMark: 100,
     },
     {
-      factor: "Saving Habits",
-      score: latestScore.savings_score || 0,
+      factor: "Savings Habit",
+      score: getCategoryPercentage(latestScore, "Savings Habit"),
       average: averageScores.savingHabits,
       fullMark: 100,
     },
     {
       factor: "Emergency Savings",
-      score: latestScore.debt_management_score || 0,
+      score: getCategoryPercentage(latestScore, "Emergency Savings"),
       average: averageScores.emergencySavings,
       fullMark: 100,
     },
     {
       factor: "Debt Management",
-      score: latestScore.financial_planning_score || 0,
+      score: getCategoryPercentage(latestScore, "Debt Management"),
       average: averageScores.debtManagement,
       fullMark: 100,
     },
     {
       factor: "Retirement Planning",
-      score: latestScore.investment_knowledge_score || 0,
+      score: getCategoryPercentage(latestScore, "Retirement Planning"),
       average: averageScores.retirementPlanning,
       fullMark: 100,
     },
     {
-      factor: "Family Protection",
-      score: 0,
+      factor: "Protecting Your Family",
+      score: getCategoryPercentage(latestScore, "Protecting Your Family"),
       average: averageScores.familyProtection,
       fullMark: 100,
     },

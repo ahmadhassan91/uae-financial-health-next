@@ -11,18 +11,17 @@ import { getApiUrl, API } from "@/lib/api-config";
 
 interface CategoryScore {
   score: number;
-  max_score: number;
+  max_possible: number;
   percentage: number;
+  status_level: string;
 }
 
 interface AssessmentHistory {
   id: number;
-  total_score: number;
-  status_band: string;
-  status_level: number;
-  created_at: string;
+  overall_score: number;
   category_scores: Record<string, CategoryScore>;
-  questions_answered: number;
+  risk_tolerance: string;
+  created_at: string;
 }
 
 export default function FinancialClinicHistoryPage() {
@@ -79,23 +78,11 @@ export default function FinancialClinicHistoryPage() {
           // Handle both array response and empty data
           const dataArray = Array.isArray(data) ? data : [];
 
-          const transformedData = dataArray.map((item: AssessmentHistory) => {
-            const categoryScores = item.category_scores || {};
-
+          const transformedData = dataArray.map((item: any) => {
             return {
               id: item.id,
               overall_score: item.total_score || 0,
-              // Map Financial Clinic categories to component fields
-              budgeting_score: categoryScores["Income Stream"]?.score || 0,
-              savings_score:
-                (categoryScores["Savings Habit"]?.score || 0) +
-                (categoryScores["Emergency Savings"]?.score || 0),
-              debt_management_score:
-                categoryScores["Debt Management"]?.score || 0,
-              financial_planning_score:
-                categoryScores["Retirement Planning"]?.score || 0,
-              investment_knowledge_score:
-                categoryScores["Protecting Your Family"]?.score || 0,
+              category_scores: item.category_scores || {},
               risk_tolerance: item.status_band || "Unknown",
               created_at: item.created_at,
             };
@@ -115,16 +102,7 @@ export default function FinancialClinicHistoryPage() {
               const currentAssessment = {
                 id: Date.now(), // Use timestamp as temporary ID
                 overall_score: result.total_score || 0,
-                budgeting_score: categoryScores["Income Stream"]?.score || 0,
-                savings_score:
-                  (categoryScores["Savings Habit"]?.score || 0) +
-                  (categoryScores["Emergency Savings"]?.score || 0),
-                debt_management_score:
-                  categoryScores["Debt Management"]?.score || 0,
-                financial_planning_score:
-                  categoryScores["Retirement Planning"]?.score || 0,
-                investment_knowledge_score:
-                  categoryScores["Protecting Your Family"]?.score || 0,
+                category_scores: result.category_scores || {},
                 risk_tolerance: result.status_band || "Unknown",
                 created_at: new Date().toISOString(),
               };
@@ -158,22 +136,10 @@ export default function FinancialClinicHistoryPage() {
                   const dataArray = Array.isArray(data) ? data : [];
 
                   const transformedData = dataArray.map((item: any) => {
-                    const categoryScores = item.category_scores || {};
-
                     return {
                       id: item.id,
                       overall_score: item.total_score || 0,
-                      budgeting_score:
-                        categoryScores["Income Stream"]?.score || 0,
-                      savings_score:
-                        (categoryScores["Savings Habit"]?.score || 0) +
-                        (categoryScores["Emergency Savings"]?.score || 0),
-                      debt_management_score:
-                        categoryScores["Debt Management"]?.score || 0,
-                      financial_planning_score:
-                        categoryScores["Retirement Planning"]?.score || 0,
-                      investment_knowledge_score:
-                        categoryScores["Protecting Your Family"]?.score || 0,
+                      category_scores: item.category_scores || {},
                       risk_tolerance: item.status_band || "Unknown",
                       created_at: item.created_at,
                     };
