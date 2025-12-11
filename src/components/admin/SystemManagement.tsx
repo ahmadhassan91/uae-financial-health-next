@@ -31,13 +31,13 @@ export function SystemManagement() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="questions">Question Variations</TabsTrigger>
           <TabsTrigger value="sets">Variation Sets</TabsTrigger>
-          {/* <TabsTrigger value="rules">Demographic Rules</TabsTrigger> */}
-          {/* <TabsTrigger value="localization">Localization</TabsTrigger> */}
+          {/* <TabsTrigger value="rules">Demographic Rules</TabsTrigger> */
+          {/* <TabsTrigger value="localization">Localization</TabsTrigger> */
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Question Variations Overview */}
+            {/* Question Variations Overview */
             <Card className="cursor-pointer hover:shadow-md transition-shadow" 
                   onClick={() => setSelectedTab('questions')}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -55,7 +55,7 @@ export function SystemManagement() {
               </CardContent>
             </Card>
 
-            {/* Variation Sets Overview */}
+            {/* Variation Sets Overview */
             <Card className="cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => setSelectedTab('sets')}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -73,7 +73,7 @@ export function SystemManagement() {
               </CardContent>
             </Card>
 
-            {/* Demographic Rules Overview - HIDDEN */}
+            {/* Demographic Rules Overview - HIDDEN */
             {/* <Card className="cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => setSelectedTab('rules')}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -89,9 +89,9 @@ export function SystemManagement() {
                   <Badge variant="secondary">92% effectiveness</Badge>
                 </div>
               </CardContent>
-            </Card> */}
+            </Card> */
 
-            {/* Localization Overview - HIDDEN */}
+            {/* Localization Overview - HIDDEN */
             {/* <Card className="cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => setSelectedTab('localization')}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -107,9 +107,9 @@ export function SystemManagement() {
                   <Badge variant="secondary">78% coverage</Badge>
                 </div>
               </CardContent>
-            </Card> */}
+            </Card> */
 
-            {/* HIDDEN: System Health - Static data, not needed at this time */}
+            {/* HIDDEN: System Health - Static data, not needed at this time */
             {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">System Health</CardTitle>
@@ -124,9 +124,9 @@ export function SystemManagement() {
                   <Badge variant="default">99.9% uptime</Badge>
                 </div>
               </CardContent>
-            </Card> */}
+            </Card> */
 
-            {/* HIDDEN: Performance Metrics - Static data, not needed at this time */}
+            {/* HIDDEN: Performance Metrics - Static data, not needed at this time */
             {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Performance</CardTitle>
@@ -141,9 +141,9 @@ export function SystemManagement() {
                   <Badge variant="secondary">95% cache hit</Badge>
                 </div>
               </CardContent>
-            </Card> */}
+            </Card> */
 
-            {/* HIDDEN: User Engagement - Static data, not needed at this time */}
+            {/* HIDDEN: User Engagement - Static data, not needed at this time */
             {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">User Engagement</CardTitle>
@@ -158,10 +158,10 @@ export function SystemManagement() {
                   <Badge variant="secondary">+23% this month</Badge>
                 </div>
               </CardContent>
-            </Card> */}
+            </Card> */
           </div>
 
-          {/* Feature Status Cards */}
+          {/* Feature Status Cards */
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -272,7 +272,7 @@ export function SystemManagement() {
                 </div>
               </CardContent>
             </Card>
-          </div> */}
+          </div> */
         </TabsContent>
 
         <TabsContent value="questions">
@@ -283,15 +283,15 @@ export function SystemManagement() {
           <VariationSetManager />
         </TabsContent>
 
-        {/* HIDDEN: Demographic Rules - Not needed at this time */}
+        {/* HIDDEN: Demographic Rules - Not needed at this time */
         {/* <TabsContent value="rules">
           <DemographicRuleManager />
-        </TabsContent> */}
+        </TabsContent> */
 
-        {/* HIDDEN: Localization - Not needed at this time */}
+        {/* HIDDEN: Localization - Not needed at this time */
         {/* <TabsContent value="localization">
           <LocalizationManager />
-        </TabsContent> */}
+        </TabsContent> */
       </Tabs>
     </div>
   );
