@@ -172,15 +172,18 @@ export function FinancialClinicResults({
         <div className="flex flex-col w-full max-w-[697px] items-center gap-3 md:gap-4 px-4">
           <div
             className="text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]"
+            // style={{
+            //   color:
+            //     result.total_score >= 80
+            //       ? "#6cc922"
+            //       : result.total_score >= 60
+            //       ? "#fca924"
+            //       : result.total_score >= 30
+            //       ? "#fe6521"
+            //       : "#f00c01",
+            // }}
             style={{
-              color:
-                result.total_score >= 80
-                  ? "#6cc922"
-                  : result.total_score >= 60
-                  ? "#fca924"
-                  : result.total_score >= 30
-                  ? "#fe6521"
-                  : "#f00c01",
+              color: "#5E5E5E",
             }}
           >
             {getScoreBandText(result.total_score)}
@@ -188,15 +191,18 @@ export function FinancialClinicResults({
 
           <div
             className="font-normal text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]"
+            // style={{
+            //   color:
+            //     result.total_score >= 80
+            //       ? "#6cc922"
+            //       : result.total_score >= 60
+            //       ? "#fca924"
+            //       : result.total_score >= 30
+            //       ? "#fe6521"
+            //       : "#f00c01",
+            // }}
             style={{
-              color:
-                result.total_score >= 80
-                  ? "#6cc922"
-                  : result.total_score >= 60
-                  ? "#fca924"
-                  : result.total_score >= 30
-                  ? "#fe6521"
-                  : "#f00c01",
+              color: "#5E5E5E",
             }}
           >
             {Math.round(result.total_score)}%
