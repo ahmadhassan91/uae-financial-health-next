@@ -272,7 +272,7 @@ export function SystemManagement() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </div> */}
         </TabsContent>
 
         <TabsContent value="questions">
