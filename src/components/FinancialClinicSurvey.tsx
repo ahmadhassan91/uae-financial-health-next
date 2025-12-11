@@ -245,7 +245,7 @@ export function FinancialClinicSurvey({
 
         {/* Welcome Text */}
         <div className="w-full max-w-[790px] mb-4 md:mb-6 lg:mb-8 px-2">
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6">
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
             {language === "ar"
               ? "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
               : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits—no judgments, just insights."}
@@ -264,7 +264,7 @@ export function FinancialClinicSurvey({
             {/* Progress Text */}
             <div className="flex flex-col gap-[3px]">
               <p
-                className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6"
+                className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center"
                 style={{ width: "670px" }}
               >
                 {language === "ar"

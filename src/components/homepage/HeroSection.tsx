@@ -130,7 +130,7 @@ export function HeroSection() {
                 </p>
               </div>
 
-              <div className="flex flex-row flex-wrap gap-3 w-full">
+              <div className="w-full" style={{ display: "flex", gap: "15px" }}>
                 <Button
                   onClick={handleStartCheckup}
                   className="h-auto items-center justify-center gap-2.5 p-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 whitespace-nowrap"
@@ -149,7 +149,7 @@ export function HeroSection() {
                   <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
                     {language === "ar"
                       ? "النتائج السابقة"
-                      : "View Previous Assessment"}
+                      : "VIEW PREVIOUS ASSESSEMENTS"}
                   </span>
                 </Button>
               </div>
