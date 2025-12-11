@@ -265,7 +265,7 @@ export function CompanyManagement({
   const handleToggleVariations = async (company: any, enable: boolean) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/variations/companies/${company.id}/toggle`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/variations/companies/${company.id}/toggle`,
         {
           method: 'POST',
           headers: {
