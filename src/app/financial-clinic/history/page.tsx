@@ -11,18 +11,17 @@ import { getApiUrl, API } from "@/lib/api-config";
 
 interface CategoryScore {
   score: number;
-  max_score: number;
+  max_possible: number;
   percentage: number;
+  status_level: string;
 }
 
 interface AssessmentHistory {
   id: number;
-  total_score: number;
-  status_band: string;
-  status_level: number;
-  created_at: string;
+  overall_score: number;
   category_scores: Record<string, CategoryScore>;
-  questions_answered: number;
+  risk_tolerance: string;
+  created_at: string;
 }
 
 export default function FinancialClinicHistoryPage() {
@@ -79,7 +78,7 @@ export default function FinancialClinicHistoryPage() {
           // Handle both array response and empty data
           const dataArray = Array.isArray(data) ? data : [];
 
-          const transformedData = dataArray.map((item: AssessmentHistory) => {
+          const transformedData = dataArray.map((item: any) => {
             return {
               id: item.id,
               overall_score: item.total_score || 0,

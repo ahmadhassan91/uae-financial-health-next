@@ -108,8 +108,22 @@ export function FinancialClinicScoreHistory({
   const scoreDiff = previousScore
     ? latestScore.overall_score - previousScore.overall_score
     : 0;
-  console.log("latestScore", latestScore);
-  console.log("previousScore", previousScore);
+
+  console.log("=== Score History Debug ===");
+  console.log("latestScore:", latestScore);
+  console.log("latestScore.category_scores:", latestScore.category_scores);
+  console.log("previousScore:", previousScore);
+
+  // Check if category_scores exists and has data
+  if (
+    !latestScore.category_scores ||
+    Object.keys(latestScore.category_scores).length === 0
+  ) {
+    console.warn("⚠️ WARNING: category_scores is missing or empty!");
+    console.warn(
+      "This might be old localStorage data. Try taking a new assessment."
+    );
+  }
 
   // Prepare data for line chart (latest on the right)
   const chartData = scoreHistory
