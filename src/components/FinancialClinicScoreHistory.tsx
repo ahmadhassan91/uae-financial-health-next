@@ -202,6 +202,35 @@ export function FinancialClinicScoreHistory({
     try {
       toast.info("Generating PDF report...");
 
+      // Check if this is a guest user with a timestamp ID (fake ID from localStorage)
+      // Timestamp IDs are > 1000000000000 (year 2001 in milliseconds)
+      const isGuestUser = responseId > 1000000000000;
+
+      let requestBody: any;
+
+      if (isGuestUser) {
+        // For guest users, send the result and profile from localStorage
+        const storedResult = localStorage.getItem("financialClinicResult");
+        const storedProfile = localStorage.getItem("financialClinicProfile");
+
+        if (!storedResult) {
+          toast.error("No assessment data found");
+          return;
+        }
+
+        requestBody = {
+          result: JSON.parse(storedResult),
+          profile: storedProfile ? JSON.parse(storedProfile) : {},
+          language: "en",
+        };
+      } else {
+        // For authenticated users, use survey_response_id
+        requestBody = {
+          survey_response_id: responseId,
+          language: "en",
+        };
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/financial-clinic/report/pdf`,
         {
@@ -209,10 +238,7 @@ export function FinancialClinicScoreHistory({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            survey_response_id: responseId,
-            language: "en",
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
