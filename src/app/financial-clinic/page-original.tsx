@@ -658,7 +658,7 @@ export default function FinancialClinicPage({
             <div className="flex flex-col gap-2 flex-1">
               <div
                 className={`flex items-center gap-6 md:gap-[35px] ${
-                  language === "ar" ? "flex-row-reverse" : ""
+                  language === "ar" ? "" : ""
                 }`}
               >
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
@@ -670,7 +670,7 @@ export default function FinancialClinicPage({
                   value={profile.gender}
                   onValueChange={handleGenderChange}
                   className={`flex items-center gap-[46px] ${
-                    language === "ar" ? "flex-row-reverse" : ""
+                    language === "ar" ? "" : ""
                   }`}
                 >
                   <div
@@ -719,7 +719,7 @@ export default function FinancialClinicPage({
             <div className="flex flex-col gap-2 flex-1">
               <div
                 className={`flex items-center gap-[46px] ${
-                  language === "ar" ? "flex-row-reverse" : ""
+                  language === "ar" ? "" : ""
                 }`}
               >
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
@@ -731,7 +731,7 @@ export default function FinancialClinicPage({
                   value={profile.nationality}
                   onValueChange={handleNationalityChange}
                   className={`flex items-center gap-[46px] ${
-                    language === "ar" ? "flex-row-reverse" : ""
+                    language === "ar" ? "" : ""
                   }`}
                 >
                   <div
@@ -899,37 +899,37 @@ export default function FinancialClinicPage({
                     value="0"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar" ? "0" : "0"}
+                    0
                   </SelectItem>
                   <SelectItem
                     value="1"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar" ? "١" : "1"}
+                    1
                   </SelectItem>
                   <SelectItem
                     value="2"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar" ? "٢" : "2"}
+                    2
                   </SelectItem>
                   <SelectItem
                     value="3"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar" ? "٣" : "3"}
+                    3
                   </SelectItem>
                   <SelectItem
                     value="4"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar" ? "٤" : "4"}
+                    4
                   </SelectItem>
                   <SelectItem
                     value="5"
                     className={language === "ar" ? "flex-row-reverse" : ""}
                   >
-                    {language === "ar" ? "٥+" : "5+"}
+                    5+
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -1142,7 +1142,12 @@ export default function FinancialClinicPage({
                 {language === "ar" ? "رقم الجوال" : "Mobile Number"}{" "}
                 <span className="text-red-500">*</span>
               </Label>
-              <div className="flex gap-2 w-full">
+              <div
+                className="flex gap-2 w-full"
+                style={{
+                  flexDirection: language === "ar" ? "row-reverse" : "row",
+                }}
+              >
                 <Select value={countryCode} onValueChange={setCountryCode}>
                   <SelectTrigger
                     className="w-[120px] md:w-[140px] h-[50px] px-2 md:px-3 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 shrink-0"

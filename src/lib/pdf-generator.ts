@@ -26,10 +26,10 @@ export async function generatePDFFromElement(
 
     // Capture the element as canvas with high quality
     const canvas = await html2canvas(element, {
-      scale: 2, // Higher quality (2x resolution)
+      scale: 3, // Higher quality (2x resolution)
       useCORS: true, // Allow cross-origin images
       logging: false, // Disable console logs
-      backgroundColor: "#ffffff",
+      backgroundColor: null, // avoid default white blending
       windowWidth: element.scrollWidth,
       windowHeight: element.scrollHeight,
       onclone: (clonedDoc) => {
@@ -56,7 +56,7 @@ export async function generatePDFFromElement(
       compress: true,
     });
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.95); // Use JPEG for smaller file size
+    const imgData = canvas.toDataURL("image/jpeg"); // Use JPEG for smaller file size
 
     // Add content to PDF (handle multiple pages if needed)
     let heightLeft = imgHeight;
