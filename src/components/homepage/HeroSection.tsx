@@ -74,7 +74,9 @@ export function HeroSection() {
       {/* Tagline */}
       <div className="flex flex-col w-full max-w-[1199px] items-center gap-4 sm:gap-[22px]">
         <div className="inline-flex flex-col items-center">
-          <h1 className="w-fit mt-[-1.00px] font-semibold text-[##5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
+          <h1
+            className="w-fit mt-[-1.00px] font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4"
+          >
             {language === "ar"
               ? "لبناء عادات مالية أكثر صحة كل يوم"
               : "Inspiring healthier financial habits every day"}
