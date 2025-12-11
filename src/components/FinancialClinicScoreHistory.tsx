@@ -296,55 +296,73 @@ export function FinancialClinicScoreHistory({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-3 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6">
       <div className="container mx-auto max-w-6xl py-4 sm:py-6 md:py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-            <Button
-              variant="outline"
-              onClick={onBack}
-              size="sm"
-              className="shrink-0"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">
-                Score History
-              </h1>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Track your financial health progress over time
-                {userEmail && (
-                  <span className="block text-xs mt-1 truncate">
-                    Logged in as: {userEmail}
-                  </span>
-                )}
-              </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <div
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <div className="flex-1 min-w-0">
+                <h1
+                  className="text-xl sm:text-2xl md:text-3xl font-bold truncate"
+                  style={{ textAlign: "center" }}
+                >
+                  Score History
+                </h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Track your financial health progress over time
+                  {userEmail && (
+                    <span className="block text-xs mt-1 truncate">
+                      Logged in as: {userEmail}
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
-
-          {onLogout && (
-            <Button
-              variant="outline"
-              onClick={onLogout}
-              size="sm"
-              className="w-full sm:w-auto"
-            >
-              Sign Out
-            </Button>
-          )}
+          <div>
+            {onLogout && (
+              <Button
+                variant="outline"
+                onClick={onLogout}
+                size="sm"
+                className="w-full sm:w-auto"
+              >
+                Sign Out
+              </Button>
+            )}
+          </div>
         </div>
-
         {/* Current Score Summary */}
-        <Card className="mb-6 sm:mb-8 border-none shadow-lg">
+        <Card
+          className="mb-6 sm:mb-8"
+          style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}
+        >
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center col-span-2 md:col-span-1">
-                <div className="text-3xl sm:text-4xl font-bold text-[#bd912e] mb-2">
+                <div className="text-3xl sm:text-4xl font-bold text-[#s5E5E5E] mb-2">
                   {Math.round(latestScore.overall_score)}
                 </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">
+                <div
+                  className="text-xs sm:text-sm text-muted-foreground"
+                  style={{ color: "#737373" }}
+                >
                   Current Score
                 </div>
               </div>
@@ -375,10 +393,13 @@ export function FinancialClinicScoreHistory({
               )}
 
               <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold text-[#bd912e] mb-2">
+                <div className="text-xl sm:text-2xl font-bold text-[#5E5E5E] mb-2">
                   {scoreHistory.length}
                 </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">
+                <div
+                  className="text-xs sm:text-sm text-muted-foreground"
+                  style={{ color: "#737373" }}
+                >
                   Total Assessments
                 </div>
               </div>
@@ -389,7 +410,7 @@ export function FinancialClinicScoreHistory({
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Score Trend */}
-          <Card>
+          <Card style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}>
             <CardHeader className="p-4 sm:p-6">
               <CardTitle className="text-base sm:text-lg">
                 Score Trend
@@ -427,7 +448,7 @@ export function FinancialClinicScoreHistory({
           </Card>
 
           {/* Category Breakdown */}
-          <Card>
+          <Card style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}>
             <CardHeader className="p-4 sm:p-6">
               <CardTitle className="text-base sm:text-lg">
                 Current Pillar Analysis
@@ -505,119 +526,144 @@ export function FinancialClinicScoreHistory({
         </div>
 
         {/* Assessment History */}
-        <Card>
-          <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-base sm:text-lg">
+        <div className="mt-6 sm:mt-8" style={{ marginTop: "100px" }}>
+          <div className="mb-3 sm:mb-4">
+            <h2 className="text-base sm:text-lg font-semibold text-[#5E5E5E]">
               Assessment History
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm">
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Detailed view of all your completed assessments
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="space-y-3 sm:space-y-4">
-              {scoreHistory.map((response, index) => {
-                const prevResponse = scoreHistory[index + 1];
-                const diff = prevResponse
-                  ? response.overall_score - prevResponse.overall_score
-                  : 0;
+            </p>
+          </div>
 
-                return (
-                  <div
-                    key={response.id}
-                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg hover:bg-accent/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                      <div className="text-center shrink-0">
-                        <div className="text-xl sm:text-2xl font-bold text-[#bd912e]">
-                          {Math.round(response.overall_score)}
-                        </div>
-                        <div className="text-[10px] sm:text-xs text-muted-foreground">
-                          {new Date(response.created_at).toLocaleDateString(
-                            "en-US",
-                            { month: "short", day: "numeric" }
-                          )}
-                        </div>
+          <div className="divide-y border-y">
+            {scoreHistory.map((response, index) => {
+              const prevResponse = scoreHistory[index + 1];
+              const diff = prevResponse
+                ? response.overall_score - prevResponse.overall_score
+                : 0;
+
+              return (
+                <div
+                  key={response.id}
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 py-3 sm:py-4"
+                >
+                  <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                    <div className="text-left shrink-0">
+                      <div className="text-xl sm:text-2xl font-bold text-[#bd912e]">
+                        {Math.round(response.overall_score)}
                       </div>
-
-                      <div className="flex flex-wrap items-center gap-2">
-                        {index === 0 && (
-                          <Badge
-                            variant="default"
-                            className="text-[10px] sm:text-xs"
-                          >
-                            Latest
-                          </Badge>
-                        )}
-
-                        {response.risk_tolerance && (
-                          <Badge
-                            variant="outline"
-                            className="text-[10px] sm:text-xs"
-                          >
-                            {response.risk_tolerance}
-                          </Badge>
-                        )}
-
-                        {diff !== 0 && (
-                          <div
-                            className={`flex items-center gap-1 text-xs sm:text-sm ${
-                              diff > 0 ? "text-green-600" : "text-red-600"
-                            }`}
-                          >
-                            {diff > 0 ? (
-                              <ChartLineUp className="w-3 h-3 sm:w-4 sm:h-4" />
-                            ) : (
-                              <ChartLineDown className="w-3 h-3 sm:w-4 sm:h-4" />
-                            )}
-                            {diff > 0 ? "+" : ""}
-                            {Math.round(diff)}
-                          </div>
+                      <div className="text-[10px] sm:text-xs text-muted-foreground">
+                        {new Date(response.created_at).toLocaleDateString(
+                          "en-US",
+                          { day: "2-digit", month: "2-digit", year: "numeric" }
                         )}
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-                      <div className="text-left sm:text-right sm:mr-4">
-                        <div className="text-xs sm:text-sm font-medium">
-                          Assessment #{scoreHistory.length - index}
-                        </div>
-                        <div className="text-[10px] sm:text-xs text-muted-foreground">
-                          {new Date(response.created_at).toLocaleTimeString(
-                            "en-US",
-                            { hour: "2-digit", minute: "2-digit" }
+                    <div className="flex flex-wrap items-center gap-2">
+                      {index === 0 && (
+                        <Badge
+                          variant="default"
+                          className="text-[10px] sm:text-xs"
+                        >
+                          Latest
+                        </Badge>
+                      )}
+
+                      {response.risk_tolerance && (
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] sm:text-xs"
+                        >
+                          {response.risk_tolerance}
+                        </Badge>
+                      )}
+
+                      {diff !== 0 && (
+                        <div
+                          className={`flex items-center gap-1 text-xs sm:text-sm ${
+                            diff > 0 ? "text-green-600" : "text-red-600"
+                          }`}
+                        >
+                          {diff > 0 ? (
+                            <ChartLineUp className="w-3 h-3 sm:w-4 sm:h-4" />
+                          ) : (
+                            <ChartLineDown className="w-3 h-3 sm:w-4 sm:h-4" />
                           )}
+                          {diff > 0 ? "+" : ""}
+                          {Math.round(diff)}
                         </div>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDownloadPDF(response.id)}
-                          className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
-                        >
-                          <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span className="hidden sm:inline">PDF</span>
-                        </Button>
-
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEmailReport(response.id)}
-                          className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
-                        >
-                          <EnvelopeSimple className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span className="hidden sm:inline">Email</span>
-                        </Button>
-                      </div>
+                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+
+                  <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                    <div className="text-right sm:mr-4">
+                      <div className="text-xs sm:text-sm font-medium">
+                        Assessment #{scoreHistory.length - index}
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-muted-foreground">
+                        {new Date(response.created_at).toLocaleTimeString(
+                          "en-US",
+                          { hour: "2-digit", minute: "2-digit" }
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownloadPDF(response.id)}
+                        className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
+                      >
+                        <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">PDF</span>
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEmailReport(response.id)}
+                        className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
+                      >
+                        <EnvelopeSimple className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">Email</span>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        {/* <Button
+          variant="outline"
+          onClick={onBack}
+          size="sm"
+          className="shrink-0"
+        >
+          <div className="w-4 h-4">Back</div>
+        </Button> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Button
+            onClick={onBack}
+            className="h-auto items-center justify-center gap-2.5 p-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5EF]/90 whitespace-nowrap"
+            style={{ width: "20%", borderRadius: "1px", marginTop: "5%" }}
+          >
+            <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
+              Back
+            </span>
+          </Button>
+        </div>
       </div>
     </div>
   );

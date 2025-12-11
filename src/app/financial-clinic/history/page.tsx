@@ -223,7 +223,7 @@ export default function FinancialClinicHistoryPage() {
     return (
       <div className="min-h-screen flex flex-col">
         <HomepageHeader />
-        <div className="flex-1 bg-gradient-to-br from-background to-secondary/20 p-4 flex items-center justify-center">
+        <div className="flex-1 bg-gradient-to-br p-4 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-muted-foreground">Loading your assessments...</p>
