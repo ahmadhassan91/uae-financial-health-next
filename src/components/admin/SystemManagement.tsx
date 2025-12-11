@@ -109,8 +109,8 @@ export function SystemManagement() {
               </CardContent>
             </Card> */}
 
-            {/* System Health */}
-            <Card>
+            {/* HIDDEN: System Health - Static data, not needed at this time */}
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">System Health</CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
@@ -124,10 +124,10 @@ export function SystemManagement() {
                   <Badge variant="default">99.9% uptime</Badge>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
-            {/* Performance Metrics */}
-            <Card>
+            {/* HIDDEN: Performance Metrics - Static data, not needed at this time */}
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Performance</CardTitle>
                 <Settings className="h-4 w-4 text-muted-foreground" />
@@ -141,10 +141,10 @@ export function SystemManagement() {
                   <Badge variant="secondary">95% cache hit</Badge>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
-            {/* User Engagement */}
-            <Card>
+            {/* HIDDEN: User Engagement - Static data, not needed at this time */}
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">User Engagement</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
@@ -158,7 +158,7 @@ export function SystemManagement() {
                   <Badge variant="secondary">+23% this month</Badge>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           {/* Feature Status Cards */}
