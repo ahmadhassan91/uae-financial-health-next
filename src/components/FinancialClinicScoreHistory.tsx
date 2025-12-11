@@ -299,35 +299,55 @@ export function FinancialClinicScoreHistory({
     <div className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6">
       <div className="container mx-auto max-w-6xl py-4 sm:py-6 md:py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">
-                Score History
-              </h1>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Track your financial health progress over time
-                {userEmail && (
-                  <span className="block text-xs mt-1 truncate">
-                    Logged in as: {userEmail}
-                  </span>
-                )}
-              </p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <div
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <div className="flex-1 min-w-0">
+                <h1
+                  className="text-xl sm:text-2xl md:text-3xl font-bold truncate"
+                  style={{ textAlign: "center" }}
+                >
+                  Score History
+                </h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Track your financial health progress over time
+                  {userEmail && (
+                    <span className="block text-xs mt-1 truncate">
+                      Logged in as: {userEmail}
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
-
-          {onLogout && (
-            <Button
-              variant="outline"
-              onClick={onLogout}
-              size="sm"
-              className="w-full sm:w-auto"
-            >
-              Sign Out
-            </Button>
-          )}
+          <div>
+            {onLogout && (
+              <Button
+                variant="outline"
+                onClick={onLogout}
+                size="sm"
+                className="w-full sm:w-auto"
+              >
+                Sign Out
+              </Button>
+            )}
+          </div>
         </div>
-
         {/* Current Score Summary */}
         <Card
           className="mb-6 sm:mb-8"
