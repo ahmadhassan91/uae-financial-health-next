@@ -516,7 +516,7 @@ export function FinancialClinicScoreHistory({
             </p>
           </div>
 
-          <div className="divide-y border-t">
+          <div className="divide-y border-y">
             {scoreHistory.map((response, index) => {
               const prevResponse = scoreHistory[index + 1];
               const diff = prevResponse
