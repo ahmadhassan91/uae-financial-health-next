@@ -372,8 +372,8 @@ export function FinancialClinicFilters({
                 options={Array.from(
                   new Map(
                     availableOptions.companies.map((company) => [
-                      company.name,
-                      { label: company.name, value: company.name },
+                      company.unique_url,
+                      { label: company.name, value: company.unique_url },
                     ])
                   ).values()
                 )}
