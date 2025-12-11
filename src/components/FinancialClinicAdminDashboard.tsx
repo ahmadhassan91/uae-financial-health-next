@@ -489,6 +489,16 @@ export function FinancialClinicAdminDashboard({
               </div>
             </div>
 
+            {/* Loading indicator for filter changes */}
+            {loading && overviewMetrics && (
+              <div className="flex items-center gap-2 p-3 mb-4 rounded-lg bg-primary/10 border border-primary/20">
+                <Loader2 className="animate-spin h-4 w-4 text-primary" />
+                <span className="text-sm text-primary font-medium">
+                  Applying filters...
+                </span>
+              </div>
+            )}
+
             {/* Tabs */}
             <Tabs
               value={selectedTab}
