@@ -212,6 +212,7 @@ export function FinancialClinicResults({
             value={result.total_score}
             className="w-full h-[14px] md:h-[18px]"
             scoreBasedColor={false}
+            isRTL={isRTL}
           />
         </div>
 
@@ -345,6 +346,7 @@ export function FinancialClinicResults({
                         value={percentage}
                         className="w-full h-[12px] md:h-[14px]"
                         scoreBasedColor={true}
+                        isRTL={isRTL}
                       />
                     </div>
 

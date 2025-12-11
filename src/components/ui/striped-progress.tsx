@@ -4,9 +4,10 @@ interface StripedProgressProps {
   value: number; // 0-100
   className?: string;
   scoreBasedColor?: boolean; // Use score-based coloring
+  isRTL?: boolean; // For Arabic RTL layout
 }
 
-export function StripedProgress({ value, className = '', scoreBasedColor = false }: StripedProgressProps) {
+export function StripedProgress({ value, className = '', scoreBasedColor = false, isRTL = false }: StripedProgressProps) {
   // Clamp value between 0 and 100
   const percentage = Math.min(Math.max(value, 0), 100);
   
@@ -26,11 +27,12 @@ export function StripedProgress({ value, className = '', scoreBasedColor = false
   const stripeColor = scoreBasedColor ? getScoreColor(percentage) : '#9a7625';
   
   return (
-    <div className={`relative rounded-full overflow-hidden ${className}`}>
+    <div className={`relative rounded-full overflow-hidden ${className}`} dir="ltr">
       <svg
         viewBox="0 0 697 18"
         className="w-full h-full"
         preserveAspectRatio="none"
+        style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
       >
         <defs>
           {/* Background stripe pattern (light/faint) */}
