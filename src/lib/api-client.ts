@@ -3,32 +3,27 @@
  * Handles authentication, requests, and error handling
  */
 
-// Production Heroku backend URL (with /api/v1 prefix)
-const PRODUCTION_API_URL =
-  "https://uae-financial-health-api-4188fd6ae86c.herokuapp.com/api/v1";
+// API URLs are configured via environment variables
+// NEXT_PUBLIC_API_URL should be set in .env.local for development
+// and in Netlify environment variables for production
 const DEVELOPMENT_API_URL = "http://localhost:8000/api/v1";
 
 // Determine API base URL based on environment
 const getApiBaseUrl = (): string => {
-  // Check for explicit environment variable first
+  // Check for explicit environment variable first (required for production)
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
   }
 
-  // Auto-detect based on environment
-  if (process.env.NODE_ENV === "production") {
-    return PRODUCTION_API_URL;
+  // Fallback to localhost for development only
+  if (process.env.NODE_ENV === "development" || 
+      (typeof window !== "undefined" && window.location.hostname === "localhost")) {
+    return DEVELOPMENT_API_URL;
   }
 
-  // Check if we're running on Netlify (production deployment)
-  if (
-    typeof window !== "undefined" &&
-    window.location.hostname !== "localhost"
-  ) {
-    return PRODUCTION_API_URL;
-  }
-
-  return DEVELOPMENT_API_URL;
+  // In production without env var, log warning and use env var (which will be undefined)
+  console.warn("NEXT_PUBLIC_API_URL not set in production environment");
+  return process.env.NEXT_PUBLIC_API_URL || DEVELOPMENT_API_URL;
 };
 
 const API_BASE_URL = getApiBaseUrl();

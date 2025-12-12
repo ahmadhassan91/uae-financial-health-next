@@ -87,7 +87,10 @@ export function FinancialClinicScoreHistory({
 
   if (!scoreHistory || scoreHistory.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4">
+      <div
+        className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4"
+        dir={isRTL ? "rtl" : "ltr"}
+      >
         <div className="container mx-auto max-w-4xl py-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-4">{t("score_history")}</h1>
@@ -323,6 +326,7 @@ export function FinancialClinicScoreHistory({
           const data = await response.json();
           toast.warning(data.message || t("pdf_generation_in_progress"));
         }
+        z;
       } else {
         toast.error(t("failed_to_generate_pdf"));
       }
@@ -385,7 +389,10 @@ export function FinancialClinicScoreHistory({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6">
+    <div
+      className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       <div className="container mx-auto max-w-6xl py-4 sm:py-6 md:py-8">
         {/* Header */}
         <div
@@ -432,7 +439,7 @@ export function FinancialClinicScoreHistory({
                 size="sm"
                 className="w-full sm:w-auto"
               >
-                Sign Out
+                {t("sign_out")}
               </Button>
             )}
           </div>
@@ -717,7 +724,11 @@ export function FinancialClinicScoreHistory({
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-                    <div className="text-right sm:mr-4">
+                    <div
+                      className={`${
+                        isRTL ? "text-left sm:ml-4" : "text-right sm:mr-4"
+                      }`}
+                    >
                       <div className="text-xs sm:text-sm font-medium">
                         {t("assessment_number", {
                           number: scoreHistory.length - index,
