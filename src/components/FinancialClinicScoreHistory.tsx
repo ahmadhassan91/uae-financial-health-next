@@ -444,7 +444,7 @@ export function FinancialClinicScoreHistory({
                 size="sm"
                 className="w-full sm:w-auto"
               >
-                Sign Out
+                {t("sign_out")}
               </Button>
             )}
           </div>
