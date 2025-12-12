@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FinancialClinicScoreHistory } from "@/components/FinancialClinicScoreHistory";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLocalization } from "@/contexts/LocalizationContext";
 import { toast } from "sonner";
 import { HomepageHeader } from "@/components/homepage/Header";
 import { HomepageFooter } from "@/components/homepage/Footer";
@@ -26,6 +27,7 @@ interface AssessmentHistory {
 
 export default function FinancialClinicHistoryPage() {
   const router = useRouter();
+  const { t } = useLocalization();
   const {
     isAuthenticated,
     isLoading: authLoading,
@@ -192,7 +194,7 @@ export default function FinancialClinicHistoryPage() {
         <div className="flex-1 bg-gradient-to-br p-4 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading your assessments...</p>
+            <p className="text-muted-foreground">{t('loading_your_assessments')}</p>
           </div>
         </div>
         <HomepageFooter />
