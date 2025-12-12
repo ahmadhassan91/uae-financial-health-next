@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -71,6 +71,7 @@ export function FinancialClinicScoreHistory({
 }: FinancialClinicScoreHistoryProps) {
   const router = useRouter();
   const { t, language, isRTL } = useLocalization();
+  const downloadingRef = useRef<Set<number>>(new Set());
 
   // Helper function to safely get category score percentage
   const getCategoryPercentage = (
@@ -87,10 +88,7 @@ export function FinancialClinicScoreHistory({
 
   if (!scoreHistory || scoreHistory.length === 0) {
     return (
-      <div
-        className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4"
-        dir={isRTL ? "rtl" : "ltr"}
-      >
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4">
         <div className="container mx-auto max-w-4xl py-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-4">{t("score_history")}</h1>
@@ -146,16 +144,6 @@ export function FinancialClinicScoreHistory({
   // Prepare histogram data for latest score using category scores from API
   // Prepare data for histogram using category names from API
   const getCategoryName = (categoryKey: string) => {
-    // Test direct translation calls
-    console.log("Direct Translation Test:", {
-      income_stream: t("income_stream"),
-      savings_habit: t("savings_habit"),
-      emergency_savings: t("emergency_savings"),
-      debt_management: t("debt_management"),
-      retirement_planning: t("retirement_planning"),
-      protecting_your_family: t("protecting_your_family"),
-    });
-    
     const categoryMap: Record<string, string> = {
       "Income Stream": t("income_stream"),
       "Savings Habit": t("savings_habit"),
@@ -164,14 +152,6 @@ export function FinancialClinicScoreHistory({
       "Retirement Planning": t("retirement_planning"),
       "Protecting Your Family": t("protecting_your_family"),
     };
-    
-    // Debug logging
-    console.log("Category Translation Debug:", {
-      categoryKey,
-      translation: categoryMap[categoryKey],
-      language,
-    });
-    
     return categoryMap[categoryKey] || categoryKey;
   };
 
@@ -283,7 +263,13 @@ export function FinancialClinicScoreHistory({
   ];
 
   const handleDownloadPDF = async (responseId: number) => {
+    // Prevent duplicate downloads
+    if (downloadingRef.current.has(responseId)) {
+      return;
+    }
+
     try {
+      downloadingRef.current.add(responseId);
       toast.info(t("generating_pdf_report"));
 
       // Check if this is a guest user with a timestamp ID (fake ID from localStorage)
@@ -344,13 +330,15 @@ export function FinancialClinicScoreHistory({
           const data = await response.json();
           toast.warning(data.message || t("pdf_generation_in_progress"));
         }
-        z;
       } else {
-        toast.error(t("failed_to_generate_pdf"));
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.message || t("failed_to_generate_pdf"));
       }
     } catch (error) {
       console.error("PDF download error:", error);
       toast.error(t("failed_to_download_pdf"));
+    } finally {
+      downloadingRef.current.delete(responseId);
     }
   };
 
@@ -407,10 +395,7 @@ export function FinancialClinicScoreHistory({
   };
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6"
-      dir={isRTL ? "rtl" : "ltr"}
-    >
+    <div className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6">
       <div className="container mx-auto max-w-6xl py-4 sm:py-6 md:py-8">
         {/* Header */}
         <div
@@ -457,7 +442,7 @@ export function FinancialClinicScoreHistory({
                 size="sm"
                 className="w-full sm:w-auto"
               >
-                {t("sign_out")}
+                Sign Out
               </Button>
             )}
           </div>
@@ -742,11 +727,7 @@ export function FinancialClinicScoreHistory({
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-                    <div
-                      className={`${
-                        isRTL ? "text-left sm:ml-4" : "text-right sm:mr-4"
-                      }`}
-                    >
+                    <div className="text-right sm:mr-4">
                       <div className="text-xs sm:text-sm font-medium">
                         {t("assessment_number", {
                           number: scoreHistory.length - index,
