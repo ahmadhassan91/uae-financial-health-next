@@ -146,6 +146,16 @@ export function FinancialClinicScoreHistory({
   // Prepare histogram data for latest score using category scores from API
   // Prepare data for histogram using category names from API
   const getCategoryName = (categoryKey: string) => {
+    // Test direct translation calls
+    console.log("Direct Translation Test:", {
+      income_stream: t("income_stream"),
+      savings_habit: t("savings_habit"),
+      emergency_savings: t("emergency_savings"),
+      debt_management: t("debt_management"),
+      retirement_planning: t("retirement_planning"),
+      protecting_your_family: t("protecting_your_family"),
+    });
+    
     const categoryMap: Record<string, string> = {
       "Income Stream": t("income_stream"),
       "Savings Habit": t("savings_habit"),
@@ -154,6 +164,14 @@ export function FinancialClinicScoreHistory({
       "Retirement Planning": t("retirement_planning"),
       "Protecting Your Family": t("protecting_your_family"),
     };
+    
+    // Debug logging
+    console.log("Category Translation Debug:", {
+      categoryKey,
+      translation: categoryMap[categoryKey],
+      language,
+    });
+    
     return categoryMap[categoryKey] || categoryKey;
   };
 
