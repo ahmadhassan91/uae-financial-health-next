@@ -368,11 +368,11 @@ export const translations = {
     score_trend: "اتجاه النتيجة",
     your_financial_health_score_progression:
       "تطور مؤشر صحتك المالية بمرور الوقت",
-    current_pillar_analysis: "تحليل الركائز الحالي",
+    current_pillar_analysis: "تحليل الفئات الحالية",
     breakdown_of_your_latest_score:
       "تحليل لأحدث تقييم لك حسب فئات الصحة المالية الست",
     assessment_history: "تاريخ التقييم",
-    detailed_view_of_all_assessments: "عرض مفصل لجميع تقييماتك المكتملة",
+    detailed_view_of_all_assessments: "عرض تفصيلي لجميع تقييماتك المكتملة",
     latest: "الأحدث",
     assessment_number: "التقييم #{{number}}",
     pdf: "PDF",
