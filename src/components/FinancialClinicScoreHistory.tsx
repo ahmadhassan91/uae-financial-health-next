@@ -86,6 +86,32 @@ export function FinancialClinicScoreHistory({
     return categoryScore?.percentage || 0;
   };
 
+  // Helper function to translate risk_tolerance or status_band
+  const translateRiskTolerance = (value: string): string => {
+    if (!value) return "";
+
+    const translations: Record<string, { en: string; ar: string }> = {
+      // Risk tolerance values
+      low: { en: "Low", ar: "منخفض" },
+      moderate: { en: "Moderate", ar: "معتدل" },
+      high: { en: "High", ar: "عالي" },
+      // Status band values (in case they're stored in risk_tolerance field)
+      excellent: { en: "Excellent", ar: "ممتاز" },
+      good: { en: "Good", ar: "جيد" },
+      "needs improvement": { en: "Needs Improvement", ar: "بحاجة إلى تحسين" },
+      "at risk": { en: "At Risk", ar: "في خطر" },
+      fair: { en: "Fair", ar: "مقبول" },
+    };
+
+    const key = value.toLowerCase().trim();
+    const translation = translations[key];
+
+    if (translation) {
+      return language === "ar" ? translation.ar : translation.en;
+    }
+
+    return value;
+  };
   if (!scoreHistory || scoreHistory.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4">
@@ -110,11 +136,6 @@ export function FinancialClinicScoreHistory({
   const scoreDiff = previousScore
     ? latestScore.overall_score - previousScore.overall_score
     : 0;
-
-  console.log("=== Score History Debug ===");
-  console.log("latestScore:", latestScore);
-  console.log("latestScore.category_scores:", latestScore.category_scores);
-  console.log("previousScore:", previousScore);
 
   // Check if category_scores exists and has data
   if (
@@ -706,7 +727,7 @@ export function FinancialClinicScoreHistory({
                           variant="outline"
                           className="text-[10px] sm:text-xs"
                         >
-                          {response.risk_tolerance}
+                          {translateRiskTolerance(response.risk_tolerance)}
                         </Badge>
                       )}
 
