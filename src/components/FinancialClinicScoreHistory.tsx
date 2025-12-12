@@ -31,6 +31,7 @@ import {
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useLocalization } from "@/contexts/LocalizationContext";
 
 interface CategoryScore {
   score: number;
@@ -69,6 +70,7 @@ export function FinancialClinicScoreHistory({
   userEmail,
 }: FinancialClinicScoreHistoryProps) {
   const router = useRouter();
+  const { t, language, isRTL } = useLocalization();
 
   // Helper function to safely get category score percentage
   const getCategoryPercentage = (
@@ -88,14 +90,13 @@ export function FinancialClinicScoreHistory({
       <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4">
         <div className="container mx-auto max-w-4xl py-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold mb-4">Score History</h1>
+            <h1 className="text-3xl font-bold mb-4">{t('score_history')}</h1>
             <p className="text-muted-foreground mb-8">
-              No previous assessments found. Complete your first assessment to
-              start tracking your progress.
+              {t('no_previous_assessments')}
             </p>
             <Button onClick={onBack}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Assessment
+              {t('back_to_assessment')}
             </Button>
           </div>
         </div>
@@ -140,34 +141,47 @@ export function FinancialClinicScoreHistory({
     });
 
   // Prepare histogram data for latest score using category scores from API
+  // Prepare data for histogram using category names from API
+  const getCategoryName = (categoryKey: string) => {
+    const categoryMap: Record<string, string> = {
+      "Income Stream": t('income_stream'),
+      "Savings Habit": t('savings_habit'),
+      "Emergency Savings": t('emergency_savings'),
+      "Debt Management": t('debt_management'),
+      "Retirement Planning": t('retirement_planning'),
+      "Protecting Your Family": t('protecting_your_family'),
+    };
+    return categoryMap[categoryKey] || categoryKey;
+  };
+
   const histogramData = [
     {
-      factor: "Income Stream",
+      factor: getCategoryName("Income Stream"),
       score: getCategoryPercentage(latestScore, "Income Stream"),
       fullMark: 100,
     },
     {
-      factor: "Savings Habit",
+      factor: getCategoryName("Savings Habit"),
       score: getCategoryPercentage(latestScore, "Savings Habit"),
       fullMark: 100,
     },
     {
-      factor: "Emergency Savings",
+      factor: getCategoryName("Emergency Savings"),
       score: getCategoryPercentage(latestScore, "Emergency Savings"),
       fullMark: 100,
     },
     {
-      factor: "Debt Management",
+      factor: getCategoryName("Debt Management"),
       score: getCategoryPercentage(latestScore, "Debt Management"),
       fullMark: 100,
     },
     {
-      factor: "Retirement Planning",
+      factor: getCategoryName("Retirement Planning"),
       score: getCategoryPercentage(latestScore, "Retirement Planning"),
       fullMark: 100,
     },
     {
-      factor: "Protecting Your Family",
+      factor: getCategoryName("Protecting Your Family"),
       score: getCategoryPercentage(latestScore, "Protecting Your Family"),
       fullMark: 100,
     },
@@ -210,37 +224,37 @@ export function FinancialClinicScoreHistory({
   // Add average scores to histogram data
   const histogramDataWithAverage = [
     {
-      factor: "Income Stream",
+      factor: getCategoryName("Income Stream"),
       score: getCategoryPercentage(latestScore, "Income Stream"),
       average: averageScores.incomeStream,
       fullMark: 100,
     },
     {
-      factor: "Savings Habit",
+      factor: getCategoryName("Savings Habit"),
       score: getCategoryPercentage(latestScore, "Savings Habit"),
       average: averageScores.savingHabits,
       fullMark: 100,
     },
     {
-      factor: "Emergency Savings",
+      factor: getCategoryName("Emergency Savings"),
       score: getCategoryPercentage(latestScore, "Emergency Savings"),
       average: averageScores.emergencySavings,
       fullMark: 100,
     },
     {
-      factor: "Debt Management",
+      factor: getCategoryName("Debt Management"),
       score: getCategoryPercentage(latestScore, "Debt Management"),
       average: averageScores.debtManagement,
       fullMark: 100,
     },
     {
-      factor: "Retirement Planning",
+      factor: getCategoryName("Retirement Planning"),
       score: getCategoryPercentage(latestScore, "Retirement Planning"),
       average: averageScores.retirementPlanning,
       fullMark: 100,
     },
     {
-      factor: "Protecting Your Family",
+      factor: getCategoryName("Protecting Your Family"),
       score: getCategoryPercentage(latestScore, "Protecting Your Family"),
       average: averageScores.familyProtection,
       fullMark: 100,
@@ -249,7 +263,7 @@ export function FinancialClinicScoreHistory({
 
   const handleDownloadPDF = async (responseId: number) => {
     try {
-      toast.info("Generating PDF report...");
+      toast.info(t('generating_pdf_report'));
 
       // Check if this is a guest user with a timestamp ID (fake ID from localStorage)
       // Timestamp IDs are > 1000000000000 (year 2001 in milliseconds)
@@ -263,20 +277,20 @@ export function FinancialClinicScoreHistory({
         const storedProfile = localStorage.getItem("financialClinicProfile");
 
         if (!storedResult) {
-          toast.error("No assessment data found");
+          toast.error(t('no_assessment_data_found'));
           return;
         }
 
         requestBody = {
           result: JSON.parse(storedResult),
           profile: storedProfile ? JSON.parse(storedProfile) : {},
-          language: "en",
+          language: language,
         };
       } else {
         // For authenticated users, use survey_response_id
         requestBody = {
           survey_response_id: responseId,
-          language: "en",
+          language: language,
         };
       }
 
@@ -304,28 +318,28 @@ export function FinancialClinicScoreHistory({
           a.click();
           window.URL.revokeObjectURL(url);
           document.body.removeChild(a);
-          toast.success("PDF downloaded successfully!");
+          toast.success(t('pdf_downloaded_successfully'));
         } else {
           const data = await response.json();
-          toast.warning(data.message || "PDF generation in progress");
+          toast.warning(data.message || t('pdf_generation_in_progress'));
         }
       } else {
-        toast.error("Failed to generate PDF");
+        toast.error(t('failed_to_generate_pdf'));
       }
     } catch (error) {
       console.error("PDF download error:", error);
-      toast.error("Failed to download PDF");
+      toast.error(t('failed_to_download_pdf'));
     }
   };
 
   const handleEmailReport = async (responseId: number) => {
     if (!userEmail) {
-      toast.error("Email address not available");
+      toast.error(t('email_address_not_available'));
       return;
     }
 
     try {
-      toast.info("Sending email report...");
+      toast.info(t('sending_email_report'));
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/financial-clinic/report/email`,
@@ -337,7 +351,7 @@ export function FinancialClinicScoreHistory({
           body: JSON.stringify({
             survey_response_id: responseId,
             email: userEmail,
-            language: "en",
+            language: language,
           }),
         }
       );
@@ -345,13 +359,13 @@ export function FinancialClinicScoreHistory({
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success("Email sent successfully!");
+        toast.success(t('email_sent_successfully'));
       } else {
-        toast.warning(data.message || "Email service being configured");
+        toast.warning(data.message || t('email_service_being_configured'));
       }
     } catch (error) {
       console.error("Email error:", error);
-      toast.error("Failed to send email");
+      toast.error(t('failed_to_send_email'));
     }
   };
 
@@ -397,13 +411,13 @@ export function FinancialClinicScoreHistory({
                   className="text-xl sm:text-2xl md:text-3xl font-bold truncate"
                   style={{ textAlign: "center" }}
                 >
-                  Score History
+                  {t('score_history')}
                 </h1>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Track your financial health progress over time
+                  {t('track_your_financial_health_progress')}
                   {userEmail && (
                     <span className="block text-xs mt-1 truncate">
-                      Logged in as: {userEmail}
+                      {t('logged_in_as', { email: userEmail })}
                     </span>
                   )}
                 </p>
@@ -438,7 +452,7 @@ export function FinancialClinicScoreHistory({
                   className="text-xs sm:text-sm text-muted-foreground"
                   style={{ color: "#737373" }}
                 >
-                  Current Score
+                  {t('current_score')}
                 </div>
               </div>
 
@@ -462,7 +476,7 @@ export function FinancialClinicScoreHistory({
                     {Math.round(scoreDiff)}
                   </div>
                   <div className="text-xs sm:text-sm text-muted-foreground">
-                    Change from Previous
+                    {t('change_from_previous')}
                   </div>
                 </div>
               )}
@@ -475,7 +489,7 @@ export function FinancialClinicScoreHistory({
                   className="text-xs sm:text-sm text-muted-foreground"
                   style={{ color: "#737373" }}
                 >
-                  Total Assessments
+                  {t('total_assessments')}
                 </div>
               </div>
             </div>
@@ -488,10 +502,10 @@ export function FinancialClinicScoreHistory({
           <Card style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}>
             <CardHeader className="p-4 sm:p-6">
               <CardTitle className="text-base sm:text-lg">
-                Score Trend
+                {t('score_trend')}
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm">
-                Your financial health score progression over time
+                {t('your_financial_health_score_progression')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
@@ -526,10 +540,10 @@ export function FinancialClinicScoreHistory({
           <Card style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}>
             <CardHeader className="p-4 sm:p-6">
               <CardTitle className="text-base sm:text-lg">
-                Current Pillar Analysis
+                {t('current_pillar_analysis')}
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm">
-                Breakdown of your latest score by the 6 financial health pillars
+                {t('breakdown_of_your_latest_score')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
@@ -551,26 +565,26 @@ export function FinancialClinicScoreHistory({
                       domain={[0, 100]}
                       tick={{ fontSize: 10 }}
                       label={{
-                        value: "Score (%)",
+                        value: t('score_percentage'),
                         angle: -90,
                         position: "insideLeft",
                       }}
                     />
                     <Tooltip
                       formatter={(value, name) => {
-                        if (name === "Current Score")
+                        if (name === t('current_score_chart'))
                           return [
                             `${Math.round(Number(value))}%`,
-                            "Current Score",
+                            t('current_score_chart'),
                           ];
-                        if (name === "Average Score")
+                        if (name === t('average_score'))
                           return [
                             `${Math.round(Number(value))}%`,
-                            "Average Score",
+                            t('average_score'),
                           ];
                         return null;
                       }}
-                      labelFormatter={(label) => `Category: ${label}`}
+                      labelFormatter={(label) => `${t('category')}: ${label}`}
                     />
                     <Legend
                       verticalAlign="top"
@@ -581,7 +595,7 @@ export function FinancialClinicScoreHistory({
                     <Bar
                       dataKey="score"
                       fill="#3b82f6"
-                      name="Current Score"
+                      name={t('current_score_chart')}
                       radius={[4, 4, 0, 0]}
                     />
                     <Line
@@ -589,7 +603,7 @@ export function FinancialClinicScoreHistory({
                       dataKey="average"
                       stroke="#f97316"
                       strokeWidth={3}
-                      name="Average Score"
+                      name={t('average_score')}
                       dot={{ fill: "#f97316", strokeWidth: 2, r: 6 }}
                       activeDot={{ r: 8 }}
                     />
@@ -604,10 +618,10 @@ export function FinancialClinicScoreHistory({
         <div className="mt-6 sm:mt-8" style={{ marginTop: "100px" }}>
           <div className="mb-3 sm:mb-4">
             <h2 className="text-base sm:text-lg font-semibold text-[#5E5E5E]">
-              Assessment History
+              {t('assessment_history')}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              Detailed view of all your completed assessments
+              {t('detailed_view_of_all_assessments')}
             </p>
           </div>
 
@@ -642,7 +656,7 @@ export function FinancialClinicScoreHistory({
                           variant="default"
                           className="text-[10px] sm:text-xs"
                         >
-                          Latest
+                          {t('latest')}
                         </Badge>
                       )}
 
@@ -676,7 +690,7 @@ export function FinancialClinicScoreHistory({
                   <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                     <div className="text-right sm:mr-4">
                       <div className="text-xs sm:text-sm font-medium">
-                        Assessment #{scoreHistory.length - index}
+                        {t('assessment_number', { number: scoreHistory.length - index })}
                       </div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground">
                         {new Date(response.created_at).toLocaleTimeString(
@@ -694,7 +708,7 @@ export function FinancialClinicScoreHistory({
                         className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
                       >
                         <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="hidden sm:inline">PDF</span>
+                        <span className="hidden sm:inline">{t('pdf')}</span>
                       </Button>
 
                       <Button
@@ -704,7 +718,7 @@ export function FinancialClinicScoreHistory({
                         className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
                       >
                         <EnvelopeSimple className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="hidden sm:inline">Email</span>
+                        <span className="hidden sm:inline">{t('email')}</span>
                       </Button>
                     </div>
                   </div>
@@ -735,7 +749,7 @@ export function FinancialClinicScoreHistory({
             style={{ width: "20%", borderRadius: "1px", marginTop: "5%" }}
           >
             <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
-              Back
+              {t('back')}
             </span>
           </Button>
         </div>
