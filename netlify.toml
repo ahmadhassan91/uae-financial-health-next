@@ -1,9 +1,8 @@
 [build]
-  # Build command for Next.js standard build (not static export)
-  command = "npm run build"
+  # Build command for Next.js standard build
+  command = "npm install && npm run build"
   
-  # For Next.js standard build, don't specify publish directory
-  # Let @netlify/plugin-nextjs handle it automatically
+  # For Next.js with @netlify/plugin-nextjs, let the plugin handle publish directory
   
   # Set Node.js version to 18 for compatibility
   [build.environment]
