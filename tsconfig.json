@@ -36,6 +36,10 @@
     "out/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/__tests__/**/*",
+    "src/lib/__tests__/**/*",
+    "src/app/_archived_test_pages/**/*",
+    "API_SERVICE_USAGE_GUIDE.tsx"
   ]
 }

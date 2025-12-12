@@ -34,7 +34,6 @@ import {
   X,
 } from "lucide-react";
 import { useAdminAuth } from "../hooks/use-admin-auth";
-import { notify } from "@/lib/notifications";
 import {
   adminApi,
   FilterOptions,
