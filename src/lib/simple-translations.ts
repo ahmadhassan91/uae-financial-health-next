@@ -215,9 +215,8 @@ export const translations = {
     view_previous_results: "عرض النتائج السابقة",
     language_selector: "اختر اللغة",
     welcome_back: "مرحباً بعودتك!",
-    sign_out: "تسجيل الخروج",
     admin_dashboard: "لوحة الإدارة",
-
+    sign_out: "تسجيل الخروج",
     // Homepage content
     financial_health_assessment: "تقييم الصحة المالية",
     trusted_uae_institution:
@@ -243,7 +242,6 @@ export const translations = {
     science_based_methodology: "منهجية علمية",
     science_based_methodology_description:
       "يستخدم تقييمنا مقاييس العافية المالية المثبتة والمكيفة خصيصاً لسكان دولة الإمارات. يقيم نظام التسجيل خمسة أركان رئيسية للصحة المالية.",
-    budgeting_expense_management: "إدارة الميزانية والنفقات",
     savings_emergency_funds: "المدخرات وصناديق الطوارئ",
     debt_management_pillar: "إدارة الديون",
     financial_planning_goals: "التخطيط المالي والأهداف",
@@ -274,7 +272,7 @@ export const translations = {
     previous_question: "السؤال السابق",
     complete_assessment: "إكمال التقييم",
     of: "من",
-
+    back: "خلف",
     // Profile Form
     customer_profile: "الملف الشخصي للعميل",
     provide_information_personalize:
@@ -357,22 +355,23 @@ export const translations = {
     needs_improvement: "يحتاج تحسين",
 
     // History Score Page
-    score_history: "سجل النقاط",
+    score_history: "سجل النتائج",
     no_previous_assessments:
       "لم يتم العثور على تقييمات سابقة. أكمل تقييمك الأول لبدء تتبع تقدمك.",
     back_to_assessment: "العودة إلى التقييم",
-    track_your_financial_health_progress: "تتبع تقدم صحتك المالية بمرور الوقت",
+    track_your_financial_health_progress:
+      "تتبع تقدمك في صحتك المالية بمرور الوقت",
     logged_in_as: "مسجل الدخول كـ: {{email}}",
-    current_score: "النقاط الحالية",
+    current_score: "النتيجة الحالية",
     change_from_previous: "التغيير عن السابق",
-    total_assessments: "إجمالي التقييمات",
-    score_trend: "اتجاه النقاط",
+    total_assessments: "التقييم الإجمالي",
+    score_trend: "اتجاه النتيجة",
     your_financial_health_score_progression:
-      "تطور درجة صحتك المالية بمرور الوقت",
+      "تطور مؤشر صحتك المالية بمرور الوقت",
     current_pillar_analysis: "تحليل الركائز الحالي",
     breakdown_of_your_latest_score:
-      "تفصيل آخر درجة لك حسب الركائز الست للصحة المالية",
-    assessment_history: "سجل التقييم",
+      "تحليل لأحدث تقييم لك حسب فئات الصحة المالية الست",
+    assessment_history: "تاريخ التقييم",
     detailed_view_of_all_assessments: "عرض مفصل لجميع تقييماتك المكتملة",
     latest: "الأحدث",
     assessment_number: "التقييم #{{number}}",
@@ -401,8 +400,8 @@ export const translations = {
 
     // Chart labels
     score: "النقاط",
-    current_score_chart: "النقاط الحالية",
-    average_score: "متوسط النقاط",
+    current_score_chart: "النتيجة الحالية",
+    average_score: "متوسط ​​الدرجات",
     category: "الفئة",
     score_percentage: "النقاط (%)",
   },
