@@ -270,7 +270,7 @@ function FinancialClinicLoginContent() {
                   </Button>
 
                   <div className="text-center">
-                    <Link href={`/financial-clinic?lang=${language}`}>
+                    <Link href={`/${language ? `?lang=${language}` : ""}`}>
                       <Button variant="link" className="text-sm">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         {language === "ar"

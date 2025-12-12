@@ -143,11 +143,14 @@ export function ConsultationRequestModal({
     const phoneRegex = /^(?:\+971|00971|0)?(?:50|51|52|54|55|56|58)[0-9]{7}$/;
     // Allow international numbers too generally, but if it looks like UAE, enforce format
     // Or just check if it has at least 9 digits
-    const generalPhoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+    const generalPhoneRegex =
+      /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
 
-    if (!generalPhoneRegex.test(formData.phone_number.replace(/\s/g, ''))) {
+    if (!generalPhoneRegex.test(formData.phone_number.replace(/\s/g, ""))) {
       toast.error(
-        language === "ar" ? "رقم الهاتف غير صحيح" : "Invalid phone number format"
+        language === "ar"
+          ? "رقم الهاتف غير صحيح"
+          : "Invalid phone number format"
       );
       return false;
     }
@@ -358,7 +361,11 @@ export function ConsultationRequestModal({
               }
               className="flex flex-col space-y-2"
             >
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+              <div
+                className={`flex items-center gap-2 ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
+              >
                 <RadioGroupItem value="phone" id="phone-method" />
                 <Label
                   htmlFor="phone-method"
@@ -368,7 +375,11 @@ export function ConsultationRequestModal({
                   {language === "ar" ? "مكالمة هاتفية" : "Phone Call"}
                 </Label>
               </div>
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+              <div
+                className={`flex items-center gap-2 ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
+              >
                 <RadioGroupItem value="whatsapp" id="whatsapp-method" />
                 <Label
                   htmlFor="whatsapp-method"
@@ -478,8 +489,8 @@ export function ConsultationRequestModal({
                   ? "جاري الإرسال..."
                   : "Sending..."
                 : language === "ar"
-                  ? "إرسال الطلب"
-                  : "Send Request"}
+                ? "إرسال الطلب"
+                : "Send Request"}
             </Button>
           </div>
         </form>

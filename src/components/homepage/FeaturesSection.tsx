@@ -71,20 +71,21 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col w-full items-center justify-start gap-3 p-4 sm:p-3"
+              className="flex flex-col items-center justify-center w-full h-full p-4 sm:p-3"
             >
-              <img
-                className="w-8 h-8 flex-shrink-0"
-                alt="Feature icon"
-                src={feature.icon}
-              />
-
-              <span
-                className="self-stretch text-[#575757] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6 text-center"
-                dangerouslySetInnerHTML={{
-                  __html: language === "ar" ? feature.textAr : feature.textEn,
-                }}
-              />
+              <div className="flex flex-col items-center justify-center">
+                <img
+                  className="w-12 h-12 mb-2 mx-auto"
+                  alt="Feature icon"
+                  src={feature.icon}
+                />
+                <span
+                  className="text-[#575757] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6 text-center"
+                  dangerouslySetInnerHTML={{
+                    __html: language === "ar" ? feature.textAr : feature.textEn,
+                  }}
+                />
+              </div>
             </div>
           ))}
         </div>

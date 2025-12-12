@@ -423,14 +423,16 @@ export function FinancialClinicScoreHistory({
                 >
                   {t("score_history")}
                 </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  {t("track_your_financial_health_progress")}
+                <div className="text-center">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    {t("track_your_financial_health_progress")}
+                  </p>
                   {userEmail && (
-                    <span className="block text-xs mt-1 truncate">
+                    <span className="block text-xs mt-1 truncate text-center">
                       {t("logged_in_as", { email: userEmail })}
                     </span>
                   )}
-                </p>
+                </div>
               </div>
             </div>
           </div>
