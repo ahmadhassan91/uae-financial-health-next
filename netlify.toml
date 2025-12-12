@@ -8,8 +8,9 @@
   # Set Node.js version to 18 for compatibility
   [build.environment]
     NODE_VERSION = "18"
-    # Production API URL pointing to new Heroku backend
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
+    # IMPORTANT: Set NEXT_PUBLIC_API_URL in Netlify dashboard > Site settings > Environment variables
+    # Do NOT hardcode production URLs here
+    # Example: NEXT_PUBLIC_API_URL = "https://your-backend.herokuapp.com/api/v1"
 
 # Next.js plugin configuration
 [[plugins]]
@@ -70,14 +71,16 @@
   pretty_urls = true
 
 # Context-specific settings
+# IMPORTANT: Configure NEXT_PUBLIC_API_URL in Netlify dashboard instead of hardcoding here
 [context.production]
   [context.production.environment]
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
+    # Set in Netlify dashboard: Site settings > Environment variables
+    # NEXT_PUBLIC_API_URL = "https://your-backend.herokuapp.com/api/v1"
 
 [context.deploy-preview]
   [context.deploy-preview.environment]
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
+    # Set in Netlify dashboard for deploy previews
 
 [context.branch-deploy]
   [context.branch-deploy.environment]
-    NEXT_PUBLIC_API_URL = "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1"
+    # Set in Netlify dashboard for branch deploys

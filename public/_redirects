@@ -1,10 +1,12 @@
 # Netlify _redirects file for SPA routing
 # This file handles client-side routing for the Next.js static export
 
-# API proxy rules - redirect API calls to Heroku backend
-# Note: These are optional since the frontend will directly call the backend
-# but can be useful for CORS handling if needed
-/api/*  https://uae-financial-health-api-4188fd6ae86c.herokuapp.com/api/:splat  200
+# API proxy rules - redirect API calls to backend
+# IMPORTANT: Configure the actual backend URL in Netlify dashboard
+# Go to: Site settings > Environment variables > Add NEXT_PUBLIC_API_URL
+# The frontend will use the environment variable directly for API calls
+# These proxy rules are disabled - use direct API calls instead
+# /api/*  YOUR_BACKEND_URL/api/:splat  200
 
 # Handle dynamic company survey routes
 # Pattern: /survey/c/[companyId] -> static export handles this automatically

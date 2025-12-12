@@ -31,6 +31,7 @@ import {
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useLocalization } from "@/contexts/LocalizationContext";
 
 interface CategoryScore {
   score: number;
@@ -69,6 +70,7 @@ export function FinancialClinicScoreHistory({
   userEmail,
 }: FinancialClinicScoreHistoryProps) {
   const router = useRouter();
+  const { t, isRTL } = useLocalization();
 
   // Helper function to safely get category score percentage
   const getCategoryPercentage = (
@@ -85,17 +87,17 @@ export function FinancialClinicScoreHistory({
 
   if (!scoreHistory || scoreHistory.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 p-4" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="container mx-auto max-w-4xl py-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold mb-4">Score History</h1>
+            <h1 className="text-3xl font-bold mb-4">{t('score_history')}</h1>
             <p className="text-muted-foreground mb-8">
               No previous assessments found. Complete your first assessment to
               start tracking your progress.
             </p>
             <Button onClick={onBack}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Assessment
+              <ArrowLeft className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+              {t('back')}
             </Button>
           </div>
         </div>
@@ -371,7 +373,7 @@ export function FinancialClinicScoreHistory({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-br p-3 sm:p-4 md:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container mx-auto max-w-6xl py-4 sm:py-6 md:py-8">
         {/* Header */}
         <div
@@ -397,10 +399,10 @@ export function FinancialClinicScoreHistory({
                   className="text-xl sm:text-2xl md:text-3xl font-bold truncate"
                   style={{ textAlign: "center" }}
                 >
-                  Score History
+                  {t('score_history')}
                 </h1>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Track your financial health progress over time
+                  {t('track_financial_health_progress')}
                   {userEmail && (
                     <span className="block text-xs mt-1 truncate">
                       Logged in as: {userEmail}
@@ -418,7 +420,7 @@ export function FinancialClinicScoreHistory({
                 size="sm"
                 className="w-full sm:w-auto"
               >
-                Sign Out
+                {t('sign_out')}
               </Button>
             )}
           </div>
@@ -438,7 +440,7 @@ export function FinancialClinicScoreHistory({
                   className="text-xs sm:text-sm text-muted-foreground"
                   style={{ color: "#737373" }}
                 >
-                  Current Score
+                  {t('current_score')}
                 </div>
               </div>
 
@@ -462,7 +464,7 @@ export function FinancialClinicScoreHistory({
                     {Math.round(scoreDiff)}
                   </div>
                   <div className="text-xs sm:text-sm text-muted-foreground">
-                    Change from Previous
+                    {t('change_from_previous')}
                   </div>
                 </div>
               )}
@@ -475,7 +477,7 @@ export function FinancialClinicScoreHistory({
                   className="text-xs sm:text-sm text-muted-foreground"
                   style={{ color: "#737373" }}
                 >
-                  Total Assessments
+                  {t('total_assessments')}
                 </div>
               </div>
             </div>
@@ -488,10 +490,10 @@ export function FinancialClinicScoreHistory({
           <Card style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}>
             <CardHeader className="p-4 sm:p-6">
               <CardTitle className="text-base sm:text-lg">
-                Score Trend
+                {t('score_trend')}
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm">
-                Your financial health score progression over time
+                {t('score_progression_description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
@@ -526,10 +528,10 @@ export function FinancialClinicScoreHistory({
           <Card style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}>
             <CardHeader className="p-4 sm:p-6">
               <CardTitle className="text-base sm:text-lg">
-                Current Pillar Analysis
+                {t('current_pillar_analysis')}
               </CardTitle>
               <CardDescription className="text-xs sm:text-sm">
-                Breakdown of your latest score by the 6 financial health pillars
+                {t('pillar_breakdown_description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
@@ -604,10 +606,10 @@ export function FinancialClinicScoreHistory({
         <div className="mt-6 sm:mt-8" style={{ marginTop: "100px" }}>
           <div className="mb-3 sm:mb-4">
             <h2 className="text-base sm:text-lg font-semibold text-[#5E5E5E]">
-              Assessment History
+              {t('assessment_history')}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              Detailed view of all your completed assessments
+              {t('assessment_history_description')}
             </p>
           </div>
 
@@ -674,9 +676,9 @@ export function FinancialClinicScoreHistory({
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-                    <div className="text-right sm:mr-4">
+                    <div className={`${isRTL ? 'text-left sm:ml-4' : 'text-right sm:mr-4'}`}>
                       <div className="text-xs sm:text-sm font-medium">
-                        Assessment #{scoreHistory.length - index}
+                        {t('assessment')} #{scoreHistory.length - index}
                       </div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground">
                         {new Date(response.created_at).toLocaleTimeString(
@@ -694,7 +696,7 @@ export function FinancialClinicScoreHistory({
                         className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
                       >
                         <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="hidden sm:inline">PDF</span>
+                        <span className="hidden sm:inline">{t('pdf')}</span>
                       </Button>
 
                       <Button
@@ -704,7 +706,7 @@ export function FinancialClinicScoreHistory({
                         className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
                       >
                         <EnvelopeSimple className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="hidden sm:inline">Email</span>
+                        <span className="hidden sm:inline">{t('email')}</span>
                       </Button>
                     </div>
                   </div>
@@ -735,7 +737,7 @@ export function FinancialClinicScoreHistory({
             style={{ width: "20%", borderRadius: "1px", marginTop: "5%" }}
           >
             <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
-              Back
+              {t('back')}
             </span>
           </Button>
         </div>

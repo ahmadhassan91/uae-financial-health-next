@@ -3,26 +3,32 @@
  * Centralized API URL management for the application
  */
 
+// Development fallback URL (only used when NEXT_PUBLIC_API_URL is not set)
+const DEVELOPMENT_API_URL = "http://localhost:8000/api/v1";
+
 /**
  * Get the API base URL based on environment
  * Priority:
  * 1. NEXT_PUBLIC_API_URL environment variable (set in .env.local or Netlify)
- * 2. Localhost detection (for local development)
- * 3. Production Heroku backend (fallback)
+ * 2. Localhost fallback (for local development only)
  */
 export function getApiUrl(): string {
-  // Priority 1: Use environment variable if defined
+  // Priority 1: Use environment variable if defined (required for production)
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
   }
 
-  // Priority 2: Detect localhost for local development
-  if (typeof window !== "undefined" && window.location.origin.includes("localhost")) {
-    return "http://localhost:8000/api/v1";
+  // Priority 2: Fallback to localhost for development only
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    return DEVELOPMENT_API_URL;
   }
 
-  // Priority 3: Production Heroku backend (fallback)
-  return "https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com/api/v1";
+  // Warn if no API URL is configured in production
+  if (process.env.NODE_ENV === "production") {
+    console.warn("NEXT_PUBLIC_API_URL not configured for production");
+  }
+
+  return DEVELOPMENT_API_URL;
 }
 
 /**

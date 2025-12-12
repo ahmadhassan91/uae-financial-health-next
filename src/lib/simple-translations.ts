@@ -138,6 +138,24 @@ export const translations = {
     'good': 'Good',
     'fair': 'Fair',
     'needs_improvement': 'Needs Improvement',
+    
+    // Score History Page
+    'score_history': 'Score History',
+    'track_financial_health_progress': 'Track your financial health progress over time',
+    'total_assessments': 'Total Assessments',
+    'change_from_previous': 'Change from Previous',
+    'current_pillar_analysis': 'Current Pillar Analysis',
+    'pillar_breakdown_description': 'Breakdown of your latest score by the 6 financial health pillars',
+    'score_trend': 'Score Trend',
+    'average_score': 'Average Score',
+    'current_score': 'Current Score',
+    'score_progression_description': 'Your financial health score progression over time',
+    'assessment_history': 'Assessment History',
+    'assessment_history_description': 'Detailed view of all your completed assessments',
+    'email': 'Email',
+    'pdf': 'PDF',
+    'assessment': 'Assessment',
+    'back': 'Back',
   },
   
   ar: {
@@ -278,5 +296,23 @@ export const translations = {
     'good': 'جيد',
     'fair': 'مقبول',
     'needs_improvement': 'يحتاج تحسين',
+    
+    // Score History Page
+    'score_history': 'سجل النتائج',
+    'track_financial_health_progress': 'تتبع تقدمك في صحتك المالية بمرور الوقت',
+    'total_assessments': 'التقييم الإجمالي',
+    'change_from_previous': 'التغيير عن السابق',
+    'current_pillar_analysis': 'تحليل الفئات الحالية',
+    'pillar_breakdown_description': 'تحليل لأحدث تقييم لك حسب فئات الصحة المالية الست',
+    'score_trend': 'اتجاه النتيجة',
+    'average_score': 'متوسط الدرجات',
+    'current_score': 'النتيجة الحالية',
+    'score_progression_description': 'تطور مؤشر صحتك المالية بمرور الوقت',
+    'assessment_history': 'تاريخ التقييم',
+    'assessment_history_description': 'عرض تفصيلي لجميع تقييماتك المكتملة',
+    'email': 'بريد إلكتروني',
+    'pdf': 'PDF',
+    'assessment': 'تقييم',
+    'back': 'خلف',
   }
 };
