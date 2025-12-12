@@ -130,12 +130,13 @@ export function HeroSection() {
                 </p>
               </div>
 
-              <div className="w-full" style={{ display: "flex", gap: "15px" }}>
+              <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Button
                   onClick={handleStartCheckup}
-                  className="h-auto items-center justify-center gap-2.5 p-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 whitespace-nowrap"
+                  className="w-full sm:w-auto h-12 rounded-lg shadow-md items-center justify-center gap-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 whitespace-nowrap text-base sm:text-sm"
+                  style={{ minHeight: 48 }}
                 >
-                  <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
+                  <span className="w-fit font-normal text-white text-base sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
                     {language === "ar"
                       ? "بدء تقييم وضعي المالي"
                       : "START MY FINANCIAL CHECKUP"}
@@ -144,9 +145,10 @@ export function HeroSection() {
 
                 <Button
                   onClick={handleViewResults}
-                  className="h-auto items-center justify-center gap-2.5 p-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5EF]/90 whitespace-nowrap"
+                  className="w-full sm:w-auto h-12 rounded-lg shadow-md items-center justify-center gap-2.5 px-4 sm:px-6 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 whitespace-nowrap text-base sm:text-sm"
+                  style={{ minHeight: 48 }}
                 >
-                  <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
+                  <span className="w-fit font-normal text-white text-base sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
                     {language === "ar"
                       ? "النتائج السابقة"
                       : "VIEW PREVIOUS ASSESSEMENTS"}
