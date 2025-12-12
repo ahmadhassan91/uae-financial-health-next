@@ -41,7 +41,7 @@ export const translations = {
       "Our assessment uses proven financial wellness metrics adapted specifically for UAE residents. The scoring system evaluates five key pillars of financial health.",
     budgeting_expense_management: "Budgeting & Expense Management",
     savings_emergency_funds: "Savings & Emergency Funds",
-    debt_management: "Debt Management",
+    debt_management_pillar: "Debt Management",
     financial_planning_goals: "Financial Planning & Goals",
     investment_wealth_building: "Investment & Wealth Building",
 
@@ -245,7 +245,7 @@ export const translations = {
       "يستخدم تقييمنا مقاييس العافية المالية المثبتة والمكيفة خصيصاً لسكان دولة الإمارات. يقيم نظام التسجيل خمسة أركان رئيسية للصحة المالية.",
     budgeting_expense_management: "إدارة الميزانية والنفقات",
     savings_emergency_funds: "المدخرات وصناديق الطوارئ",
-    debt_management: "إدارة الديون",
+    debt_management_pillar: "إدارة الديون",
     financial_planning_goals: "التخطيط المالي والأهداف",
     investment_wealth_building: "الاستثمار وبناء الثروة",
 

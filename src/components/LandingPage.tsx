@@ -189,7 +189,7 @@ export function LandingPage({ onStartSurvey, onAdminAccess, onLogin, onLogout, u
               <ul className="text-sm text-muted-foreground space-y-2">
                 <li>• {t('budgeting_expense_management')}</li>
                 <li>• {t('savings_emergency_funds')}</li>
-                <li>• {t('debt_management')}</li>
+                <li>• {t('debt_management_pillar')}</li>
                 <li>• {t('financial_planning_goals')}</li>
                 <li>• {t('investment_wealth_building')}</li>
               </ul>
