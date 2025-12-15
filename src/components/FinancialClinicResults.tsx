@@ -159,7 +159,7 @@ export function FinancialClinicResults({
 
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
-                ? "هذه لمحة عن وضعكم، عرضٌ واضح لمدى صحّة أوضاعكم المالية اليوم."
+                ? "نقدّم لكم لمحة سريعة تعكس رؤية واضحة لمدى صحّة وضعكم المالي اليوم."
                 : "This is your snapshot; a clear view of how healthy your finances are today."}
             </p>
           </div>
