@@ -335,14 +335,14 @@ export function FinancialClinicResults({
                       >
                         <div
                           className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${
-                            isRTL ? "text-right" : "text-left"
+                            isRTL ? "" : ""
                           }`}
                         >
                           {getCategoryTranslation(categoryName)}
                         </div>
                         <div
                           className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
-                            isRTL ? "text-right" : "text-left"
+                            isRTL ? "" : ""
                           }`}
                         >
                           {getCategoryDescription(categoryName)}

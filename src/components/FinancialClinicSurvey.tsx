@@ -248,7 +248,7 @@ export function FinancialClinicSurvey({
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
             {language === "ar"
               ? "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
-              : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits—no judgments, just insights."}
+              : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits."}
           </p>
         </div>
 
@@ -283,7 +283,7 @@ export function FinancialClinicSurvey({
         {currentCategoryQuestions.length > 0 && (
           <div className="w-full max-w-[1380px] px-1 sm:px-2">
             <h2
-              className={`font-[family-name:var(--font-poppins)] font-semibold text-[#2a4d2e] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${
+              className={`font-[family-name:var(--font-poppins)] font-semibold text-[#575757] text-base md:text-lg lg:text-xl tracking-[0] leading-6 md:leading-7 mb-3 md:mb-4 px-2 sm:px-0 ${
                 isRTL ? "flex-row-reverse" : "flex-row"
               }`}
             >
@@ -304,17 +304,30 @@ export function FinancialClinicSurvey({
                     className="w-full bg-[#f8fbfd] border border-solid border-[#bdcdd6] overflow-hidden"
                   >
                     <CardContent className="flex flex-col sm:flex-row items-start gap-3 md:gap-4 lg:gap-6 p-3 sm:p-4 md:p-5 lg:p-8">
-                      {/* Question Number Circle - Golden accent */}
-                      <div className="flex flex-col w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center gap-2.5 p-2 md:p-2.5 lg:p-3 bg-[#64717C]/20 border-2 rounded-[100px] flex-shrink-0 self-center sm:self-start">
-                        <div className="font-[family-name:var(--font-poppins)] font-semibold text-[#64717C] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
-                          {question.number}
+                      {/* Question Number and Title Row */}
+                      <div className="flex flex-row items-center gap-3 md:gap-4 lg:gap-6 w-full sm:w-auto">
+                        {/* Question Number Circle - Golden accent */}
+                        <div className="flex w-[35px] h-[35px] md:w-[40px] md:h-[40px] lg:w-[43px] lg:h-[43px] items-center justify-center bg-[#64717C]/20 border-2 rounded-full flex-shrink-0">
+                          <div className="font-[family-name:var(--font-poppins)] font-semibold text-[#64717C] text-sm sm:text-base md:text-lg text-center tracking-[0] leading-5 md:leading-7">
+                            {question.number}
+                          </div>
                         </div>
+
+                        {/* Question Title - Only on mobile, shown inline with number */}
+                        <h3
+                          className={`sm:hidden font-[family-name:var(--font-poppins)] font-semibold text-[#575757] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words flex-1 ${
+                            isRTL ? "text-right" : "text-left"
+                          }`}
+                        >
+                          {questionText}
+                        </h3>
                       </div>
 
                       {/* Question Content */}
                       <div className="flex flex-col items-start gap-2 flex-1 w-full min-w-0">
+                        {/* Question Title - Desktop only */}
                         <h3
-                          className={`font-[family-name:var(--font-poppins)] font-semibold text-[#575757] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${
+                          className={`hidden sm:block font-[family-name:var(--font-poppins)] font-semibold text-[#575757] text-sm md:text-base lg:text-lg tracking-[0] leading-5 md:leading-6 lg:leading-7 break-words ${
                             isRTL ? "text-right" : "text-left"
                           }`}
                         >
