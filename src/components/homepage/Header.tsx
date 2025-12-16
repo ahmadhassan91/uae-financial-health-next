@@ -84,14 +84,18 @@ export function HomepageHeader() {
           <Link href="/">
             <img
               className="h-[28px] sm:h-[40px] md:h-[50px] cursor-pointer"
-              style={{marginLeft:"35px"}}
+              style={
+                language === "ar"
+                  ? { marginLeft: "35px", marginRight: "35px" }
+                  : { marginLeft: "35px" }
+              }
               alt="Financial Clinic Logo"
               src="/homepage/icons/logo.svg"
             />
           </Link>
         </div>
       </div>
-      
+
       {/* Golden accent line below logos */}
       <div className="w-full h-1 bg-[#bd912e]" />
     </header>

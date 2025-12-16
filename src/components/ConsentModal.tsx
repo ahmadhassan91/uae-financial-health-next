@@ -20,7 +20,8 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
     React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [termsExpanded, setTermsExpanded] = React.useState(false);
-  const [acknowledgementExpanded, setAcknowledgementExpanded] = React.useState(false);
+  const [acknowledgementExpanded, setAcknowledgementExpanded] =
+    React.useState(false);
   const [noOfferExpanded, setNoOfferExpanded] = React.useState(false);
   const [disclaimerExpanded, setDisclaimerExpanded] = React.useState(false);
   const [trademarksExpanded, setTrademarksExpanded] = React.useState(false);
@@ -87,7 +88,7 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
         </div>
 
         {/* Scrollable Content - Only the informational sections */}
-        <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6 space-y-3 sm:space-y-4 md:space-y-8 overflow-y-auto flex-1 max-h-[25vh] sm:max-h-[35vh] md:max-h-none">
+        <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6 space-y-3 sm:space-y-4 md:space-y-3 overflow-y-auto flex-1 max-h-[25vh] sm:max-h-[35vh] md:max-h-none">
           {/* What We Collect */}
           <div className="bg-[#f2f5f7] rounded-lg overflow-hidden">
             <button
@@ -117,7 +118,9 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
           {/* How We Use Your Data */}
           <div className="bg-[#f2f5f7] rounded-lg overflow-hidden">
             <button
-              onClick={() => setAcknowledgementExpanded(!acknowledgementExpanded)}
+              onClick={() =>
+                setAcknowledgementExpanded(!acknowledgementExpanded)
+              }
               className="w-full p-3 sm:p-4 md:p-[18px] flex items-center justify-between text-left hover:bg-[#e8ecf0] transition-colors"
             >
               <h3 className="font-normal text-[#565d63] text-sm sm:text-base leading-5 sm:leading-6">
@@ -229,7 +232,7 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
         </div>
 
         {/* Required Consents - Fixed section outside scrollable area */}
-        <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6 border-t border-gray-100 flex-shrink-0">
+        <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-3 border-t border-gray-100 flex-shrink-0">
           <div className="space-y-2 sm:space-y-3">
             <h3 className="font-normal text-[#565d63] text-sm sm:text-base leading-5 sm:leading-6">
               {language === "ar"
@@ -238,8 +241,10 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
             </h3>
 
             {/* Profiling Consent */}
-            <div className="p-2.5 sm:p-3 md:p-4 border border-gray-200 rounded-lg 
-            transition-colors">
+            <div
+              className="p-2.5 sm:p-3 md:p-4 border border-gray-200 rounded-lg 
+            transition-colors"
+            >
               <div className="flex items-start gap-2.5 sm:gap-3 md:gap-4">
                 <Checkbox
                   id="profiling-consent"
