@@ -71,6 +71,7 @@ import { CompaniesAnalyticsTable } from "./admin/CompaniesAnalyticsTable";
 import { ScoreAnalyticsTable } from "./admin/ScoreAnalyticsTable";
 import { CompanyManagement } from "./CompanyManagement";
 import { LeadsManagement } from "./LeadsManagement";
+import { CompaniesDetails } from "./admin/CompaniesDetails";
 import { IncompleteSurveys } from "./admin/IncompleteSurveys";
 import { SystemManagement } from "./admin/SystemManagement";
 import { SubmissionsTable } from "./admin/SubmissionsTable";
@@ -508,8 +509,8 @@ export function FinancialClinicAdminDashboard({
                 <TabsList
                   className={`inline-flex w-auto min-w-full lg:grid ${
                     user?.admin_role === "view_only"
-                      ? "lg:grid-cols-4"
-                      : "lg:grid-cols-6"
+                      ? "lg:grid-cols-5"
+                      : "lg:grid-cols-7"
                   } gap-1`}
                 >
                   <TabsTrigger
@@ -532,6 +533,12 @@ export function FinancialClinicAdminDashboard({
                       Companies
                     </TabsTrigger>
                   )}
+                  <TabsTrigger
+                    value="companies-details"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    Companies Details
+                  </TabsTrigger>
                                     <TabsTrigger
                     value="leads"
                     className="text-xs sm:text-sm whitespace-nowrap"
@@ -713,6 +720,11 @@ export function FinancialClinicAdminDashboard({
               {/* Leads Tab */}
               <TabsContent value="leads" className="space-y-6">
                 <LeadsManagement />
+              </TabsContent>
+
+              {/* Companies Details Tab */}
+              <TabsContent value="companies-details" className="space-y-6">
+                <CompaniesDetails />
               </TabsContent>
 
               {/* Incomplete Tab */}

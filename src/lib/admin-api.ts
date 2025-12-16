@@ -580,4 +580,100 @@ export const adminApi = {
     const data = await response.json();
     return data.breakdown || [];
   },
+
+  // Companies Details API methods
+  async uploadCompaniesCSV(file: File): Promise<{
+    message: string;
+    companies_uploaded: number;
+    companies: any[];
+  }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/upload-csv`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_access_token")}`,
+        },
+        body: formData,
+      }
+    );
+    
+    if (!response.ok) throw new Error("Failed to upload CSV");
+    return await response.json();
+  },
+
+  async getUploadedCompanies(search?: string): Promise<{
+    companies: any[];
+    total: number;
+  }> {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/companies?${params}`,
+      { headers: getAuthHeaders() }
+    );
+    
+    if (!response.ok) throw new Error("Failed to fetch companies");
+    return await response.json();
+  },
+
+  async searchCompanies(query: string, limit: number = 10): Promise<any[]> {
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/search-companies?q=${encodeURIComponent(query)}&limit=${limit}`,
+      { headers: getAuthHeaders() }
+    );
+    
+    if (!response.ok) throw new Error("Failed to search companies");
+    return await response.json();
+  },
+
+  async createCustomerProfile(profileData: {
+    company_id: number;
+    full_name: string;
+    date_of_birth: string;
+    gender: string;
+    nationality: string;
+    emirate: string;
+    children: string;
+    employment_status: string;
+    household_income: string;
+    email: string;
+    mobile_number: string;
+  }): Promise<any> {
+    const formData = new FormData();
+    Object.entries(profileData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/customer-profile`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_access_token")}`,
+        },
+        body: formData,
+      }
+    );
+    
+    if (!response.ok) throw new Error("Failed to create customer profile");
+    return await response.json();
+  },
+
+  async getCustomerProfiles(companyId?: number): Promise<any[]> {
+    const params = new URLSearchParams();
+    if (companyId) params.append('company_id', companyId.toString());
+    
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/customer-profiles?${params}`,
+      { headers: getAuthHeaders() }
+    );
+    
+    if (!response.ok) throw new Error("Failed to fetch customer profiles");
+    return await response.json();
+  },
 };
