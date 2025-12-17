@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Standard build for Netlify deployment
+  // Static export for on-prem deployment (set STATIC_EXPORT=true in .env)
+  // When enabled, runs `next build` and exports to 'out' folder
+  output: process.env.STATIC_EXPORT === 'true' ? 'export' : undefined,
+  
+  // Standard build settings
   trailingSlash: true,
   images: {
     unoptimized: true
