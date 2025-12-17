@@ -478,7 +478,7 @@ export function FinancialClinicScoreHistory({
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center col-span-2 md:col-span-1">
-                <div className="text-3xl sm:text-4xl font-bold text-[#s5E5E5E] mb-2">
+                <div className="text-3xl sm:text-4xl font-bold text-[#5E5E5E] mb-2">
                   {Math.round(latestScore.overall_score)}
                 </div>
                 <div
@@ -612,8 +612,8 @@ export function FinancialClinicScoreHistory({
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="factor"
-                      tick={{ fontSize: 9 }}
-                      angle={isRTL ? 45 : -45}
+                      tick={{ fontSize: 9, dx: isRTL ? 25 : 0, dy: isRTL ? 10 : 0 }}
+                      angle={isRTL ? -10 : -15}
                       textAnchor={isRTL ? "start" : "end"}
                       height={120}
                       interval={0}
@@ -656,17 +656,17 @@ export function FinancialClinicScoreHistory({
                     />
                     <Bar
                       dataKey="score"
-                      fill="#3b82f6"
+                      fill="#5E5E5E"
                       name={t("current_score_chart")}
                       radius={[4, 4, 0, 0]}
                     />
                     <Line
                       type="monotone"
                       dataKey="average"
-                      stroke="#f97316"
+                      stroke="#AF8F39"
                       strokeWidth={3}
                       name={t("average_score")}
-                      dot={{ fill: "#f97316", strokeWidth: 2, r: 6 }}
+                      dot={{ fill: "#AF8F39", strokeWidth: 2, r: 6 }}
                       activeDot={{ r: 8 }}
                     />
                   </ComposedChart>

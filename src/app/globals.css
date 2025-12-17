@@ -32,8 +32,8 @@
     --secondary: 142 40% 60%; /* Light green */
     --secondary-foreground: 0 0% 100%;
     
-    /* Accent - Green highlight */
-    --accent: 142 50% 50%; /* Medium green */
+    /* Accent - Golden highlight #AF8F39 */
+    --accent: 44 52% 45%; /* Golden #AF8F39 */
     --accent-foreground: 0 0% 100%;
     
     --muted: 0 0% 96%;
@@ -410,20 +410,24 @@ input[type="date"]:not(:focus):invalid {
 }
 
 .react-datepicker__day:hover {
-  background-color: #e8f5e9 !important;
-  color: #437749 !important;
+  color: #AF8F39 !important;
 }
+
+.react-datepicker__day--today:hover {
+    color: white !important;
+}
+
+
 
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
-  background-color: #437749 !important;
+  background-color: #AF8F39 !important;
   color: white !important;
   font-weight: 600 !important;
 }
 
 .react-datepicker__day--today {
   font-weight: 600 !important;
-  color: #437749 !important;
 }
 
 .react-datepicker__day--disabled {
