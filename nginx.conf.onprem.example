@@ -1,0 +1,223 @@
+# =============================================================================
+# NGINX CONFIGURATION FOR ON-PREM DEPLOYMENT
+# =============================================================================
+# Copy this file to: /etc/nginx/sites-available/financialclinic.ae
+# Then enable with: sudo ln -sf /etc/nginx/sites-available/financialclinic.ae /etc/nginx/sites-enabled/
+# Test with: sudo nginx -t
+# Reload with: sudo systemctl reload nginx
+# =============================================================================
+
+# Upstream backend server
+upstream backend {
+    server 192.168.128.135:8000;
+    keepalive 32;
+}
+
+# =============================================================================
+# HTTPS SERVER (Main configuration)
+# =============================================================================
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name financialclinic.ae www.financialclinic.ae;
+
+    # ==========================================================================
+    # SSL/TLS CONFIGURATION
+    # ==========================================================================
+    # Use valid SSL certificates (e.g., from Let's Encrypt)
+    ssl_certificate /etc/letsencrypt/live/financialclinic.ae/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/financialclinic.ae/privkey.pem;
+    
+    # SSL session configuration
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+    
+    # Modern SSL configuration
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    
+    # HSTS header (optional but recommended)
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    # ==========================================================================
+    # LOGGING
+    # ==========================================================================
+    access_log /var/log/nginx/financialclinic_access.log;
+    error_log /var/log/nginx/financialclinic_error.log warn;
+
+    # ==========================================================================
+    # GZIP COMPRESSION
+    # ==========================================================================
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1000;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/json;
+
+    # ==========================================================================
+    # FRONTEND - Serve static files from 'out' directory
+    # ==========================================================================
+    root /var/www/financialclinic/out;
+
+    # Root location - serve index.html for React Router
+    location / {
+        # Try files, directories, then fall back to index.html
+        try_files $uri $uri/ /index.html;
+        
+        # Cache control for HTML files (short cache)
+        expires 5m;
+        add_header Cache-Control "public, max-age=300";
+    }
+
+    # Static assets - aggressive caching
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # ==========================================================================
+    # BACKEND API - Proxy to FastAPI backend
+    # ==========================================================================
+    location /api/ {
+        # Proxy to backend
+        proxy_pass http://backend;
+        proxy_http_version 1.1;
+        
+        # Required proxy headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $server_name;
+        
+        # WebSocket support (if needed for real-time features)
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        
+        # Connection settings
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        
+        # Timeouts for long-running requests (reports, uploads)
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 300s;
+        proxy_read_timeout 300s;
+        
+        # Buffer sizes
+        proxy_buffer_size 128k;
+        proxy_buffers 4 256k;
+        proxy_busy_buffers_size 256k;
+    }
+
+    # ==========================================================================
+    # NFS STORAGE - Serve files from NFS mount
+    # ==========================================================================
+    location /storage/ {
+        # Serve files from NFS mounted directory
+        alias /mnt/financialclinic/;
+        
+        # Disable directory listing for security
+        autoindex off;
+        
+        # Cache control for storage files
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        
+        # Allow CORS for PDF downloads
+        add_header Access-Control-Allow-Origin "*";
+        add_header Access-Control-Allow-Methods "GET, HEAD, OPTIONS";
+    }
+
+    # ==========================================================================
+    # HEALTH CHECK ENDPOINT
+    # ==========================================================================
+    location /health {
+        access_log off;
+        return 200 "OK";
+        add_header Content-Type text/plain;
+    }
+
+    # ==========================================================================
+    # SECURITY HEADERS
+    # ==========================================================================
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    
+    # Content Security Policy (adjust as needed)
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com;" always;
+
+    # ==========================================================================
+    # DISABLE ACCESS TO SENSITIVE FILES
+    # ==========================================================================
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    location ~ ~$ {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # ==========================================================================
+    # DENY ACCESS TO .env FILES
+    # ==========================================================================
+    location ~ /\.env {
+        deny all;
+    }
+
+}
+
+# =============================================================================
+# HTTP SERVER - Redirect all HTTP to HTTPS
+# =============================================================================
+server {
+    listen 80;
+    listen [::]:80;
+    server_name financialclinic.ae www.financialclinic.ae;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+# =============================================================================
+# INSTALLATION & SETUP INSTRUCTIONS
+# =============================================================================
+# 
+# 1. Install Nginx:
+#    sudo apt-get update && sudo apt-get install -y nginx
+#
+# 2. Install Let's Encrypt certificates:
+#    sudo apt-get install -y certbot python3-certbot-nginx
+#    sudo certbot certonly -d financialclinic.ae -d www.financialclinic.ae
+#
+# 3. Copy this config:
+#    sudo cp nginx.conf.onprem.example /etc/nginx/sites-available/financialclinic.ae
+#
+# 4. Enable the site:
+#    sudo ln -sf /etc/nginx/sites-available/financialclinic.ae /etc/nginx/sites-enabled/
+#    sudo rm /etc/nginx/sites-enabled/default (if exists)
+#
+# 5. Test configuration:
+#    sudo nginx -t
+#
+# 6. Start/reload Nginx:
+#    sudo systemctl start nginx
+#    sudo systemctl reload nginx
+#    sudo systemctl enable nginx
+#
+# 7. Deploy frontend:
+#    sudo mkdir -p /var/www/financialclinic/out
+#    sudo chown -R www-data:www-data /var/www/financialclinic
+#    # Extract built files here
+#
+# 8. Verify:
+#    curl -I https://financialclinic.ae
+#    curl -I https://financialclinic.ae/api/v1/health
+#
+# =============================================================================

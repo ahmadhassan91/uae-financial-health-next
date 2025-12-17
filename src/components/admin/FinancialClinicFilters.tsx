@@ -114,7 +114,7 @@ export function FinancialClinicFilters({
       <Card>
         <CardContent className="py-6">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5E5E5E]"></div>
             <span className="ml-3 text-muted-foreground">
               Loading filters...
             </span>

@@ -145,7 +145,7 @@ export function AdminLoginForm({ onSuccess, onBack }: AdminLoginFormProps) {
               >
                 {authLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin text-[#5E5E5E]" />
                     Signing in...
                   </>
                 ) : (
