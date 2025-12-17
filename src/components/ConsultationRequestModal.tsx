@@ -233,7 +233,10 @@ export function ConsultationRequestModal({
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-xl p-8 max-w-md w-full text-center">
           <div className="mb-6">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+            <CheckCircle
+              className="w-16 h-16 mx-auto mb-4"
+              style={{ color: "#AF8F39" }}
+            />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               {language === "ar" ? "تم الإرسال بنجاح!" : "Request Submitted!"}
             </h3>
@@ -245,7 +248,7 @@ export function ConsultationRequestModal({
           </div>
           <Button
             onClick={handleClose}
-            className="w-full bg-[#3fab4c] hover:bg-[#3fab4c]/90"
+            className="w-full bg-[#5E5E5E] hover:bg-[#5E5E5E]/90"
           >
             {language === "ar" ? "إغلاق" : "Close"}
           </Button>
