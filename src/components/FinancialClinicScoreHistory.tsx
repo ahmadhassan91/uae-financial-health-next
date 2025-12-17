@@ -555,7 +555,7 @@ export function FinancialClinicScoreHistory({
                     />
                     <YAxis
                       domain={[0, 100]}
-                      tick={{ fontSize: 10 }}
+                      tick={{ fontSize: 9, dx: isRTL ? 10 : 0, dy: isRTL ? 0 : 0 }}
                       orientation={isRTL ? "right" : "left"}
                       tickMargin={5}
                       axisLine={{ stroke: "#ccc" }}
@@ -622,7 +622,7 @@ export function FinancialClinicScoreHistory({
                     />
                     <YAxis
                       domain={[0, 100]}
-                      tick={{ fontSize: 10 }}
+                      tick={{ fontSize: 9, dx: isRTL ? 10 : 0, dy: isRTL ? 0 : 0 }}
                       orientation={isRTL ? "right" : "left"}
                       tickMargin={10}
                       axisLine={{ stroke: "#ccc" }}
