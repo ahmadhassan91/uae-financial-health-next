@@ -89,19 +89,19 @@ export const CATEGORY_DESCRIPTIONS = {
   },
   "Savings Habit": {
     en: "Saving behavior and emergency preparedness",
-    ar: "عادات الادخار والاستعداد لحالات الطوارئ",
+    ar: "عادات الادخار والاستعداد لحالات الطوارئ",
   },
   "Emergency Savings": {
     en: "Emergency fund readiness",
-    ar: "الاستعداد للادخار في حالات الطوارئ",
+    ar: "الاستعداد للادخار في حالات الطوارئ",
   },
   "Debt Management": {
     en: "Debt control and debit health",
-    ar: "التحكّم في الديون والصحّة الائتمانية",
+    ar: "التحكّم في الديون والصحّة الائتمانية",
   },
   "Retirement Planning": {
     en: "Long-term financial security",
-    ar: "الأمان المالي الطويل الأمد",
+    ar: "الأمان المالي الطويل الأمد",
   },
   "Protecting Your Assets | Loved Ones": {
     en: "Insurance and risk management",

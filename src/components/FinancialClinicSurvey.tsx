@@ -244,11 +244,13 @@ export function FinancialClinicSurvey({
         </div>
 
         {/* Welcome Text */}
-        <div className="w-full max-w-[790px] mb-4 md:mb-6 lg:mb-8 px-2">
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
+        <div
+          className={`w-full mb-4 md:mb-6 lg:mb-8 px-2 ${language === "ar" ? "max-w-[634px]" : "max-w-[675px]"}`}
+        >
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center whitespace-pre-line">
             {language === "ar"
               ? "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
-              : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits."}
+              : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits\nno judgments, just insights."}
           </p>
         </div>
 
@@ -262,10 +264,9 @@ export function FinancialClinicSurvey({
             />
 
             {/* Progress Text */}
-            <div className="flex flex-col gap-[3px]">
+            <div className="flex flex-col items-center gap-[3px] w-full">
               <p
-                className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center"
-                style={{ width: "670px" }}
+                className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center w-full px-2"
               >
                 {language === "ar"
                   ? `لقد أجَبْتم عن %${Math.round(
@@ -357,12 +358,8 @@ export function FinancialClinicSurvey({
                               <div
                                 key={option.value}
                                 className={`flex items-start gap-2.5 md:gap-3 ${
-                                  isRTL ? "flex-row-reverse" : "flex-row"
-                                } min-h-[24px]`}
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "end",
-                                }}
+                                  isRTL ? "flex-row-reverse justify-end" : "flex-row justify-start"
+                                } min-h-[24px] w-full`}
                               >
                                 <RadioGroupItem
                                   value={option.value.toString()}
@@ -402,12 +399,9 @@ export function FinancialClinicSurvey({
 
         {/* Navigation Buttons */}
         <div
-          className={`flex flex-col sm:flex-row ${
-            currentStep > 0 ? "sm:justify-between" : "sm:justify-end"
-          } items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${
-            isRTL ? "flex-row-reverse" : "flex-row"
+          className={`flex flex-col sm:flex-row justify-center items-stretch sm:items-center w-full max-w-[1380px] mt-6 md:mt-8 lg:mt-12 gap-3 md:gap-4 px-2 ${
+            isRTL ? "sm:flex-row-reverse" : ""
           }`}
-          style={{ display: "flex", justifyContent: "center" }}
         >
           {/* Previous Button - Only show if not on first category */}
           {currentStep > 0 && (
