@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle, Info, X, ArrowLeft, EnvelopeSimple } from '@phosphor-icons/react';
+import { CheckCircle, Info, X, ArrowLeft, EnvelopeSimple, SpinnerGap } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import type { FinancialClinicResult } from '@/lib/financial-clinic-types';
 import { OTPInput } from '@/components/OTPInput';
@@ -266,7 +266,7 @@ export function FinancialClinicAccountModal({
             >
               {loading ? (
                 <>
-                  <span className="animate-spin mr-2">⏳</span>
+                  <SpinnerGap className="w-4 h-4 mr-2 animate-spin text-[#5E5E5E]" weight="bold" />
                   {language === 'ar' ? 'جارٍ الإرسال...' : 'Sending...'}
                 </>
               ) : (
@@ -360,7 +360,7 @@ export function FinancialClinicAccountModal({
               >
                 {loading ? (
                   <>
-                    <span className="animate-spin mr-2">⏳</span>
+                    <SpinnerGap className="w-4 h-4 mr-2 animate-spin text-[#5E5E5E]" weight="bold" />
                     {language === 'ar' ? 'جارٍ التحقق...' : 'Verifying...'}
                   </>
                 ) : (

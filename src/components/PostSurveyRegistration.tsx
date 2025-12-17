@@ -141,7 +141,7 @@ export function PostSurveyRegistration({
               You're being logged in automatically...
             </p>
             <div className="flex justify-center">
-              <Loader2 className="h-6 w-6 animate-spin" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#5E5E5E]" />
             </div>
           </CardContent>
         </Card>
@@ -290,7 +290,7 @@ export function PostSurveyRegistration({
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Button type="submit" className="flex-1" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin text-[#5E5E5E]" />}
                 Create Account & Save Results
               </Button>
               <Button 

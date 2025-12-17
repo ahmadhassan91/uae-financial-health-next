@@ -48,7 +48,7 @@ export function SurveyFlow({ currentStep, customerProfile, onStepChange, onRespo
           <Card className="shadow-lg border-none">
             <CardContent className="p-8">
               <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mr-3"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5E5E5E] mr-3"></div>
                 <span>{t('loading')}...</span>
               </div>
             </CardContent>

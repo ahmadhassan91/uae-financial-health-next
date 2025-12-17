@@ -111,7 +111,7 @@ export function FinancialClinicSurvey({
         <HomepageHeader />
         <div className="flex-1 flex items-center justify-center px-4">
           <div className="text-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#437749] mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5E5E5E] mx-auto"></div>
             <p className="text-[#575757]">
               {language === "ar"
                 ? "جاري تحميل الأسئلة..."
