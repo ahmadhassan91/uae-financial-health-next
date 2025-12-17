@@ -259,14 +259,10 @@ export function FinancialClinicResults({
                     key={index}
                     className="flex flex-col flex-1 items-center px-0.5 sm:px-2 md:px-3 py-0"
                   >
-                    <div
-                      className="font-semibold text-[#575757] text-[8px] sm:text-xs md:text-sm text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full"
-                    >
+                    <div className="font-semibold text-[#575757] text-[8px] sm:text-xs md:text-sm text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full">
                       {band.title[language]}
                     </div>
-                    <div
-                      className="font-normal text-[#575757] text-[7px] sm:text-[10px] md:text-sm text-center tracking-[0] leading-[10px] sm:leading-4 md:leading-5 w-full"
-                    >
+                    <div className="font-normal text-[#575757] text-[7px] sm:text-[10px] md:text-sm text-center tracking-[0] leading-[10px] sm:leading-4 md:leading-5 w-full">
                       {band.description[language]}
                     </div>
                   </div>
@@ -338,7 +334,7 @@ export function FinancialClinicResults({
                         </div>
                         <div
                           className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
-                            isRTL ? "" : ""
+                            language === "ar" ? "whitespace-nowrap" : ""
                           }`}
                         >
                           {getCategoryDescription(categoryName)}
