@@ -337,9 +337,7 @@ export function FinancialClinicResults({
                           {getCategoryTranslation(categoryName)}
                         </div>
                         <div
-                          className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
-                            isRTL ? "" : ""
-                          }`}
+                          className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${language === "ar" ? "whitespace-nowrap" : ""}`}
                         >
                           {getCategoryDescription(categoryName)}
                         </div>
