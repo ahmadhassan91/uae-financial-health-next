@@ -330,7 +330,8 @@ export default function FinancialClinicResultsPage() {
         <Card className="max-w-md w-full">
           <CardContent className="p-8">
             <div className="text-center space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              {/* <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div> */}
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5E5E5E] mx-auto"></div>
               <p className="text-muted-foreground">Loading your results...</p>
             </div>
           </CardContent>

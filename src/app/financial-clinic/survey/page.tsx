@@ -214,8 +214,8 @@ export default function FinancialClinicSurveyPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#437749] mx-auto"></div>
-          <p className="text-[#a1aeb7]">Loading your profile...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5E5E5E] mx-auto"></div>
+          <p className="text-[##5E5E5E]">Loading your profile...</p>
         </div>
       </div>
     );

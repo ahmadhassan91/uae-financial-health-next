@@ -97,7 +97,7 @@ export function SessionWarning({ isAdmin = false, onExtendSession, onLogout }: S
           >
             {isRefreshing ? (
               <>
-                <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                <RefreshCw className="h-3 w-3 mr-1 animate-spin text-[#5E5E5E]" />
                 Extending...
               </>
             ) : (

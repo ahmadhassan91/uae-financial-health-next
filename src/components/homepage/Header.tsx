@@ -67,11 +67,11 @@ export function HomepageHeader() {
 
       {/* Bottom row: Dual logos centered */}
       <div className="flex w-full items-center justify-center px-4 sm:px-6 md:px-[90px] py-4 sm:py-6 md:py-8">
-        <div className="flex items-center gap-3 sm:gap-6 md:gap-8">
+        <div className="flex items-center justify-center">
           {/* National Bonds Logo */}
           <Link href="/">
             <img
-              className="h-[35px] sm:h-[50px] md:h-[60px] cursor-pointer object-contain"
+              className="h-[42px] sm:h-[58px] md:h-[72px] cursor-pointer object-contain"
               alt="National Bonds Logo"
               src="/homepage/images/nbc-logo2-02-1.png"
             />
@@ -84,13 +84,18 @@ export function HomepageHeader() {
           <Link href="/">
             <img
               className="h-[28px] sm:h-[40px] md:h-[50px] cursor-pointer"
+              style={
+                language === "ar"
+                  ? { marginLeft: "35px", marginRight: "35px" }
+                  : { marginLeft: "35px" }
+              }
               alt="Financial Clinic Logo"
               src="/homepage/icons/logo.svg"
             />
           </Link>
         </div>
       </div>
-      
+
       {/* Golden accent line below logos */}
       <div className="w-full h-1 bg-[#bd912e]" />
     </header>

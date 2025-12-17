@@ -296,14 +296,14 @@ export function IncompleteSurveys() {
           <div className="flex space-x-2">
             <Button onClick={handleExportCSV} disabled={isExporting || surveys.length === 0} variant="outline" size="sm">
               {isExporting ? (
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin text-[#5E5E5E]" />
               ) : (
                 <Download className="h-4 w-4 mr-2" />
               )}
               Export CSV
             </Button>
             <Button onClick={loadData} disabled={loading} variant="outline" size="sm">
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 text-[#5E5E5E] ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
           </div>
@@ -365,7 +365,7 @@ export function IncompleteSurveys() {
                 onClick={handleSendFollowUp}
                 disabled={selectedSurveys.length === 0 || sendingFollowUp}
               >
-                {sendingFollowUp && <RefreshCw className="h-4 w-4 mr-2 animate-spin" />}
+                {sendingFollowUp && <RefreshCw className="h-4 w-4 mr-2 animate-spin text-[#5E5E5E]" />}
                 <Send className="h-4 w-4 mr-2" />
                 Send Follow-up ({selectedSurveys.length})
               </Button>

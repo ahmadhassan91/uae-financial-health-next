@@ -233,7 +233,10 @@ export function ConsultationRequestModal({
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-xl p-8 max-w-md w-full text-center">
           <div className="mb-6">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+            <CheckCircle
+              className="w-16 h-16 mx-auto mb-4"
+              style={{ color: "#AF8F39" }}
+            />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               {language === "ar" ? "تم الإرسال بنجاح!" : "Request Submitted!"}
             </h3>
@@ -245,7 +248,7 @@ export function ConsultationRequestModal({
           </div>
           <Button
             onClick={handleClose}
-            className="w-full bg-[#3fab4c] hover:bg-[#3fab4c]/90"
+            className="w-full bg-[#5E5E5E] hover:bg-[#5E5E5E]/90"
           >
             {language === "ar" ? "إغلاق" : "Close"}
           </Button>
@@ -275,7 +278,7 @@ export function ConsultationRequestModal({
             variant="ghost"
             size="icon"
             onClick={handleClose}
-            className="h-8 w-8"
+            className="h-8 w-8 hover:bg-[#5E5E5E]/10 hover:text-[#5E5E5E]"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -463,7 +466,7 @@ export function ConsultationRequestModal({
                   ? "أخبرنا عن أهدافك المالية أو أي أسئلة محددة لديك"
                   : "Tell us about your financial goals or any specific questions you have"
               }
-              className="mt-1 min-h-[80px]"
+              className="mt-1 min-h-[80px] focus:border-[#5E5E5E] focus:ring-[#5E5E5E]/20"
               rows={3}
             />
           </div>
@@ -474,14 +477,14 @@ export function ConsultationRequestModal({
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 hover:bg-transparent hover:text-inherit"
               disabled={isSubmitting}
             >
               {language === "ar" ? "إلغاء" : "Cancel"}
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-[#3fab4c] hover:bg-[#3fab4c]/90"
+              className="flex-1 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90"
               disabled={isSubmitting}
             >
               {isSubmitting

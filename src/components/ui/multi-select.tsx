@@ -69,9 +69,12 @@ export function MultiSelect({
         >
           <div className="flex gap-1 flex-wrap items-center flex-1 min-w-0">
             {selectedOptions.length === 0 && (
-              <span className="text-muted-foreground">{placeholder}</span>
+              <span style={{ color: "#aab5bf" }}>
+                {placeholder}
+              </span>
             )}
-            {selectedOptions.length > 0 && selectedOptions.length <= maxDisplay && (
+            {selectedOptions.length > 0 &&
+              selectedOptions.length <= maxDisplay &&
               selectedOptions.map((option) => (
                 <Badge
                   key={option.value}
@@ -102,9 +105,8 @@ export function MultiSelect({
                     <X className="h-3 w-3 hover:text-destructive" />
                   </div>
                 </Badge>
-              ))
-            )}
-            {selectedOptions.length > maxDisplay && (
+              ))}
+             {selectedOptions.length > maxDisplay && (
               <>
                 {selectedOptions.slice(0, maxDisplay).map((option) => (
                   <Badge
