@@ -152,7 +152,7 @@ export function SimpleAuthForm({
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin text-[#5E5E5E]" />}
               Access History
             </Button>
           </form>

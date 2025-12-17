@@ -243,7 +243,7 @@ export function ReportDelivery({ surveyResponseId, userEmail, onClose }: ReportD
           >
             {isGenerating ? (
               <>
-                <Spinner className="h-4 w-4 mr-2 animate-spin" />
+                <Spinner className="h-4 w-4 mr-2 animate-spin text-[#5E5E5E]" />
                 Generating Report...
               </>
             ) : (
@@ -324,7 +324,7 @@ export function ReportDelivery({ surveyResponseId, userEmail, onClose }: ReportD
               disabled={isLoadingHistory}
             >
               {isLoadingHistory ? (
-                <Spinner className="h-4 w-4 animate-spin" />
+                <Spinner className="h-4 w-4 animate-spin text-[#5E5E5E]" />
               ) : (
                 <Eye className="h-4 w-4" />
               )}
