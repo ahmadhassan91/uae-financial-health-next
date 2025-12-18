@@ -261,6 +261,7 @@ export function FinancialClinicSurvey({
             <StripedProgress
               value={progress}
               className="w-full h-[14px] md:h-[16px] lg:h-[18px]"
+              isRTL={isRTL}
             />
 
             {/* Progress Text */}

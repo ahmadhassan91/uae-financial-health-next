@@ -36,7 +36,7 @@ export function FeaturesSection() {
         <div className="inline-flex flex-col items-center">
           <h2 className="w-fit mt-[-1.00px] font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[35px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
             {language === "ar"
-              ? "ما أهميّة إجراء هذا التقييم؟"
+              ? "لماذا يُعدّ هذا التقييم مهمًا بالنسبة لكم؟"
               : "Why Take the Checkup?"}
           </h2>
         </div>

@@ -370,7 +370,7 @@ export const translations = {
       "تطور مؤشر صحتك المالية بمرور الوقت",
     current_pillar_analysis: "تحليل الفئات الحالية",
     breakdown_of_your_latest_score:
-      "تحليل لأحدث تقييم لك حسب فئات الصحة المالية الست",
+      "تحليل لأحدث تقييم لك حسب فئات الصحة المالية ستة",
     assessment_history: "تاريخ التقييم",
     detailed_view_of_all_assessments: "عرض تفصيلي لجميع تقييماتك المكتملة",
     latest: "الأحدث",
