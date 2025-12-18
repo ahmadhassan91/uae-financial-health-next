@@ -76,8 +76,8 @@ export function HeroSection() {
         <div className="inline-flex flex-col items-center">
           <h1 className="w-fit mt-[-1.00px] font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
             {language === "ar"
-              ? "لبناء عادات مالية أكثر صحة كل يوم"
-              : "Inspiring healthier financial habits every day"}
+              ? "لبناء عادات مالية أكثر كفاءة"
+              : "Inspiring healthier financial habits"}
           </h1>
 
           <p className="self-stretch font-normal text-[#bd912e] text-base sm:text-lg md:text-2xl text-center tracking-[0] leading-tight sm:leading-[38px]">
@@ -90,14 +90,19 @@ export function HeroSection() {
         <div className="flex flex-col items-center justify-center gap-2 sm:gap-[3px] w-full max-w-[900px]">
           <p className="self-stretch mt-[-1.00px] font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
-              ? "ساعدت الصكوك الوطنية الأفراد والعائلات في مختلف أنحاء الإمارات على بناء مستقبل مالي أفضل لأكثر من 18 عامًا."
-              : "For over 18 years National Bonds has empowered individuals and families across the UAE to build a better financial future."}
+              ? "هل تعلمون أن تغييرات بسيطة في عاداتكم المالية يمكن أن تصنع مستقبلاً ماليًا أقوى وأكثر أمانًا؟"
+              : "Do you know how small changes in your habits can create a stronger, more secure financial future?"}
           </p>
 
           <p className="w-fit font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
             {language === "ar"
-              ? "واليوم، نضع هذه الخبرة بين أيديكم عبر عيادتكم المالية؛ الطريقة التي تجمع بين الرؤية المالية وعلم السلوك لمساعدتكم على اتخاذ قرارات أذكى وأكثر ثقة."
-              : "Now, we bring that expertise into your Financial Clinic; combining financial insight with behavioral science to help you make smarter, more confident decisions."}
+              ? "في بضع دقائق فقط، تساعدكم عيادتنا المالية على فهم الطريقة الصحيحة للتعامل مع الأموال من خلال دمج الرؤى الذكية مع علم السلوك، مما يمكّنكم من اتخاذ قرارات أكثر كفاءة."
+              : "In just a few minutes, our Financial Clinic blends smart insights with behavioral science to help you understand your money mindset and make more confident decisions."}
+          </p>
+          <p className="w-fit font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
+            {language === "ar"
+              ? "هل أنتم مستعدون لمعرفة ما تقوله عاداتكم المالية عنكم؟ "
+              : "Ready to find out what your financial habits say about you?"}
           </p>
         </div>
       </div>
