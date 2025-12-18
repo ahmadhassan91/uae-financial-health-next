@@ -439,8 +439,8 @@ export function FinancialClinicScoreHistory({
             <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <div className="flex-1 min-w-0">
                 <h1
-                  className="text-xl sm:text-2xl md:text-3xl font-bold truncate"
-                  style={{ textAlign: "center" }}
+                  className="font-bold"
+                  style={{ textAlign: "center", fontSize: "24px" }}
                 >
                   {t("score_history")}
                 </h1>
@@ -555,7 +555,11 @@ export function FinancialClinicScoreHistory({
                     />
                     <YAxis
                       domain={[0, 100]}
-                      tick={{ fontSize: 9, dx: isRTL ? 10 : 0, dy: isRTL ? 0 : 0 }}
+                      tick={{
+                        fontSize: 9,
+                        dx: isRTL ? 10 : 0,
+                        dy: isRTL ? 0 : 0,
+                      }}
                       orientation={isRTL ? "right" : "left"}
                       tickMargin={5}
                       axisLine={{ stroke: "#ccc" }}
@@ -612,7 +616,11 @@ export function FinancialClinicScoreHistory({
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="factor"
-                      tick={{ fontSize: 9, dx: isRTL ? 25 : 0, dy: isRTL ? 10 : 0 }}
+                      tick={{
+                        fontSize: 9,
+                        dx: isRTL ? 25 : 0,
+                        dy: isRTL ? 10 : 0,
+                      }}
                       angle={isRTL ? -10 : -15}
                       textAnchor={isRTL ? "start" : "end"}
                       height={120}
@@ -622,7 +630,11 @@ export function FinancialClinicScoreHistory({
                     />
                     <YAxis
                       domain={[0, 100]}
-                      tick={{ fontSize: 9, dx: isRTL ? 10 : 0, dy: isRTL ? 0 : 0 }}
+                      tick={{
+                        fontSize: 9,
+                        dx: isRTL ? 10 : 0,
+                        dy: isRTL ? 0 : 0,
+                      }}
                       orientation={isRTL ? "right" : "left"}
                       tickMargin={10}
                       axisLine={{ stroke: "#ccc" }}
