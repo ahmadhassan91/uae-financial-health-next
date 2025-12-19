@@ -5,22 +5,22 @@ import { useLocalization } from "@/contexts/LocalizationContext";
 
 const features = [
   {
-    icon: "/homepage/icons/homeicon1.png",
+    icon: "/homepage/icons/group10.png",
     textEn: "Understand where you stand&nbsp;financially",
     textAr: "معرفة وضعكم المالي&nbsp;الحالي",
   },
   {
-    icon: "/homepage/icons/homeicon2.png",
+    icon: "/homepage/icons/group5.png",
     textEn: "Identify habits that need&nbsp;improvement",
     textAr: "تحديد السلوكيات التي لا بدّ من&nbsp;تحسينها",
   },
   {
-    icon: "/homepage/icons/homeicon3.png",
+    icon: "/homepage/icons/group7.png",
     textEn: "Receive easy, actionable steps to reach your&nbsp;goals",
     textAr: "الحصول على خطوات سهلة وعملية لتحقيق&nbsp;أهدافكم",
   },
   {
-    icon: "/homepage/icons/homeicon4.png",
+    icon: "/homepage/icons/group9.png",
     textEn:
       "Discover products and tools designed to empower your financial&nbsp;journey",
     textAr: "اكتشاف البرامج والأدوات المُصممة لدعم رحلتكم&nbsp;المالية",
@@ -76,7 +76,7 @@ export function FeaturesSection() {
               <div className="flex flex-col items-center justify-center">
                 <img
                   className="mx-auto"
-                  style={{ height: "50px", width: "70px" }}
+                  style={{ marginBottom: "10px" }}
                   alt="Feature icon"
                   src={feature.icon}
                 />
