@@ -5,8 +5,11 @@ const isStaticExport = process.env.STATIC_EXPORT === 'true';
 
 const nextConfig: NextConfig = {
   // Enable static export for on-prem deployment when STATIC_EXPORT=true
-  ...(isStaticExport && { output: 'export' }),
+  output: isStaticExport ? 'export' : undefined,
   
+  // Resolve monorepo structure for output file tracing
+  outputFileTracingRoot: require('path').join(__dirname, '../'),
+
   // Standard build settings
   trailingSlash: true,
   images: {

@@ -21,9 +21,9 @@ const getApiBaseUrl = (): string => {
     return DEVELOPMENT_API_URL;
   }
 
-  // In production without env var, log warning and use env var (which will be undefined)
-  console.warn("NEXT_PUBLIC_API_URL not set in production environment");
-  return process.env.NEXT_PUBLIC_API_URL || DEVELOPMENT_API_URL;
+  // In production without env var, throw error to fail fast
+  console.error("CRITICAL: NEXT_PUBLIC_API_URL not set in production environment");
+  throw new Error("NEXT_PUBLIC_API_URL environment variable is required in production");
 };
 
 const API_BASE_URL = getApiBaseUrl();
