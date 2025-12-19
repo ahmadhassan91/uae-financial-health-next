@@ -650,9 +650,15 @@ export default function FinancialClinicPage({
           </div>
 
           {/* Gender and Nationality */}
-          <div className="flex flex-col gap-4 w-full">
+          <div
+            className="flex flex-col gap-4 w-full"
+            style={{ flexDirection: "row" }}
+          >
             {/* Gender Row */}
-            <div className="flex flex-col gap-2 w-full">
+            <div
+              className="flex flex-col gap-2 w-full"
+              style={{ flexDirection: "row" }}
+            >
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                 {language === "ar" ? "الجنس" : "Gender"}{" "}
                 <span className="text-red-500">*</span>
@@ -705,7 +711,10 @@ export default function FinancialClinicPage({
             </div>
 
             {/* Nationality Row */}
-            <div className="flex flex-col gap-2 w-full">
+            <div
+              className="flex flex-col gap-2 w-full"
+              style={{ flexDirection: "row" }}
+            >
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                 {language === "ar" ? "الجنسية" : "Nationality"}{" "}
                 <span className="text-red-500">*</span>
