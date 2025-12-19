@@ -5,22 +5,22 @@ import { useLocalization } from "@/contexts/LocalizationContext";
 
 const features = [
   {
-    icon: "/homepage/icons/chart.svg",
+    icon: "/homepage/icons/group10.png",
     textEn: "Understand where you stand&nbsp;financially",
     textAr: "معرفة وضعكم المالي&nbsp;الحالي",
   },
   {
-    icon: "/homepage/icons/improvement.svg",
+    icon: "/homepage/icons/group5.png",
     textEn: "Identify habits that need&nbsp;improvement",
     textAr: "تحديد السلوكيات التي لا بدّ من&nbsp;تحسينها",
   },
   {
-    icon: "/homepage/icons/steps.svg",
+    icon: "/homepage/icons/group7.png",
     textEn: "Receive easy, actionable steps to reach your&nbsp;goals",
     textAr: "الحصول على خطوات سهلة وعملية لتحقيق&nbsp;أهدافكم",
   },
   {
-    icon: "/homepage/icons/products.svg",
+    icon: "/homepage/icons/group9.png",
     textEn:
       "Discover products and tools designed to empower your financial&nbsp;journey",
     textAr: "اكتشاف البرامج والأدوات المُصممة لدعم رحلتكم&nbsp;المالية",
@@ -36,7 +36,7 @@ export function FeaturesSection() {
         <div className="inline-flex flex-col items-center">
           <h2 className="w-fit mt-[-1.00px] font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[35px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
             {language === "ar"
-              ? "ما أهميّة إجراء هذا التقييم؟"
+              ? "لماذا يُعدّ هذا التقييم مهمًا بالنسبة لكم؟"
               : "Why Take the Checkup?"}
           </h2>
         </div>
@@ -67,15 +67,16 @@ export function FeaturesSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-2 w-full">
+        <div className="flex flex-col sm:flex-row flex-wrap lg:flex-nowrap justify-center items-start gap-6 sm:gap-8 lg:gap-4 w-full">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col items-center justify-center w-full h-full p-4 sm:p-3"
+              className="flex flex-col items-center justify-start w-full sm:w-auto lg:flex-1 min-w-[200px] p-4 sm:p-3"
             >
               <div className="flex flex-col items-center justify-center">
                 <img
-                  className="w-12 h-12 mb-2 mx-auto"
+                  className="mx-auto"
+                  style={{ marginBottom: "10px" }}
                   alt="Feature icon"
                   src={feature.icon}
                 />
