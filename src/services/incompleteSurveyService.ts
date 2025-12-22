@@ -115,12 +115,24 @@ class IncompleteSurveyService {
         throw new Error(`Failed to update survey progress: ${response.status} ${errorText}`);
       }
 
-      const result = await response.json();
-      console.log('✅ Survey progress updated successfully:', {
-        sessionId: sessionId,
-        currentStep: result.current_step,
-        responsesCount: result.responses ? Object.keys(result.responses).length : 0
-      });
+      // Check content type before parsing as JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const result = await response.json();
+        console.log('✅ Survey progress updated successfully:', {
+          sessionId: sessionId,
+          currentStep: result.current_step,
+          responsesCount: result.responses ? Object.keys(result.responses).length : 0
+        });
+      } else {
+        // Response is not JSON (might be HTML error page)
+        const text = await response.text();
+        console.error('❌ Unexpected response type:', {
+          contentType,
+          body: text.substring(0, 200)
+        });
+        throw new Error('Server returned non-JSON response');
+      }
     } catch (error) {
       console.error('❌ Failed to update survey progress:', error);
       // Don't throw - we don't want to block the user if auto-save fails
