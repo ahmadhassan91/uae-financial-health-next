@@ -59,7 +59,23 @@ class IncompleteSurveyService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to start survey tracking');
+        const errorText = await response.text();
+        console.error('❌ Failed to start tracking:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText.substring(0, 500)
+        });
+        throw new Error(`Failed to start survey tracking: ${response.status}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error('❌ Non-JSON response when starting tracking:', {
+          contentType,
+          body: text.substring(0, 500)
+        });
+        throw new Error('Server returned non-JSON response');
       }
 
       const result = await response.json();
@@ -72,7 +88,8 @@ class IncompleteSurveyService {
       return result;
     } catch (error) {
       console.error('❌ Failed to start survey tracking:', error);
-      throw error;
+      // Don't throw - allow survey to continue without tracking
+      return { session_id: null } as any;
     }
   }
 
