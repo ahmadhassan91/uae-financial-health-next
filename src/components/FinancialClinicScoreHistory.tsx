@@ -473,7 +473,10 @@ export function FinancialClinicScoreHistory({
         {/* Current Score Summary */}
         <Card
           className="mb-6 sm:mb-8"
-          style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}
+          style={{
+            backgroundColor: "#eaf0f3ff",
+            borderRadius: "1px",
+          }}
         >
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
