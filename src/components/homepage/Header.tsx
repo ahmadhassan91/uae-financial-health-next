@@ -71,7 +71,7 @@ export function HomepageHeader() {
           {/* National Bonds Logo */}
           <Link href="/">
             <img
-              className="h-[50px] sm:h-[65px] md:h-[72px] cursor-pointer object-contain"
+              className="h-[60px] sm:h-[75px] md:h-[85px] cursor-pointer object-contain"
               style={{ marginRight: "35px" }}
               alt="National Bonds Logo"
               src="/homepage/images/NATIONAL BONDS LOGO.svg"
