@@ -668,6 +668,48 @@ export function FinancialClinicScoreHistory({
                       height={36}
                       iconType="circle"
                       wrapperStyle={{ fontSize: "12px" }}
+                      iconSize={14}
+                      margin={{ left: 10, right: 0 }}
+                      content={(props) => {
+                        // Default Legend rendering with extra space between dot and text
+                        const { payload = [] } = props;
+                        return (
+                          <ul
+                            style={{
+                              display: "flex",
+                              gap: 24,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              padding: 0,
+                              margin: 0,
+                              listStyle: "none",
+                            }}
+                          >
+                            {payload.map((entry, index) => (
+                              <li
+                                key={`item-${index}`}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    width: 14,
+                                    height: 14,
+                                    borderRadius: "50%",
+                                    background: entry.color,
+                                    marginRight: 8,
+                                  }}
+                                />
+                                <span>{entry.value}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      }}
                     />
                     <Bar
                       dataKey="score"
@@ -679,9 +721,9 @@ export function FinancialClinicScoreHistory({
                       type="monotone"
                       dataKey="average"
                       stroke="#5E5E5E"
+                      fill="#5E5E5E"
                       strokeWidth={3}
                       name={t("average_score")}
-                      dot={{ fill: "#5E5E5E", strokeWidth: 2, r: 6 }}
                       activeDot={{ r: 8 }}
                     />
                   </ComposedChart>
