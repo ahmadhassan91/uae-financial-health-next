@@ -81,38 +81,38 @@ export const SCORE_BANDS = [
 export const CATEGORY_DESCRIPTIONS = {
   "Income Stream": {
     en: "Stability and diversity of income sources",
-    ar: "استقرار وتنوّع في مصادر الدخل",
+    ar: "استقرار وتنوّع في\nمصادر الدخل",
   },
   "Monthly Expenses Management": {
     en: "Budgeting and expense control",
-    ar: "إدارة الميزانية والتحكم في النفقات",
+    ar: "إدارة الميزانية والتحكم في\nالنفقات",
   },
   "Savings Habit": {
     en: "Saving behavior and emergency preparedness",
-    ar: "عادات الادخار والاستعداد لحالات الطوارئ",
+    ar: "عادات الادخار والاستعداد\nلحالات الطوارئ",
   },
   "Emergency Savings": {
     en: "Emergency fund readiness",
-    ar: "الاستعداد للادخار في حالات الطوارئ",
+    ar: "الاستعداد للادخار في\nحالات الطوارئ",
   },
   "Debt Management": {
     en: "Debt control and debit health",
-    ar: "التحكّم في الديون والصحّة الائتمانية",
+    ar: "التحكّم في الديون\nوالصحّة الائتمانية",
   },
   "Retirement Planning": {
     en: "Long-term financial security",
-    ar: "الأمان المالي الطويل الأمد",
+    ar: "الأمان المالي\nالطويل الأمد",
   },
   "Protecting Your Assets | Loved Ones": {
     en: "Insurance and risk management",
-    ar: "التأمين وإدارة المخاطر",
+    ar: "التأمين وإدارة\nالمخاطر",
   },
   "Planning for Your Future | Siblings": {
     en: "Financial planning and family preparation",
-    ar: "التخطيط المالي والاستعداد للعائلة",
+    ar: "التخطيط المالي\nوالاستعداد للعائلة",
   },
   "Protecting Your Family": {
     en: "Ensuring financial wellbeing for your loved ones",
-    ar: "ضمان الرفاهية المالية لأحبائك",
+    ar: "ضمان الرفاهية\nالمالية لأحبائك",
   },
 } as const;

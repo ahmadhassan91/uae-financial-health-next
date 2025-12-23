@@ -78,9 +78,9 @@ export function HowItWorksSection() {
 
   return (
     <div className="w-full flex flex-col items-center gap-8 sm:gap-12 md:gap-[65px] py-8 sm:py-12 px-4">
-      <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-stretch gap-0 rounded-lg overflow-hidden">
+      <div className="w-full flex flex-col lg:flex-row items-stretch gap-0 rounded-lg overflow-hidden">
         {/* Left Side - Image */}
-        <div className="w-full lg:w-1/2 min-h-[250px] sm:min-h-[300px] lg:min-h-0">
+        <div className="w-full h-auto min-h-[400px] sm:h-[500px] md:h-[850px] overflow-hidden relative rounded-lg">
           <img
             src="/homepage/images/frame-12.png"
             alt="How it works background"
@@ -123,6 +123,7 @@ export function HowItWorksSection() {
       <Button
         onClick={handleStartCheckup}
         className="h-auto w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[5E5E5E]/90"
+        style={{ marginTop: "60px" }}
       >
         <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
           {language === "ar"

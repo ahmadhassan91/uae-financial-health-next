@@ -157,7 +157,7 @@ export function ScoreHistory({ scoreHistory, onBack, onLogout, userEmail }: Scor
           <Card>
             <CardHeader>
               <CardTitle>Score Trend</CardTitle>
-              <CardDescription>
+              <CardDescription style={{color:"#737373"}}>
                 Your financial health score progression over time
               </CardDescription>
             </CardHeader>

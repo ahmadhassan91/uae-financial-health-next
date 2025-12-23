@@ -624,12 +624,29 @@ export function FinancialClinicScoreHistory({
                         dx: isRTL ? 25 : 0,
                         dy: isRTL ? 10 : 0,
                       }}
-                      angle={isRTL ? -10 : -15}
-                      textAnchor={isRTL ? "start" : "end"}
-                      height={120}
+                      angle={0}
+                      textAnchor="middle"
+                      height={100}
                       interval={0}
                       tickMargin={15}
                       axisLine={{ stroke: "#ccc" }}
+                      tick={({ x, y, payload }) => {
+                        const value = payload.value;
+                        const words = value.split(' ');
+                        const midPoint = Math.ceil(words.length / 2);
+                        const line1 = words.slice(0, midPoint).join(' ');
+                        const line2 = words.slice(midPoint).join(' ');
+                        return (
+                          <g transform={`translate(${x},${y})`}>
+                            <text x={0} y={0} dy={0} textAnchor="middle" fill="#666" fontSize={9}>
+                              {line1}
+                            </text>
+                            <text x={0} y={0} dy={12} textAnchor="middle" fill="#666" fontSize={9}>
+                              {line2}
+                            </text>
+                          </g>
+                        );
+                      }}
                     />
                     <YAxis
                       domain={[0, 100]}
@@ -671,17 +688,17 @@ export function FinancialClinicScoreHistory({
                     />
                     <Bar
                       dataKey="score"
-                      fill="#5E5E5E"
+                      fill="#AF8F39"
                       name={t("current_score_chart")}
                       radius={[4, 4, 0, 0]}
                     />
                     <Line
                       type="monotone"
                       dataKey="average"
-                      stroke="#AF8F39"
+                      stroke="#5E5E5E"
                       strokeWidth={3}
                       name={t("average_score")}
-                      dot={{ fill: "#AF8F39", strokeWidth: 2, r: 6 }}
+                      dot={{ fill: "#5E5E5E", strokeWidth: 2, r: 6 }}
                       activeDot={{ r: 8 }}
                     />
                   </ComposedChart>
