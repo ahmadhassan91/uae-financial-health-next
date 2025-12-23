@@ -626,27 +626,10 @@ export function FinancialClinicScoreHistory({
                       }}
                       angle={0}
                       textAnchor="middle"
-                      height={100}
+                      height={80}
                       interval={0}
                       tickMargin={15}
                       axisLine={{ stroke: "#ccc" }}
-                      tick={({ x, y, payload }) => {
-                        const value = payload.value;
-                        const words = value.split(' ');
-                        const midPoint = Math.ceil(words.length / 2);
-                        const line1 = words.slice(0, midPoint).join(' ');
-                        const line2 = words.slice(midPoint).join(' ');
-                        return (
-                          <g transform={`translate(${x},${y})`}>
-                            <text x={0} y={0} dy={0} textAnchor="middle" fill="#666" fontSize={9}>
-                              {line1}
-                            </text>
-                            <text x={0} y={0} dy={12} textAnchor="middle" fill="#666" fontSize={9}>
-                              {line2}
-                            </text>
-                          </g>
-                        );
-                      }}
                     />
                     <YAxis
                       domain={[0, 100]}

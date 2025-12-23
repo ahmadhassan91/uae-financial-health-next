@@ -122,10 +122,10 @@ export function HowItWorksSection() {
 
       <Button
         onClick={handleStartCheckup}
-        className="h-auto w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[5E5E5E]/90"
+        className="h-auto w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-4 sm:px-6 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 min-h-[44px]"
         style={{ marginTop: "60px" }}
       >
-        <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
+        <span className="w-fit font-normal text-white text-sm sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal">
           {language === "ar"
             ? "بدء تقييم وضعي المالي"
             : "START MY FINANCIAL CHECKUP"}
