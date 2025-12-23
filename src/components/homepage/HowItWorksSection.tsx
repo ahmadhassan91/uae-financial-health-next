@@ -78,9 +78,9 @@ export function HowItWorksSection() {
 
   return (
     <div className="w-full flex flex-col items-center gap-8 sm:gap-12 md:gap-[65px] py-8 sm:py-12 px-4">
-      <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-stretch gap-0 rounded-lg overflow-hidden">
+      <div className="w-full flex flex-col lg:flex-row items-stretch gap-0 rounded-lg overflow-hidden">
         {/* Left Side - Image */}
-        <div className="w-full lg:w-1/2 min-h-[250px] sm:min-h-[300px] lg:min-h-0">
+        <div className="w-full h-auto min-h-[400px] sm:h-[500px] md:h-[850px] overflow-hidden relative rounded-lg">
           <img
             src="/homepage/images/frame-12.png"
             alt="How it works background"
