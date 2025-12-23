@@ -11,7 +11,7 @@ export function HomepageFooter() {
       <div className="max-w-7xl mx-auto flex flex-col items-center justify-center">
         <div className="mb-6 sm:mb-8">
           <img
-            src="/homepage/images/nbc-logo2.jpg"
+            src="/logos/national-bonds-logo.png"
             alt="National Bonds"
             className="h-16 sm:h-15 md:h-18 object-contain"
           />
