@@ -73,7 +73,7 @@ export function HomepageHeader() {
             <img
               className="h-[42px] sm:h-[58px] md:h-[72px] cursor-pointer object-contain"
               alt="National Bonds Logo"
-              src="/homepage/images/nbc-logo2-02-1.png"
+              src="/logos/national-bonds-logo.png"
             />
           </Link>
 
