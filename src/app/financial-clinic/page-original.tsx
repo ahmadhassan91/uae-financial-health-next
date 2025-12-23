@@ -651,13 +651,11 @@ export default function FinancialClinicPage({
 
           {/* Gender and Nationality */}
           <div
-            className="flex flex-col gap-4 w-full"
-            style={{ flexDirection: "row" }}
+            className="flex flex-col md:flex-row md:justify-between gap-4 md:gap-0 w-full"
           >
             {/* Gender Row */}
             <div
-              className="flex flex-col gap-2 w-full"
-              style={{ flexDirection: "row" }}
+              className={`flex ${language === "ar" ? "flex-row" : "flex-row"} gap-2 w-full md:w-auto items-center`}
             >
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                 {language === "ar" ? "الجنس" : "Gender"}{" "}
@@ -670,7 +668,7 @@ export default function FinancialClinicPage({
               >
                 <div
                   className={`flex items-center gap-2 ${
-                    language === "ar" ? "flex-row-reverse" : ""
+                    language === "ar" ? "" : ""
                   }`}
                 >
                   <RadioGroupItem
@@ -687,7 +685,7 @@ export default function FinancialClinicPage({
                 </div>
                 <div
                   className={`flex items-center gap-2 ${
-                    language === "ar" ? "flex-row-reverse" : ""
+                    language === "ar" ? "" : ""
                   }`}
                 >
                   <RadioGroupItem
@@ -712,8 +710,7 @@ export default function FinancialClinicPage({
 
             {/* Nationality Row */}
             <div
-              className="flex flex-col gap-2 w-full"
-              style={{ flexDirection: "row" }}
+              className={`flex ${language === "ar" ? "flex-row" : "flex-row flex-wrap"} gap-2 w-full md:w-auto items-center`}
             >
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                 {language === "ar" ? "الجنسية" : "Nationality"}{" "}
@@ -851,7 +848,7 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <div className="min-h-[20px]">
+              <div >
                 {emirateError && (
                   <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
                     {emirateError}

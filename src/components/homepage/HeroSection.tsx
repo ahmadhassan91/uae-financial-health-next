@@ -94,7 +94,10 @@ export function HeroSection() {
               : "Do you know how small changes in your habits can create a stronger, more secure financial future?"}
           </p>
 
-          <p className="w-fit font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
+          <p
+            className="w-fit font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4"
+            style={{ width: "697px" }}
+          >
             {language === "ar"
               ? "في بضع دقائق فقط، تساعدكم عيادتنا المالية على فهم الطريقة الصحيحة للتعامل مع الأموال من خلال دمج الرؤى الذكية مع علم السلوك، مما يمكّنكم من اتخاذ قرارات أكثر كفاءة."
               : "In just a few minutes, our Financial Clinic blends smart insights with behavioral science to help you understand your money mindset and make more confident decisions."}

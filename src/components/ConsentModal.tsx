@@ -296,7 +296,7 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
             disabled={!canProceed || isSubmitting}
             className={`flex-1 max-w-[296px] h-9 font-normal text-white text-sm rounded-lg ${
               canProceed && !isSubmitting
-                ? "bg-[#1e2939] hover:bg-[#1e2939]/90 cursor-pointer"
+                ? "bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 cursor-pointer"
                 : "bg-gray-300 cursor-not-allowed"
             }`}
           >

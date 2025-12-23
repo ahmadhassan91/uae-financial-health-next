@@ -48,7 +48,10 @@ export function FeaturesSection() {
               : "Because your financial wellbeing deserves a regular checkup."}
           </p>
 
-          <p className="w-fit font-normal text-[#575757] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4">
+          <p
+            className="w-fit font-normal text-[#575757] text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-4"
+            style={{ marginBottom: "28px" }}
+          >
             {language === "ar"
               ? "فصحّتكم المالية بحاجة إلى الرعاية والاهتمام، تماماً كصحّتكم الجسدية."
               : "Just like your physical health, your financial health needs care and attention."}

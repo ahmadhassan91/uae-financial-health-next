@@ -252,9 +252,9 @@ export function FinancialClinicSurvey({
               "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
             ) : (
               <>
-                Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits
+                Welcome to your Financial Clinic checkup! Let's take a few minutes to understand
                 <br />
-                no judgments, just insights.
+                your financial habits no judgments, just insights.
               </>
             )}
           </p>

@@ -123,6 +123,7 @@ export function HowItWorksSection() {
       <Button
         onClick={handleStartCheckup}
         className="h-auto w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[5E5E5E]/90"
+        style={{ marginTop: "60px" }}
       >
         <span className="w-fit mt-[-1.00px] font-normal text-white text-xs sm:text-sm text-center tracking-[0] leading-[18px] whitespace-normal sm:whitespace-nowrap">
           {language === "ar"

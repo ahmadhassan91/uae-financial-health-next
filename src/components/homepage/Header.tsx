@@ -72,7 +72,11 @@ export function HomepageHeader() {
           <Link href="/">
             <img
               className="h-[42px] sm:h-[58px] md:h-[60px] cursor-pointer object-contain"
-              style={{ marginRight: "35px" }}
+              style={
+                language === "ar"
+                  ? { marginLeft: "35px" }
+                  : { marginRight: "35px" }
+              }
               alt="National Bonds Logo"
               src="/homepage/images/nbc-logo2.jpg"
             />
