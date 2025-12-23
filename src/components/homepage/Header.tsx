@@ -74,7 +74,7 @@ export function HomepageHeader() {
               className="h-[50px] sm:h-[65px] md:h-[72px] cursor-pointer object-contain"
               style={{ marginRight: "35px" }}
               alt="National Bonds Logo"
-              src="/logos/national-bonds-logo-trimmed.png"
+              src="/homepage/images/NATIONAL BONDS LOGO.svg"
             />
           </Link>
 
