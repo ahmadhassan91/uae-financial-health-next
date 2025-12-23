@@ -247,10 +247,16 @@ export function FinancialClinicSurvey({
         <div
           className={`w-full mb-4 md:mb-6 lg:mb-8 px-2 ${language === "ar" ? "max-w-[634px]" : "max-w-[675px]"}`}
         >
-          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center whitespace-pre-line">
-            {language === "ar"
-              ? "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
-              : "Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits\nno judgments, just insights."}
+          <p className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center">
+            {language === "ar" ? (
+              "أهلاً بكم في تقييم الصحة المالية! الدقائق القليلة القادمة مخصّصة للتعرّف على سلوكيّاتكم المالية لفهم أعمق، بعيداً عن الأحكام"
+            ) : (
+              <>
+                Welcome to your Financial Clinic checkup! Let's take a few minutes to understand your financial habits
+                <br />
+                no judgments, just insights.
+              </>
+            )}
           </p>
         </div>
 
