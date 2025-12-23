@@ -77,11 +77,12 @@ export function HowItWorksSection() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-8 sm:gap-12 md:gap-[65px] py-8 sm:py-12 px-4">
+    <div className="w-full flex flex-col items-center gap-6 sm:gap-10 md:gap-[65px] py-6 sm:py-10 px-2 sm:px-4">
       <div className="w-full flex flex-col lg:flex-row items-stretch gap-0 rounded-lg overflow-hidden">
         {/* Left Side - Image */}
-        <div className="w-full h-auto min-h-[400px] sm:h-[500px] md:h-[850px] overflow-hidden relative rounded-lg">
+        <div className="w-full h-[180px] xs:h-[240px] sm:h-[320px] md:h-[400px] lg:h-[850px] overflow-hidden relative rounded-lg lg:w-[100%]">
           <img
+            width="1000px"
             src="/homepage/images/frame-12.png"
             alt="How it works background"
             className="w-full h-full object-cover"
@@ -89,26 +90,29 @@ export function HowItWorksSection() {
         </div>
 
         {/* Right Side - Content */}
-        <div className="w-full lg:w-1/2 p-6 sm:p-8 md:p-12 lg:p-[5%] bg-white">
-          <div className="flex flex-col items-start gap-6 sm:gap-8 md:gap-[46px] w-full">
-            <h2 className="self-stretch font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px]">
+        <div className="w-full lg:w-1/2 p-4 xs:p-6 sm:p-8 md:p-12 lg:p-[5%] bg-white">
+          <div className="flex flex-col items-start gap-4 xs:gap-6 sm:gap-8 md:gap-[46px] w-full">
+            <h2 className="self-stretch font-semibold text-[#5E5E5E] text-lg xs:text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px]">
               {language === "ar" ? "كيف يعمل" : "How It Works"}
             </h2>
 
             {steps.map((step, index) => (
-              <div key={index} className="items-start gap-3 flex w-full">
+              <div
+                key={index}
+                className="items-start gap-2 xs:gap-3 flex w-full"
+              >
                 <img
-                  className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 mt-0.5"
+                  className="flex-shrink-0 w-5 h-5 xs:w-6 xs:h-6 mt-0.5"
                   alt="Tick circle"
                   src="/homepage/icons/tick.svg"
                 />
 
-                <div className="flex flex-col items-start justify-center gap-1.5 flex-1">
-                  <h4 className="w-full font-semibold text-[#bd912e] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-6">
+                <div className="flex flex-col items-start justify-center gap-1 flex-1">
+                  <h4 className="w-full font-semibold text-[#bd912e] text-xs xs:text-sm sm:text-base tracking-[0] leading-5 sm:leading-6">
                     {language === "ar" ? step.titleAr : step.titleEn}
                   </h4>
 
-                  <p className="self-stretch font-normal text-[#575757] text-xs sm:text-sm tracking-[0] leading-5 sm:leading-[21px]">
+                  <p className="self-stretch font-normal text-[#575757] text-xs xs:text-sm sm:text-base tracking-[0] leading-5 sm:leading-[21px]">
                     {language === "ar"
                       ? step.descriptionAr
                       : step.descriptionEn}
