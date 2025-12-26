@@ -28,6 +28,10 @@ const getApiBaseUrl = (): string => {
 
 const API_BASE_URL = getApiBaseUrl();
 
+// Debug: Log the actual API URL being used
+console.log('DEBUG: API_BASE_URL =', API_BASE_URL);
+console.log('DEBUG: NEXT_PUBLIC_API_URL =', process.env.NEXT_PUBLIC_API_URL);
+
 interface ApiError {
   detail: string;
   status?: number;
