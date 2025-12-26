@@ -32,7 +32,7 @@ export function CompanyVariationControl() {
     try {
       const token = localStorage.getItem('admin_access_token');
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/variations/companies`,
+        `${process.env.NEXT_PUBLIC_API_URL || "https://financialclinic.ae/api/v1"}/admin/variations/companies`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ export function CompanyVariationControl() {
     try {
       const token = localStorage.getItem('admin_access_token');
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/variations/companies/${companyId}/toggle`,
+        `${process.env.NEXT_PUBLIC_API_URL || "https://financialclinic.ae/api/v1"}/admin/variations/companies/${companyId}/toggle`,
         {
           method: 'POST',
           headers: {

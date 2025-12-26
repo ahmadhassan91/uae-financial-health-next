@@ -104,7 +104,7 @@ export function CompanyManagement({
   const fetchAvailableVariationSets = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/variation-sets?is_active=true&page_size=100`,
+        `${process.env.NEXT_PUBLIC_API_URL || "https://financialclinic.ae/api/v1"}/admin/variation-sets?is_active=true&page_size=100`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(
@@ -265,7 +265,7 @@ export function CompanyManagement({
   const handleToggleVariations = async (company: any, enable: boolean) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/variations/companies/${company.id}/toggle`,
+        `${process.env.NEXT_PUBLIC_API_URL || "https://financialclinic.ae/api/v1"}/api/v1/admin/variations/companies/${company.id}/toggle`,
         {
           method: 'POST',
           headers: {
