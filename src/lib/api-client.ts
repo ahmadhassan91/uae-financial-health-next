@@ -12,7 +12,12 @@ const DEVELOPMENT_API_URL = "http://localhost:8000/api/v1";
 const getApiBaseUrl = (): string => {
   // Check for explicit environment variable first (required for production)
   if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+    // Force HTTPS for on-prem deployment
+    const url = process.env.NEXT_PUBLIC_API_URL;
+    if (url.includes('financialclinic.ae') && !url.startsWith('https://')) {
+      return url.replace(/^http:\/\//, 'https://');
+    }
+    return url;
   }
 
   // Fallback to localhost for development only
