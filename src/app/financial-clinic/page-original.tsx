@@ -509,7 +509,7 @@ export default function FinancialClinicPage({
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#437749] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5E5E5E] mx-auto mb-4"></div>
           <p className="text-[#a1aeb7]">
             {language === "ar" ? "جاري التحقق..." : "Checking..."}
           </p>
@@ -649,16 +649,10 @@ export default function FinancialClinicPage({
             </div>
           </div>
 
-          {/* Gender and Nationality */}
-          <div
-            className="flex flex-col gap-4 w-full"
-            style={{ flexDirection: "row" }}
-          >
+          {/* Gender and Nationality - stacked for alignment */}
+          <div className="flex flex-col gap-4 w-full">
             {/* Gender Row */}
-            <div
-              className="flex flex-col gap-2 w-full"
-              style={{ flexDirection: "row" }}
-            >
+            <div className={`flex flex-row gap-2 w-full items-center`}>
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                 {language === "ar" ? "الجنس" : "Gender"}{" "}
                 <span className="text-red-500">*</span>
@@ -668,11 +662,7 @@ export default function FinancialClinicPage({
                 onValueChange={handleGenderChange}
                 className="flex items-center gap-6"
               >
-                <div
-                  className={`flex items-center gap-2 ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
-                >
+                <div className="flex items-center gap-2">
                   <RadioGroupItem
                     value="Male"
                     id="male"
@@ -685,11 +675,7 @@ export default function FinancialClinicPage({
                     {language === "ar" ? "ذكر" : "Male"}
                   </Label>
                 </div>
-                <div
-                  className={`flex items-center gap-2 ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
-                >
+                <div className="flex items-center gap-2">
                   <RadioGroupItem
                     value="Female"
                     id="female"
@@ -709,12 +695,8 @@ export default function FinancialClinicPage({
                 </p>
               )}
             </div>
-
-            {/* Nationality Row */}
-            <div
-              className="flex flex-col gap-2 w-full"
-              style={{ flexDirection: "row" }}
-            >
+            {/* Nationality Row - now directly below Gender, aligned left */}
+            <div className="flex flex-row gap-2 w-full items-center">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                 {language === "ar" ? "الجنسية" : "Nationality"}{" "}
                 <span className="text-red-500">*</span>
@@ -851,7 +833,7 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <div className="min-h-[20px]">
+              <div>
                 {emirateError && (
                   <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
                     {emirateError}

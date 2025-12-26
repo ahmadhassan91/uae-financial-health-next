@@ -50,8 +50,17 @@ export async function fetchFinancialClinicQuestions(
         companyUrl
       );
     }
+    
+    // Add timestamp to break caching
+    url += `&_t=${Date.now()}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch questions: ${response.statusText}`);

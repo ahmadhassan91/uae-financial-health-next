@@ -242,9 +242,9 @@
 }
 
 /* RTL-aware flexbox */
-[dir="rtl"] .flex-row {
+/* [dir="rtl"] .flex-row {
   flex-direction: row-reverse;
-}
+} */
 
 [dir="rtl"] .justify-start {
   justify-content: flex-end;

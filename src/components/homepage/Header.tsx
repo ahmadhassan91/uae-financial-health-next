@@ -71,9 +71,14 @@ export function HomepageHeader() {
           {/* National Bonds Logo */}
           <Link href="/">
             <img
-              className="h-[42px] sm:h-[58px] md:h-[72px] cursor-pointer object-contain"
+              className="h-[42px] sm:h-[58px] md:h-[60px] cursor-pointer object-contain"
+              style={
+                language === "ar"
+                  ? { marginLeft: "35px" }
+                  : { marginRight: "35px" }
+              }
               alt="National Bonds Logo"
-              src="/logos/national-bonds-logo.png"
+              src="/homepage/images/NATIONAL BONDS LOGO.svg"
             />
           </Link>
 
@@ -83,7 +88,7 @@ export function HomepageHeader() {
           {/* Financial Clinic Logo */}
           <Link href="/">
             <img
-              className="h-[28px] sm:h-[40px] md:h-[50px] cursor-pointer"
+              className="h-[50px] sm:h-[65px] md:h-[60px] cursor-pointer"
               style={
                 language === "ar"
                   ? { marginLeft: "35px", marginRight: "35px" }

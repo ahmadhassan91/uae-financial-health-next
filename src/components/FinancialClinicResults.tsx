@@ -334,7 +334,7 @@ export function FinancialClinicResults({
                         </div>
                         <div
                           className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
-                            language === "ar" ? "whitespace-nowrap" : ""
+                            language === "ar" ? "whitespace-pre-line" : ""
                           }`}
                         >
                           {getCategoryDescription(categoryName)}
@@ -432,7 +432,7 @@ export function FinancialClinicResults({
         </div>
 
         {/* Main Action Buttons - Design Spec */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]" style={{marginTop:"38pxF"}}>
           <Button
             onClick={() => setIsConsultationModalOpen(true)}
             className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"

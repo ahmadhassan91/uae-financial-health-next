@@ -1,10 +1,16 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLocalization } from '@/contexts/LocalizationContext';
-import { LanguageSelector } from '@/components/LanguageSelector';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useLocalization } from "@/contexts/LocalizationContext";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 export default function TestHomepageLayout() {
   const { t, language, isRTL } = useLocalization();
@@ -21,7 +27,9 @@ export default function TestHomepageLayout() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-2xl font-bold">Homepage Layout Test</h1>
-            <p className="text-muted-foreground">Testing Arabic heading gradient and layout</p>
+            <p className="text-muted-foreground">
+              Testing Arabic heading gradient and layout
+            </p>
           </div>
           <LanguageSelector />
         </div>
@@ -39,11 +47,15 @@ export default function TestHomepageLayout() {
               </div>
               <div>
                 <div className="text-sm font-medium">Direction</div>
-                <div className="text-lg">{isRTL ? 'RTL' : 'LTR'}</div>
+                <div className="text-lg">{isRTL ? "RTL" : "LTR"}</div>
               </div>
               <div>
                 <div className="text-sm font-medium">HTML Dir</div>
-                <div className="text-lg">{mounted ? (document.documentElement.dir || 'auto') : 'Loading...'}</div>
+                <div className="text-lg">
+                  {mounted
+                    ? document.documentElement.dir || "auto"
+                    : "Loading..."}
+                </div>
               </div>
             </div>
           </CardContent>
@@ -53,47 +65,63 @@ export default function TestHomepageLayout() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Hero Section Test</CardTitle>
-            <CardDescription>Testing the main heading with gradient</CardDescription>
+            <CardDescription>
+              Testing the main heading with gradient
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`text-center ${isRTL ? 'rtl-content' : ''}`}>
+            <div className={`text-center ${isRTL ? "rtl-content" : ""}`}>
               {/* Original Implementation */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">Original (Fixed) Implementation</h3>
-                <h1 className={`text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight ${
-                  isRTL ? 'font-arabic rtl-gradient' : ''
-                }`}>
-                  {t('financial_health_assessment')}
+                <h3 className="text-lg font-semibold mb-4">
+                  Original (Fixed) Implementation
+                </h3>
+                <h1
+                  className={`text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight ${
+                    isRTL ? "font-arabic rtl-gradient" : ""
+                  }`}
+                >
+                  {t("financial_health_assessment")}
                 </h1>
-                <p className={`text-xl text-muted-foreground max-w-2xl mx-auto ${
-                  isRTL ? 'leading-relaxed' : ''
-                }`}>
-                  {t('trusted_uae_institution')}
+                <p
+                  className={`text-xl text-muted-foreground max-w-2xl mx-auto ${
+                    isRTL ? "leading-relaxed" : ""
+                  }`}
+                >
+                  {t("trusted_uae_institution")}
                 </p>
               </div>
 
               {/* Alternative Implementation */}
               <div className="mb-8 border-t pt-8">
-                <h3 className="text-lg font-semibold mb-4">Alternative Implementation</h3>
-                <h1 className={`text-4xl md:text-6xl font-bold mb-4 text-gradient-primary leading-tight ${
-                  isRTL ? 'font-arabic' : ''
-                }`}>
-                  {t('financial_health_assessment')}
+                <h3 className="text-lg font-semibold mb-4">
+                  Alternative Implementation
+                </h3>
+                <h1
+                  className={`text-4xl md:text-6xl font-bold mb-4 text-gradient-primary leading-tight ${
+                    isRTL ? "font-arabic" : ""
+                  }`}
+                >
+                  {t("financial_health_assessment")}
                 </h1>
-                <p className={`text-xl text-muted-foreground max-w-2xl mx-auto ${
-                  isRTL ? 'leading-relaxed' : ''
-                }`}>
-                  {t('get_personalized_insights')}
+                <p
+                  className={`text-xl text-muted-foreground max-w-2xl mx-auto ${
+                    isRTL ? "leading-relaxed" : ""
+                  }`}
+                >
+                  {t("get_personalized_insights")}
                 </p>
               </div>
 
               {/* CSS Class Test */}
               <div className="mb-8 border-t pt-8">
                 <h3 className="text-lg font-semibold mb-4">CSS Class Test</h3>
-                <h1 className={`arabic-heading bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent ${
-                  isRTL ? 'font-arabic' : ''
-                }`}>
-                  {t('financial_health_assessment')}
+                <h1
+                  className={`arabic-heading bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent ${
+                    isRTL ? "font-arabic" : ""
+                  }`}
+                >
+                  {t("financial_health_assessment")}
                 </h1>
               </div>
             </div>
@@ -110,20 +138,34 @@ export default function TestHomepageLayout() {
               <div>
                 <div className="text-sm font-medium">Document Direction</div>
                 <code className="text-sm bg-muted px-2 py-1 rounded">
-                  {mounted ? document.documentElement.dir : 'Loading...'}
+                  {mounted ? document.documentElement.dir : "Loading..."}
                 </code>
               </div>
               <div>
                 <div className="text-sm font-medium">Document Language</div>
                 <code className="text-sm bg-muted px-2 py-1 rounded">
-                  {mounted ? document.documentElement.lang : 'Loading...'}
+                  {mounted ? document.documentElement.lang : "Loading..."}
                 </code>
               </div>
               <div>
                 <div className="text-sm font-medium">CSS Custom Properties</div>
                 <div className="text-xs space-y-1">
-                  <div>--text-align-start: {mounted ? getComputedStyle(document.documentElement).getPropertyValue('--text-align-start') : 'Loading...'}</div>
-                  <div>--text-align-end: {mounted ? getComputedStyle(document.documentElement).getPropertyValue('--text-align-end') : 'Loading...'}</div>
+                  <div>
+                    --text-align-start:{" "}
+                    {mounted
+                      ? getComputedStyle(
+                          document.documentElement
+                        ).getPropertyValue("--text-align-start")
+                      : "Loading..."}
+                  </div>
+                  <div>
+                    --text-align-end:{" "}
+                    {mounted
+                      ? getComputedStyle(
+                          document.documentElement
+                        ).getPropertyValue("--text-align-end")
+                      : "Loading..."}
+                  </div>
                 </div>
               </div>
             </div>
