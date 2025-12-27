@@ -10,20 +10,33 @@ const DEVELOPMENT_API_URL = "http://localhost:8000/api/v1";
 
 // Determine API base URL based on environment
 const getApiBaseUrl = (): string => {
+  let url = "";
+
   // Check for explicit environment variable first (required for production)
   if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+    url = process.env.NEXT_PUBLIC_API_URL;
+  } else if (process.env.NODE_ENV === "development" ||
+    (typeof window !== "undefined" && window.location.hostname === "localhost")) {
+    // Fallback to localhost for development only
+    url = DEVELOPMENT_API_URL;
+  } else {
+    // In production without env var, log warning and use env var (which will be undefined)
+    console.warn("NEXT_PUBLIC_API_URL not set in production environment");
+    url = process.env.NEXT_PUBLIC_API_URL || DEVELOPMENT_API_URL;
   }
 
-  // Fallback to localhost for development only
-  if (process.env.NODE_ENV === "development" || 
-      (typeof window !== "undefined" && window.location.hostname === "localhost")) {
-    return DEVELOPMENT_API_URL;
+  // Protocol enforcement: If the page is loaded over HTTPS, the API must also be HTTPS
+  // to avoid Mixed Content errors. Only applies if we're on the same domain or if the URL is absolute.
+  if (typeof window !== "undefined" && window.location.protocol === "https:" && url.startsWith("http://")) {
+    // If the URL is for the same host, upgrade it to https
+    const urlObj = new URL(url, window.location.origin);
+    if (urlObj.hostname === window.location.hostname) {
+      console.warn(`Upgrading insecure API URL ${url} to HTTPS to match page protocol`);
+      url = url.replace("http://", "https://");
+    }
   }
 
-  // In production without env var, log warning and use env var (which will be undefined)
-  console.warn("NEXT_PUBLIC_API_URL not set in production environment");
-  return process.env.NEXT_PUBLIC_API_URL || DEVELOPMENT_API_URL;
+  return url;
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -161,9 +174,8 @@ class ApiClient {
     options: RequestInit = {},
     attempt: number = 0
   ): Promise<T> {
-    // Normalize endpoint to remove trailing slashes (except for root)
-    const normalizedEndpoint =
-      endpoint === "/" ? endpoint : endpoint.replace(/\/+$/, "");
+    // Normalize endpoint (ensure it starts with / but preserve trailing /)
+    const normalizedEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
     const url = `${this.baseUrl}${normalizedEndpoint}`;
 
     // Get token from localStorage
@@ -206,8 +218,7 @@ class ApiClient {
 
           if (process.env.NODE_ENV === "development") {
             console.log(
-              `Request failed (attempt ${attempt + 1}/${
-                this.retryConfig.maxRetries + 1
+              `Request failed (attempt ${attempt + 1}/${this.retryConfig.maxRetries + 1
               }), retrying in ${delay}ms:`,
               enhancedError.detail
             );
@@ -235,8 +246,7 @@ class ApiClient {
 
           if (process.env.NODE_ENV === "development") {
             console.log(
-              `Request timeout (attempt ${attempt + 1}/${
-                this.retryConfig.maxRetries + 1
+              `Request timeout (attempt ${attempt + 1}/${this.retryConfig.maxRetries + 1
               }), retrying in ${delay}ms`
             );
           }
@@ -256,8 +266,7 @@ class ApiClient {
 
         if (process.env.NODE_ENV === "development") {
           console.log(
-            `Network error (attempt ${attempt + 1}/${
-              this.retryConfig.maxRetries + 1
+            `Network error (attempt ${attempt + 1}/${this.retryConfig.maxRetries + 1
             }), retrying in ${delay}ms:`,
             enhancedError.detail
           );
@@ -779,9 +788,8 @@ class ApiClient {
         .toISOString()
         .slice(0, 19)
         .replace(/:/g, "-");
-      filename = `incomplete_surveys_${
-        abandonedOnly ? "abandoned" : "all"
-      }_${timestamp}.csv`;
+      filename = `incomplete_surveys_${abandonedOnly ? "abandoned" : "all"
+        }_${timestamp}.csv`;
     }
 
     // Create blob and download
@@ -834,8 +842,7 @@ class ApiClient {
 
     const queryString = params.toString();
     return this.request(
-      `/localization/questions/${language}${
-        queryString ? `?${queryString}` : ""
+      `/localization/questions/${language}${queryString ? `?${queryString}` : ""
       }`
     );
   }
