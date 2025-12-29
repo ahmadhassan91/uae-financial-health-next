@@ -262,7 +262,7 @@ export function FinancialClinicResults({
                     <div className="font-semibold text-[#575757] text-[8px] sm:text-xs md:text-sm text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full">
                       {band.title[language]}
                     </div>
-                    <div className="font-normal text-[#575757] text-[7px] sm:text-[10px] md:text-sm text-center tracking-[0] leading-[10px] sm:leading-4 md:leading-5 w-full">
+                    <div className="font-normal text-[#575757] text-[7px] sm:text-[10px] md:text-sm text-center tracking-[0] leading-[10px] sm:leading-4 md:leading-5 w-full whitespace-pre-line">
                       {band.description[language]}
                     </div>
                   </div>

@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   // When enabled, runs `next build` and exports to 'out' folder
   output: process.env.STATIC_EXPORT === 'true' ? 'export' : undefined,
   
+  // Allow cross-origin requests for on-prem deployment
+  allowedDevOrigins: ['financialclinic.ae'],
+  
   // Standard build settings
   trailingSlash: true,
   images: {
