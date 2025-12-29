@@ -189,7 +189,9 @@ export default function FinancialClinicSurveyPage() {
       // Navigate to results page
       router.push('/financial-clinic/results');
 
-      toast.success('Assessment completed! Your Financial Health score has been calculated.');
+      toast.success((typeof window !== 'undefined' && localStorage.getItem('preferred_language') === 'ar')
+        ? 'تم الانتهاء من التقييم! تم حساب نتيجتك.'
+        : 'Assessment completed! Your score has been calculated.');
     } catch (error: any) {
       console.error('Survey submission error:', error);
 
