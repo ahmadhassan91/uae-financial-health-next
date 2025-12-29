@@ -1,13 +1,15 @@
 import type { NextConfig } from "next";
 
+// Check if we should build for static export (on-prem deployment)
+const isStaticExport = process.env.STATIC_EXPORT === 'true';
+
 const nextConfig: NextConfig = {
-  // Static export for on-prem deployment (set STATIC_EXPORT=true in .env)
-  // When enabled, runs `next build` and exports to 'out' folder
-  output: process.env.STATIC_EXPORT === 'true' ? 'export' : undefined,
+  // Enable static export for on-prem deployment when STATIC_EXPORT=true
+  output: isStaticExport ? 'export' : undefined,
   
-  // Allow cross-origin requests for on-prem deployment
-  allowedDevOrigins: ['financialclinic.ae'],
-  
+  // Resolve monorepo structure for output file tracing
+  outputFileTracingRoot: require('path').join(__dirname, '../'),
+
   // Standard build settings
   trailingSlash: true,
   images: {
