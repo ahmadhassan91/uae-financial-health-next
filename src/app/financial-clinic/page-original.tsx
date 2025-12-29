@@ -566,10 +566,10 @@ export default function FinancialClinicPage({
 
         {/* Form */}
         <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[850px]">
-          {/* Name and Date of Birth */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 w-full">
+          {/* Row 1: Name and Date of Birth */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {/* Name Input with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "الاسم" : "Name"}{" "}
                 <span className="text-red-500">*</span>
@@ -598,7 +598,7 @@ export default function FinancialClinicPage({
                     setNameError("");
                   }
                 }}
-                className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
                   nameError ? "border-red-500" : "border-[#c2d1d9]"
                 } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
                   language === "ar" ? "flex-row-reverse" : "flex-row"
@@ -612,7 +612,7 @@ export default function FinancialClinicPage({
             </div>
 
             {/* Date of Birth Input with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "تاريخ الميلاد" : "Date of Birth"}{" "}
                 <span className="text-red-500">*</span>
@@ -649,100 +649,105 @@ export default function FinancialClinicPage({
             </div>
           </div>
 
-          {/* Gender and Nationality - stacked for alignment */}
-          <div className="flex flex-col gap-4 w-full">
-            {/* Gender Row */}
-            <div className={`flex flex-row gap-2 w-full items-center`}>
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
-                {language === "ar" ? "الجنس" : "Gender"}{" "}
-                <span className="text-red-500">*</span>
-              </Label>
-              <RadioGroup
-                value={profile.gender}
-                onValueChange={handleGenderChange}
-                className="flex items-center gap-6"
-              >
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem
-                    value="Male"
-                    id="male"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="male"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
-                  >
-                    {language === "ar" ? "ذكر" : "Male"}
-                  </Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem
-                    value="Female"
-                    id="female"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="female"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
-                  >
-                    {language === "ar" ? "أنثى" : "Female"}
-                  </Label>
-                </div>
-              </RadioGroup>
+          {/* Row 2: Gender and Nationality - using grid for alignment under Name and DOB */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            {/* Gender - aligned under Name */}
+            <div className="w-full">
+              <div className={`flex flex-row flex-wrap gap-2 items-center`}>
+                <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                  {language === "ar" ? "الجنس" : "Gender"}{" "}
+                  <span className="text-red-500">*</span>
+                </Label>
+                <RadioGroup
+                  value={profile.gender}
+                  onValueChange={handleGenderChange}
+                  className="flex items-center gap-6"
+                >
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem
+                      value="Male"
+                      id="male"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="male"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "ذكر" : "Male"}
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem
+                      value="Female"
+                      id="female"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="female"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "أنثى" : "Female"}
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
               {genderError && (
-                <p className="text-red-500 text-xs font-[family-name:var(--font-poppins)]">
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
                   {genderError}
                 </p>
               )}
             </div>
-            {/* Nationality Row - now directly below Gender, aligned left */}
-            <div className="flex flex-row gap-2 w-full items-center">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
-                {language === "ar" ? "الجنسية" : "Nationality"}{" "}
-                <span className="text-red-500">*</span>
-              </Label>
-              <RadioGroup
-                value={profile.nationality}
-                onValueChange={handleNationalityChange}
-                className="flex items-center gap-6"
-              >
-                <div
-                  className={`flex items-center gap-2 ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
+
+            {/* Nationality - aligned under Date of Birth */}
+            <div className="w-full">
+              <div className="flex flex-row flex-wrap gap-2 items-center">
+                <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
+                  {language === "ar" ? "الجنسية" : "Nationality"}{" "}
+                  <span className="text-red-500">*</span>
+                </Label>
+                <RadioGroup
+                  value={profile.nationality}
+                  onValueChange={handleNationalityChange}
+                  className="flex items-center gap-6"
                 >
-                  <RadioGroupItem
-                    value="Emirati"
-                    id="emirati"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="emirati"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                  <div
+                    className={`flex items-center gap-2 ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
-                    {language === "ar" ? "إماراتي" : "Emirati"}
-                  </Label>
-                </div>
-                <div
-                  className={`flex items-center gap-2 ${
-                    language === "ar" ? "flex-row-reverse" : ""
-                  }`}
-                >
-                  <RadioGroupItem
-                    value="Non-Emirati"
-                    id="non-emirati"
-                    className="w-[17px] h-[17px] border-[#a1aeb7]"
-                  />
-                  <Label
-                    htmlFor="non-emirati"
-                    className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    <RadioGroupItem
+                      value="Emirati"
+                      id="emirati"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="emirati"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "إماراتي" : "Emirati"}
+                    </Label>
+                  </div>
+                  <div
+                    className={`flex items-center gap-2 ${
+                      language === "ar" ? "flex-row-reverse" : ""
+                    }`}
                   >
-                    {language === "ar" ? "غير إماراتي" : "Non-Emirati"}
-                  </Label>
-                </div>
-              </RadioGroup>
+                    <RadioGroupItem
+                      value="Non-Emirati"
+                      id="non-emirati"
+                      className="w-[17px] h-[17px] border-[#a1aeb7]"
+                    />
+                    <Label
+                      htmlFor="non-emirati"
+                      className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
+                    >
+                      {language === "ar" ? "غير إماراتي" : "Non-Emirati"}
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
               {nationalityError && (
-                <p className="text-red-500 text-xs font-[family-name:var(--font-poppins)]">
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
                   {nationalityError}
                 </p>
               )}
@@ -833,13 +838,11 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <div>
-                {emirateError && (
-                  <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
-                    {emirateError}
-                  </p>
-                )}
-              </div>
+              {emirateError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {emirateError}
+                </p>
+              )}
             </div>
 
             {/* Children Dropdown with Label */}
@@ -904,7 +907,6 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <div className="min-h-[20px]"></div>
             </div>
           </div>
 
@@ -1062,9 +1064,9 @@ export default function FinancialClinicPage({
           </div>
 
           {/* Email and Mobile Number */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {/* Email Field with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar"
                   ? "عنوان البريد الإلكتروني"
@@ -1108,7 +1110,7 @@ export default function FinancialClinicPage({
             </div>
 
             {/* Mobile Number Field with Label */}
-            <div className="flex-1 w-full">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "رقم الجوال" : "Mobile Number"}{" "}
                 <span className="text-red-500">*</span>

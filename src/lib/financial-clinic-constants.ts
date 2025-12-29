@@ -55,7 +55,7 @@ export const SCORE_BANDS = [
     title: { en: "Fair", ar: "مقبولة" },
     description: {
       en: "Good foundation, room for growth",
-      ar: "أساس متين مع إمكانية للتطوّر",
+      ar: "أساس متين مع\nإمكانية للتطوّر",
     },
   },
   {
