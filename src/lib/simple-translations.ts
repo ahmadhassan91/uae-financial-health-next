@@ -69,6 +69,7 @@ export const translations = {
     previous_question: "Previous Question",
     complete_assessment: "Complete Assessment",
     of: "of",
+    assessment_completed: "Assessment completed! Your score has been calculated.",
 
     // Profile Form
     customer_profile: "Customer Profile",
@@ -273,6 +274,8 @@ export const translations = {
     complete_assessment: "إكمال التقييم",
     of: "من",
     back: "خلف",
+    assessment_completed_ar: "تم الانتهاء من التقييم! تم حساب نتيجتك.",
+
     // Profile Form
     customer_profile: "الملف الشخصي للعميل",
     provide_information_personalize:
