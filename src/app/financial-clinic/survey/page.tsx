@@ -239,9 +239,15 @@ export default function FinancialClinicSurveyPage() {
           <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
             <div className="text-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#437749] mx-auto"></div>
-              <h3 className="text-lg font-semibold text-[#437749]">Calculating Your Score...</h3>
+              <h3 className="text-lg font-semibold text-[#437749]">
+                {(typeof window !== 'undefined' && (localStorage.getItem('preferred_language') === 'ar'))
+                  ? 'جاري حساب نتيجتك...'
+                  : 'Calculating Your Score...'}
+              </h3>
               <p className="text-[#a1aeb7]">
-                Please wait while we analyze your responses and generate personalized recommendations.
+                {(typeof window !== 'undefined' && (localStorage.getItem('preferred_language') === 'ar'))
+                  ? 'يرجى الانتظار بينما نقوم بتحليل إجاباتك وتوليد توصيات مخصصة.'
+                  : 'Please wait while we analyze your responses and generate personalized recommendations.'}
               </p>
             </div>
           </div>
