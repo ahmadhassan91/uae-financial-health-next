@@ -626,27 +626,10 @@ export function FinancialClinicScoreHistory({
                       }}
                       angle={0}
                       textAnchor="middle"
-                      height={100}
+                      height={80}
                       interval={0}
                       tickMargin={15}
                       axisLine={{ stroke: "#ccc" }}
-                      tick={({ x, y, payload }) => {
-                        const value = payload.value;
-                        const words = value.split(' ');
-                        const midPoint = Math.ceil(words.length / 2);
-                        const line1 = words.slice(0, midPoint).join(' ');
-                        const line2 = words.slice(midPoint).join(' ');
-                        return (
-                          <g transform={`translate(${x},${y})`}>
-                            <text x={0} y={0} dy={0} textAnchor="middle" fill="#666" fontSize={9}>
-                              {line1}
-                            </text>
-                            <text x={0} y={0} dy={12} textAnchor="middle" fill="#666" fontSize={9}>
-                              {line2}
-                            </text>
-                          </g>
-                        );
-                      }}
                     />
                     <YAxis
                       domain={[0, 100]}
@@ -685,6 +668,48 @@ export function FinancialClinicScoreHistory({
                       height={36}
                       iconType="circle"
                       wrapperStyle={{ fontSize: "12px" }}
+                      iconSize={14}
+                      margin={{ left: 10, right: 0 }}
+                      content={(props) => {
+                        // Default Legend rendering with extra space between dot and text
+                        const { payload = [] } = props;
+                        return (
+                          <ul
+                            style={{
+                              display: "flex",
+                              gap: 24,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              padding: 0,
+                              margin: 0,
+                              listStyle: "none",
+                            }}
+                          >
+                            {payload.map((entry, index) => (
+                              <li
+                                key={`item-${index}`}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    width: 14,
+                                    height: 14,
+                                    borderRadius: "50%",
+                                    background: entry.color,
+                                    marginRight: 8,
+                                  }}
+                                />
+                                <span>{entry.value}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      }}
                     />
                     <Bar
                       dataKey="score"
@@ -696,9 +721,9 @@ export function FinancialClinicScoreHistory({
                       type="monotone"
                       dataKey="average"
                       stroke="#5E5E5E"
+                      fill="#5E5E5E"
                       strokeWidth={3}
                       name={t("average_score")}
-                      dot={{ fill: "#5E5E5E", strokeWidth: 2, r: 6 }}
                       activeDot={{ r: 8 }}
                     />
                   </ComposedChart>

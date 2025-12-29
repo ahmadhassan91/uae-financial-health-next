@@ -72,9 +72,9 @@ export function HeroSection() {
   return (
     <section className="flex w-full relative flex-col items-center gap-8 sm:gap-12 md:gap-[65px] px-4 py-8 sm:py-12 md:py-[65px]">
       {/* Tagline */}
-      <div className="flex flex-col w-full max-w-[1199px] items-center gap-4 sm:gap-[22px]">
-        <div className="inline-flex flex-col items-center">
-          <h1 className="w-fit mt-[-1.00px] font-semibold text-[#5E5E5E] text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px] text-center px-4">
+      <div className="flex flex-col w-full max-w-[1199px] items-center gap-3 sm:gap-5">
+        <div className="inline-flex flex-col items-center w-full">
+          <h1 className="w-full font-semibold text-[#5E5E5E] text-lg xs:text-xl sm:text-2xl md:text-[33px] tracking-[0] leading-tight sm:leading-[38px] text-center px-2 sm:px-4">
             {language === "ar"
               ? "لبناء عادات مالية أكثر كفاءة"
               : "Inspiring healthier financial habits"}
@@ -87,22 +87,22 @@ export function HeroSection() {
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-2 sm:gap-[3px] w-full max-w-[900px]">
-          <p className="self-stretch mt-[-1.00px] font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
+        <div className="flex flex-col items-center justify-center gap-1.5 sm:gap-2 w-full max-w-[900px]">
+          <p className="w-full font-normal text-[#575757] text-xs xs:text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-2 sm:px-4">
             {language === "ar"
               ? "هل تعلمون أن تغييرات بسيطة في عاداتكم المالية يمكن أن تصنع مستقبلاً ماليًا أقوى وأكثر أمانًا؟"
               : "Do you know how small changes in your habits can create a stronger, more secure financial future?"}
           </p>
 
           <p
-            className="w-fit font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4"
-            style={{ width: "697px" }}
+            className="w-full font-normal text-[#575757] text-xs xs:text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-2 sm:px-4"
+            style={{ maxWidth: "700px" }}
           >
             {language === "ar"
               ? "في بضع دقائق فقط، تساعدكم عيادتنا المالية على فهم الطريقة الصحيحة للتعامل مع الأموال من خلال دمج الرؤى الذكية مع علم السلوك، مما يمكّنكم من اتخاذ قرارات أكثر كفاءة."
               : "In just a few minutes, our Financial Clinic blends smart insights with behavioral science to help you understand your money mindset and make more confident decisions."}
           </p>
-          <p className="w-fit font-normal text-[#575757] text-xs sm:text-sm text-center tracking-[0] leading-5 sm:leading-6 px-4">
+          <p className="w-full font-normal text-[#575757] text-xs xs:text-sm sm:text-base text-center tracking-[0] leading-5 sm:leading-6 px-2 sm:px-4">
             {language === "ar"
               ? "هل أنتم مستعدون لمعرفة ما تقوله عاداتكم المالية عنكم؟ "
               : "Ready to find out what your financial habits say about you?"}

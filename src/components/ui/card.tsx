@@ -38,11 +38,16 @@ function CardTitle({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-function CardDescription({ className, ...props }: ComponentProps<"div">) {
+function CardDescription({
+  className,
+  color,
+  ...props
+}: ComponentProps<"div"> & { color?: string }) {
   return (
     <div
       data-slot="card-description"
       className={cn("text-sm", className)}
+      style={{ color: color || "#737373" }}
       {...props}
     />
   );

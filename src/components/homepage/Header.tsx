@@ -88,7 +88,7 @@ export function HomepageHeader() {
           {/* Financial Clinic Logo */}
           <Link href="/">
             <img
-              className="h-[50px] sm:h-[65px] md:h-[72px] cursor-pointer"
+              className="h-[50px] sm:h-[65px] md:h-[60px] cursor-pointer"
               style={
                 language === "ar"
                   ? { marginLeft: "35px", marginRight: "35px" }
