@@ -22,49 +22,10 @@ export default function FinancialClinicResultsPage() {
 
   useEffect(() => {
     const loadResult = async () => {
-      // First try to get email from localStorage profile
+      // Get profile from localStorage
       const storedProfile = localStorage.getItem("financialClinicProfile");
-      let email = "";
-
-      if (storedProfile) {
-        try {
-          const profile = JSON.parse(storedProfile);
-          email = profile.email;
-        } catch (error) {
-          console.error("Failed to parse profile:", error);
-        }
-      }
-
-      // If we have an email, try to fetch from database
-      if (email) {
-        try {
-          const response = await fetch(
-            `${
-              process.env.NEXT_PUBLIC_API_URL
-            }/financial-clinic/latest/${encodeURIComponent(email)}`
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            setResult(data);
-
-            // Also store in localStorage as backup
-            localStorage.setItem("financialClinicResult", JSON.stringify(data));
-
-            if (storedProfile) {
-              setProfile(JSON.parse(storedProfile));
-            }
-
-            setLoading(false);
-            return;
-          }
-        } catch (error) {
-          console.error("Error fetching result from database:", error);
-          // Fall through to localStorage check
-        }
-      }
-
-      // Fallback to localStorage if database fetch failed or no email
+      
+      // Get result from localStorage (stored after survey submission)
       const storedResult = localStorage.getItem("financialClinicResult");
 
       if (storedResult) {

@@ -63,6 +63,42 @@ interface FinancialClinicScoreHistoryProps {
   userEmail?: string;
 }
 
+const CategoryAxisTick: React.FC<{
+  x?: number;
+  y?: number;
+  payload?: { value: string };
+}> = ({ x = 0, y = 0, payload }) => {
+  const rawValue = String(payload?.value ?? "");
+  const words = rawValue.split(" ").filter(Boolean);
+
+  // First word on first line, remaining words on second line (if any)
+  let lines: string[] = [];
+  if (words.length <= 1) {
+    lines = [rawValue];
+  } else {
+    lines = [words[0], words.slice(1).join(" ")];
+  }
+
+  const lineHeight = 10;
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {lines.map((line, index) => (
+        <text
+          key={index}
+          x={0}
+          y={index * lineHeight}
+          textAnchor="middle"
+          fill="#666"
+          fontSize={9}
+        >
+          {line}
+        </text>
+      ))}
+    </g>
+  );
+};
+
 export function FinancialClinicScoreHistory({
   scoreHistory,
   onBack,
@@ -619,16 +655,10 @@ export function FinancialClinicScoreHistory({
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="factor"
-                      tick={{
-                        fontSize: 9,
-                        dx: isRTL ? 25 : 0,
-                        dy: isRTL ? 10 : 0,
-                      }}
-                      angle={0}
-                      textAnchor="middle"
-                      height={80}
+                      tick={<CategoryAxisTick />}
+                      height={70}
                       interval={0}
-                      tickMargin={15}
+                      tickMargin={10}
                       axisLine={{ stroke: "#ccc" }}
                     />
                     <YAxis

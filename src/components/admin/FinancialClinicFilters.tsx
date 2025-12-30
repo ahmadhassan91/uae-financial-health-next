@@ -285,7 +285,6 @@ export function FinancialClinicFilters({
                 Emirate
               </Label>
               <MultiSelect
-                style={{ color: "#5E5E5E !important" }}
                 options={availableOptions.emirates.map((emirate) => ({
                   label: emirate,
                   value: emirate,
