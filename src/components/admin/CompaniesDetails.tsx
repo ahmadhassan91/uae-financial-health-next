@@ -41,6 +41,7 @@ export function CompaniesDetails() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const companiesPerPage = 10;
+  const [selectedCompanies, setSelectedCompanies] = useState<Set<string>>(new Set());
 
   // Load existing companies on component mount
   useEffect(() => {
@@ -52,18 +53,25 @@ export function CompaniesDetails() {
       // Try public endpoint first to test database connection
       const publicResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/companies-details/public-companies`);
       if (publicResponse.ok) {
-        const publicData = await publicResponse.json();
-        console.log('Public companies loaded:', publicData);
-        // Convert to expected format
-        setUploadedCompanies(publicData.map((item: any) => ({
-          id: item.id,
-          company_name: item.name,
-          company_email: '',
-          contact_person: '',
-          phone_number: '',
-          additional_details: ''
-        })));
-        setCurrentPage(1); // Reset to first page when loading new data
+        const publicCompanies = await publicResponse.json();
+        console.log('🔧 [DEBUG] Public companies loaded:', publicCompanies);
+        
+        // Transform public API format to Company interface format
+        const transformedCompanies = publicCompanies.map((company: any) => ({
+          id: company.id.toString(),
+          company_name: company.name,
+          company_email: 'no-email@example.com', // Default values for public API
+          contact_person: 'Not specified',
+          phone_number: null,
+          additional_details: null,
+          uploaded_by: 1, // Default user ID
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          is_active: true // Default to active
+        }));
+        
+        console.log('🔧 [DEBUG] Transformed companies:', transformedCompanies);
+        setUploadedCompanies(transformedCompanies);
         return;
       }
       
@@ -76,35 +84,156 @@ export function CompaniesDetails() {
     }
   };
 
+  const validateCSVDuplicates = async (file: File): Promise<{isValid: boolean, error?: string, duplicates?: string[], existingCompanies?: string[]}> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        try {
+          const text = e.target?.result as string;
+          const lines = text.split('\n').filter(line => line.trim());
+          
+          if (lines.length < 2) {
+            resolve({ isValid: false, error: 'CSV file is empty or only contains headers' });
+            return;
+          }
+          
+          // Get existing companies from database
+          const existingCompanyNames = uploadedCompanies.map(c => c.company_name.toLowerCase());
+          console.log('🔧 [DEBUG] Existing companies in DB:', existingCompanyNames);
+          
+          // Skip header and get company names from CSV
+          const csvCompanyNames: string[] = [];
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line) {
+              // Handle CSV parsing - split by comma and get first non-empty column
+              const columns = line.split(',').map(col => col.replace(/"/g, '').trim());
+              
+              // Find the first non-empty column (company name)
+              let companyName = '';
+              for (const col of columns) {
+                if (col && col.toLowerCase() !== 'company name') {
+                  companyName = col;
+                  break;
+                }
+              }
+              
+              if (companyName) {
+                // Normalize: lowercase, trim whitespace, remove extra spaces
+                const normalizedName = companyName.toLowerCase().replace(/\s+/g, ' ').trim();
+                if (normalizedName) {
+                  csvCompanyNames.push(normalizedName);
+                }
+              }
+            }
+          }
+          
+          console.log('🔧 [DEBUG] Parsed CSV companies:', csvCompanyNames);
+          
+          if (csvCompanyNames.length === 0) {
+            resolve({ isValid: false, error: 'No valid company names found in CSV' });
+            return;
+          }
+          
+          // Check for duplicates within CSV
+          const csvUniqueNames = new Set<string>();
+          const csvDuplicates: string[] = [];
+          
+          for (const name of csvCompanyNames) {
+            if (csvUniqueNames.has(name)) {
+              csvDuplicates.push(name);
+            } else {
+              csvUniqueNames.add(name);
+            }
+          }
+          
+          // Check for companies that already exist in database
+          const existingDuplicates: string[] = [];
+          for (const csvName of csvCompanyNames) {
+            if (existingCompanyNames.includes(csvName)) {
+              existingDuplicates.push(csvName);
+            }
+          }
+          
+          if (csvDuplicates.length > 0) {
+            // CSV has internal duplicates
+            const formattedDuplicates = [...new Set(csvDuplicates)].map(name => 
+              name.charAt(0).toUpperCase() + name.slice(1)
+            );
+            
+            console.log('🔧 [DEBUG] CSV internal duplicates found:', formattedDuplicates);
+            
+            resolve({ 
+              isValid: true, 
+              duplicates: formattedDuplicates
+            });
+          } else if (existingDuplicates.length > 0) {
+            // CSV companies already exist in database
+            const formattedExisting = [...new Set(existingDuplicates)].map(name => 
+              name.charAt(0).toUpperCase() + name.slice(1)
+            );
+            
+            console.log('🔧 [DEBUG] Companies already exist in DB:', formattedExisting);
+            
+            resolve({ 
+              isValid: true, 
+              existingCompanies: formattedExisting
+            });
+          } else {
+            console.log('🔧 [DEBUG] No conflicts found');
+            resolve({ isValid: true });
+          }
+          
+        } catch (error) {
+          console.error('🔧 [DEBUG] CSV parsing error:', error);
+          resolve({ isValid: false, error: 'Failed to parse CSV file' });
+        }
+      };
+      
+      reader.onerror = () => {
+        resolve({ isValid: false, error: 'Failed to read CSV file' });
+      };
+      
+      reader.readAsText(file);
+    });
+  };
+
   // Get unique companies for display
   const getUniqueCompanies = () => {
+    console.log('🔧 [DEBUG] getUniqueCompanies called with uploadedCompanies:', uploadedCompanies);
+    
     const uniqueCompanies = new Map();
     uploadedCompanies.forEach(company => {
       if (!uniqueCompanies.has(company.company_name)) {
         uniqueCompanies.set(company.company_name, company);
       }
     });
-    return Array.from(uniqueCompanies.values());
+    
+    const result = Array.from(uniqueCompanies.values());
+    console.log('🔧 [DEBUG] Unique companies result:', result);
+    
+    return result;
   };
 
   // Get current page companies
   const getCurrentPageCompanies = () => {
-    const uniqueCompanies = getUniqueCompanies();
+    const companies = getUniqueCompanies();
     const startIndex = (currentPage - 1) * companiesPerPage;
     const endIndex = startIndex + companiesPerPage;
-    return uniqueCompanies.slice(startIndex, endIndex);
+    return companies.slice(startIndex, endIndex);
   };
 
   // Get pagination info
   const getPaginationInfo = () => {
-    const uniqueCompanies = getUniqueCompanies();
-    const totalPages = Math.ceil(uniqueCompanies.length / companiesPerPage);
+    const companies = getUniqueCompanies();
+    const totalPages = Math.ceil(companies.length / companiesPerPage);
     return {
       currentPage,
       totalPages,
-      totalItems: uniqueCompanies.length,
+      totalItems: companies.length,
       startIndex: (currentPage - 1) * companiesPerPage + 1,
-      endIndex: Math.min(currentPage * companiesPerPage, uniqueCompanies.length)
+      endIndex: Math.min(currentPage * companiesPerPage, companies.length)
     };
   };
 
@@ -121,6 +250,61 @@ export function CompaniesDetails() {
     setUploadProgress(0);
 
     try {
+      // First, validate CSV for duplicates and existing companies
+      console.log('🔧 [DEBUG] Validating CSV for duplicates and existing companies...');
+      const csvValidation = await validateCSVDuplicates(file);
+      console.log('🔧 [DEBUG] CSV validation result:', csvValidation);
+      
+      if (!csvValidation.isValid) {
+        console.log('🔧 [DEBUG] CSV validation failed:', csvValidation.error);
+        toast.error(csvValidation.error);
+        setUploadStatus('error');
+        return;
+      }
+
+      // Check if CSV companies already exist in database
+      if (csvValidation.existingCompanies && csvValidation.existingCompanies.length > 0) {
+        console.log('🔧 [DEBUG] Companies already exist in database:', csvValidation.existingCompanies);
+        
+        // Show modal with options
+        const existingList = csvValidation.existingCompanies.join(', ');
+        const shouldProceed = window.confirm(
+          `The following companies already exist in the database:\n\n${existingList}\n\n` +
+          `Choose an option:\n` +
+          `• OK: Upload only unique companies (duplicates will be skipped)\n` +
+          `• Cancel: Upload a different CSV file\n\n` +
+          `Click OK to proceed with unique companies only, or Cancel to choose a different file.`
+        );
+        
+        if (!shouldProceed) {
+          setUploadStatus('error');
+          return;
+        }
+        
+        // Proceed with upload - backend will handle filtering
+        console.log('🔧 [DEBUG] Proceeding with upload (unique companies only)');
+      }
+
+      // Check for internal CSV duplicates
+      if (csvValidation.duplicates && csvValidation.duplicates.length > 0) {
+        console.log('🔧 [DEBUG] Internal CSV duplicates found:', csvValidation.duplicates);
+        const duplicateList = csvValidation.duplicates.join(', ');
+        
+        // Create a detailed error message
+        const errorMessage = csvValidation.duplicates.length === 1
+          ? `Duplicate company found in CSV: "${csvValidation.duplicates[0]}". Please remove duplicates and try again.`
+          : `${csvValidation.duplicates.length} duplicate companies found in CSV:\n\n${csvValidation.duplicates.map(name => `• ${name}`).join('\n')}\n\nPlease remove duplicates and try again.`;
+        
+        // Show both alert and toast for better visibility
+        alert(errorMessage);
+        toast.error(`${csvValidation.duplicates.length} duplicate companies found in CSV. Check console for details.`);
+        
+        setUploadStatus('error');
+        return;
+      }
+
+      console.log('🔧 [DEBUG] CSV validation passed, proceeding with upload...');
+
       // Simulate progress
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => {
@@ -152,7 +336,8 @@ export function CompaniesDetails() {
   };
 
   const downloadSampleCSV = () => {
-    const csvContent = "Company Name\n" +
+    const csvContent = "# Company Names - Ensure all names are unique\n" +
+      "Company Name\n" +
       "Acme Corporation\n" +
       "Global Trading\n" +
       "UAE Enterprises";
@@ -168,6 +353,137 @@ export function CompaniesDetails() {
     document.body.removeChild(a);
   };
 
+  const handleToggleCompany = async (companyId: number, currentStatus: boolean) => {
+    try {
+      const response = await adminApi.toggleCompanyStatus(companyId);
+      
+      if (response.message) {
+        toast.success(response.message);
+        // Refresh the companies list
+        loadCompanies();
+      }
+    } catch (error) {
+      console.error('Error toggling company status:', error);
+      toast.error('Failed to update company status');
+    }
+  };
+
+  const handleDeleteCompany = async (companyId: number) => {
+    console.log('🔧 [DEBUG] Attempting to delete company:', companyId);
+    
+    if (!confirm('Are you sure you want to delete this company? This action cannot be undone.')) {
+      console.log('🔧 [DEBUG] User cancelled deletion');
+      return;
+    }
+
+    try {
+      console.log('🔧 [DEBUG] Calling delete API for company:', companyId);
+      const response = await adminApi.deleteCompany(companyId);
+      console.log('🔧 [DEBUG] Delete API response:', response);
+      
+      if (response.message) {
+        toast.success(response.message);
+        console.log('🔧 [DEBUG] Delete successful, refreshing companies list');
+        // Refresh the companies list
+        loadCompanies();
+      }
+    } catch (error) {
+      console.error('🔧 [DEBUG] Error deleting company:', error);
+      toast.error('Failed to delete company');
+    }
+  };
+
+  // Selection handlers
+  const handleSelectCompany = (companyId: string) => {
+    const newSelection = new Set(selectedCompanies);
+    if (newSelection.has(companyId)) {
+      newSelection.delete(companyId);
+    } else {
+      newSelection.add(companyId);
+    }
+    setSelectedCompanies(newSelection);
+  };
+
+  const handleSelectAll = () => {
+    const currentPageCompanies = getCurrentPageCompanies();
+    const currentPageIds = currentPageCompanies.map(company => company.id);
+    
+    if (currentPageIds.every(id => selectedCompanies.has(id))) {
+      // Deselect all on current page
+      const newSelection = new Set(selectedCompanies);
+      currentPageIds.forEach(id => newSelection.delete(id));
+      setSelectedCompanies(newSelection);
+    } else {
+      // Select all on current page
+      const newSelection = new Set(selectedCompanies);
+      currentPageIds.forEach(id => newSelection.add(id));
+      setSelectedCompanies(newSelection);
+    }
+  };
+
+  const handleBulkToggle = async (enable: boolean) => {
+    console.log('🔧 [DEBUG] handleBulkToggle called with enable:', enable);
+    console.log('🔧 [DEBUG] selectedCompanies:', selectedCompanies);
+    
+    if (selectedCompanies.size === 0) {
+      toast.error('Please select at least one company');
+      return;
+    }
+
+    const action = enable ? 'enable' : 'disable';
+    console.log('🔧 [DEBUG] Action:', action, 'for', selectedCompanies.size, 'companies');
+    
+    if (!confirm(`Are you sure you want to ${action} ${selectedCompanies.size} selected companies?`)) {
+      console.log('🔧 [DEBUG] User cancelled bulk toggle');
+      return;
+    }
+
+    try {
+      console.log('🔧 [DEBUG] Starting bulk toggle operations...');
+      let successCount = 0;
+      for (const companyId of selectedCompanies) {
+        console.log('🔧 [DEBUG] Toggling company:', companyId);
+        await adminApi.toggleCompanyStatus(parseInt(companyId));
+        successCount++;
+        console.log('🔧 [DEBUG] Successfully toggled company:', companyId);
+      }
+      
+      console.log('🔧 [DEBUG] Bulk toggle completed. Success count:', successCount);
+      toast.success(`Successfully ${action}d ${successCount} companies`);
+      setSelectedCompanies(new Set()); // Clear selection
+      loadCompanies(); // Refresh list
+    } catch (error) {
+      console.error('🔧 [DEBUG] Error bulk toggling companies:', error);
+      toast.error(`Failed to ${action} some companies`);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedCompanies.size === 0) {
+      toast.error('Please select at least one company');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ${selectedCompanies.size} selected companies? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      let successCount = 0;
+      for (const companyId of selectedCompanies) {
+        await adminApi.deleteCompany(parseInt(companyId));
+        successCount++;
+      }
+      
+      toast.success(`Successfully deleted ${successCount} companies`);
+      setSelectedCompanies(new Set()); // Clear selection
+      loadCompanies(); // Refresh list
+    } catch (error) {
+      console.error('Error bulk deleting companies:', error);
+      toast.error('Failed to delete some companies');
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* CSV Upload Section */}
@@ -180,6 +496,9 @@ export function CompaniesDetails() {
           <CardDescription>
             Upload a CSV file containing company information. The CSV should have column: 
             Company Name (required). Other columns like Email, Contact, Phone, Details are optional.
+            <br /><br />
+            <strong>⚠️ Note:</strong> CSV files with duplicate company names will be rejected. 
+            Please ensure all company names are unique before uploading.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -257,11 +576,52 @@ export function CompaniesDetails() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building className="w-5 h-5" />
-            Uploaded Companies ({getUniqueCompanies().length})
+            Unique Companies ({getUniqueCompanies().length})
           </CardTitle>
           <CardDescription>
-            View and manage all uploaded companies (duplicates removed)
+            View and manage unique uploaded companies (duplicates automatically removed)
           </CardDescription>
+          
+          {/* Bulk Action Buttons */}
+          {selectedCompanies.size > 0 && (
+            <div className="flex items-center gap-2 mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <span className="text-sm font-medium text-blue-800">
+                {selectedCompanies.size} company{selectedCompanies.size > 1 ? 's' : ''} selected
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleBulkToggle(true)}
+                className="text-xs"
+              >
+                Enable Selected
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleBulkToggle(false)}
+                className="text-xs"
+              >
+                Disable Selected
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleBulkDelete}
+                className="text-xs"
+              >
+                Delete Selected
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedCompanies(new Set())}
+                className="text-xs"
+              >
+                Clear Selection
+              </Button>
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           {uploadedCompanies.length > 0 ? (
@@ -270,16 +630,57 @@ export function CompaniesDetails() {
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="border-b">
+                      <th className="text-left p-3 font-medium">
+                        <input
+                          type="checkbox"
+                          onChange={handleSelectAll}
+                          checked={getCurrentPageCompanies().every(company => selectedCompanies.has(company.id))}
+                          className="rounded border-gray-300"
+                        />
+                      </th>
                       <th className="text-left p-3 font-medium">Company Name</th>
-                    
+                      <th className="text-left p-3 font-medium">Status</th>
+                      <th className="text-left p-3 font-medium">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {getCurrentPageCompanies().map((company) => (
                       <tr key={company.id} className="border-b hover:bg-gray-50">
-                        <td className="p-3 font-medium">{company.company_name}</td>
                         <td className="p-3">
-                          <Badge variant="secondary">Uploaded</Badge>
+                          <input
+                            type="checkbox"
+                            checked={selectedCompanies.has(company.id)}
+                            onChange={() => handleSelectCompany(company.id)}
+                            className="rounded border-gray-300"
+                          />
+                        </td>
+                        <td className="p-3 font-medium">
+                          {company.company_name}
+                        </td>
+                        <td className="p-3">
+                          <Badge variant={company.is_active ? "default" : "secondary"}>
+                            {company.is_active ? "Active" : "Disabled"}
+                          </Badge>
+                        </td>
+                        <td className="p-3">
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleToggleCompany(company.id, company.is_active)}
+                              className="text-xs"
+                            >
+                              {company.is_active ? "Disable" : "Enable"}
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDeleteCompany(company.id)}
+                              className="text-xs"
+                            >
+                              Delete
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}

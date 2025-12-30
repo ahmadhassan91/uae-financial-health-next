@@ -693,4 +693,44 @@ export const adminApi = {
     if (!response.ok) throw new Error("Failed to fetch customer profiles");
     return await response.json();
   },
+
+  async toggleCompanyStatus(companyId: number): Promise<any> {
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/${companyId}/toggle-status`,
+      {
+        method: 'PATCH',
+        headers: getAuthHeaders()
+      }
+    );
+    
+    if (!response.ok) throw new Error("Failed to toggle company status");
+    return await response.json();
+  },
+
+  async deleteCompany(companyId: number): Promise<any> {
+    console.log('🔧 [DEBUG] Admin API: Deleting company:', companyId);
+    
+    const url = `${getBackendUrl()}/companies-details/${companyId}`;
+    console.log('🔧 [DEBUG] Delete URL:', url);
+    
+    const response = await fetch(
+      url,
+      {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      }
+    );
+    
+    console.log('🔧 [DEBUG] Delete response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('🔧 [DEBUG] Delete error response:', errorText);
+      throw new Error(`Failed to delete company: ${errorText}`);
+    }
+    
+    const result = await response.json();
+    console.log('🔧 [DEBUG] Delete response data:', result);
+    return result;
+  },
 };
