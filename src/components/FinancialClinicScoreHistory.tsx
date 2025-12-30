@@ -439,8 +439,8 @@ export function FinancialClinicScoreHistory({
             <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <div className="flex-1 min-w-0">
                 <h1
-                  className="text-xl sm:text-2xl md:text-3xl font-bold truncate"
-                  style={{ textAlign: "center" }}
+                  className="font-bold"
+                  style={{ textAlign: "center", fontSize: "24px" }}
                 >
                   {t("score_history")}
                 </h1>
@@ -473,12 +473,15 @@ export function FinancialClinicScoreHistory({
         {/* Current Score Summary */}
         <Card
           className="mb-6 sm:mb-8"
-          style={{ backgroundColor: "#eaf0f3ff", borderRadius: "1px" }}
+          style={{
+            backgroundColor: "#eaf0f3ff",
+            borderRadius: "1px",
+          }}
         >
           <CardContent className="p-4 sm:p-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center col-span-2 md:col-span-1">
-                <div className="text-3xl sm:text-4xl font-bold text-[#s5E5E5E] mb-2">
+                <div className="text-3xl sm:text-4xl font-bold text-[#5E5E5E] mb-2">
                   {Math.round(latestScore.overall_score)}
                 </div>
                 <div
@@ -555,7 +558,11 @@ export function FinancialClinicScoreHistory({
                     />
                     <YAxis
                       domain={[0, 100]}
-                      tick={{ fontSize: 10 }}
+                      tick={{
+                        fontSize: 9,
+                        dx: isRTL ? 10 : 0,
+                        dy: isRTL ? 0 : 0,
+                      }}
                       orientation={isRTL ? "right" : "left"}
                       tickMargin={5}
                       axisLine={{ stroke: "#ccc" }}
@@ -612,17 +619,25 @@ export function FinancialClinicScoreHistory({
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="factor"
-                      tick={{ fontSize: 9 }}
-                      angle={isRTL ? 45 : -45}
-                      textAnchor={isRTL ? "start" : "end"}
-                      height={120}
+                      tick={{
+                        fontSize: 9,
+                        dx: isRTL ? 25 : 0,
+                        dy: isRTL ? 10 : 0,
+                      }}
+                      angle={0}
+                      textAnchor="middle"
+                      height={80}
                       interval={0}
                       tickMargin={15}
                       axisLine={{ stroke: "#ccc" }}
                     />
                     <YAxis
                       domain={[0, 100]}
-                      tick={{ fontSize: 10 }}
+                      tick={{
+                        fontSize: 9,
+                        dx: isRTL ? 10 : 0,
+                        dy: isRTL ? 0 : 0,
+                      }}
                       orientation={isRTL ? "right" : "left"}
                       tickMargin={10}
                       axisLine={{ stroke: "#ccc" }}
@@ -653,20 +668,62 @@ export function FinancialClinicScoreHistory({
                       height={36}
                       iconType="circle"
                       wrapperStyle={{ fontSize: "12px" }}
+                      iconSize={14}
+                      margin={{ left: 10, right: 0 }}
+                      content={(props) => {
+                        // Default Legend rendering with extra space between dot and text
+                        const { payload = [] } = props;
+                        return (
+                          <ul
+                            style={{
+                              display: "flex",
+                              gap: 24,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              padding: 0,
+                              margin: 0,
+                              listStyle: "none",
+                            }}
+                          >
+                            {payload.map((entry, index) => (
+                              <li
+                                key={`item-${index}`}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    width: 14,
+                                    height: 14,
+                                    borderRadius: "50%",
+                                    background: entry.color,
+                                    marginRight: 8,
+                                  }}
+                                />
+                                <span>{entry.value}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      }}
                     />
                     <Bar
                       dataKey="score"
-                      fill="#3b82f6"
+                      fill="#AF8F39"
                       name={t("current_score_chart")}
                       radius={[4, 4, 0, 0]}
                     />
                     <Line
                       type="monotone"
                       dataKey="average"
-                      stroke="#f97316"
+                      stroke="#5E5E5E"
+                      fill="#5E5E5E"
                       strokeWidth={3}
                       name={t("average_score")}
-                      dot={{ fill: "#f97316", strokeWidth: 2, r: 6 }}
                       activeDot={{ r: 8 }}
                     />
                   </ComposedChart>

@@ -5,6 +5,7 @@ import { SurveyFlow } from '@/components/SurveyFlow';
 import { useSurvey } from '@/hooks/use-survey';
 import { LandingPage } from '@/components/LandingPage';
 import { toast } from 'sonner';
+import { useLocalization } from '@/contexts/LocalizationContext';
 
 export default function SurveyPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function SurveyPage() {
     submitSurvey, 
     getResponse 
   } = useSurvey();
+  const { t, language } = useLocalization();
 
   const handleSurveyComplete = async () => {
     try {
@@ -34,7 +36,7 @@ export default function SurveyPage() {
       console.log('Navigating to results page...');
       router.push('/results');
       
-      toast.success('Assessment completed! Your score has been calculated.');
+      toast.success(t(language === 'ar' ? 'assessment_completed_ar' : 'assessment_completed'));
     } catch (error) {
       console.error('Score calculation error:', error);
       

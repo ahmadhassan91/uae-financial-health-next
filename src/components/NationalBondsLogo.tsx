@@ -19,13 +19,13 @@ export function NationalBondsLogo({
   const getLogoSrc = () => {
     switch (variant) {
       case 'primary':
-        return '/logos/nbc-logo.jpg';
+        return '/homepage/images/NATIONAL BONDS LOGO.svg';
       case 'secondary':
         return '/logos/nbc-logo-02.png';
       case 'full':
         return '/logos/nbc-logo.jpg';
       default:
-        return '/logos/nbc-logo-01.png';
+        return '/homepage/images/NATIONAL BONDS LOGO.svg';
     }
   };
 

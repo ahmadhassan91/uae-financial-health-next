@@ -105,7 +105,7 @@ export default function FinancialClinicWrapper() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center max-w-md p-8">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#437749] mx-auto mb-6"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#5E5E5E] mx-auto mb-6"></div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Restoring Your Survey
           </h2>

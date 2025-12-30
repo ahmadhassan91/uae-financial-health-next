@@ -12,7 +12,12 @@ const DEVELOPMENT_API_URL = "http://localhost:8000/api/v1";
 const getApiBaseUrl = (): string => {
   // Check for explicit environment variable first (required for production)
   if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+    // Force HTTPS for on-prem deployment
+    const url = process.env.NEXT_PUBLIC_API_URL;
+    if (url.includes('financialclinic.ae') && !url.startsWith('https://')) {
+      return url.replace(/^http:\/\//, 'https://');
+    }
+    return url;
   }
 
   // Fallback to localhost for development only
@@ -21,9 +26,9 @@ const getApiBaseUrl = (): string => {
     return DEVELOPMENT_API_URL;
   }
 
-  // In production without env var, log warning and use env var (which will be undefined)
-  console.warn("NEXT_PUBLIC_API_URL not set in production environment");
-  return process.env.NEXT_PUBLIC_API_URL || DEVELOPMENT_API_URL;
+  // In production without env var, throw error to fail fast
+  console.error("CRITICAL: NEXT_PUBLIC_API_URL not set in production environment");
+  throw new Error("NEXT_PUBLIC_API_URL environment variable is required in production");
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -161,9 +166,8 @@ class ApiClient {
     options: RequestInit = {},
     attempt: number = 0
   ): Promise<T> {
-    // Normalize endpoint to remove trailing slashes (except for root)
-    const normalizedEndpoint =
-      endpoint === "/" ? endpoint : endpoint.replace(/\/+$/, "");
+    // Normalize endpoint (ensure it starts with / but preserve trailing /)
+    const normalizedEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
     const url = `${this.baseUrl}${normalizedEndpoint}`;
 
     // Get token from localStorage
@@ -206,8 +210,7 @@ class ApiClient {
 
           if (process.env.NODE_ENV === "development") {
             console.log(
-              `Request failed (attempt ${attempt + 1}/${
-                this.retryConfig.maxRetries + 1
+              `Request failed (attempt ${attempt + 1}/${this.retryConfig.maxRetries + 1
               }), retrying in ${delay}ms:`,
               enhancedError.detail
             );
@@ -235,8 +238,7 @@ class ApiClient {
 
           if (process.env.NODE_ENV === "development") {
             console.log(
-              `Request timeout (attempt ${attempt + 1}/${
-                this.retryConfig.maxRetries + 1
+              `Request timeout (attempt ${attempt + 1}/${this.retryConfig.maxRetries + 1
               }), retrying in ${delay}ms`
             );
           }
@@ -256,8 +258,7 @@ class ApiClient {
 
         if (process.env.NODE_ENV === "development") {
           console.log(
-            `Network error (attempt ${attempt + 1}/${
-              this.retryConfig.maxRetries + 1
+            `Network error (attempt ${attempt + 1}/${this.retryConfig.maxRetries + 1
             }), retrying in ${delay}ms:`,
             enhancedError.detail
           );
@@ -779,9 +780,8 @@ class ApiClient {
         .toISOString()
         .slice(0, 19)
         .replace(/:/g, "-");
-      filename = `incomplete_surveys_${
-        abandonedOnly ? "abandoned" : "all"
-      }_${timestamp}.csv`;
+      filename = `incomplete_surveys_${abandonedOnly ? "abandoned" : "all"
+        }_${timestamp}.csv`;
     }
 
     // Create blob and download
@@ -834,8 +834,7 @@ class ApiClient {
 
     const queryString = params.toString();
     return this.request(
-      `/localization/questions/${language}${
-        queryString ? `?${queryString}` : ""
+      `/localization/questions/${language}${queryString ? `?${queryString}` : ""
       }`
     );
   }

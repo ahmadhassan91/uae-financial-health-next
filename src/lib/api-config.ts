@@ -13,22 +13,31 @@ const DEVELOPMENT_API_URL = "http://localhost:8000/api/v1";
  * 2. Localhost fallback (for local development only)
  */
 export function getApiUrl(): string {
+  let url = "";
+
   // Priority 1: Use environment variable if defined (required for production)
   if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+    url = process.env.NEXT_PUBLIC_API_URL;
+  } else if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    // Priority 2: Fallback to localhost for development only
+    url = DEVELOPMENT_API_URL;
+  } else {
+    // Warn if no API URL is configured in production
+    if (process.env.NODE_ENV === "production") {
+      console.warn("NEXT_PUBLIC_API_URL not configured for production");
+    }
+    url = DEVELOPMENT_API_URL;
   }
 
-  // Priority 2: Fallback to localhost for development only
-  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-    return DEVELOPMENT_API_URL;
+  // Protocol enforcement for production
+  if (typeof window !== "undefined" && window.location.protocol === "https:" && url.startsWith("http://")) {
+    const urlObj = new URL(url, window.location.origin);
+    if (urlObj.hostname === window.location.hostname) {
+      url = url.replace("http://", "https://");
+    }
   }
 
-  // Warn if no API URL is configured in production
-  if (process.env.NODE_ENV === "production") {
-    console.warn("NEXT_PUBLIC_API_URL not configured for production");
-  }
-
-  return DEVELOPMENT_API_URL;
+  return url;
 }
 
 /**

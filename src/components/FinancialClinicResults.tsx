@@ -253,24 +253,16 @@ export function FinancialClinicResults({
               </div>
 
               {/* Band labels */}
-              <div className="flex flex-col md:flex-row items-start md:items-center w-full gap-3 md:gap-0">
+              <div className="flex flex-row items-start w-full">
                 {SCORE_BANDS.map((band, index) => (
                   <div
                     key={index}
-                    className="flex flex-col flex-1 items-start md:items-center px-1 sm:px-2 md:px-3 py-0 w-full md:w-auto"
+                    className="flex flex-col flex-1 items-center px-0.5 sm:px-2 md:px-3 py-0"
                   >
-                    <div
-                      className={`font-semibold text-[#575757] text-xs sm:text-sm md:text-center tracking-[0] leading-4 md:leading-5 w-full ${
-                        isRTL ? "text-right" : "text-left"
-                      }`}
-                    >
+                    <div className="font-semibold text-[#575757] text-[8px] sm:text-xs md:text-sm text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full">
                       {band.title[language]}
                     </div>
-                    <div
-                      className={`font-normal text-[#575757] text-[10px] sm:text-xs md:text-sm md:text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full ${
-                        isRTL ? "text-right" : "text-left"
-                      }`}
-                    >
+                    <div className="font-normal text-[#575757] text-[7px] sm:text-[10px] md:text-sm text-center tracking-[0] leading-[10px] sm:leading-4 md:leading-5 w-full whitespace-pre-line">
                       {band.description[language]}
                     </div>
                   </div>
@@ -335,14 +327,14 @@ export function FinancialClinicResults({
                       >
                         <div
                           className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${
-                            isRTL ? "text-right" : "text-left"
+                            isRTL ? "" : ""
                           }`}
                         >
                           {getCategoryTranslation(categoryName)}
                         </div>
                         <div
                           className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] ${
-                            isRTL ? "text-right" : "text-left"
+                            language === "ar" ? "whitespace-pre-line" : ""
                           }`}
                         >
                           {getCategoryDescription(categoryName)}
@@ -440,7 +432,7 @@ export function FinancialClinicResults({
         </div>
 
         {/* Main Action Buttons - Design Spec */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]" style={{marginTop:"38pxF"}}>
           <Button
             onClick={() => setIsConsultationModalOpen(true)}
             className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"

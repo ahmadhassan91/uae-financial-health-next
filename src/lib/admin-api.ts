@@ -1,10 +1,20 @@
- /**
- * Admin Analytics API Service
- * Handles all API calls to the Financial Clinic admin endpoints
- */
+/**
+* Admin Analytics API Service
+* Handles all API calls to the Financial Clinic admin endpoints
+*/
 
 const getBackendUrl = () => {
-  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+
+  // Protocol enforcement for production
+  if (typeof window !== "undefined" && window.location.protocol === "https:" && url.startsWith("http://")) {
+    const urlObj = new URL(url, window.location.origin);
+    if (urlObj.hostname === window.location.hostname) {
+      url = url.replace("http://", "https://");
+    }
+  }
+
+  return url;
 };
 
 const getAuthHeaders = () => {

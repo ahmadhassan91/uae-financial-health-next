@@ -509,7 +509,7 @@ export default function FinancialClinicPage({
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#437749] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5E5E5E] mx-auto mb-4"></div>
           <p className="text-[#a1aeb7]">
             {language === "ar" ? "جاري التحقق..." : "Checking..."}
           </p>
@@ -566,10 +566,10 @@ export default function FinancialClinicPage({
 
         {/* Form */}
         <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[850px]">
-          {/* Name and Date of Birth */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 w-full">
+          {/* Row 1: Name and Date of Birth */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {/* Name Input with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "الاسم" : "Name"}{" "}
                 <span className="text-red-500">*</span>
@@ -598,7 +598,7 @@ export default function FinancialClinicPage({
                     setNameError("");
                   }
                 }}
-                className={`h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
                   nameError ? "border-red-500" : "border-[#c2d1d9]"
                 } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
                   language === "ar" ? "flex-row-reverse" : "flex-row"
@@ -612,7 +612,7 @@ export default function FinancialClinicPage({
             </div>
 
             {/* Date of Birth Input with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "تاريخ الميلاد" : "Date of Birth"}{" "}
                 <span className="text-red-500">*</span>
@@ -649,35 +649,21 @@ export default function FinancialClinicPage({
             </div>
           </div>
 
-          {/* Gender and Nationality */}
-          <div
-            className={`flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-8 w-full md:justify-between ${
-              language === "ar" ? "md:flex-row-reverse" : ""
-            }`}
-          >
-            <div className="flex flex-col gap-2 flex-1">
-              <div
-                className={`flex items-center gap-6 md:gap-[35px] ${
-                  language === "ar" ? "" : ""
-                }`}
-              >
+          {/* Row 2: Gender and Nationality - using grid for alignment under Name and DOB */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            {/* Gender - aligned under Name */}
+            <div className="w-full">
+              <div className={`flex flex-row flex-wrap gap-2 items-center`}>
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   {language === "ar" ? "الجنس" : "Gender"}{" "}
                   <span className="text-red-500">*</span>
                 </Label>
-
                 <RadioGroup
                   value={profile.gender}
                   onValueChange={handleGenderChange}
-                  className={`flex items-center gap-[46px] ${
-                    language === "ar" ? "" : ""
-                  }`}
+                  className="flex items-center gap-6"
                 >
-                  <div
-                    className={`flex items-center gap-[5px] ${
-                      language === "ar" ? "flex-row-reverse" : ""
-                    }`}
-                  >
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem
                       value="Male"
                       id="male"
@@ -690,11 +676,7 @@ export default function FinancialClinicPage({
                       {language === "ar" ? "ذكر" : "Male"}
                     </Label>
                   </div>
-                  <div
-                    className={`flex items-center gap-[5px] ${
-                      language === "ar" ? "flex-row-reverse" : ""
-                    }`}
-                  >
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem
                       value="Female"
                       id="female"
@@ -710,32 +692,26 @@ export default function FinancialClinicPage({
                 </RadioGroup>
               </div>
               {genderError && (
-                <p className="text-red-500 text-xs font-[family-name:var(--font-poppins)]">
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
                   {genderError}
                 </p>
               )}
             </div>
 
-            <div className="flex flex-col gap-2 flex-1">
-              <div
-                className={`flex items-center gap-[46px] ${
-                  language === "ar" ? "" : ""
-                }`}
-              >
+            {/* Nationality - aligned under Date of Birth */}
+            <div className="w-full">
+              <div className="flex flex-row flex-wrap gap-2 items-center">
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6">
                   {language === "ar" ? "الجنسية" : "Nationality"}{" "}
                   <span className="text-red-500">*</span>
                 </Label>
-
                 <RadioGroup
                   value={profile.nationality}
                   onValueChange={handleNationalityChange}
-                  className={`flex items-center gap-[46px] ${
-                    language === "ar" ? "" : ""
-                  }`}
+                  className="flex items-center gap-6"
                 >
                   <div
-                    className={`flex items-center gap-[5px] ${
+                    className={`flex items-center gap-2 ${
                       language === "ar" ? "flex-row-reverse" : ""
                     }`}
                   >
@@ -752,7 +728,7 @@ export default function FinancialClinicPage({
                     </Label>
                   </div>
                   <div
-                    className={`flex items-center gap-[5px] ${
+                    className={`flex items-center gap-2 ${
                       language === "ar" ? "flex-row-reverse" : ""
                     }`}
                   >
@@ -765,13 +741,13 @@ export default function FinancialClinicPage({
                       htmlFor="non-emirati"
                       className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 whitespace-nowrap cursor-pointer"
                     >
-                      {language === "ar" ? "غير إماراتي" : "Non- Emirati"}
+                      {language === "ar" ? "غير إماراتي" : "Non-Emirati"}
                     </Label>
                   </div>
                 </RadioGroup>
               </div>
               {nationalityError && (
-                <p className="text-red-500 text-xs font-[family-name:var(--font-poppins)]">
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
                   {nationalityError}
                 </p>
               )}
@@ -779,9 +755,9 @@ export default function FinancialClinicPage({
           </div>
 
           {/* Emirate and Children */}
-          <div className="flex flex-col md:flex-row items-start md:items-start gap-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {/* Emirate Dropdown with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "الإمارة" : "Emirate"}{" "}
                 <span className="text-red-500">*</span>
@@ -862,17 +838,15 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <div className="min-h-[20px]">
-                {emirateError && (
-                  <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
-                    {emirateError}
-                  </p>
-                )}
-              </div>
+              {emirateError && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {emirateError}
+                </p>
+              )}
             </div>
 
             {/* Children Dropdown with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "الأطفال" : "Children"}
               </Label>
@@ -933,14 +907,13 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <div className="min-h-[20px]"></div>
             </div>
           </div>
 
           {/* Employment Status and Income Range */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {/* Employment Status Dropdown with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "حالة التوظيف" : "Employment Status"}{" "}
                 <span className="text-red-500">*</span>
@@ -992,7 +965,7 @@ export default function FinancialClinicPage({
             </div>
 
             {/* Household Monthly Income Range Dropdown with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar"
                   ? "نطاق الدخل الشهري للأسرة بالدرهم الإماراتي"
@@ -1091,9 +1064,9 @@ export default function FinancialClinicPage({
           </div>
 
           {/* Email and Mobile Number */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {/* Email Field with Label */}
-            <div className="flex-1">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar"
                   ? "عنوان البريد الإلكتروني"
@@ -1137,7 +1110,7 @@ export default function FinancialClinicPage({
             </div>
 
             {/* Mobile Number Field with Label */}
-            <div className="flex-1 w-full">
+            <div className="w-full">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "رقم الجوال" : "Mobile Number"}{" "}
                 <span className="text-red-500">*</span>
