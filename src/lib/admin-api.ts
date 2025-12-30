@@ -627,7 +627,14 @@ export const adminApi = {
       { headers: getAuthHeaders() }
     );
     
-    if (!response.ok) throw new Error("Failed to fetch companies");
+    if (!response.ok) {
+      if (response.status === 500) {
+        const errorText = await response.text();
+        console.error('Backend 500 error:', errorText);
+        throw new Error(`Backend error: ${errorText}`);
+      }
+      throw new Error("Failed to fetch companies");
+    }
     return await response.json();
   },
 
@@ -656,7 +663,7 @@ export const adminApi = {
   }): Promise<any> {
     const formData = new FormData();
     Object.entries(profileData).forEach(([key, value]) => {
-      formData.append(key, value);
+      formData.append(key, String(value));
     });
     
     const response = await fetch(

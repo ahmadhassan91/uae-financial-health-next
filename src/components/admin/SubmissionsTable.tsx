@@ -141,7 +141,18 @@ export function SubmissionsTable() {
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
+      console.log('🔧 [DEBUG] Loading submissions with params:', params.toString());
       const response = await apiClient.request(`/admin/simple/submissions?${params}`) as any;
+      console.log('🔧 [DEBUG] Submissions response:', response);
+      
+      if (response.submissions && response.submissions.length > 0) {
+        console.log('🔧 [DEBUG] First submission company data:', {
+          id: response.submissions[0].id,
+          company_name: response.submissions[0].company_name,
+          profile_name: response.submissions[0].profile_name
+        });
+      }
+      
       setSubmissions(response.submissions || []);
       setTotalPages(response.total_pages || 1);
     } catch (error) {

@@ -59,6 +59,10 @@ export default function FinancialClinicPage({
     companyName?: string;
   } | null>(null);
 
+  const [companyOptions, setCompanyOptions] = useState<
+    { id: number; name: string }[]
+  >([]);
+
   const [profile, setProfile] = useState<FinancialClinicProfile>({
     name: "",
     date_of_birth: "",
@@ -70,6 +74,7 @@ export default function FinancialClinicPage({
     emirate: "",
     email: "",
     mobile_number: "",
+    company_name: "",
   });
 
   const [nameError, setNameError] = useState<string>("");
@@ -213,6 +218,36 @@ export default function FinancialClinicPage({
     }
   }, []);
 
+  useEffect(() => {
+    const loadCompanies = async () => {
+      try {
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+        const response = await fetch(
+          `${apiUrl}/companies-details/public-companies`
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setCompanyOptions(
+            data.map((item: any) => ({
+              id: item.id,
+              name: item.name,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load companies list:", error);
+      }
+    };
+
+    loadCompanies();
+  }, []);
+
   // Clear previous assessment data when component mounts
   useEffect(() => {
     localStorage.removeItem("financialClinicResult");
@@ -283,27 +318,29 @@ export default function FinancialClinicPage({
     field: keyof FinancialClinicProfile,
     value: string
   ) => {
-    setProfile((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    console.log('🔧 [DEBUG] handleInputChange:', { field, value });
+    setProfile((prev) => {
+      const updated = {
+        ...prev,
+        [field]: value,
+      };
+      console.log('🔧 [DEBUG] Updated profile:', updated);
+      return updated;
+    });
   };
 
-  const handleConsentGranted = () => {
-    // Consent has been granted and saved by ConsentModal
-    setShowConsent(false);
-    setHasConsent(true);
-    // No need for toast here as ConsentModal already shows success message
-  };
-
-  const handleConsentDeclined = () => {
-    // User declined consent, redirect to homepage
-    router.push("/");
-    toast.info(
-      language === "ar"
-        ? "الموافقة مطلوبة لاستخدام هذه الخدمة."
-        : "Consent is required to use this service."
-    );
+  // Get unique company names for dropdown
+  const getUniqueCompanyOptions = () => {
+    console.log('🔧 [DEBUG] companyOptions available:', companyOptions);
+    const uniqueCompanies = new Map();
+    companyOptions.forEach(company => {
+      if (!uniqueCompanies.has(company.name)) {
+        uniqueCompanies.set(company.name, company);
+      }
+    });
+    const result = Array.from(uniqueCompanies.values());
+    console.log('🔧 [DEBUG] Unique company options:', result);
+    return result;
   };
 
   const handleViewPreviousResults = async () => {
@@ -488,6 +525,7 @@ export default function FinancialClinicPage({
     }
 
     // Save profile to localStorage
+    console.log('🔧 [DEBUG] Saving profile to localStorage:', profile);
     localStorage.setItem("financialClinicProfile", JSON.stringify(profile));
 
     // Navigate to survey - preserve company parameter if present
@@ -905,6 +943,64 @@ export default function FinancialClinicPage({
                   >
                     5+
                   </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Company Selection */}
+          <div className="grid grid-cols-1 w-full">
+            <div className="w-full">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
+                {language === "ar" ? "الشركة" : "Company"}
+              </Label>
+              <Select
+                value={profile.company_name || "none"}
+                onValueChange={(value) => {
+                  console.log('🔧 [DEBUG] Company selection changed:', { value, currentCompany: profile.company_name });
+                  setProfile((prev) => {
+                    const updated = {
+                      ...prev,
+                      company_name: value === "none" ? "" : value,
+                    };
+                    console.log('🔧 [DEBUG] Profile after company change:', updated);
+                    return updated;
+                  });
+                }}
+              >
+                <SelectTrigger
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  <SelectValue
+                    placeholder={
+                      language === "ar" ? "اختر الشركة (اختياري)" : "Select company (optional)"
+                    }
+                    className="placeholder:text-[#a1aeb7]"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {getUniqueCompanyOptions().length > 0 ? (
+                    <>
+                      <SelectItem value="none" className={language === "ar" ? "flex-row-reverse" : ""}>
+                        {language === "ar" ? "لا شيء" : "None"}
+                      </SelectItem>
+                      {getUniqueCompanyOptions().map((company) => (
+                        <SelectItem
+                          key={company.id}
+                          value={company.name}
+                          className={language === "ar" ? "flex-row-reverse" : ""}
+                        >
+                          {company.name}
+                        </SelectItem>
+                      ))}
+                    </>
+                  ) : (
+                    <SelectItem value="none" disabled>
+                      {language === "ar" ? "لا توجد شركات متاحة" : "No companies available"}
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             </div>

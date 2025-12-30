@@ -67,6 +67,7 @@ import { EmploymentDistributionChart } from "./admin/charts/EmploymentDistributi
 import { EmirateDistributionChart } from "./admin/charts/EmirateDistributionChart";
 import { ChildrenDistributionChart } from "./admin/charts/ChildrenDistributionChart";
 import { IncomeRangeDistributionChart } from "./admin/charts/IncomeRangeDistributionChart";
+import { CompanyDistributionChart } from "./admin/charts/CompanyDistributionChart";
 import { CompaniesAnalyticsTable } from "./admin/CompaniesAnalyticsTable";
 import { ScoreAnalyticsTable } from "./admin/ScoreAnalyticsTable";
 import { CompanyManagement } from "./CompanyManagement";
@@ -188,6 +189,16 @@ export function FinancialClinicAdminDashboard({
         adminApi.getScoreAnalyticsTable(filters, dateParams),
         adminApi.getGenderBreakdown(filters, dateParams),
       ]);
+      
+      console.log('🔧 [DEBUG] API Results:', {
+        genBreakdown: results[0],
+        emirBreakdown: results[1],
+        childBreakdown: results[2],
+        incBreakdown: results[3],
+        compAnalytics: results[4], // This is companiesAnalytics
+        scoreTable: results[5],
+        genBreakdown2: results[6]
+      });
 
       // Extract successful results
       const [
@@ -321,6 +332,9 @@ export function FinancialClinicAdminDashboard({
         </div>
       </div>
     );
+  }
+  {
+    console.log("companiesAnalytics:", companiesAnalytics);
   }
 
   return (
@@ -539,7 +553,7 @@ export function FinancialClinicAdminDashboard({
                   >
                     Companies Details
                   </TabsTrigger>
-                                    <TabsTrigger
+                  <TabsTrigger
                     value="leads"
                     className="text-xs sm:text-sm whitespace-nowrap"
                   >
@@ -693,6 +707,14 @@ export function FinancialClinicAdminDashboard({
                       <IncomeRangeDistributionChart data={incomeBreakdown} />
                     </div>
 
+                    {/* Company Distribution */}
+                    {companiesAnalytics && companiesAnalytics.length > 0 && (
+                      <>
+                        {console.log("companiesAnalytics:", companiesAnalytics)}
+                        <CompanyDistributionChart data={companiesAnalytics} />
+                      </>
+                    )}
+
                     {/* Score Analytics Table */}
                     {scoreAnalyticsTable && (
                       <ScoreAnalyticsTable data={scoreAnalyticsTable} />
@@ -716,7 +738,6 @@ export function FinancialClinicAdminDashboard({
                 </TabsContent>
               )}
 
-              
               {/* Leads Tab */}
               <TabsContent value="leads" className="space-y-6">
                 <LeadsManagement />
