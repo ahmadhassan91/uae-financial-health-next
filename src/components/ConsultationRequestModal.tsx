@@ -69,11 +69,16 @@ export function ConsultationRequestModal({
             email: userData.email,
             phone: userData.phone || userData.phone_number,
           });
+          let phoneNumber = userData.phone || userData.phone_number || "";
+          // Auto-add +971 if phone number doesn't have country code
+          if (phoneNumber && !phoneNumber.startsWith("+")) {
+            phoneNumber = `+971${phoneNumber.replace(/^0/, "")}`;
+          }
           setFormData((prev) => ({
             ...prev,
             name: userData.full_name || userData.name || "",
             email: userData.email || "",
-            phone_number: userData.phone || userData.phone_number || "",
+            phone_number: phoneNumber,
           }));
         } else {
           // If not logged in, try to get data from Financial Clinic profile
@@ -90,18 +95,33 @@ export function ConsultationRequestModal({
               email: profile.email,
               mobile: profile.mobile_number,
             });
+            let phoneNumber = profile.mobile_number || profile.phone_number || "";
+            // Auto-add +971 if phone number doesn't have country code
+            if (phoneNumber && !phoneNumber.startsWith("+")) {
+              phoneNumber = `+971${phoneNumber.replace(/^0/, "")}`;
+            }
             setFormData((prev) => ({
               ...prev,
               name: profile.name || "",
               email: profile.email || "",
-              phone_number: profile.mobile_number || profile.phone_number || "",
+              phone_number: phoneNumber,
             }));
           } else {
             console.log("❌ No profile data found in localStorage");
+            // Auto-populate with UAE country code for new users
+            setFormData((prev) => ({
+              ...prev,
+              phone_number: "+971",
+            }));
           }
         }
       } catch (error) {
-        console.error("❌ Error loading user data:", error);
+        console.error("❌ Error loading profile data:", error);
+        // Fallback to UAE country code
+        setFormData((prev) => ({
+          ...prev,
+          phone_number: "+971",
+        }));
       }
     }
   }, [isOpen]);
@@ -139,18 +159,18 @@ export function ConsultationRequestModal({
       return false;
     }
 
-    // UAE Phone Validation: +971 or 05 followed by digits
-    const phoneRegex = /^(?:\+971|00971|0)?(?:50|51|52|54|55|56|58)[0-9]{7}$/;
-    // Allow international numbers too generally, but if it looks like UAE, enforce format
-    // Or just check if it has at least 9 digits
-    const generalPhoneRegex =
-      /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
-
-    if (!generalPhoneRegex.test(formData.phone_number.replace(/\s/g, ""))) {
+    // UAE Phone Validation: More lenient validation
+    const phoneRegex = /^\+971[0-9]{9}$/;  // +971 followed by 9 digits
+    const generalPhoneRegex = /^\+?[1-9][0-9]{6,14}$/;  // International format: + followed by 7-15 digits
+    
+    const cleanPhone = formData.phone_number.replace(/\s/g, "");
+    
+    // Check if it's a valid UAE number or valid international number
+    if (!phoneRegex.test(cleanPhone) && !generalPhoneRegex.test(cleanPhone)) {
       toast.error(
         language === "ar"
-          ? "رقم الهاتف غير صحيح"
-          : "Invalid phone number format"
+          ? "رقم الهاتف غير صحيح. يرجى إدخال رقم هاتف صحيح مع رمز البلد"
+          : "Invalid phone number format. Please include country code (e.g., +971XXXXXXXXX)"
       );
       return false;
     }
@@ -343,7 +363,7 @@ export function ConsultationRequestModal({
                 handleInputChange("phone_number", e.target.value)
               }
               placeholder={
-                language === "ar" ? "+971XXXXXXXXX" : "+971XXXXXXXXX"
+                language === "ar" ? "+971501234567" : "+971501234567"
               }
               className="mt-1"
               required
