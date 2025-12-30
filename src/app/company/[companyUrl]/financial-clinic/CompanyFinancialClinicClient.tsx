@@ -30,9 +30,9 @@ export default function CompanyFinancialClinicClient({ companyUrl }: CompanyFina
         setCompanyInfo(data);
         setTimeout(() => {
           if (sessionId) {
-            router.push(`/financial-clinic?company=${companyUrl}&session=${sessionId}`);
+            router.push(`/?company=${companyUrl}&session=${sessionId}`);
           } else {
-            router.push(`/financial-clinic?company=${companyUrl}`);
+            router.push(`/?company=${companyUrl}`);
           }
         }, 2000);
       } catch (err) {
@@ -59,7 +59,7 @@ export default function CompanyFinancialClinicClient({ companyUrl }: CompanyFina
             </p>
           )}
           <p className="text-sm text-gray-500 mt-4">
-            Redirecting to assessment...
+            Redirecting to home page...
           </p>
         </div>
       </div>
