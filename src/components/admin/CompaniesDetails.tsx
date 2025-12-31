@@ -354,30 +354,35 @@ export function CompaniesDetails() {
   };
 
   const handleToggleCompany = async (companyId: number, currentStatus: boolean) => {
+    console.log('🔧 [DEBUG] handleToggleCompany called:', companyId, currentStatus);
+    
     try {
+      console.log('🔧 [DEBUG] Calling toggleCompanyStatus API for:', companyId);
       const response = await adminApi.toggleCompanyStatus(companyId);
+      console.log('🔧 [DEBUG] Toggle API response:', response);
       
       if (response.message) {
         toast.success(response.message);
+        console.log('🔧 [DEBUG] Toggle successful, refreshing companies list');
         // Refresh the companies list
         loadCompanies();
       }
     } catch (error) {
-      console.error('Error toggling company status:', error);
+      console.error('🔧 [DEBUG] Error toggling company status:', error);
       toast.error('Failed to update company status');
     }
   };
 
   const handleDeleteCompany = async (companyId: number) => {
-    console.log('🔧 [DEBUG] Attempting to delete company:', companyId);
+    console.log('🔧 [DEBUG] handleDeleteCompany called:', companyId);
     
     if (!confirm('Are you sure you want to delete this company? This action cannot be undone.')) {
-      console.log('🔧 [DEBUG] User cancelled deletion');
+      console.log('🔧 [DEBUG] User cancelled individual deletion');
       return;
     }
 
     try {
-      console.log('🔧 [DEBUG] Calling delete API for company:', companyId);
+      console.log('🔧 [DEBUG] Calling deleteCompany API for:', companyId);
       const response = await adminApi.deleteCompany(companyId);
       console.log('🔧 [DEBUG] Delete API response:', response);
       
@@ -443,9 +448,14 @@ export function CompaniesDetails() {
       let successCount = 0;
       for (const companyId of selectedCompanies) {
         console.log('🔧 [DEBUG] Toggling company:', companyId);
-        await adminApi.toggleCompanyStatus(parseInt(companyId));
-        successCount++;
-        console.log('🔧 [DEBUG] Successfully toggled company:', companyId);
+        try {
+          const response = await adminApi.toggleCompanyStatus(parseInt(companyId));
+          console.log('🔧 [DEBUG] Successfully toggled company:', companyId, 'Response:', response);
+          successCount++;
+        } catch (error) {
+          console.error('🔧 [DEBUG] Failed to toggle company:', companyId, 'Error:', error);
+          // Continue with other companies even if one fails
+        }
       }
       
       console.log('🔧 [DEBUG] Bulk toggle completed. Success count:', successCount);
@@ -459,27 +469,35 @@ export function CompaniesDetails() {
   };
 
   const handleBulkDelete = async () => {
+    console.log('🔧 [DEBUG] handleBulkDelete called');
+    console.log('🔧 [DEBUG] selectedCompanies:', selectedCompanies);
+    
     if (selectedCompanies.size === 0) {
       toast.error('Please select at least one company');
       return;
     }
 
     if (!confirm(`Are you sure you want to delete ${selectedCompanies.size} selected companies? This action cannot be undone.`)) {
+      console.log('🔧 [DEBUG] User cancelled bulk delete');
       return;
     }
 
     try {
+      console.log('🔧 [DEBUG] Starting bulk delete operations...');
       let successCount = 0;
       for (const companyId of selectedCompanies) {
+        console.log('🔧 [DEBUG] Deleting company:', companyId);
         await adminApi.deleteCompany(parseInt(companyId));
         successCount++;
+        console.log('🔧 [DEBUG] Successfully deleted company:', companyId);
       }
       
+      console.log('🔧 [DEBUG] Bulk delete completed. Success count:', successCount);
       toast.success(`Successfully deleted ${successCount} companies`);
       setSelectedCompanies(new Set()); // Clear selection
       loadCompanies(); // Refresh list
     } catch (error) {
-      console.error('Error bulk deleting companies:', error);
+      console.error('🔧 [DEBUG] Error bulk deleting companies:', error);
       toast.error('Failed to delete some companies');
     }
   };
@@ -591,7 +609,10 @@ export function CompaniesDetails() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleBulkToggle(true)}
+                onClick={() => {
+                  console.log('🔧 [DEBUG] Enable Selected button clicked!');
+                  handleBulkToggle(true);
+                }}
                 className="text-xs"
               >
                 Enable Selected
@@ -599,7 +620,10 @@ export function CompaniesDetails() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleBulkToggle(false)}
+                onClick={() => {
+                  console.log('🔧 [DEBUG] Disable Selected button clicked!');
+                  handleBulkToggle(false);
+                }}
                 className="text-xs"
               >
                 Disable Selected
@@ -607,7 +631,10 @@ export function CompaniesDetails() {
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={handleBulkDelete}
+                onClick={() => {
+                  console.log('🔧 [DEBUG] Delete Selected button clicked!');
+                  handleBulkDelete();
+                }}
                 className="text-xs"
               >
                 Delete Selected

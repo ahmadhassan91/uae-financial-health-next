@@ -62,6 +62,11 @@ export default function FinancialClinicPage({
   const [companyOptions, setCompanyOptions] = useState<
     { id: number; name: string }[]
   >([]);
+  const [companySearch, setCompanySearch] = useState<string>('');
+  const [showCompanyDropdown, setShowCompanyDropdown] = useState<boolean>(false);
+  const [filteredCompanyOptions, setFilteredCompanyOptions] = useState<
+    { id: number; name: string }[]
+  >([]);
 
   const [profile, setProfile] = useState<FinancialClinicProfile>({
     name: "",
@@ -328,6 +333,14 @@ export default function FinancialClinicPage({
       return updated;
     });
   };
+
+  // Filter company options based on search
+  useEffect(() => {
+    const filtered = companyOptions.filter(company => 
+      company.name.toLowerCase().includes(companySearch.toLowerCase())
+    );
+    setFilteredCompanyOptions(filtered);
+  }, [companySearch, companyOptions]);
 
   // Get unique company names for dropdown
   const getUniqueCompanyOptions = () => {
@@ -950,59 +963,73 @@ export default function FinancialClinicPage({
 
           {/* Company Selection */}
           <div className="grid grid-cols-1 w-full">
-            <div className="w-full">
+            <div className="w-full relative">
               <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
                 {language === "ar" ? "الشركة" : "Company"}
               </Label>
-              <Select
-                value={profile.company_name || "none"}
-                onValueChange={(value) => {
-                  console.log('🔧 [DEBUG] Company selection changed:', { value, currentCompany: profile.company_name });
+              <Input
+                type="text"
+                placeholder={language === "ar" ? "اكتب اسم الشركة (اختياري)" : "Type company name (optional)"}
+                value={profile.company_name || companySearch}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setCompanySearch(value);
+                  setShowCompanyDropdown(true);
                   setProfile((prev) => {
                     const updated = {
                       ...prev,
-                      company_name: value === "none" ? "" : value,
+                      company_name: value,
                     };
                     console.log('🔧 [DEBUG] Profile after company change:', updated);
                     return updated;
                   });
                 }}
-              >
-                <SelectTrigger
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                    language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
-                >
-                  <SelectValue
-                    placeholder={
-                      language === "ar" ? "اختر الشركة (اختياري)" : "Select company (optional)"
-                    }
-                    className="placeholder:text-[#a1aeb7]"
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {getUniqueCompanyOptions().length > 0 ? (
-                    <>
-                      <SelectItem value="none" className={language === "ar" ? "flex-row-reverse" : ""}>
-                        {language === "ar" ? "لا شيء" : "None"}
-                      </SelectItem>
-                      {getUniqueCompanyOptions().map((company) => (
-                        <SelectItem
-                          key={company.id}
-                          value={company.name}
-                          className={language === "ar" ? "flex-row-reverse" : ""}
-                        >
-                          {company.name}
-                        </SelectItem>
-                      ))}
-                    </>
-                  ) : (
-                    <SelectItem value="none" disabled>
-                      {language === "ar" ? "لا توجد شركات متاحة" : "No companies available"}
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
+                onFocus={() => setShowCompanyDropdown(true)}
+                onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
+                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid border-[#c2d1d9] font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
+              />
+              {showCompanyDropdown && (
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto w-full">
+                  <div 
+                    className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      setProfile((prev) => {
+                        const updated = {
+                          ...prev,
+                          company_name: "",
+                        };
+                        return updated;
+                      });
+                      setCompanySearch("");
+                      setShowCompanyDropdown(false);
+                    }}
+                  >
+                    {language === "ar" ? "لا شيء" : "None"}
+                  </div>
+                  {filteredCompanyOptions.map((company) => (
+                    <div
+                      key={company.id}
+                      className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setProfile((prev) => {
+                          const updated = {
+                            ...prev,
+                            company_name: company.name,
+                          };
+                          console.log('🔧 [DEBUG] Profile after company change:', updated);
+                          return updated;
+                        });
+                        setCompanySearch(company.name);
+                        setShowCompanyDropdown(false);
+                      }}
+                    >
+                      {company.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

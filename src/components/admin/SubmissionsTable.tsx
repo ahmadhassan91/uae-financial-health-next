@@ -99,6 +99,9 @@ export function SubmissionsTable() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [nationalityFilter, setNationalityFilter] = useState<string>('all');
   const [companyFilter, setCompanyFilter] = useState<string>('all');
+  const [companySearch, setCompanySearch] = useState<string>('');
+  const [showCompanyDropdown, setShowCompanyDropdown] = useState<boolean>(false);
+  const [filteredCompanies, setFilteredCompanies] = useState<Company[]>([]);
   const [incomeFilter, setIncomeFilter] = useState<string>('all');
   const [ageGroupFilter, setAgeGroupFilter] = useState<string>('all');
   const [selectedSubmission, setSelectedSubmission] = useState<FinancialClinicSubmission | null>(null);
@@ -111,6 +114,13 @@ export function SubmissionsTable() {
   useEffect(() => {
     loadCompanies();
   }, []);
+
+  useEffect(() => {
+    const filtered = companies.filter(company => 
+      company.name.toLowerCase().includes(companySearch.toLowerCase())
+    );
+    setFilteredCompanies(filtered);
+  }, [companySearch, companies]);
 
   useEffect(() => {
     loadSubmissions();
@@ -388,19 +398,60 @@ export function SubmissionsTable() {
                   <SelectItem value="Non-Emirati">Non-Emirati</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={companyFilter} onValueChange={setCompanyFilter}>
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="Filter by company" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Companies</SelectItem>
-                  {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.id.toString()}>
-                      {company.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="relative w-full sm:w-[200px]">
+                <Input
+                  type="text"
+                  placeholder="Filter by company"
+                  value={companySearch}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setCompanySearch(value);
+                    setShowCompanyDropdown(true);
+                    if (value === '') {
+                      setCompanyFilter('all');
+                    } else {
+                      const matchedCompany = companies.find(c => c.name.toLowerCase() === value.toLowerCase());
+                      if (matchedCompany) {
+                        setCompanyFilter(matchedCompany.id.toString());
+                      } else {
+                        // Clear input and set to 'all' when no match found
+                        setCompanyFilter('all');
+                        setCompanySearch('');
+                      }
+                    }
+                  }}
+                  onFocus={() => setShowCompanyDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
+                  className="w-full"
+                />
+                {showCompanyDropdown && (
+                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                    <div 
+                      className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setCompanyFilter('all');
+                        setCompanySearch('');
+                        setShowCompanyDropdown(false);
+                      }}
+                    >
+                      All Companies
+                    </div>
+                    {filteredCompanies.map((company) => (
+                      <div
+                        key={company.id}
+                        className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          setCompanyFilter(company.id.toString());
+                          setCompanySearch(company.name);
+                          setShowCompanyDropdown(false);
+                        }}
+                      >
+                        {company.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Additional Demographic Filters Row */}
