@@ -409,14 +409,14 @@ export function SubmissionsTable() {
                     setShowCompanyDropdown(true);
                     if (value === '') {
                       setCompanyFilter('all');
+                    } else if (value.toLowerCase() === 'other') {
+                      setCompanyFilter('other');
                     } else {
                       const matchedCompany = companies.find(c => c.name.toLowerCase() === value.toLowerCase());
                       if (matchedCompany) {
                         setCompanyFilter(matchedCompany.id.toString());
                       } else {
-                        // Clear input and set to 'all' when no match found
                         setCompanyFilter('all');
-                        setCompanySearch('');
                       }
                     }
                   }}
@@ -449,6 +449,16 @@ export function SubmissionsTable() {
                         {company.name}
                       </div>
                     ))}
+                    <div 
+                      className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer border-t border-gray-200"
+                      onClick={() => {
+                        setCompanyFilter('other');
+                        setCompanySearch('Other');
+                        setShowCompanyDropdown(false);
+                      }}
+                    >
+                      Other
+                    </div>
                   </div>
                 )}
               </div>

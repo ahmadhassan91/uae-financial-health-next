@@ -695,16 +695,30 @@ export const adminApi = {
   },
 
   async toggleCompanyStatus(companyId: number): Promise<any> {
+    console.log('🔧 [DEBUG] Admin API: Toggling company status:', companyId);
+    
+    const url = `${getBackendUrl()}/companies-details/${companyId}/toggle-status`;
+    console.log('🔧 [DEBUG] Toggle URL:', url);
+    
     const response = await fetch(
-      `${getBackendUrl()}/companies-details/${companyId}/toggle-status`,
+      url,
       {
         method: 'PATCH',
         headers: getAuthHeaders()
       }
     );
     
-    if (!response.ok) throw new Error("Failed to toggle company status");
-    return await response.json();
+    console.log('🔧 [DEBUG] Toggle response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('🔧 [DEBUG] Toggle error response:', errorText);
+      throw new Error(`Failed to toggle company status: ${errorText}`);
+    }
+    
+    const result = await response.json();
+    console.log('🔧 [DEBUG] Toggle response data:', result);
+    return result;
   },
 
   async deleteCompany(companyId: number): Promise<any> {
