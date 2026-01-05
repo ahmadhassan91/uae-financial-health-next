@@ -1,5 +1,7 @@
 "use client";
 
+// CompaniesDetails component - Updated: 2026-01-06 (Deployment trigger)
+
 import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
