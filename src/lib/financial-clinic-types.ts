@@ -40,6 +40,8 @@ export interface FinancialClinicProfile {
 
   // Optional fields
   mobile_number?: string;
+  company_name?: string;
+  other_company_name?: string;
 }
 
 // ==================== Response Types ====================

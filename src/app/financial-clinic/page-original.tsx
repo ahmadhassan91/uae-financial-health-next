@@ -59,6 +59,17 @@ export default function FinancialClinicPage({
     companyName?: string;
   } | null>(null);
 
+  const [companyOptions, setCompanyOptions] = useState<
+    { id: number; name: string }[]
+  >([]);
+  const [companySearch, setCompanySearch] = useState<string>('');
+  const [showCompanyDropdown, setShowCompanyDropdown] = useState<boolean>(false);
+  const [showOtherCompanyInput, setShowOtherCompanyInput] = useState<boolean>(false);
+  const [otherCompanyName, setOtherCompanyName] = useState<string>('');
+  const [filteredCompanyOptions, setFilteredCompanyOptions] = useState<
+    { id: number; name: string }[]
+  >([]);
+
   const [profile, setProfile] = useState<FinancialClinicProfile>({
     name: "",
     date_of_birth: "",
@@ -70,9 +81,11 @@ export default function FinancialClinicPage({
     emirate: "",
     email: "",
     mobile_number: "",
+    company_name: "",
   });
 
   const [nameError, setNameError] = useState<string>("");
+  const [companyError, setCompanyError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [phoneError, setPhoneError] = useState<string>("");
   const [dateError, setDateError] = useState<string>("");
@@ -213,6 +226,36 @@ export default function FinancialClinicPage({
     }
   }, []);
 
+  useEffect(() => {
+    const loadCompanies = async () => {
+      try {
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+        const response = await fetch(
+          `${apiUrl}/companies-details/public-companies`
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setCompanyOptions(
+            data.map((item: any) => ({
+              id: item.id,
+              name: item.name,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load companies list:", error);
+      }
+    };
+
+    loadCompanies();
+  }, []);
+
   // Clear previous assessment data when component mounts
   useEffect(() => {
     localStorage.removeItem("financialClinicResult");
@@ -283,27 +326,37 @@ export default function FinancialClinicPage({
     field: keyof FinancialClinicProfile,
     value: string
   ) => {
-    setProfile((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    console.log('🔧 [DEBUG] handleInputChange:', { field, value });
+    setProfile((prev) => {
+      const updated = {
+        ...prev,
+        [field]: value,
+      };
+      console.log('🔧 [DEBUG] Updated profile:', updated);
+      return updated;
+    });
   };
 
-  const handleConsentGranted = () => {
-    // Consent has been granted and saved by ConsentModal
-    setShowConsent(false);
-    setHasConsent(true);
-    // No need for toast here as ConsentModal already shows success message
-  };
-
-  const handleConsentDeclined = () => {
-    // User declined consent, redirect to homepage
-    router.push("/");
-    toast.info(
-      language === "ar"
-        ? "الموافقة مطلوبة لاستخدام هذه الخدمة."
-        : "Consent is required to use this service."
+  // Filter company options based on search
+  useEffect(() => {
+    const filtered = companyOptions.filter(company => 
+      company.name.toLowerCase().includes(companySearch.toLowerCase())
     );
+    setFilteredCompanyOptions(filtered);
+  }, [companySearch, companyOptions]);
+
+  // Get unique company names for dropdown
+  const getUniqueCompanyOptions = () => {
+    console.log('🔧 [DEBUG] companyOptions available:', companyOptions);
+    const uniqueCompanies = new Map();
+    companyOptions.forEach(company => {
+      if (!uniqueCompanies.has(company.name)) {
+        uniqueCompanies.set(company.name, company);
+      }
+    });
+    const result = Array.from(uniqueCompanies.values());
+    console.log('🔧 [DEBUG] Unique company options:', result);
+    return result;
   };
 
   const handleViewPreviousResults = async () => {
@@ -369,6 +422,7 @@ export default function FinancialClinicPage({
   const handleStartSurvey = () => {
     // Clear all errors first
     setNameError("");
+    setCompanyError("");
     setDateError("");
     setGenderError("");
     setNationalityError("");
@@ -390,6 +444,15 @@ export default function FinancialClinicPage({
           ? "الاسم يجب أن يحتوي على أحرف فقط"
           : "Name must contain only letters"
       );
+      hasError = true;
+    }
+
+    // Validate company field
+    if (!profile.company_name?.trim()) {
+      setCompanyError(language === "ar" ? "الشركة مطلوبة" : "Company is required");
+      hasError = true;
+    } else if (profile.company_name === "Other" && !profile.other_company_name?.trim()) {
+      setCompanyError(language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name");
       hasError = true;
     }
 
@@ -488,6 +551,7 @@ export default function FinancialClinicPage({
     }
 
     // Save profile to localStorage
+    console.log('🔧 [DEBUG] Saving profile to localStorage:', profile);
     localStorage.setItem("financialClinicProfile", JSON.stringify(profile));
 
     // Navigate to survey - preserve company parameter if present
@@ -907,6 +971,128 @@ export default function FinancialClinicPage({
                   </SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          {/* Company Selection */}
+          <div className="grid grid-cols-1 w-full">
+            <div className="w-full relative">
+              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
+                {language === "ar" ? "الشركة" : "Company"}
+                <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
+                value={profile.company_name || companySearch}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setCompanySearch(value);
+                  setShowCompanyDropdown(true);
+                  setProfile((prev) => {
+                    const updated = {
+                      ...prev,
+                      company_name: value,
+                    };
+                    console.log('🔧 [DEBUG] Profile after company change:', updated);
+                    return updated;
+                  });
+                  // Clear error when user starts typing
+                  if (companyError) setCompanyError("");
+                }}
+                onFocus={() => setShowCompanyDropdown(true)}
+                onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
+                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                  companyError ? "border-red-500" : "border-[#c2d1d9]"
+                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                  language === "ar" ? "flex-row-reverse" : "flex-row"
+                }`}
+              />
+              {companyError && !showOtherCompanyInput && (
+                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                  {companyError}
+                </p>
+              )}
+              {showCompanyDropdown && (
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto w-full">
+                  {filteredCompanyOptions.map((company) => (
+                    <div
+                      key={company.id}
+                      className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setProfile((prev) => {
+                          const updated = {
+                            ...prev,
+                            company_name: company.name,
+                            other_company_name: "",
+                          };
+                          console.log('🔧 [DEBUG] Profile after company change:', updated);
+                          return updated;
+                        });
+                        setCompanySearch(company.name);
+                        setShowOtherCompanyInput(false);
+                        setOtherCompanyName("");
+                        setShowCompanyDropdown(false);
+                        setCompanyError("");
+                      }}
+                    >
+                      {company.name}
+                    </div>
+                  ))}
+                  <div 
+                    className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      setProfile((prev) => {
+                        const updated = {
+                          ...prev,
+                          company_name: "Other",
+                          other_company_name: "",
+                        };
+                        console.log('🔧 [DEBUG] Profile after company change:', updated);
+                        return updated;
+                      });
+                      setCompanySearch("Other");
+                      setShowOtherCompanyInput(true);
+                      setShowCompanyDropdown(false);
+                      setCompanyError("");
+                    }}
+                  >
+                    {language === "ar" ? "أخرى" : "Other"}
+                  </div>
+                </div>
+              )}
+              {showOtherCompanyInput && (
+                <div className="mt-2">
+                  <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
+                    {language === "ar" ? "اسم الشركة" : "Company Name"}
+                  </Label>
+                  <Input
+                    type="text"
+                    placeholder={language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name"}
+                    value={otherCompanyName}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setOtherCompanyName(value);
+                      setProfile((prev) => ({
+                        ...prev,
+                        other_company_name: value,
+                      }));
+                      // Clear error when user starts typing
+                      if (companyError) setCompanyError("");
+                    }}
+                    className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                      companyError ? "border-red-500" : "border-[#c2d1d9]"
+                    } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                      language === "ar" ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  />
+                  {companyError && (
+                    <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                      {companyError}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

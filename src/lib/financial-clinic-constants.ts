@@ -112,7 +112,7 @@ export const CATEGORY_DESCRIPTIONS = {
     ar: "التخطيط المالي\nوالاستعداد للعائلة",
   },
   "Protecting Your Family": {
-    en: "Ensuring financial wellbeing for your loved ones",
+    en: "Ensuring financial wellbeing for\nyour loved ones",
     ar: "ضمان الرفاهية\nالمالية لأحبائك",
   },
 } as const;
