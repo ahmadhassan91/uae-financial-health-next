@@ -363,30 +363,32 @@ export function FinancialClinicFilters({
               />
             </div>
 
-            {/* Companies Filter - Searchable */}
-            <div>
-              <Label className="text-xs font-semibold mb-2 block">
-                Company
-              </Label>
-              <MultiSelect
-                options={Array.from(
-                  new Map(
-                    availableOptions.companies.map((company) => [
-                      company.unique_url,
-                      { label: company.name, value: company.unique_url },
-                    ])
-                  ).values()
-                )}
-                selected={filters.companies || []}
-                onChange={(values) =>
-                  onFiltersChange({
-                    ...filters,
-                    companies: values.length > 0 ? values : undefined,
-                  })
-                }
-                placeholder="Select companies"
-              />
-            </div>
+            {/* Companies Filter - Searchable - Only show if companies exist */}
+            {availableOptions.companies && availableOptions.companies.length > 0 && (
+              <div>
+                <Label className="text-xs font-semibold mb-2 block">
+                  Company
+                </Label>
+                <MultiSelect
+                  options={Array.from(
+                    new Map(
+                      availableOptions.companies.map((company) => [
+                        company.unique_url,
+                        { label: company.name, value: company.unique_url },
+                      ])
+                    ).values()
+                  )}
+                  selected={filters.companies || []}
+                  onChange={(values) =>
+                    onFiltersChange({
+                      ...filters,
+                      companies: values.length > 0 ? values : undefined,
+                    })
+                  }
+                  placeholder="Select companies"
+                />
+              </div>
+            )}
           </div>
 
           {/* Unique Users Filter */}

@@ -589,69 +589,69 @@ export function CompaniesDetails() {
 
      
 
-      {/* Uploaded Companies Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building className="w-5 h-5" />
-            Unique Companies ({getUniqueCompanies().length})
-          </CardTitle>
-          <CardDescription>
-            View and manage unique uploaded companies (duplicates automatically removed)
-          </CardDescription>
-          
-          {/* Bulk Action Buttons */}
-          {selectedCompanies.size > 0 && (
-            <div className="flex items-center gap-2 mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <span className="text-sm font-medium text-blue-800">
-                {selectedCompanies.size} company{selectedCompanies.size > 1 ? 's' : ''} selected
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  console.log('🔧 [DEBUG] Enable Selected button clicked!');
-                  handleBulkToggle(true);
-                }}
-                className="text-xs"
-              >
-                Enable Selected
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  console.log('🔧 [DEBUG] Disable Selected button clicked!');
-                  handleBulkToggle(false);
-                }}
-                className="text-xs"
-              >
-                Disable Selected
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => {
-                  console.log('🔧 [DEBUG] Delete Selected button clicked!');
-                  handleBulkDelete();
-                }}
-                className="text-xs"
-              >
-                Delete Selected
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedCompanies(new Set())}
-                className="text-xs"
-              >
-                Clear Selection
-              </Button>
-            </div>
-          )}
-        </CardHeader>
-        <CardContent>
-          {uploadedCompanies.length > 0 ? (
+      {/* Uploaded Companies Table - Only show if companies exist */}
+      {uploadedCompanies.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building className="w-5 h-5" />
+              Unique Companies ({getUniqueCompanies().length})
+            </CardTitle>
+            <CardDescription>
+              View and manage unique uploaded companies (duplicates automatically removed)
+            </CardDescription>
+            
+            {/* Bulk Action Buttons */}
+            {selectedCompanies.size > 0 && (
+              <div className="flex items-center gap-2 mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <span className="text-sm font-medium text-blue-800">
+                  {selectedCompanies.size} company{selectedCompanies.size > 1 ? 's' : ''} selected
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    console.log('🔧 [DEBUG] Enable Selected button clicked!');
+                    handleBulkToggle(true);
+                  }}
+                  className="text-xs"
+                >
+                  Enable Selected
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    console.log('🔧 [DEBUG] Disable Selected button clicked!');
+                    handleBulkToggle(false);
+                  }}
+                  className="text-xs"
+                >
+                  Disable Selected
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => {
+                    console.log('🔧 [DEBUG] Delete Selected button clicked!');
+                    handleBulkDelete();
+                  }}
+                  className="text-xs"
+                >
+                  Delete Selected
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedCompanies(new Set())}
+                  className="text-xs"
+                >
+                  Clear Selection
+                </Button>
+              </div>
+            )}
+          </CardHeader>
+          <CardContent>
             <>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
@@ -747,13 +747,9 @@ export function CompaniesDetails() {
                 </div>
               )}
             </>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              No companies uploaded yet. Upload a CSV file to get started.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
     </div>
   );
