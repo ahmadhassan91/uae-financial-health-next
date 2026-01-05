@@ -54,6 +54,25 @@ export default function FinancialClinicPage({
   const [hasConsent, setHasConsent] = useState(false);
   const [isCheckingConsent, setIsCheckingConsent] = useState(true);
 
+  // Consent handlers
+  const handleConsentGranted = async () => {
+    try {
+      await consentService.recordConsent(true);
+      setHasConsent(true);
+      setShowConsent(false);
+      toast.success(language === "ar" ? "تم تسجيل موافقتك بنجاح" : "Your consent has been recorded successfully");
+    } catch (error) {
+      console.error("Error recording consent:", error);
+      toast.error(language === "ar" ? "حدث خطأ أثناء تسجيل الموافقة" : "Error recording consent");
+    }
+  };
+
+  const handleConsentDeclined = () => {
+    setShowConsent(false);
+    toast.info(language === "ar" ? "يجب الموافقة على الشروط للمتابعة" : "You must consent to proceed");
+    // Optionally redirect away or show alternative content
+  };
+
   // Track company tracking status
   const [companyTracking, setCompanyTracking] = useState<{
     active: boolean;
