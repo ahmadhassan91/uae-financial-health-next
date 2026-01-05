@@ -631,6 +631,32 @@ export const adminApi = {
     return await response.json();
   },
 
+  async updateCompany(companyId: string, data: Partial<any>): Promise<any> {
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/${companyId}`,
+      {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
+    
+    if (!response.ok) throw new Error("Failed to update company");
+    return await response.json();
+  },
+
+  async deleteCompany(companyId: string): Promise<void> {
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/${companyId}`,
+      {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      }
+    );
+    
+    if (!response.ok) throw new Error("Failed to delete company");
+  },
+
   async searchCompanies(query: string, limit: number = 10): Promise<any[]> {
     const response = await fetch(
       `${getBackendUrl()}/companies-details/search-companies?q=${encodeURIComponent(query)}&limit=${limit}`,
