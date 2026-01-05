@@ -179,6 +179,7 @@ export default function FinancialClinicSurveyPage() {
       console.log('Submitting Financial Clinic survey...');
       console.log('Answers:', answers);
       console.log('Profile:', profile);
+      console.log('🔧 [DEBUG] Profile company_name being sent:', profile.company_name);
 
       // Submit and save survey to database
       const result: FinancialClinicResult = await submitFinancialClinicSurvey(

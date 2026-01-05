@@ -27,6 +27,7 @@ export async function generateStaticParams() {
 
 import CompanyFinancialClinicClient from './CompanyFinancialClinicClient';
 
-export default function CompanyFinancialClinicPage({ params }: { params: { companyUrl: string } }) {
-  return <CompanyFinancialClinicClient companyUrl={params.companyUrl} />;
+export default async function CompanyFinancialClinicPage({ params }: { params: Promise<{ companyUrl: string }> }) {
+  const { companyUrl } = await params;
+  return <CompanyFinancialClinicClient companyUrl={companyUrl} />;
 }

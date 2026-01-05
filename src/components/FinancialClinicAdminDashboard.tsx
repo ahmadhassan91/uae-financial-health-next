@@ -67,10 +67,12 @@ import { EmploymentDistributionChart } from "./admin/charts/EmploymentDistributi
 import { EmirateDistributionChart } from "./admin/charts/EmirateDistributionChart";
 import { ChildrenDistributionChart } from "./admin/charts/ChildrenDistributionChart";
 import { IncomeRangeDistributionChart } from "./admin/charts/IncomeRangeDistributionChart";
+import { CompanyDistributionChart } from "./admin/charts/CompanyDistributionChart";
 import { CompaniesAnalyticsTable } from "./admin/CompaniesAnalyticsTable";
 import { ScoreAnalyticsTable } from "./admin/ScoreAnalyticsTable";
 import { CompanyManagement } from "./CompanyManagement";
 import { LeadsManagement } from "./LeadsManagement";
+import { CompaniesDetails } from "./admin/CompaniesDetails";
 import { IncompleteSurveys } from "./admin/IncompleteSurveys";
 import { SystemManagement } from "./admin/SystemManagement";
 import { SubmissionsTable } from "./admin/SubmissionsTable";
@@ -146,10 +148,14 @@ export function FinancialClinicAdminDashboard({
   }, [overviewMetrics]);
   // Load all analytics data when filters or date range changes
   useEffect(() => {
+    console.log('🔧 [DEBUG] useEffect triggered - filters:', filters);
+    console.log('🔧 [DEBUG] useEffect triggered - dateParams:', dateParams);
+    console.log('🔧 [DEBUG] useEffect triggered - availableOptions:', availableOptions);
+    console.log('🔧 [DEBUG] useEffect triggered - activeCompanies:', filters.activeCompanies);
     if (availableOptions) {
       loadAllAnalytics();
     }
-  }, [filters, dateParams, availableOptions]);
+  }, [filters, dateParams, availableOptions, filters.activeCompanies]); // Add explicit dependency on activeCompanies
 
   // Load time series when groupBy changes
   useEffect(() => {
@@ -170,6 +176,8 @@ export function FinancialClinicAdminDashboard({
 
   const loadAllAnalytics = async () => {
     setLoading(true);
+    console.log('🔧 [DEBUG] loadAllAnalytics called with filters:', filters);
+    console.log('🔧 [DEBUG] loadAllAnalytics called with dateParams:', dateParams);
     try {
       // Load all analytics in parallel with individual error handling
       const results = await Promise.allSettled([
@@ -187,6 +195,16 @@ export function FinancialClinicAdminDashboard({
         adminApi.getScoreAnalyticsTable(filters, dateParams),
         adminApi.getGenderBreakdown(filters, dateParams),
       ]);
+      
+      console.log('🔧 [DEBUG] API Results:', {
+        genBreakdown: results[0],
+        emirBreakdown: results[1],
+        childBreakdown: results[2],
+        incBreakdown: results[3],
+        compAnalytics: results[4], // This is companiesAnalytics
+        scoreTable: results[5],
+        genBreakdown2: results[6]
+      });
 
       // Extract successful results
       const [
@@ -320,6 +338,9 @@ export function FinancialClinicAdminDashboard({
         </div>
       </div>
     );
+  }
+  {
+    console.log("companiesAnalytics:", companiesAnalytics);
   }
 
   return (
@@ -508,8 +529,8 @@ export function FinancialClinicAdminDashboard({
                 <TabsList
                   className={`inline-flex w-auto min-w-full lg:grid ${
                     user?.admin_role === "view_only"
-                      ? "lg:grid-cols-4"
-                      : "lg:grid-cols-6"
+                      ? "lg:grid-cols-5"
+                      : "lg:grid-cols-7"
                   } gap-1`}
                 >
                   <TabsTrigger
@@ -529,10 +550,16 @@ export function FinancialClinicAdminDashboard({
                       value="companies"
                       className="text-xs sm:text-sm whitespace-nowrap"
                     >
-                      Companies
+                      Unique URLs
                     </TabsTrigger>
                   )}
-                                    <TabsTrigger
+                  <TabsTrigger
+                    value="companies-details"
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    Company Management
+                  </TabsTrigger>
+                  <TabsTrigger
                     value="leads"
                     className="text-xs sm:text-sm whitespace-nowrap"
                   >
@@ -686,6 +713,14 @@ export function FinancialClinicAdminDashboard({
                       <IncomeRangeDistributionChart data={incomeBreakdown} />
                     </div>
 
+                    {/* Company Distribution */}
+                    {companiesAnalytics && companiesAnalytics.length > 0 && (
+                      <>
+                        {console.log("companiesAnalytics:", companiesAnalytics)}
+                        <CompanyDistributionChart data={companiesAnalytics} />
+                      </>
+                    )}
+
                     {/* Score Analytics Table */}
                     {scoreAnalyticsTable && (
                       <ScoreAnalyticsTable data={scoreAnalyticsTable} />
@@ -709,10 +744,14 @@ export function FinancialClinicAdminDashboard({
                 </TabsContent>
               )}
 
-              
               {/* Leads Tab */}
               <TabsContent value="leads" className="space-y-6">
                 <LeadsManagement />
+              </TabsContent>
+
+              {/* Companies Details Tab */}
+              <TabsContent value="companies-details" className="space-y-6">
+                <CompaniesDetails />
               </TabsContent>
 
               {/* Incomplete Tab */}

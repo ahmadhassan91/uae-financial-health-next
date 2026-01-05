@@ -18,15 +18,20 @@ export default function CompanyFinancialClinicClient({ companyUrl }: CompanyFina
       try {
         const searchParams = new URLSearchParams(window.location.search);
         const sessionId = searchParams.get('session');
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/companies/by-url/${companyUrl}`
-        );
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/companies/by-url/${companyUrl}`;
+        console.log('🔧 [DEBUG] Calling API:', apiUrl);
+        
+        const response = await fetch(apiUrl);
+        console.log('🔧 [DEBUG] API Response status:', response.status);
+        
         if (!response.ok) {
+          console.log('🔧 [DEBUG] API Response not OK:', response.statusText);
           setError('Company not found or link is invalid');
           setLoading(false);
           return;
         }
         const data = await response.json();
+        console.log('🔧 [DEBUG] API Response data:', data);
         setCompanyInfo(data);
         setTimeout(() => {
           if (sessionId) {

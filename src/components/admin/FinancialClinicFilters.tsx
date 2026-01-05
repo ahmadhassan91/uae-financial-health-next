@@ -363,30 +363,61 @@ export function FinancialClinicFilters({
               />
             </div>
 
-            {/* Companies Filter - Searchable */}
-            <div>
-              <Label className="text-xs font-semibold mb-2 block">
-                Company
-              </Label>
-              <MultiSelect
-                options={Array.from(
-                  new Map(
-                    availableOptions.companies.map((company) => [
-                      company.unique_url,
-                      { label: company.name, value: company.unique_url },
-                    ])
-                  ).values()
-                )}
-                selected={filters.companies || []}
-                onChange={(values) =>
-                  onFiltersChange({
-                    ...filters,
-                    companies: values.length > 0 ? values : undefined,
-                  })
-                }
-                placeholder="Select companies"
-              />
-            </div>
+            {/* Companies Filter - Searchable - Only show if companies exist */}
+            {availableOptions.companies && availableOptions.companies.length > 0 && (
+              <div>
+                <Label className="text-xs font-semibold mb-2 block">
+                  Unique URL
+                </Label>
+                <MultiSelect
+                  options={Array.from(
+                    new Map(
+                      availableOptions.companies.map((company) => [
+                        company.unique_url,
+                        { label: company.name, value: company.unique_url },
+                      ])
+                    ).values()
+                  )}
+                  selected={filters.companies || []}
+                  onChange={(values) =>
+                    onFiltersChange({
+                      ...filters,
+                      companies: values.length > 0 ? values : undefined,
+                    })
+                  }
+                  placeholder="Select unique URLs"
+                />
+              </div>
+            )}
+
+            {/* Active Companies Filter - Only show if active companies exist */}
+            {availableOptions.activeCompanies && availableOptions.activeCompanies.length > 0 && (
+              <div>
+                <Label className="text-xs font-semibold mb-2 block">
+                  Company
+                </Label>
+                <MultiSelect
+                  options={availableOptions.activeCompanies.map((company) => ({
+                    label: company.name,
+                    value: company.id.toString(),
+                  }))}
+                  selected={filters.activeCompanies || []}
+                  onChange={(values) =>
+                    {
+                      console.log('🔧 [DEBUG] Company filter changed to:', values);
+                      console.log('🔧 [DEBUG] Previous filters:', filters);
+                      const newFilters = {
+                        ...filters,
+                        activeCompanies: values.length > 0 ? values : undefined,
+                      };
+                      console.log('🔧 [DEBUG] New filters to send:', newFilters);
+                      onFiltersChange(newFilters);
+                    }
+                  }
+                  placeholder="Select active companies"
+                />
+              </div>
+            )}
           </div>
 
           {/* Unique Users Filter */}

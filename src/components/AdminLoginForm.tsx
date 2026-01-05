@@ -101,7 +101,7 @@ export function AdminLoginForm({ onSuccess, onBack }: AdminLoginFormProps) {
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="admin@nationalbonds.ae"
+                placeholder="Enter Your Email Address"
                 required
                 disabled={authLoading}
               />

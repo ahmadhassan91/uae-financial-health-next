@@ -103,20 +103,32 @@ export function CompanyManagement({
 
   const fetchAvailableVariationSets = async () => {
     try {
+      const token = localStorage.getItem("admin_access_token");
+      if (!token) {
+        console.log("No admin token found, skipping variation sets fetch");
+        return;
+      }
+
       const response = await fetch(
         `/api/v1/admin/variation-sets?is_active=true&page_size=100`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "admin_access_token"
-            )}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
+      
+      if (response.status === 401 || response.status === 403) {
+        console.log("Admin authentication required for variation sets");
+        return;
+      }
+      
       if (response.ok) {
         const data = await response.json();
         setAvailableVariationSets(data.variation_sets || []);
+      } else {
+        console.log("Variation sets endpoint response:", response.status);
       }
     } catch (error) {
       console.error("Error fetching variation sets:", error);

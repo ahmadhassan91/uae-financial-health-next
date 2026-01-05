@@ -14,7 +14,7 @@ interface ConsentModalProps {
 }
 
 export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
-  const { language } = useLocalization();
+  const { language, setLanguage } = useLocalization();
   const [profilingConsent, setProfilingConsent] = React.useState(false);
   const [dataProcessingConsent, setDataProcessingConsent] =
     React.useState(false);
@@ -25,6 +25,17 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
   const [noOfferExpanded, setNoOfferExpanded] = React.useState(false);
   const [disclaimerExpanded, setDisclaimerExpanded] = React.useState(false);
   const [trademarksExpanded, setTrademarksExpanded] = React.useState(false);
+
+  const toggleLanguage = () => {
+    const newLanguage = language === "en" ? "ar" : "en";
+    setLanguage(newLanguage);
+    
+    // Update URL with language parameter
+    const currentPath = window.location.pathname;
+    const currentSearch = new URLSearchParams(window.location.search);
+    currentSearch.set("lang", newLanguage);
+    window.history.replaceState(null, '', `${currentPath}?${currentSearch.toString()}`);
+  };
 
   const handleGrantConsent = async () => {
     if (profilingConsent && dataProcessingConsent) {
@@ -66,11 +77,13 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
       <div className="bg-white rounded-[10px] shadow-lg max-w-[884px] w-full max-h-[95vh] sm:max-h-[90vh] flex flex-col">
-        {/* Header - Simple and clean */}
-        <div className="bg-white px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 flex items-start justify-between border-b border-gray-100 flex-shrink-0">
-          <div className="flex-1 pr-2">
-            <h2 className="font-bold text-[#505d68] text-sm sm:text-base leading-5 sm:leading-6 mb-1">
-              {language === "ar" ? "الشروط والأحكام" : "Terms & Conditions"}
+        {/* Header */}
+        <div className="flex items-start justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6">
+          <div className="flex-1">
+            <h2 className="text-xl sm:text-2xl font-semibold text-[#1a1a1a] mb-2">
+              {language === "ar"
+                ? "الشروط والأحكام"
+                : "Terms and Conditions"}
             </h2>
             <p className="font-normal text-[#495565] text-xs sm:text-sm leading-4 sm:leading-5">
               {language === "ar"
@@ -78,13 +91,22 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
                 : "Please read the following important terms and conditions before accessing this website."}
             </p>
           </div>
-          <button
-            onClick={onDecline}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1 flex-shrink-0"
-            aria-label="Close"
-          >
-            <X className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              onClick={toggleLanguage}
+              className="h-auto p-1 font-normal text-gray-400 hover:text-gray-600 transition-colors text-sm"
+            >
+              {language === "ar" ? "EN" : "AR"}
+            </Button>
+            <button
+              onClick={onDecline}
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1 flex-shrink-0"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Content - Only the informational sections */}
