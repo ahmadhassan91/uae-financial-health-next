@@ -7,6 +7,7 @@ import { useLocalization } from "@/contexts/LocalizationContext";
 import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { consentService } from "@/services/consentService";
 import { toast } from "sonner";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 interface ConsentModalProps {
   onConsent: () => void;
@@ -66,11 +67,13 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
       <div className="bg-white rounded-[10px] shadow-lg max-w-[884px] w-full max-h-[95vh] sm:max-h-[90vh] flex flex-col">
-        {/* Header - Simple and clean */}
-        <div className="bg-white px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 flex items-start justify-between border-b border-gray-100 flex-shrink-0">
-          <div className="flex-1 pr-2">
-            <h2 className="font-bold text-[#505d68] text-sm sm:text-base leading-5 sm:leading-6 mb-1">
-              {language === "ar" ? "الشروط والأحكام" : "Terms & Conditions"}
+        {/* Header */}
+        <div className="flex items-start justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6">
+          <div className="flex-1">
+            <h2 className="text-xl sm:text-2xl font-semibold text-[#1a1a1a] mb-2">
+              {language === "ar"
+                ? "الشروط والأحكام"
+                : "Terms and Conditions"}
             </h2>
             <p className="font-normal text-[#495565] text-xs sm:text-sm leading-4 sm:leading-5">
               {language === "ar"
@@ -78,13 +81,16 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
                 : "Please read the following important terms and conditions before accessing this website."}
             </p>
           </div>
-          <button
-            onClick={onDecline}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1 flex-shrink-0"
-            aria-label="Close"
-          >
-            <X className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <LanguageSelector variant="icon-only" className="text-gray-400 hover:text-gray-600 transition-colors" />
+            <button
+              onClick={onDecline}
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1 flex-shrink-0"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Content - Only the informational sections */}
