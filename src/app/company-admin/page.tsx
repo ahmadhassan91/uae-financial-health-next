@@ -19,17 +19,19 @@ import {
   ArrowRight
 } from 'lucide-react';
 import CompanyAdminDashboard from '@/components/admin/CompanyAdminDashboard';
+import { adminApi } from '@/lib/admin-api';
+import { useAdminAuth } from '@/hooks/use-admin-auth';
 
 interface Company {
   id: number;
   company_name: string;
   company_email: string;
   contact_person: string;
-  unique_url: string;
-  total_assessments: number;
-  average_score: number;
-  is_active: boolean;
+  phone_number?: string;
+  additional_details?: string;
+  uploaded_by: number;
   created_at: string;
+  updated_at?: string;
 }
 
 export default function CompanyAdminPage() {
@@ -38,63 +40,53 @@ export default function CompanyAdminPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
   const router = useRouter();
+  const { user, isAuthenticated, loading } = useAdminAuth();
 
   useEffect(() => {
-    checkUserRole();
-    loadCompanies();
-  }, []);
-
-  const checkUserRole = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
-        return;
-      }
-
-      // Decode token to check user role (simplified)
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setUserRole(payload.role || 'user');
-      
-      if (payload.role !== 'admin' && payload.role !== 'company_admin') {
-        setError('Access denied. Company admin privileges required.');
-        return;
-      }
-    } catch (error) {
+    if (!loading && !isAuthenticated) {
       router.push('/login');
+      return;
     }
-  };
+    
+    if (isAuthenticated && user) {
+      loadCompanies();
+    }
+  }, [loading, isAuthenticated, user]);
 
   const loadCompanies = async () => {
     try {
-      const response = await fetch('/api/companies', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setCompanies(data);
-      } else if (response.status === 401) {
-        router.push('/login');
-      } else {
-        setError('Failed to load companies');
-      }
+      const data = await adminApi.getUploadedCompanies(searchTerm);
+      setCompanies(data.companies);
+      setError(null);
     } catch (error) {
-      setError('Network error occurred');
+      setError('Failed to load companies');
+      console.error('Error loading companies:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filteredCompanies = companies.filter(company =>
-    company.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    company.contact_person.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    company.unique_url.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center py-8">
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>Please log in to access company administration.</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -163,7 +155,7 @@ export default function CompanyAdminPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredCompanies.map((company) => (
+            {companies.map((company) => (
               <Card 
                 key={company.id} 
                 className="cursor-pointer hover:shadow-md transition-shadow"
@@ -172,15 +164,9 @@ export default function CompanyAdminPage() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{company.company_name}</CardTitle>
-                    <Badge variant={company.is_active ? "default" : "secondary"}>
-                      {company.is_active ? (
-                        <>
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          Active
-                        </>
-                      ) : (
-                        'Inactive'
-                      )}
+                    <Badge variant="default">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Active
                     </Badge>
                   </div>
                   <CardDescription>
@@ -190,29 +176,23 @@ export default function CompanyAdminPage() {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">URL:</span>
-                      <span className="font-mono text-xs">{company.unique_url}</span>
+                      <span className="text-muted-foreground">Email:</span>
+                      <span className="font-mono text-xs">{company.company_email}</span>
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <Users className="w-4 h-4 text-muted-foreground" />
-                        <span>{company.total_assessments} assessments</span>
+                    {company.phone_number && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Phone:</span>
+                        <span className="font-mono text-xs">{company.phone_number}</span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <BarChart3 className="w-4 h-4 text-muted-foreground" />
-                        <span>
-                          {company.average_score ? 
-                            `${company.average_score.toFixed(1)} avg` : 
-                            'No data'
-                          }
-                        </span>
-                      </div>
+                    )}
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Created:</span>
+                      <span className="text-xs">{new Date(company.created_at).toLocaleDateString()}</span>
                     </div>
 
                     <div className="flex items-center justify-between pt-2">
                       <span className="text-xs text-muted-foreground">
-                        Created {new Date(company.created_at).toLocaleDateString()}
+                        ID: {company.id}
                       </span>
                       <Button size="sm" variant="ghost">
                         Manage

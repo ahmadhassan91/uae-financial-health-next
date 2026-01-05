@@ -367,7 +367,7 @@ export function FinancialClinicFilters({
             {availableOptions.companies && availableOptions.companies.length > 0 && (
               <div>
                 <Label className="text-xs font-semibold mb-2 block">
-                  Company
+                  Unique URL
                 </Label>
                 <MultiSelect
                   options={Array.from(
@@ -385,7 +385,36 @@ export function FinancialClinicFilters({
                       companies: values.length > 0 ? values : undefined,
                     })
                   }
-                  placeholder="Select companies"
+                  placeholder="Select unique URLs"
+                />
+              </div>
+            )}
+
+            {/* Active Companies Filter - Only show if active companies exist */}
+            {availableOptions.activeCompanies && availableOptions.activeCompanies.length > 0 && (
+              <div>
+                <Label className="text-xs font-semibold mb-2 block">
+                  Company
+                </Label>
+                <MultiSelect
+                  options={availableOptions.activeCompanies.map((company) => ({
+                    label: company.name,
+                    value: company.id.toString(),
+                  }))}
+                  selected={filters.activeCompanies || []}
+                  onChange={(values) =>
+                    {
+                      console.log('🔧 [DEBUG] Company filter changed to:', values);
+                      console.log('🔧 [DEBUG] Previous filters:', filters);
+                      const newFilters = {
+                        ...filters,
+                        activeCompanies: values.length > 0 ? values : undefined,
+                      };
+                      console.log('🔧 [DEBUG] New filters to send:', newFilters);
+                      onFiltersChange(newFilters);
+                    }
+                  }
+                  placeholder="Select active companies"
                 />
               </div>
             )}

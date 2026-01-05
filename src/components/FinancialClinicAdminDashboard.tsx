@@ -148,10 +148,14 @@ export function FinancialClinicAdminDashboard({
   }, [overviewMetrics]);
   // Load all analytics data when filters or date range changes
   useEffect(() => {
+    console.log('🔧 [DEBUG] useEffect triggered - filters:', filters);
+    console.log('🔧 [DEBUG] useEffect triggered - dateParams:', dateParams);
+    console.log('🔧 [DEBUG] useEffect triggered - availableOptions:', availableOptions);
+    console.log('🔧 [DEBUG] useEffect triggered - activeCompanies:', filters.activeCompanies);
     if (availableOptions) {
       loadAllAnalytics();
     }
-  }, [filters, dateParams, availableOptions]);
+  }, [filters, dateParams, availableOptions, filters.activeCompanies]); // Add explicit dependency on activeCompanies
 
   // Load time series when groupBy changes
   useEffect(() => {
@@ -172,6 +176,8 @@ export function FinancialClinicAdminDashboard({
 
   const loadAllAnalytics = async () => {
     setLoading(true);
+    console.log('🔧 [DEBUG] loadAllAnalytics called with filters:', filters);
+    console.log('🔧 [DEBUG] loadAllAnalytics called with dateParams:', dateParams);
     try {
       // Load all analytics in parallel with individual error handling
       const results = await Promise.allSettled([
@@ -544,14 +550,14 @@ export function FinancialClinicAdminDashboard({
                       value="companies"
                       className="text-xs sm:text-sm whitespace-nowrap"
                     >
-                      Companies
+                      Unique URLs
                     </TabsTrigger>
                   )}
                   <TabsTrigger
                     value="companies-details"
                     className="text-xs sm:text-sm whitespace-nowrap"
                   >
-                    Companies Details
+                    Company Management
                   </TabsTrigger>
                   <TabsTrigger
                     value="leads"
