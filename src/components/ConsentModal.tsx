@@ -7,7 +7,6 @@ import { useLocalization } from "@/contexts/LocalizationContext";
 import { X, ChevronDown, ChevronUp } from "lucide-react";
 import { consentService } from "@/services/consentService";
 import { toast } from "sonner";
-import { LanguageSelector } from "@/components/LanguageSelector";
 
 interface ConsentModalProps {
   onConsent: () => void;
@@ -15,7 +14,7 @@ interface ConsentModalProps {
 }
 
 export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
-  const { language } = useLocalization();
+  const { language, setLanguage } = useLocalization();
   const [profilingConsent, setProfilingConsent] = React.useState(false);
   const [dataProcessingConsent, setDataProcessingConsent] =
     React.useState(false);
@@ -26,6 +25,17 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
   const [noOfferExpanded, setNoOfferExpanded] = React.useState(false);
   const [disclaimerExpanded, setDisclaimerExpanded] = React.useState(false);
   const [trademarksExpanded, setTrademarksExpanded] = React.useState(false);
+
+  const toggleLanguage = () => {
+    const newLanguage = language === "en" ? "ar" : "en";
+    setLanguage(newLanguage);
+    
+    // Update URL with language parameter
+    const currentPath = window.location.pathname;
+    const currentSearch = new URLSearchParams(window.location.search);
+    currentSearch.set("lang", newLanguage);
+    window.history.replaceState(null, '', `${currentPath}?${currentSearch.toString()}`);
+  };
 
   const handleGrantConsent = async () => {
     if (profilingConsent && dataProcessingConsent) {
@@ -82,7 +92,13 @@ export function ConsentModal({ onConsent, onDecline }: ConsentModalProps) {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <LanguageSelector variant="icon-only" className="text-gray-400 hover:text-gray-600 transition-colors" />
+            <Button
+              variant="ghost"
+              onClick={toggleLanguage}
+              className="h-auto p-1 font-normal text-gray-400 hover:text-gray-600 transition-colors text-sm"
+            >
+              {language === "ar" ? "EN" : "AR"}
+            </Button>
             <button
               onClick={onDecline}
               className="text-gray-400 hover:text-gray-600 transition-colors p-1 flex-shrink-0"
