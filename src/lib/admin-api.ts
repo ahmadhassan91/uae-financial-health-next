@@ -40,6 +40,7 @@ export interface FilterOptions {
   incomeRanges: string[];
   childrenOptions: string[];
   companies: Company[];
+  activeCompanies: Company[];
 }
 
 export interface DemographicFilters {
@@ -51,6 +52,7 @@ export interface DemographicFilters {
   incomeRanges?: string[];
   children?: string[];
   companies?: string[];
+  activeCompanies?: string[];
   unique_users_only?: boolean;
 }
 
@@ -181,6 +183,9 @@ const buildQueryParams = (
   if (filters?.companies && filters.companies.length > 0) {
     params.append("companies", filters.companies.join(","));
   }
+  if (filters?.activeCompanies && filters.activeCompanies.length > 0) {
+    params.append("activeCompanies", filters.activeCompanies.join(","));
+  }
 
   // Add unique users filter
   if (filters?.unique_users_only) {
@@ -211,6 +216,13 @@ export const adminApi = {
     if (!response.ok) throw new Error("Failed to fetch filter options");
     const data = await response.json();
 
+    // Get active companies
+    const activeCompaniesResponse = await fetch(
+      `${getBackendUrl()}/companies-details/public-companies`,
+      { headers: getAuthHeaders() }
+    );
+    const activeCompaniesData = activeCompaniesResponse.ok ? await activeCompaniesResponse.json() : [];
+
     // Convert snake_case backend response to camelCase
     return {
       ageGroups: data.age_groups || [],
@@ -221,6 +233,11 @@ export const adminApi = {
       incomeRanges: data.income_ranges || [],
       childrenOptions: data.children_options || [],
       companies: data.companies || [],
+      activeCompanies: activeCompaniesData.map((company: any) => ({
+        id: company.id,
+        name: company.name,
+        unique_url: company.name.toLowerCase().replace(/\s+/g, '-'),
+      })),
     };
   },
 
@@ -610,9 +627,69 @@ export const adminApi = {
         body: formData,
       }
     );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to upload companies CSV');
+    }
+
+    return response.json();
+  },
+
+  async createCompany(companyData: {
+    company_name: string;
+    company_email?: string;
+    contact_person?: string;
+    phone_number?: string;
+    additional_details?: string;
+  }): Promise<any> {
+    const formData = new FormData();
+    formData.append('company_name', companyData.company_name);
+    if (companyData.company_email) formData.append('company_email', companyData.company_email);
+    if (companyData.contact_person) formData.append('contact_person', companyData.contact_person);
+    if (companyData.phone_number) formData.append('phone_number', companyData.phone_number);
+    if (companyData.additional_details) formData.append('additional_details', companyData.additional_details);
     
-    if (!response.ok) throw new Error("Failed to upload CSV");
-    return await response.json();
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/create-company`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_access_token")}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to create company');
+    }
+
+    return response.json();
+  },
+
+  async createCompanyFromOther(companyName: string): Promise<any> {
+    const formData = new FormData();
+    formData.append('company_name', companyName);
+    
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/create-from-other`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_access_token")}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to create company from Other');
+    }
+
+    return response.json();
   },
 
   async getUploadedCompanies(search?: string): Promise<{
@@ -652,18 +729,7 @@ export const adminApi = {
     return await response.json();
   },
 
-  async deleteCompany(companyId: string): Promise<void> {
-    const response = await fetch(
-      `${getBackendUrl()}/companies-details/${companyId}`,
-      {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-      }
-    );
-    
-    if (!response.ok) throw new Error("Failed to delete company");
-  },
-
+  
   async searchCompanies(query: string, limit: number = 10): Promise<any[]> {
     const response = await fetch(
       `${getBackendUrl()}/companies-details/search-companies?q=${encodeURIComponent(query)}&limit=${limit}`,
@@ -747,7 +813,7 @@ export const adminApi = {
     return result;
   },
 
-  async deleteCompany(companyId: number): Promise<any> {
+  async deleteCompany(companyId: string | number): Promise<any> {
     console.log('🔧 [DEBUG] Admin API: Deleting company:', companyId);
     
     const url = `${getBackendUrl()}/companies-details/${companyId}`;

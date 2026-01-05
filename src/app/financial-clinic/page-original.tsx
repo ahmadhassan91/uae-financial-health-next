@@ -18,6 +18,7 @@ import { DatePickerComponent } from "@/components/ui/date-picker";
 import { useLocalization } from "@/contexts/LocalizationContext";
 import type { FinancialClinicProfile } from "@/lib/financial-clinic-types";
 import { toast } from "sonner";
+import { adminApi } from "@/lib/admin-api";
 import { ConsentModal } from "@/components/ConsentModal";
 import { consentService } from "@/services/consentService";
 import { HomepageHeader } from "@/components/homepage/Header";
@@ -226,33 +227,82 @@ export default function FinancialClinicPage({
     }
   }, []);
 
-  useEffect(() => {
-    const loadCompanies = async () => {
-      try {
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-        const response = await fetch(
-          `${apiUrl}/companies-details/public-companies`
-        );
+  // Function to create company from "Other" option
+  const createCompanyFromOther = async (companyName: string) => {
+    if (!companyName || companyName.trim() === '') {
+      return;
+    }
 
-        if (!response.ok) {
-          return;
-        }
+    try {
+      console.log('🔧 [DEBUG] Creating company from Other:', companyName);
+      
+      // Call the API to create the company
+      const result = await adminApi.createCompanyFromOther(companyName.trim());
+      
+      console.log('🔧 [DEBUG] Company created successfully:', result);
+      
+      // Refresh the companies list to include the new company
+      await loadCompanies();
+      
+      // Add the new company to the dropdown options
+      const newCompanyOption = {
+        id: parseInt(result.id),
+        name: result.company_name
+      };
+      
+      setCompanyOptions(prev => [...prev, newCompanyOption]);
+      setFilteredCompanyOptions(prev => [...prev, newCompanyOption]);
+      
+      // Update the profile to use the new company
+      setProfile(prev => ({
+        ...prev,
+        company_name: result.company_name,
+        company_id: parseInt(result.id),
+        other_company_name: ''
+      }));
+      
+      setCompanySearch(result.company_name);
+      setShowOtherCompanyInput(false);
+      setOtherCompanyName('');
+      
+      if (companyError) setCompanyError("");
+      
+      toast.success(`Company "${result.company_name}" added successfully!`);
+      
+    } catch (error) {
+      console.error('🔧 [DEBUG] Error creating company from Other:', error);
+      toast.error('Failed to add company. Please try again.');
+    }
+  };
 
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setCompanyOptions(
-            data.map((item: any) => ({
-              id: item.id,
-              name: item.name,
-            }))
-          );
-        }
-      } catch (error) {
-        console.error("Failed to load companies list:", error);
+  // Load companies function
+  const loadCompanies = async () => {
+    try {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+      const response = await fetch(
+        `${apiUrl}/companies-details/public-companies`
+      );
+
+      if (!response.ok) {
+        return;
       }
-    };
 
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setCompanyOptions(
+          data.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Failed to load companies list:", error);
+    }
+  };
+
+  useEffect(() => {
     loadCompanies();
   }, []);
 
@@ -1003,7 +1053,10 @@ export default function FinancialClinicPage({
                     // Clear error when user starts typing
                     if (companyError) setCompanyError("");
                   }}
-                  onFocus={() => setShowCompanyDropdown(true)}
+                  onFocus={() => {
+    setShowCompanyDropdown(true);
+    loadCompanies(); // Refresh companies when dropdown is focused
+  }}
                   onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
                   className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
                     companyError ? "border-red-500" : "border-[#c2d1d9]"
@@ -1082,6 +1135,20 @@ export default function FinancialClinicPage({
                         }));
                         // Clear error when user starts typing
                         if (companyError) setCompanyError("");
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value;
+                        if (value && value.trim()) {
+                          createCompanyFromOther(value.trim());
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const value = e.target.value;
+                          if (value && value.trim()) {
+                            createCompanyFromOther(value.trim());
+                          }
+                        }
                       }}
                       className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
                         companyError ? "border-red-500" : "border-[#c2d1d9]"

@@ -176,14 +176,21 @@ export function CompaniesDetails() {
     }
 
     try {
-      // Create a CSV-like object for the new company
-      const csvContent = `company_name\n${createForm.company_name}`;
-      const blob = new Blob([csvContent], { type: 'text/csv' });
-      const file = new File([blob], 'new-company.csv', { type: 'text/csv' });
+      console.log('🔧 [DEBUG] Creating company with data:', createForm);
       
-      const result = await adminApi.uploadCompaniesCSV(file);
+      const result = await adminApi.createCompany({
+        company_name: createForm.company_name,
+        company_email: createForm.company_email || undefined,
+        contact_person: createForm.contact_person || undefined,
+        phone_number: createForm.phone_number || undefined,
+        additional_details: createForm.additional_details || undefined
+      });
       
-      setAllCompanies(prev => [...result.companies, ...prev]);
+      console.log('🔧 [DEBUG] Company created successfully:', result);
+      
+      // Refresh the companies list from server
+      await loadAllCompanies();
+      
       setShowCreateForm(false);
       setCreateForm({
         company_name: '',
@@ -192,10 +199,10 @@ export function CompaniesDetails() {
         phone_number: '',
         additional_details: ''
       });
-      toast.success('Company created successfully');
+      toast.success(`Company "${createForm.company_name}" created successfully`);
     } catch (error) {
+      console.error('🔧 [DEBUG] Error creating company:', error);
       toast.error('Failed to create company');
-      console.error('Create error:', error);
     }
   };
 
@@ -326,7 +333,8 @@ export function CompaniesDetails() {
               Create New Company
             </CardTitle>
             <CardDescription>
-              Add a new company manually. Only the company name is required.
+              Add a new company manually. Only the company name is required. 
+              All other fields are optional and will remain empty if not provided.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -345,7 +353,7 @@ export function CompaniesDetails() {
                 <Input
                   value={createForm.company_email}
                   onChange={(e) => setCreateForm(prev => ({ ...prev, company_email: e.target.value }))}
-                  placeholder="company@example.com"
+                  placeholder="Optional: company@example.com"
                   className="mt-1"
                 />
               </div>
@@ -354,7 +362,7 @@ export function CompaniesDetails() {
                 <Input
                   value={createForm.contact_person}
                   onChange={(e) => setCreateForm(prev => ({ ...prev, contact_person: e.target.value }))}
-                  placeholder="Contact person name"
+                  placeholder="Optional: Contact Person"
                   className="mt-1"
                 />
               </div>
@@ -363,7 +371,7 @@ export function CompaniesDetails() {
                 <Input
                   value={createForm.phone_number}
                   onChange={(e) => setCreateForm(prev => ({ ...prev, phone_number: e.target.value }))}
-                  placeholder="+971-XX-XXXXXXX"
+                  placeholder="Optional: +971-XX-XXXXXXX"
                   className="mt-1"
                 />
               </div>
@@ -372,7 +380,7 @@ export function CompaniesDetails() {
                 <Input
                   value={createForm.additional_details}
                   onChange={(e) => setCreateForm(prev => ({ ...prev, additional_details: e.target.value }))}
-                  placeholder="Additional information about the company"
+                  placeholder="Optional: Additional information about the company"
                   className="mt-1"
                 />
               </div>
@@ -466,6 +474,15 @@ export function CompaniesDetails() {
                             <Input
                               value={editForm.phone_number || ''}
                               onChange={(e) => setEditForm(prev => ({ ...prev, phone_number: e.target.value }))}
+                              className="mt-1"
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="text-xs font-medium text-gray-700">Additional Details</label>
+                            <Input
+                              value={editForm.additional_details || ''}
+                              onChange={(e) => setEditForm(prev => ({ ...prev, additional_details: e.target.value }))}
+                              placeholder="Additional information about the company"
                               className="mt-1"
                             />
                           </div>
