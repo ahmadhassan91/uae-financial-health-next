@@ -19,16 +19,23 @@ export default function FinancialClinicWrapper() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams?.get('session');
+  const companyUrl = searchParams?.get('company');
   
   const [isRestoring, setIsRestoring] = useState(false);
   const [restoredData, setRestoredData] = useState<RestoredSurveyData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Store company URL in sessionStorage if present
+    if (companyUrl) {
+      console.log('🏢 Storing company URL from parameters:', companyUrl);
+      sessionStorage.setItem('company_url', companyUrl);
+    }
+    
     if (sessionId) {
       restoreSession(sessionId);
     }
-  }, [sessionId]);
+  }, [sessionId, companyUrl]);
 
   const restoreSession = async (sessionId: string) => {
     setIsRestoring(true);

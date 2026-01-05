@@ -107,7 +107,15 @@ export default function FinancialClinicSurveyPage() {
 
   // Helper function to start a new survey
   const startNewSurvey = (parsedProfile: any, searchParams: URLSearchParams) => {
-    const companyUrl = searchParams.get('company');
+    // Check company URL from both URL parameters and sessionStorage
+    let companyUrl = searchParams.get('company');
+    
+    // If not in URL params, check sessionStorage (preserved from home page)
+    if (!companyUrl) {
+      companyUrl = sessionStorage.getItem('company_url');
+    }
+    
+    console.log('🏢 Starting survey with company URL:', companyUrl);
     
     incompleteSurveyService.startTracking({
       current_step: 0,
