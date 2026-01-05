@@ -447,13 +447,15 @@ export default function FinancialClinicPage({
       hasError = true;
     }
 
-    // Validate company field
-    if (!profile.company_name?.trim()) {
-      setCompanyError(language === "ar" ? "الشركة مطلوبة" : "Company is required");
-      hasError = true;
-    } else if (profile.company_name === "Other" && !profile.other_company_name?.trim()) {
-      setCompanyError(language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name");
-      hasError = true;
+    // Validate company field - only if companies exist
+    if (companyOptions && companyOptions.length > 0) {
+      if (!profile.company_name?.trim()) {
+        setCompanyError(language === "ar" ? "الشركة مطلوبة" : "Company is required");
+        hasError = true;
+      } else if (profile.company_name === "Other" && !profile.other_company_name?.trim()) {
+        setCompanyError(language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name");
+        hasError = true;
+      }
     }
 
     if (!profile.date_of_birth.trim()) {
@@ -974,127 +976,129 @@ export default function FinancialClinicPage({
             </div>
           </div>
 
-          {/* Company Selection */}
-          <div className="grid grid-cols-1 w-full">
-            <div className="w-full relative">
-              <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                {language === "ar" ? "الشركة" : "Company"}
-                <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                type="text"
-                placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
-                value={profile.company_name || companySearch}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setCompanySearch(value);
-                  setShowCompanyDropdown(true);
-                  setProfile((prev) => {
-                    const updated = {
-                      ...prev,
-                      company_name: value,
-                    };
-                    console.log('🔧 [DEBUG] Profile after company change:', updated);
-                    return updated;
-                  });
-                  // Clear error when user starts typing
-                  if (companyError) setCompanyError("");
-                }}
-                onFocus={() => setShowCompanyDropdown(true)}
-                onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
-                className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
-                  companyError ? "border-red-500" : "border-[#c2d1d9]"
-                } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                  language === "ar" ? "flex-row-reverse" : "flex-row"
-                }`}
-              />
-              {companyError && !showOtherCompanyInput && (
-                <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
-                  {companyError}
-                </p>
-              )}
-              {showCompanyDropdown && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto w-full">
-                  {filteredCompanyOptions.map((company) => (
-                    <div
-                      key={company.id}
+          {/* Company Selection - Only show if companies exist */}
+          {companyOptions && companyOptions.length > 0 && (
+            <div className="grid grid-cols-1 w-full">
+              <div className="w-full relative">
+                <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
+                  {language === "ar" ? "الشركة" : "Company"}
+                  <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
+                  value={profile.company_name || companySearch}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setCompanySearch(value);
+                    setShowCompanyDropdown(true);
+                    setProfile((prev) => {
+                      const updated = {
+                        ...prev,
+                        company_name: value,
+                      };
+                      console.log('🔧 [DEBUG] Profile after company change:', updated);
+                      return updated;
+                    });
+                    // Clear error when user starts typing
+                    if (companyError) setCompanyError("");
+                  }}
+                  onFocus={() => setShowCompanyDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
+                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                    companyError ? "border-red-500" : "border-[#c2d1d9]"
+                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                    language === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                />
+                {companyError && !showOtherCompanyInput && (
+                  <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                    {companyError}
+                  </p>
+                )}
+                {showCompanyDropdown && (
+                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto w-full">
+                    {filteredCompanyOptions.map((company) => (
+                      <div
+                        key={company.id}
+                        className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          setProfile((prev) => {
+                            const updated = {
+                              ...prev,
+                              company_name: company.name,
+                              other_company_name: "",
+                            };
+                            console.log('🔧 [DEBUG] Profile after company change:', updated);
+                            return updated;
+                          });
+                          setCompanySearch(company.name);
+                          setShowOtherCompanyInput(false);
+                          setOtherCompanyName("");
+                          setShowCompanyDropdown(false);
+                          setCompanyError("");
+                        }}
+                      >
+                        {company.name}
+                      </div>
+                    ))}
+                    <div 
                       className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
                       onClick={() => {
                         setProfile((prev) => {
                           const updated = {
                             ...prev,
-                            company_name: company.name,
+                            company_name: "Other",
                             other_company_name: "",
                           };
                           console.log('🔧 [DEBUG] Profile after company change:', updated);
                           return updated;
                         });
-                        setCompanySearch(company.name);
-                        setShowOtherCompanyInput(false);
-                        setOtherCompanyName("");
+                        setCompanySearch("Other");
+                        setShowOtherCompanyInput(true);
                         setShowCompanyDropdown(false);
                         setCompanyError("");
                       }}
                     >
-                      {company.name}
+                      {language === "ar" ? "أخرى" : "Other"}
                     </div>
-                  ))}
-                  <div 
-                    className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      setProfile((prev) => {
-                        const updated = {
-                          ...prev,
-                          company_name: "Other",
-                          other_company_name: "",
-                        };
-                        console.log('🔧 [DEBUG] Profile after company change:', updated);
-                        return updated;
-                      });
-                      setCompanySearch("Other");
-                      setShowOtherCompanyInput(true);
-                      setShowCompanyDropdown(false);
-                      setCompanyError("");
-                    }}
-                  >
-                    {language === "ar" ? "أخرى" : "Other"}
                   </div>
-                </div>
-              )}
-              {showOtherCompanyInput && (
-                <div className="mt-2">
-                  <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                    {language === "ar" ? "اسم الشركة" : "Company Name"}
-                  </Label>
-                  <Input
-                    type="text"
-                    placeholder={language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name"}
-                    value={otherCompanyName}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setOtherCompanyName(value);
-                      setProfile((prev) => ({
-                        ...prev,
-                        other_company_name: value,
-                      }));
-                      // Clear error when user starts typing
-                      if (companyError) setCompanyError("");
-                    }}
-                    className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
-                      companyError ? "border-red-500" : "border-[#c2d1d9]"
-                    } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                      language === "ar" ? "flex-row-reverse" : "flex-row"
-                    }`}
-                  />
-                  {companyError && (
-                    <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
-                      {companyError}
-                    </p>
-                  )}
-                </div>
-              )}
+                )}
+                {showOtherCompanyInput && (
+                  <div className="mt-2">
+                    <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
+                      {language === "ar" ? "اسم الشركة" : "Company Name"}
+                    </Label>
+                    <Input
+                      type="text"
+                      placeholder={language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name"}
+                      value={otherCompanyName}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setOtherCompanyName(value);
+                        setProfile((prev) => ({
+                          ...prev,
+                          other_company_name: value,
+                        }));
+                        // Clear error when user starts typing
+                        if (companyError) setCompanyError("");
+                      }}
+                      className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                        companyError ? "border-red-500" : "border-[#c2d1d9]"
+                      } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
+                        language === "ar" ? "flex-row-reverse" : "flex-row"
+                      }`}
+                    />
+                    {companyError && (
+                      <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                        {companyError}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Employment Status and Income Range */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
