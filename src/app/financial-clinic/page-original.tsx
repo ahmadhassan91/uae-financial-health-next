@@ -18,7 +18,6 @@ import { DatePickerComponent } from "@/components/ui/date-picker";
 import { useLocalization } from "@/contexts/LocalizationContext";
 import type { FinancialClinicProfile } from "@/lib/financial-clinic-types";
 import { toast } from "sonner";
-import { adminApi } from "@/lib/admin-api";
 import { ConsentModal } from "@/components/ConsentModal";
 import { consentService } from "@/services/consentService";
 import { HomepageHeader } from "@/components/homepage/Header";
@@ -84,8 +83,6 @@ export default function FinancialClinicPage({
   >([]);
   const [companySearch, setCompanySearch] = useState<string>('');
   const [showCompanyDropdown, setShowCompanyDropdown] = useState<boolean>(false);
-  const [showOtherCompanyInput, setShowOtherCompanyInput] = useState<boolean>(false);
-  const [otherCompanyName, setOtherCompanyName] = useState<string>('');
   const [filteredCompanyOptions, setFilteredCompanyOptions] = useState<
     { id: number; name: string }[]
   >([]);
@@ -246,54 +243,6 @@ export default function FinancialClinicPage({
       setCompanyTracking({ active: false });
     }
   }, []);
-
-  // Function to create company from "Other" option
-  const createCompanyFromOther = async (companyName: string) => {
-    if (!companyName || companyName.trim() === '') {
-      return;
-    }
-
-    try {
-      console.log('🔧 [DEBUG] Creating company from Other:', companyName);
-      
-      // Call the API to create the company
-      const result = await adminApi.createCompanyFromOther(companyName.trim());
-      
-      console.log('🔧 [DEBUG] Company created successfully:', result);
-      
-      // Refresh the companies list to include the new company
-      await loadCompanies();
-      
-      // Add the new company to the dropdown options
-      const newCompanyOption = {
-        id: parseInt(result.id),
-        name: result.company_name
-      };
-      
-      setCompanyOptions(prev => [...prev, newCompanyOption]);
-      setFilteredCompanyOptions(prev => [...prev, newCompanyOption]);
-      
-      // Update the profile to use the new company
-      setProfile(prev => ({
-        ...prev,
-        company_name: result.company_name,
-        company_id: parseInt(result.id),
-        other_company_name: ''
-      }));
-      
-      setCompanySearch(result.company_name);
-      setShowOtherCompanyInput(false);
-      setOtherCompanyName('');
-      
-      if (companyError) setCompanyError("");
-      
-      toast.success(`Company "${result.company_name}" added successfully!`);
-      
-    } catch (error) {
-      console.error('🔧 [DEBUG] Error creating company from Other:', error);
-      toast.error('Failed to add company. Please try again.');
-    }
-  };
 
   // Load companies function
   const loadCompanies = async () => {
@@ -527,9 +476,6 @@ export default function FinancialClinicPage({
     if (companyOptions && companyOptions.length > 0) {
       if (!profile.company_name?.trim()) {
         setCompanyError(language === "ar" ? "الشركة مطلوبة" : "Company is required");
-        hasError = true;
-      } else if (profile.company_name === "Other" && !profile.other_company_name?.trim()) {
-        setCompanyError(language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name");
         hasError = true;
       }
     }
@@ -1104,14 +1050,11 @@ export default function FinancialClinicPage({
                               const updated = {
                                 ...prev,
                                 company_name: company.name,
-                                other_company_name: "",
                               };
                               console.log('🔧 [DEBUG] Profile after company change:', updated);
                               return updated;
                             });
                             setCompanySearch(company.name);
-                            setShowOtherCompanyInput(false);
-                            setOtherCompanyName("");
                             setShowCompanyDropdown(false);
                             setIsUserTyping(false);
                             setCompanyError("");
@@ -1120,80 +1063,13 @@ export default function FinancialClinicPage({
                           {company.name}
                         </div>
                       ))}
-                      <div 
-                        className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                        onClick={() => {
-                          setProfile((prev) => {
-                            const updated = {
-                              ...prev,
-                              company_name: "Other",
-                              other_company_name: "",
-                            };
-                            console.log('🔧 [DEBUG] Profile after company change:', updated);
-                            return updated;
-                          });
-                          setCompanySearch("Other");
-                          setShowOtherCompanyInput(true);
-                          setShowCompanyDropdown(false);
-                          setIsUserTyping(false);
-                          setCompanyError("");
-                        }}
-                      >
-                        {language === "ar" ? "أخرى" : "Other"}
-                      </div>
                     </div>
                   )}
                 </div>
-                {companyError && !showOtherCompanyInput && (
+                {companyError && (
                   <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
                     {companyError}
                   </p>
-                )}
-                {showOtherCompanyInput && (
-                  <div className="mt-2">
-                    <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                      {language === "ar" ? "اسم الشركة" : "Company Name"}
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder={language === "ar" ? "يرجى إدخال اسم الشركة" : "Please enter company name"}
-                      value={otherCompanyName}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setOtherCompanyName(value);
-                        setProfile((prev) => ({
-                          ...prev,
-                          other_company_name: value,
-                        }));
-                        // Clear error when user starts typing
-                        if (companyError) setCompanyError("");
-                      }}
-                      onBlur={(e) => {
-                        const value = e.target.value;
-                        if (value && value.trim()) {
-                          createCompanyFromOther(value.trim());
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          const value = e.target.value;
-                          if (value && value.trim()) {
-                            createCompanyFromOther(value.trim());
-                          }
-                        }
-                      }}
-                      className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
-                        companyError ? "border-red-500" : "border-[#c2d1d9]"
-                      } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                        language === "ar" ? "flex-row-reverse" : "flex-row"
-                      }`}
-                    />
-                    {companyError && (
-                      <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
-                        {companyError}
-                      </p>
-                    )}
-                  </div>
                 )}
               </div>
             </div>
