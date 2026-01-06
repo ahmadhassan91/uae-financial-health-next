@@ -629,7 +629,7 @@ export default function FinancialClinicPage({
         {/* Title Section */}
         <div className="flex flex-col items-center gap-1.5 mb-4 md:mb-8">
           <h1 className="font-[family-name:var(--font-poppins)] font-semibold text-[#5E5E5E] text-xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight text-center">
-            {language === "ar" ? "ملف العميل / صاحب العمل" : "Customer / Employer Profile"}
+            {language === "ar" ? "ملف العميل" : "Customer Profile"}
           </h1>
           <p className="font-[family-name:var(--font-poppins)] font-normal text-[#5a6c64] text-sm text-center tracking-[0] leading-6">
             {language === "ar"
@@ -1003,7 +1003,7 @@ export default function FinancialClinicPage({
             <div className="grid grid-cols-1 w-full">
               <div className="w-full relative">
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                  {language === "ar" ? "الشركة" : "Company"}
+                  {language === "ar" ? "الشركة / صاحب العمل" : "Company / Employer"}
                   <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
