@@ -1060,92 +1060,94 @@ export default function FinancialClinicPage({
                   {language === "ar" ? "الشركة" : "Company"}
                   <span className="text-red-500">*</span>
                 </Label>
-                <Input
-                  type="text"
-                  placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
-                  value={profile.company_name || companySearch}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setCompanySearch(value);
-                    setIsUserTyping(true);
-                    setShowCompanyDropdown(true);
-                    setProfile((prev) => {
-                      const updated = {
-                        ...prev,
-                        company_name: value,
-                      };
-                      console.log('🔧 [DEBUG] Profile after company change:', updated);
-                      return updated;
-                    });
-                    // Clear error when user starts typing
-                    if (companyError) setCompanyError("");
-                  }}
-                  onFocus={() => {
-    setShowCompanyDropdown(true);
-    setIsUserTyping(false);
-    loadCompanies(); // Refresh companies when dropdown is focused
-  }}
-                  onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
-                  className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
-                    companyError ? "border-red-500" : "border-[#c2d1d9]"
-                  } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 ${
-                    language === "ar" ? "flex-row-reverse" : "flex-row"
-                  }`}
-                />
-                {companyError && !showOtherCompanyInput && (
-                  <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
-                    {companyError}
-                  </p>
-                )}
-                {showCompanyDropdown && (
-                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto w-full">
-                    {filteredCompanyOptions.map((company) => (
-                      <div
-                        key={company.id}
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
+                    value={profile.company_name || companySearch}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setCompanySearch(value);
+                      setIsUserTyping(true);
+                      setShowCompanyDropdown(true);
+                      setProfile((prev) => {
+                        const updated = {
+                          ...prev,
+                          company_name: value,
+                        };
+                        console.log('🔧 [DEBUG] Profile after company change:', updated);
+                        return updated;
+                      });
+                      // Clear error when user starts typing
+                      if (companyError) setCompanyError("");
+                    }}
+                    onFocus={() => {
+                      setShowCompanyDropdown(true);
+                      setIsUserTyping(false);
+                      loadCompanies(); // Refresh companies when dropdown is focused
+                    }}
+                    onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
+                    className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${
+                      companyError ? "border-red-500" : "border-[#c2d1d9]"
+                    } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${
+                      language === "ar" ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  />
+                  {showCompanyDropdown && (
+                    <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-[60] max-h-60 overflow-y-auto w-full">
+                      {filteredCompanyOptions.map((company) => (
+                        <div
+                          key={company.id}
+                          className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            setProfile((prev) => {
+                              const updated = {
+                                ...prev,
+                                company_name: company.name,
+                                other_company_name: "",
+                              };
+                              console.log('🔧 [DEBUG] Profile after company change:', updated);
+                              return updated;
+                            });
+                            setCompanySearch(company.name);
+                            setShowOtherCompanyInput(false);
+                            setOtherCompanyName("");
+                            setShowCompanyDropdown(false);
+                            setIsUserTyping(false);
+                            setCompanyError("");
+                          }}
+                        >
+                          {company.name}
+                        </div>
+                      ))}
+                      <div 
                         className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
                         onClick={() => {
                           setProfile((prev) => {
                             const updated = {
                               ...prev,
-                              company_name: company.name,
+                              company_name: "Other",
                               other_company_name: "",
                             };
                             console.log('🔧 [DEBUG] Profile after company change:', updated);
                             return updated;
                           });
-                          setCompanySearch(company.name);
-                          setShowOtherCompanyInput(false);
-                          setOtherCompanyName("");
+                          setCompanySearch("Other");
+                          setShowOtherCompanyInput(true);
                           setShowCompanyDropdown(false);
                           setIsUserTyping(false);
                           setCompanyError("");
                         }}
                       >
-                        {company.name}
+                        {language === "ar" ? "أخرى" : "Other"}
                       </div>
-                    ))}
-                    <div 
-                      className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                      onClick={() => {
-                        setProfile((prev) => {
-                          const updated = {
-                            ...prev,
-                            company_name: "Other",
-                            other_company_name: "",
-                          };
-                          console.log('🔧 [DEBUG] Profile after company change:', updated);
-                          return updated;
-                        });
-                        setCompanySearch("Other");
-                        setShowOtherCompanyInput(true);
-                        setShowCompanyDropdown(false);
-                        setIsUserTyping(false);
-                        setCompanyError("");
-                      }}
-                    >
-                      {language === "ar" ? "أخرى" : "Other"}
                     </div>
-                  </div>
+                  )}
+                </div>
+                {companyError && !showOtherCompanyInput && (
+                  <p className="text-red-500 text-xs mt-1 font-[family-name:var(--font-poppins)]">
+                    {companyError}
+                  </p>
                 )}
                 {showOtherCompanyInput && (
                   <div className="mt-2">
