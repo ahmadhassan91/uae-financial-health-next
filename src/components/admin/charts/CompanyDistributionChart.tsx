@@ -88,7 +88,7 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
         return (
             <Card>
                 <CardHeader>
-                    <CardTitle>Company Distribution</CardTitle>
+                    <CardTitle>Company / Employer</CardTitle>
                     <CardDescription>
                         Distribution of submissions across companies
                     </CardDescription>
@@ -107,7 +107,7 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
             {/* Pie Chart */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Company Distribution</CardTitle>
+                    <CardTitle>Company / Employer</CardTitle>
                     <CardDescription>
                         Percentage of submissions by company (Top 10 shown)
                     </CardDescription>
