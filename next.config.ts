@@ -7,14 +7,16 @@ const nextConfig: NextConfig = {
   // Enable static export for on-prem deployment when STATIC_EXPORT=true
   output: isStaticExport ? 'export' : undefined,
   
-  // Resolve monorepo structure for output file tracing
-  outputFileTracingRoot: require('path').join(__dirname, '../'),
-
-  // Standard build settings
-  trailingSlash: true,
-  images: {
-    unoptimized: true
-  },
+  // Exclude dynamic pages from static generation
+  ...(isStaticExport && {
+    trailingSlash: true,
+    images: {
+      unoptimized: true
+    },
+    // Skip static generation for dynamic/authenticated pages
+    generateBuildId: () => 'build',
+    distDir: 'out',
+  }),
   eslint: {
     // Disable ESLint during builds to allow deployment with warnings
     ignoreDuringBuilds: true,

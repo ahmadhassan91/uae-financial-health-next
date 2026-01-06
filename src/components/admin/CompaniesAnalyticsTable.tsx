@@ -24,7 +24,7 @@ export function CompaniesAnalyticsTable({ data }: CompaniesAnalyticsTableProps) 
 
   // Filter by search term
   const filteredData = tableData.filter((company) =>
-    company.company.toLowerCase().includes(searchTerm.toLowerCase())
+    (company.company?.toLowerCase() || '').includes(searchTerm.toLowerCase())
   );
 
   // Sort data

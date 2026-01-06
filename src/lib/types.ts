@@ -13,22 +13,6 @@ export interface UserInfo {
   login: string;
 }
 
-declare global {
-  interface Window {
-    spark: {
-      llmPrompt: (strings: string[], ...values: unknown[]) => string;
-      llm: (prompt: string, modelName?: string, jsonMode?: boolean) => Promise<string>;
-      user: () => Promise<UserInfo>;
-      kv: {
-        keys: () => Promise<string[]>;
-        get: <T>(key: string) => Promise<T | undefined>;
-        set: <T>(key: string, value: T) => Promise<void>;
-        delete: (key: string) => Promise<void>;
-      };
-    };
-  }
-}
-
 // v2 Types for Financial Health Check
 export type ModelVersion = 'v2';
 

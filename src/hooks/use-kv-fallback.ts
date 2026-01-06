@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 /**
- * Fallback useKV hook for production builds where @github/spark is not available
- * Uses localStorage for persistence
+ * Key-Value storage hook using localStorage for persistence
+ * Used for storing application state and user preferences
  */
 export function useKV<T>(key: string, defaultValue: T): [T, (value: T | ((current: T) => T)) => void, () => void] {
   const [value, setValue] = useState<T>(() => {
