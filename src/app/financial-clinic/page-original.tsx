@@ -89,6 +89,7 @@ export default function FinancialClinicPage({
   const [filteredCompanyOptions, setFilteredCompanyOptions] = useState<
     { id: number; name: string }[]
   >([]);
+  const [isUserTyping, setIsUserTyping] = useState<boolean>(false);
 
   const [profile, setProfile] = useState<FinancialClinicProfile>({
     name: "",
@@ -408,11 +409,17 @@ export default function FinancialClinicPage({
 
   // Filter company options based on search
   useEffect(() => {
-    const filtered = companyOptions.filter(company => 
-      company.name.toLowerCase().includes(companySearch.toLowerCase())
-    );
-    setFilteredCompanyOptions(filtered);
-  }, [companySearch, companyOptions]);
+    if (showCompanyDropdown && !isUserTyping) {
+      // When dropdown opens and user isn't typing, show all options
+      setFilteredCompanyOptions(getUniqueCompanyOptions());
+    } else if (isUserTyping) {
+      // When user is typing, filter the options
+      const filtered = companyOptions.filter(company => 
+        company.name.toLowerCase().includes(companySearch.toLowerCase())
+      );
+      setFilteredCompanyOptions(filtered);
+    }
+  }, [companySearch, companyOptions, showCompanyDropdown, isUserTyping]);
 
   // Get unique company names for dropdown
   const getUniqueCompanyOptions = () => {
@@ -1060,6 +1067,7 @@ export default function FinancialClinicPage({
                   onChange={(e) => {
                     const value = e.target.value;
                     setCompanySearch(value);
+                    setIsUserTyping(true);
                     setShowCompanyDropdown(true);
                     setProfile((prev) => {
                       const updated = {
@@ -1074,6 +1082,7 @@ export default function FinancialClinicPage({
                   }}
                   onFocus={() => {
     setShowCompanyDropdown(true);
+    setIsUserTyping(false);
     loadCompanies(); // Refresh companies when dropdown is focused
   }}
                   onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
@@ -1108,6 +1117,7 @@ export default function FinancialClinicPage({
                           setShowOtherCompanyInput(false);
                           setOtherCompanyName("");
                           setShowCompanyDropdown(false);
+                          setIsUserTyping(false);
                           setCompanyError("");
                         }}
                       >
@@ -1129,6 +1139,7 @@ export default function FinancialClinicPage({
                         setCompanySearch("Other");
                         setShowOtherCompanyInput(true);
                         setShowCompanyDropdown(false);
+                        setIsUserTyping(false);
                         setCompanyError("");
                       }}
                     >
