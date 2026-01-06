@@ -434,9 +434,9 @@ export function CompaniesDetails() {
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {allCompanies
                 .filter(company => 
-                  company.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  company.contact_person.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  company.company_email.toLowerCase().includes(searchTerm.toLowerCase())
+                  (company.company_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+                  (company.contact_person?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+                  (company.company_email?.toLowerCase() || '').includes(searchTerm.toLowerCase())
                 )
                 .map((company) => (
                   <div
