@@ -216,14 +216,8 @@ export const adminApi = {
     if (!response.ok) throw new Error("Failed to fetch filter options");
     const data = await response.json();
 
-    // Get active companies
-    const activeCompaniesResponse = await fetch(
-      `${getBackendUrl()}/companies-details/public-companies`,
-      { headers: getAuthHeaders() }
-    );
-    const activeCompaniesData = activeCompaniesResponse.ok ? await activeCompaniesResponse.json() : [];
-
     // Convert snake_case backend response to camelCase
+    // activeCompanies is already returned from filter-options endpoint (from CompanyDetails table)
     return {
       ageGroups: data.age_groups || [],
       genders: data.genders || [],
@@ -233,10 +227,10 @@ export const adminApi = {
       incomeRanges: data.income_ranges || [],
       childrenOptions: data.children_options || [],
       companies: data.companies || [],
-      activeCompanies: activeCompaniesData.map((company: any) => ({
+      activeCompanies: (data.activeCompanies || []).map((company: any) => ({
         id: company.id,
         name: company.name,
-        unique_url: company.name.toLowerCase().replace(/\s+/g, '-'),
+        unique_url: company.unique_url || company.name.toLowerCase().replace(/\s+/g, '-'),
       })),
     };
   },
