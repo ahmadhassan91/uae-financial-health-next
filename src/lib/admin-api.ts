@@ -692,12 +692,18 @@ export const adminApi = {
     return response.json();
   },
 
-  async getUploadedCompanies(search?: string): Promise<{
+  async getUploadedCompanies(options?: {
+    search?: string;
+    skip?: number;
+    limit?: number;
+  }): Promise<{
     companies: any[];
     total: number;
   }> {
     const params = new URLSearchParams();
-    if (search) params.append('search', search);
+    if (options?.search) params.append('search', options.search);
+    if (options?.skip !== undefined) params.append('skip', options.skip.toString());
+    if (options?.limit !== undefined) params.append('limit', options.limit.toString());
     
     const response = await fetch(
       `${getBackendUrl()}/companies-details/companies?${params}`,

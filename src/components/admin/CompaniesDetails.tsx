@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Upload, 
   FileSpreadsheet, 
@@ -24,7 +25,9 @@ import {
   Save,
   X,
   Plus,
-  Power
+  Power,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi } from "@/lib/admin-api";
@@ -44,6 +47,7 @@ interface Company {
 export function CompaniesDetails() {
   const [uploadedCompanies, setUploadedCompanies] = useState<Company[]>([]);
   const [allCompanies, setAllCompanies] = useState<Company[]>([]);
+  const [totalCompanies, setTotalCompanies] = useState(0);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,23 +62,58 @@ export function CompaniesDetails() {
     phone_number: '',
     additional_details: ''
   });
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(50);
+  const pageSizeOptions = [20, 50, 100, 150, 200];
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load all companies on component mount
+  // Load all companies on component mount and when pagination changes
   useEffect(() => {
     loadAllCompanies();
-  }, []);
+  }, [currentPage, pageSize]);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    } else {
+      loadAllCompanies();
+    }
+  }, [searchTerm]);
 
   const loadAllCompanies = async () => {
     try {
-      const data = await adminApi.getUploadedCompanies();
+      setIsLoading(true);
+      const skip = (currentPage - 1) * pageSize;
+      const data = await adminApi.getUploadedCompanies({
+        search: searchTerm || undefined,
+        skip,
+        limit: pageSize
+      });
       setAllCompanies(data.companies);
+      setTotalCompanies(data.total);
     } catch (error) {
       console.error('Error loading companies:', error);
       toast.error('Failed to load companies');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const totalPages = Math.ceil(totalCompanies / pageSize);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const handlePageSizeChange = (newSize: string) => {
+    setPageSize(parseInt(newSize, 10));
+    setCurrentPage(1); // Reset to first page when changing page size
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -406,14 +445,14 @@ export function CompaniesDetails() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Building className="w-5 h-5" />
-            All Companies ({allCompanies.length})
+            All Companies ({totalCompanies})
           </CardTitle>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button onClick={() => setShowCreateForm(true)} size="sm">
               <Plus className="w-4 h-4 mr-1" />
               Create Company
             </Button>
-            <div className="relative flex-1">
+            <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search companies..."
@@ -421,6 +460,22 @@ export function CompaniesDetails() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Show:</span>
+              <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+                <SelectTrigger className="w-[80px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {pageSizeOptions.map((size) => (
+                    <SelectItem key={size} value={size.toString()}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-sm text-gray-600">per page</span>
             </div>
           </div>
         </CardHeader>
@@ -431,14 +486,8 @@ export function CompaniesDetails() {
               <p>Loading companies...</p>
             </div>
           ) : (
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {allCompanies
-                .filter(company => 
-                  (company.company_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-                  (company.contact_person?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-                  (company.company_email?.toLowerCase() || '').includes(searchTerm.toLowerCase())
-                )
-                .map((company) => (
+            <div className="space-y-2">
+              {allCompanies.map((company) => (
                   <div
                     key={company.id}
                     className="border rounded-lg hover:bg-gray-50"
@@ -543,6 +592,54 @@ export function CompaniesDetails() {
                   <p className="text-sm">Upload a CSV file to add companies</p>
                 </div>
               )}
+            </div>
+          )}
+          
+          {/* Pagination Controls */}
+          {totalCompanies > 0 && (
+            <div className="flex items-center justify-between mt-4 pt-4 border-t">
+              <div className="text-sm text-gray-600">
+                Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalCompanies)} of {totalCompanies} companies
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1}
+                >
+                  First
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </Button>
+                <span className="text-sm px-2">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
+                >
+                  Last
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
