@@ -63,12 +63,45 @@ export function CompaniesDetails() {
     additional_details: ''
   });
   
+  // Companies module enabled/disabled state
+  const [moduleEnabled, setModuleEnabled] = useState(true);
+  const [moduleStatusLoading, setModuleStatusLoading] = useState(true);
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
   const pageSizeOptions = [20, 50, 100, 150, 200];
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load module status on mount
+  useEffect(() => {
+    loadModuleStatus();
+  }, []);
+
+  const loadModuleStatus = async () => {
+    try {
+      const status = await adminApi.getCompaniesModuleStatus();
+      setModuleEnabled(status.enabled);
+    } catch (error) {
+      console.error('Error loading module status:', error);
+      // Default to enabled if we can't fetch status
+      setModuleEnabled(true);
+    } finally {
+      setModuleStatusLoading(false);
+    }
+  };
+
+  const handleModuleToggle = async (enabled: boolean) => {
+    try {
+      const result = await adminApi.updateCompaniesModuleStatus(enabled);
+      setModuleEnabled(result.enabled);
+      toast.success(result.message);
+    } catch (error) {
+      console.error('Error updating module status:', error);
+      toast.error('Failed to update module status');
+    }
+  };
 
   // Load all companies on component mount and when pagination changes
   useEffect(() => {
@@ -285,6 +318,38 @@ export function CompaniesDetails() {
 
   return (
     <div className="space-y-6">
+      {/* Companies Module Toggle */}
+      <Card className="border-2 border-blue-200 bg-blue-50/50">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Power className="w-5 h-5" />
+                Companies Module
+              </CardTitle>
+              <CardDescription className="mt-1">
+                When disabled, the company selection dropdown will not appear in the customer profile form.
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-3">
+              {moduleStatusLoading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+              ) : (
+                <>
+                  <span className={`text-sm font-medium ${moduleEnabled ? 'text-green-600' : 'text-gray-500'}`}>
+                    {moduleEnabled ? 'Enabled' : 'Disabled'}
+                  </span>
+                  <Switch
+                    checked={moduleEnabled}
+                    onCheckedChange={handleModuleToggle}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
       {/* CSV Upload Section */}
       <Card>
         <CardHeader>

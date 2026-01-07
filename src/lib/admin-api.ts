@@ -845,4 +845,34 @@ export const adminApi = {
     console.log('🔧 [DEBUG] Delete response data:', result);
     return result;
   },
+
+  // Companies Module Status (global toggle)
+  async getCompaniesModuleStatus(): Promise<{ enabled: boolean; message: string }> {
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/module-status`,
+      { headers: getAuthHeaders() }
+    );
+    
+    if (!response.ok) throw new Error("Failed to fetch companies module status");
+    return await response.json();
+  },
+
+  async updateCompaniesModuleStatus(enabled: boolean): Promise<{ enabled: boolean; message: string }> {
+    const formData = new FormData();
+    formData.append('enabled', String(enabled));
+    
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/module-status`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_access_token")}`,
+        },
+        body: formData,
+      }
+    );
+    
+    if (!response.ok) throw new Error("Failed to update companies module status");
+    return await response.json();
+  },
 };
