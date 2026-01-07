@@ -359,10 +359,10 @@ export const adminApi = {
       result.push({
         nationality: "Emirati",
         total: data.emirati.count,
-        excellent: 0, // TODO: Backend should provide this
-        good: 0,
-        needs_improvement: 0,
-        at_risk: 0,
+        excellent: data.emirati.excellent || 0,
+        good: data.emirati.good || 0,
+        needs_improvement: data.emirati.needs_improvement || 0,
+        at_risk: data.emirati.at_risk || 0,
         average_score: data.emirati.avg_score || 0,
       });
     }
@@ -371,10 +371,10 @@ export const adminApi = {
       result.push({
         nationality: "Non-Emirati",
         total: data.non_emirati.count,
-        excellent: 0,
-        good: 0,
-        needs_improvement: 0,
-        at_risk: 0,
+        excellent: data.non_emirati.excellent || 0,
+        good: data.non_emirati.good || 0,
+        needs_improvement: data.non_emirati.needs_improvement || 0,
+        at_risk: data.non_emirati.at_risk || 0,
         average_score: data.non_emirati.avg_score || 0,
       });
     }
