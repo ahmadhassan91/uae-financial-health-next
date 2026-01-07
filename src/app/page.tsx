@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   HomepageHeader,
   HeroSection,
@@ -9,65 +9,32 @@ import {
   HowItWorksSection,
   HomepageFooter 
 } from '@/components/homepage';
-import { ConsentModal } from '@/components/ConsentModal';
-import { consentService } from '@/services/consentService';
-import { toast } from 'sonner';
 
 function HomePageContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [showConsent, setShowConsent] = useState(false);
-  const [hasConsent, setHasConsent] = useState(false);
-  const [isCheckingConsent, setIsCheckingConsent] = useState(true);
-  const [companyUrl, setCompanyUrl] = useState<string | null>(null);
-  const [sessionId, setSessionId] = useState<string | null>(null);
 
-  // Check for company parameters and consent on mount
+  // Check for company parameters on mount and persist to localStorage
   useEffect(() => {
     const company = searchParams.get('company');
     const session = searchParams.get('session');
     
     if (company) {
-      setCompanyUrl(company);
-      setSessionId(session);
+      // Persist company context so profile flow can pick it up if user needs to complete profile
+      try {
+        localStorage.setItem('company-context', JSON.stringify({
+          companyId: company,
+          companyName: null,
+          referralSource: 'company-link',
+          sessionId: session
+        }));
+      } catch (e) {
+        console.warn('Failed to persist company-context', e);
+      }
     }
-
-    const checkConsent = async () => {
-      const hasValidConsent = await consentService.hasConsent();
-      setHasConsent(hasValidConsent);
-      setIsCheckingConsent(false);
-    };
-
-    checkConsent();
   }, [searchParams]);
 
-  const handleConsentGranted = () => {
-    setShowConsent(false);
-    
-    // If this is a company link, proceed to financial clinic with company context
-    if (companyUrl) {
-      const url = sessionId 
-        ? `/financial-clinic?company=${companyUrl}&session=${sessionId}`
-        : `/financial-clinic?company=${companyUrl}`;
-      router.push(url);
-    } else {
-      router.push('/profile');
-    }
-    
-    toast.success('Consent recorded. Proceeding to Financial Clinic.');
-  };
-
-  const handleConsentDeclined = () => {
-    setShowConsent(false);
-    toast.error('Consent is required to use this service.');
-  };
-
-  // Auto-show consent for company links if not already consented
-  useEffect(() => {
-    if (!isCheckingConsent && companyUrl && !hasConsent) {
-      setShowConsent(true);
-    }
-  }, [isCheckingConsent, companyUrl, hasConsent]);
+  // Note: Consent modal is intentionally NOT auto-shown on landing when a company link is used.
+  // Consent is shown when the user clicks the Start CTA (handled inside HeroSection).
 
   return (
     <div className="w-full flex flex-col bg-white min-h-screen">
@@ -78,14 +45,7 @@ function HomePageContent() {
         <HowItWorksSection />
       </main>
       <HomepageFooter />
-      
-      {/* Consent Modal */}
-      {showConsent && (
-        <ConsentModal 
-          onConsent={handleConsentGranted}
-          onDecline={handleConsentDeclined}
-        />
-      )}
+      {/* Consent modal is handled inside HeroSection to avoid premature prompting on landing */}
     </div>
   );
 }

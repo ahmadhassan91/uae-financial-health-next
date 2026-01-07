@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocalization } from "@/contexts/LocalizationContext";
 import { ConsentModal } from "@/components/ConsentModal";
 import { consentService } from "@/services/consentService";
@@ -36,9 +36,14 @@ const steps = [
 
 export function HowItWorksSection() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { language } = useLocalization();
   const [showConsent, setShowConsent] = useState(false);
   const [hasConsent, setHasConsent] = useState(false);
+
+  // Get company URL from query params if present
+  const companyParam = searchParams?.get ? searchParams.get("company") : null;
+  const sessionParam = searchParams?.get ? searchParams.get("session") : null;
 
   // Check for consent on mount
   useEffect(() => {
@@ -69,7 +74,17 @@ export function HowItWorksSection() {
   const handleConsent = () => {
     setShowConsent(false);
     setHasConsent(true);
-    router.push("/financial-clinic");
+    // Preserve company/session context if present
+    if (companyParam) {
+      const sessionPart = sessionParam
+        ? `&session=${encodeURIComponent(sessionParam)}`
+        : "";
+      router.push(
+        `/financial-clinic?company=${encodeURIComponent(companyParam)}${sessionPart}`
+      );
+    } else {
+      router.push("/financial-clinic");
+    }
   };
 
   const handleDecline = () => {

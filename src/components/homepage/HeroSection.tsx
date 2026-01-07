@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useLocalization } from "@/contexts/LocalizationContext";
 import { ConsentModal } from "@/components/ConsentModal";
 import { consentService } from "@/services/consentService";
@@ -10,10 +11,16 @@ import { toast } from "sonner";
 
 export function HeroSection() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { language } = useLocalization();
   const [showConsent, setShowConsent] = useState(false);
   const [hasConsent, setHasConsent] = useState(false);
   const [isCheckingConsent, setIsCheckingConsent] = useState(true);
+
+  // If a company query param is present on the homepage, treat this as a company link
+  const companyParam = searchParams?.get ? searchParams.get("company") : null;
+  const sessionParam = searchParams?.get ? searchParams.get("session") : null;
+  const isCompanyLink = !!companyParam;
 
   // Check for consent on mount
   useEffect(() => {
@@ -28,16 +35,13 @@ export function HeroSection() {
   }, []);
 
   const handleStartCheckup = () => {
-    console.log("🚀 START button clicked. Has consent:", hasConsent);
-    // ALWAYS show consent modal first (for testing)
+    console.log(
+      "🚀 START button clicked. Has consent:",
+      hasConsent,
+      "company:",
+      companyParam
+    );
     setShowConsent(true);
-
-    // After testing, uncomment this:
-    // if (!hasConsent) {
-    //   setShowConsent(true);
-    // } else {
-    //   router.push('/financial-clinic');
-    // }
   };
 
   const handleViewResults = async () => {
@@ -62,7 +66,19 @@ export function HeroSection() {
   const handleConsent = () => {
     setShowConsent(false);
     setHasConsent(true);
-    router.push("/financial-clinic");
+    // Preserve company/session context if present on the homepage
+    if (isCompanyLink) {
+      const sessionPart = sessionParam
+        ? `&session=${encodeURIComponent(sessionParam)}`
+        : "";
+      router.push(
+        `/financial-clinic?company=${encodeURIComponent(
+          companyParam
+        )}${sessionPart}`
+      );
+    } else {
+      router.push("/financial-clinic");
+    }
   };
 
   const handleDecline = () => {

@@ -157,9 +157,10 @@ export function CompanyManagement({
 
   const handleGenerateLink = async (company: any) => {
     try {
-      // Use the new Financial Clinic company URL format
+      // Use the home page with company query parameter so users land on the homepage
+      // and can start the flow from there (consent modal + redirect handled in /src/app/page.tsx)
       const baseUrl = window.location.origin;
-      const financialClinicLink = `${baseUrl}/company/${company.unique_url}/financial-clinic`;
+      const financialClinicLink = `${baseUrl}/?company=${encodeURIComponent(company.unique_url)}`;
 
       setGeneratedLink(financialClinicLink);
       setSelectedCompany(company);
