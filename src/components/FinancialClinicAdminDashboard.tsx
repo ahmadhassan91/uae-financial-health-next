@@ -136,12 +136,16 @@ export function FinancialClinicAdminDashboard({
   const [scoreAnalyticsTable, setScoreAnalyticsTable] =
     useState<ScoreAnalyticsResponse | null>(null);
 
+  // State for companies module status
+  const [companiesModuleEnabled, setCompaniesModuleEnabled] = useState<boolean>(true);
+
   // State for export
   const [exporting, setExporting] = useState(false);
 
-  // Load filter options on mount
+  // Load filter options and companies module status on mount
   useEffect(() => {
     loadFilterOptions();
+    loadCompaniesModuleStatus();
   }, []);
   useEffect(() => {
     console.log("overviewMetrics:", overviewMetrics);
@@ -171,6 +175,17 @@ export function FinancialClinicAdminDashboard({
     } catch (error) {
       console.error("Failed to load filter options:", error);
       toast.error("Failed to load filter options");
+    }
+  };
+
+  const loadCompaniesModuleStatus = async () => {
+    try {
+      const status = await adminApi.getCompaniesModuleStatus();
+      setCompaniesModuleEnabled(status.enabled);
+    } catch (error) {
+      console.error("Failed to load companies module status:", error);
+      // Default to enabled if we can't check status
+      setCompaniesModuleEnabled(true);
     }
   };
 
@@ -714,7 +729,7 @@ export function FinancialClinicAdminDashboard({
                     </div>
 
                     {/* Company Distribution */}
-                    {companiesAnalytics && companiesAnalytics.length > 0 && (
+                    {companiesModuleEnabled && companiesAnalytics && companiesAnalytics.length > 0 && (
                       <>
                         {console.log("companiesAnalytics:", companiesAnalytics)}
                         <CompanyDistributionChart data={companiesAnalytics} />
@@ -737,8 +752,15 @@ export function FinancialClinicAdminDashboard({
               {/* Companies Tab - Only for full admins */}
               {user?.admin_role !== "view_only" && (
                 <TabsContent value="companies" className="space-y-6">
-                  {companiesAnalytics && (
+                  {companiesModuleEnabled && companiesAnalytics && (
                     <CompaniesAnalyticsTable data={companiesAnalytics} />
+                  )}
+                  {!companiesModuleEnabled && (
+                    <Card>
+                      <CardContent className="p-6 text-center text-muted-foreground">
+                        <p>Companies module is currently disabled. Enable it in Company Management to view analytics.</p>
+                      </CardContent>
+                    </Card>
                   )}
                   <CompanyManagement onCompanyCreated={loadFilterOptions} />
                 </TabsContent>

@@ -87,18 +87,26 @@ interface SubmissionStats {
 interface Company {
   id: number;
   name: string;
+  unique_url: string | null;
+}
+
+interface UniqueUrl {
+  id: number;
+  name: string;
   unique_url: string;
 }
 
 export function SubmissionsTable() {
   const [submissions, setSubmissions] = useState<FinancialClinicSubmission[]>([]);
   const [stats, setStats] = useState<SubmissionStats | null>(null);
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]); // From CompanyDetails table
+  const [uniqueUrls, setUniqueUrls] = useState<UniqueUrl[]>([]); // From CompanyTracker table
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [nationalityFilter, setNationalityFilter] = useState<string>('all');
   const [companyFilter, setCompanyFilter] = useState<string>('all');
+  const [uniqueUrlFilter, setUniqueUrlFilter] = useState<string>('all');
   const [companySearch, setCompanySearch] = useState<string>('');
   const [showCompanyDropdown, setShowCompanyDropdown] = useState<boolean>(false);
   const [filteredCompanies, setFilteredCompanies] = useState<Company[]>([]);
@@ -125,12 +133,15 @@ export function SubmissionsTable() {
   useEffect(() => {
     loadSubmissions();
     loadStats();
-  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, incomeFilter, ageGroupFilter]);
+  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, uniqueUrlFilter, incomeFilter, ageGroupFilter]);
 
   const loadCompanies = async () => {
     try {
       const response = await apiClient.request('/admin/simple/filter-options') as any;
-      setCompanies(response.companies || []);
+      // Use activeCompanies from CompanyDetails table for company filter
+      setCompanies(response.activeCompanies || []);
+      // Use companies from CompanyTracker table for unique URL filter
+      setUniqueUrls(response.companies || []);
     } catch (error) {
       console.error('Error loading companies:', error);
     }
@@ -147,7 +158,8 @@ export function SubmissionsTable() {
       if (searchTerm) params.append('search', searchTerm);
       if (statusFilter !== 'all') params.append('status_band', statusFilter);
       if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
-      if (companyFilter !== 'all') params.append('company_id', companyFilter);
+      if (companyFilter !== 'all') params.append('company_name', companyFilter); // Changed to company_name for CompanyDetails
+      if (uniqueUrlFilter !== 'all') params.append('company_id', uniqueUrlFilter); // Unique URL uses company_id
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
@@ -175,7 +187,19 @@ export function SubmissionsTable() {
 
   const loadStats = async () => {
     try {
-      const data = await apiClient.request('/admin/simple/submissions/stats') as any;
+      // Build filter params for stats
+      const params = new URLSearchParams();
+      if (searchTerm) params.append('search', searchTerm);
+      if (statusFilter !== 'all') params.append('status_band', statusFilter);
+      if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
+      if (companyFilter !== 'all') params.append('company_name', companyFilter);
+      if (uniqueUrlFilter !== 'all') params.append('company_id', uniqueUrlFilter);
+      if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
+      if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
+      
+      const queryString = params.toString();
+      const url = queryString ? `/admin/simple/submissions/stats?${queryString}` : '/admin/simple/submissions/stats';
+      const data = await apiClient.request(url) as any;
       setStats(data);
     } catch (error) {
       console.error('Error loading stats:', error);
@@ -207,7 +231,8 @@ export function SubmissionsTable() {
       if (searchTerm) params.append('search', searchTerm);
       if (statusFilter !== 'all') params.append('status_band', statusFilter);
       if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
-      if (companyFilter !== 'all') params.append('company_id', companyFilter);
+      if (companyFilter !== 'all') params.append('company_name', companyFilter);
+      if (uniqueUrlFilter !== 'all') params.append('company_id', uniqueUrlFilter);
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
@@ -414,7 +439,7 @@ export function SubmissionsTable() {
                     } else {
                       const matchedCompany = companies.find(c => c.name.toLowerCase() === value.toLowerCase());
                       if (matchedCompany) {
-                        setCompanyFilter(matchedCompany.id.toString());
+                        setCompanyFilter(matchedCompany.name); // Use company name for filtering
                       } else {
                         setCompanyFilter('all');
                       }
@@ -441,7 +466,7 @@ export function SubmissionsTable() {
                         key={company.id}
                         className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
                         onClick={() => {
-                          setCompanyFilter(company.id.toString());
+                          setCompanyFilter(company.name); // Use company name for filtering
                           setCompanySearch(company.name);
                           setShowCompanyDropdown(false);
                         }}
@@ -466,6 +491,20 @@ export function SubmissionsTable() {
 
             {/* Additional Demographic Filters Row */}
             <div className="flex flex-col sm:flex-row gap-4">
+              <Select value={uniqueUrlFilter} onValueChange={setUniqueUrlFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Unique URL" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Unique URLs</SelectItem>
+                  {uniqueUrls.map((url) => (
+                    <SelectItem key={url.id} value={url.id.toString()}>
+                      {url.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               <Select value={incomeFilter} onValueChange={setIncomeFilter}>
                 <SelectTrigger className="w-full sm:w-[200px]">
                   <SelectValue placeholder="Income Range" />
