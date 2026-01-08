@@ -66,19 +66,31 @@ export function HomepageHeader() {
       </div>
 
       {/* Bottom row: Dual logos centered */}
-      <div className="flex w-full items-center justify-center px-4 sm:px-6 md:px-[90px] py-4 sm:py-6 md:py-8">
+      <div className={
+                language === "ar"
+                  ? "flex w-full items-center justify-center px-4 sm:px-6 md:px-[40px] py-4 sm:py-6 md:py-8"
+                  : "flex w-full items-center justify-center px-4 sm:px-6 md:px-[90px] py-4 sm:py-6 md:py-8"
+              }>
         <div className="flex items-center justify-center">
           {/* National Bonds Logo */}
           <Link href="/">
             <img
-              className="h-[42px] sm:h-[58px] md:h-[60px] cursor-pointer object-contain"
+              className={
+                language === "ar"
+                  ? "h-[80px] sm:h-[95px] md:h-[170px] cursor-pointer object-contain"
+                  : "h-[42px] sm:h-[58px] md:h-[60px] cursor-pointer object-contain"
+              }
               style={
                 language === "ar"
                   ? { marginLeft: "35px" }
                   : { marginRight: "35px" }
               }
               alt="National Bonds Logo"
-              src="/homepage/images/NATIONAL BONDS LOGO.svg"
+              src={
+                language === "ar"
+                  ? "/homepage/images/Logo_arb.svg"
+                  : "/homepage/images/NATIONAL BONDS LOGO.svg"
+              }
             />
           </Link>
 
@@ -88,14 +100,22 @@ export function HomepageHeader() {
           {/* Financial Clinic Logo */}
           <Link href="/">
             <img
-              className="h-[50px] sm:h-[65px] md:h-[60px] cursor-pointer"
+              className={
+                language === "ar"
+                  ? "h-[80px] sm:h-[95px] md:h-[100px] cursor-pointer object-cover object-center"
+                  : "h-[50px] sm:h-[65px] md:h-[60px] cursor-pointer object-contain"
+              }
               style={
                 language === "ar"
-                  ? { marginLeft: "35px", marginRight: "35px" }
+                  ? {}
                   : { marginLeft: "35px" }
               }
               alt="Financial Clinic Logo"
-              src="/homepage/icons/logo.svg"
+              src={
+                language === "ar"
+                  ? "/homepage/icons/Financial Clinic logo-04.png"
+                  : "/homepage/icons/logo.svg"
+              }
             />
           </Link>
         </div>
