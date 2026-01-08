@@ -22,6 +22,7 @@ import {
 import { OTPInput } from "@/components/OTPInput";
 import { useOTPAuth } from "@/hooks/use-otp-auth";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLocalization } from "@/contexts/LocalizationContext";
 import Link from "next/link";
 import { HomepageHeader } from "@/components/homepage/Header";
 import { HomepageFooter } from "@/components/homepage/Footer";
@@ -31,6 +32,14 @@ function FinancialClinicLoginContent() {
   const searchParams = useSearchParams();
   const language = (searchParams?.get("lang") as "en" | "ar") || "en";
   const { login: authLogin, isAuthenticated } = useAuth();
+  const { setLanguage } = useLocalization();
+
+  // Set language in context when URL parameter changes
+  useEffect(() => {
+    if (language) {
+      setLanguage(language);
+    }
+  }, [language, setLanguage]);
 
   // Debug: Log the language
   useEffect(() => {

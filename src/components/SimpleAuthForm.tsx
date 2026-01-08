@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Calendar, Mail, ArrowLeft } from 'lucide-react';
 import { useSimpleAuth } from '@/hooks/use-simple-auth';
 import { NationalBondsLogo } from '@/components/NationalBondsLogo';
+import { useLocalization } from '@/contexts/LocalizationContext';
 
 interface SimpleAuthFormProps {
   onSuccess?: () => void;
@@ -23,6 +25,17 @@ export function SimpleAuthForm({
   title = "Access Your History",
   description = "Enter your email and date of birth to view your previous assessments"
 }: SimpleAuthFormProps) {
+  const searchParams = useSearchParams();
+  const { setLanguage } = useLocalization();
+  const language = (searchParams?.get("lang") as "en" | "ar") || "en";
+
+  // Set language in context when URL parameter changes
+  useEffect(() => {
+    if (language) {
+      setLanguage(language);
+    }
+  }, [language, setLanguage]);
+
   const [formData, setFormData] = useState({
     email: '',
     dateOfBirth: ''

@@ -75,45 +75,29 @@ export function HomepageHeader() {
           {/* National Bonds Logo */}
           <Link href="/">
             <img
-              className={
-                language === "ar"
-                  ? "h-[80px] sm:h-[95px] md:h-[170px] cursor-pointer object-contain"
-                  : "h-[42px] sm:h-[58px] md:h-[60px] cursor-pointer object-contain"
-              }
-              style={
-                language === "ar"
-                  ? { marginLeft: "35px" }
-                  : { marginRight: "35px" }
-              }
+              className={language === "ar" ? "h-[80px] sm:h-[95px] md:h-[170px] cursor-pointer object-contain transition-all duration-300 ease-in-out" : "h-[42px] sm:h-[58px] md:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"}
+              style={language === "ar" ? { marginLeft: "35px" } : { marginRight: "35px" }}
               alt="National Bonds Logo"
-              src={
-                language === "ar"
-                  ? "/homepage/images/Logo_arb.svg"
-                  : "/homepage/images/NATIONAL BONDS LOGO.svg"
-              }
+              src={language === "ar" ? "/homepage/images/Logo_arb.svg" : "/homepage/images/NATIONAL BONDS LOGO.svg"}
             />
           </Link>
 
           {/* Divider */}
-          <div className="h-8 sm:h-12 md:h-14 w-px bg-[#c2d1d9]" />
+          <div className="h-8 sm:h-12 md:h-14 w-px bg-[#c2d1d9] transition-all duration-300 ease-in-out" />
 
           {/* Financial Clinic Logo */}
           <Link href="/">
             <img
               className={
                 language === "ar"
-                  ? "h-[80px] sm:h-[95px] md:h-[100px] cursor-pointer object-cover object-center"
-                  : "h-[50px] sm:h-[65px] md:h-[60px] cursor-pointer object-contain"
+                  ? "h-[80px] sm:h-[95px] md:h-[100px] cursor-pointer object-cover object-center transition-all duration-300 ease-in-out"
+                  : "h-[50px] sm:h-[65px] md:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
               }
-              style={
-                language === "ar"
-                  ? {}
-                  : { marginLeft: "35px" }
-              }
+              style={language === "ar" ? {} : { marginLeft: "35px" }}
               alt="Financial Clinic Logo"
               src={
                 language === "ar"
-                  ? "/homepage/icons/Financial Clinic logo-04.png"
+                  ? "/homepage/icons/Financial-Clinic-logo-04.png"
                   : "/homepage/icons/logo.svg"
               }
             />

@@ -253,6 +253,9 @@ export function LocalizationProvider({
 
     const isRTL = language === "ar" && !isAdminRoute;
 
+    // Apply smooth transitions for direction changes
+    document.documentElement.style.transition = "direction 0.3s ease, font-family 0.3s ease";
+    
     // Only apply RTL if not on admin routes
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
     document.documentElement.lang = language;
@@ -285,24 +288,13 @@ export function LocalizationProvider({
       );
     } else {
       // Force LTR for admin routes
+      document.documentElement.dir = "ltr";
       document.documentElement.style.setProperty("--text-align-start", "left");
       document.documentElement.style.setProperty("--text-align-end", "right");
-      document.documentElement.style.setProperty(
-        "--margin-start",
-        "margin-left"
-      );
-      document.documentElement.style.setProperty(
-        "--margin-end",
-        "margin-right"
-      );
-      document.documentElement.style.setProperty(
-        "--padding-start",
-        "padding-left"
-      );
-      document.documentElement.style.setProperty(
-        "--padding-end",
-        "padding-right"
-      );
+      document.documentElement.style.setProperty("--margin-start", "margin-left");
+      document.documentElement.style.setProperty("--margin-end", "margin-right");
+      document.documentElement.style.setProperty("--padding-start", "padding-left");
+      document.documentElement.style.setProperty("--padding-end", "padding-right");
     }
 
     // Load Arabic fonts when switching to Arabic (regardless of admin route)

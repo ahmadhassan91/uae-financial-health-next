@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { useLocalization } from '@/contexts/LocalizationContext';
 
 interface NationalBondsLogoProps {
   className?: string;
@@ -14,9 +15,14 @@ export function NationalBondsLogo({
   height = 80,
   variant = 'primary'
 }: NationalBondsLogoProps) {
+  const { language } = useLocalization();
 
-  // Choose logo based on variant
+  // Choose logo based on variant and language
   const getLogoSrc = () => {
+    if (language === 'ar') {
+      return '/homepage/images/Logo_arb.svg';
+    }
+    
     switch (variant) {
       case 'primary':
         return '/homepage/images/NATIONAL BONDS LOGO.svg';
