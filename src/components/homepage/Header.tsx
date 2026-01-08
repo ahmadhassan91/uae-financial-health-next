@@ -66,34 +66,62 @@ export function HomepageHeader() {
       </div>
 
       {/* Bottom row: Dual logos centered */}
-      <div className={
-                language === "ar"
-                  ? "flex w-full items-center justify-center px-4 sm:px-6 md:px-[40px] py-4 sm:py-6 md:py-8"
-                  : "flex w-full items-center justify-center px-4 sm:px-6 md:px-[90px] py-4 sm:py-6 md:py-8"
-              }>
-        <div className="flex items-center justify-center">
+      <div
+        className={
+          language === "ar"
+            ? "flex w-full items-center justify-center px-2 sm:px-4 md:px-[90px] py-1 sm:py-0"
+            : "flex w-full items-center justify-center px-2 sm:px-4 md:px-[90px] py-2 sm:py-3 md:py-4"
+        }
+      >
+        <div
+          className="flex items-center justify-center gap-2 sm:gap-0"
+          style={
+            language === "ar"
+              ? {
+                  marginBottom: "-55px",
+                  marginTop: "-40px",
+                }
+              : {}
+          }
+        >
           {/* National Bonds Logo */}
           <Link href="/">
             <img
-              className={language === "ar" ? "h-[80px] sm:h-[95px] md:h-[170px] cursor-pointer object-contain transition-all duration-300 ease-in-out" : "h-[42px] sm:h-[58px] md:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"}
-              style={language === "ar" ? { marginLeft: "35px" } : { marginRight: "35px" }}
+              className={
+                language === "ar"
+                  ? "h-[60px] sm:h-[80px] md:h-[120px] lg:h-[200px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
+                  : "h-[35px] sm:h-[42px] md:h-[55px] lg:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
+              }
+              style={
+                language === "ar"
+                  ? { marginLeft: "15px", marginRight: "15px" }
+                  : {}
+              }
               alt="National Bonds Logo"
-              src={language === "ar" ? "/homepage/images/Logo_arb.svg" : "/homepage/images/NATIONAL BONDS LOGO.svg"}
+              src={
+                language === "ar"
+                  ? "/homepage/images/Logo_arb.svg"
+                  : "/homepage/images/NATIONAL BONDS LOGO.svg"
+              }
             />
           </Link>
 
           {/* Divider */}
-          <div className="h-8 sm:h-12 md:h-14 w-px bg-[#c2d1d9] transition-all duration-300 ease-in-out" />
+          <div className="h-6 sm:h-8 md:h-12 lg:h-14 w-px bg-[#c2d1d9] transition-all duration-300 ease-in-out flex-shrink-0" />
 
           {/* Financial Clinic Logo */}
           <Link href="/">
             <img
               className={
                 language === "ar"
-                  ? "h-[80px] sm:h-[95px] md:h-[100px] cursor-pointer object-cover object-center transition-all duration-300 ease-in-out"
-                  : "h-[50px] sm:h-[65px] md:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
+                  ? "h-[60px] sm:h-[80px] md:h-[90px] lg:h-[100px] cursor-pointer object-cover object-center transition-all duration-300 ease-in-out"
+                  : "h-[40px] sm:h-[50px] md:h-[58px] lg:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
               }
-              style={language === "ar" ? {} : { marginLeft: "35px" }}
+              style={
+                language === "ar"
+                  ? { marginLeft: "15px", marginRight: "15px" }
+                  : { marginLeft: "15px" }
+              }
               alt="Financial Clinic Logo"
               src={
                 language === "ar"
