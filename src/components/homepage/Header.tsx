@@ -94,8 +94,8 @@ export function HomepageHeader() {
               }
               style={
                 language === "ar"
-                  ? { marginLeft: "15px", marginRight: "15px" }
-                  : {}
+                  ? { marginLeft: "15px", marginRight: "0px" }
+                  : { marginLeft: "15px", marginRight: "15px" }
               }
               alt="National Bonds Logo"
               src={
@@ -119,7 +119,7 @@ export function HomepageHeader() {
               }
               style={
                 language === "ar"
-                  ? { marginLeft: "15px", marginRight: "15px" }
+                  ? { marginLeft: "15px", marginRight: "-15px" }
                   : { marginLeft: "15px" }
               }
               alt="Financial Clinic Logo"
