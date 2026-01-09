@@ -9,7 +9,7 @@ export function HomepageFooter() {
   return (
     <footer className="w-full bg-white py-8 sm:py-12 md:py-16 px-4 sm:px-6 border-t border-gray-200">
       <div className="max-w-7xl mx-auto flex flex-col items-center justify-center">
-        <div className={language === "ar" ? "" : "mb-6 sm:mb-8"}>
+        <div className="mb-6 sm:mb-8">
           <img
             src={
               language === "ar"
@@ -17,16 +17,7 @@ export function HomepageFooter() {
                 : "/homepage/images/NATIONAL BONDS LOGO.svg"
             }
             alt="National Bonds"
-            className={
-              language === "ar"
-                ? "h-[180px] sm:h-[95px] md:h-[300px] object-contain"
-                : "h-16 sm:h-20 md:h-24 object-contain"
-            }
-            style={
-              language === "ar"
-                ? { marginBottom: "-80px", marginTop: "-80px" }
-                : {}
-            }
+            className="h-16 sm:h-20 md:h-24 object-contain"
           />
         </div>
 
