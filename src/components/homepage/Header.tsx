@@ -66,28 +66,12 @@ export function HomepageHeader() {
       </div>
 
       {/* Bottom row: Dual logos centered */}
-      <div
-        className={
-          language === "ar"
-            ? "flex w-full items-center justify-center px-2 sm:px-4 md:px-[90px] py-3 sm:py-4 md:py-2 lg:py-1"
-            : "flex w-full items-center justify-center px-2 sm:px-4 md:px-[90px] py-2 sm:py-3 md:py-4"
-        }
-      >
-        <div
-          className={
-            language === "ar"
-              ? "flex items-center justify-center gap-2 sm:gap-3 md:gap-4 md:-mb-[55px] md:-mt-[40px]"
-              : "flex items-center justify-center gap-2 sm:gap-3 md:gap-4"
-          }
-        >
+      <div className="flex w-full items-center justify-center px-2 sm:px-4 md:px-[90px] py-2 sm:py-3 md:py-3">
+        <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-6">
           {/* National Bonds Logo */}
           <Link href="/">
             <img
-              className={
-                language === "ar"
-                  ? "h-[80px] sm:h-[100px] md:h-[120px] lg:h-[200px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
-                  : "h-[50px] sm:h-[60px] md:h-[48px] lg:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
-              }
+              className="w-[120px] sm:w-[150px] md:w-[180px] lg:w-[200px] h-auto max-h-[80px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
               alt="National Bonds Logo"
               src={
                 language === "ar"
@@ -98,20 +82,15 @@ export function HomepageHeader() {
           </Link>
 
           {/* Divider */}
-          <div className="h-[50px] sm:h-[60px] md:h-[50px] lg:h-[60px] w-px bg-[#c2d1d9] transition-all duration-300 ease-in-out flex-shrink-0" />
+          <div className="h-[40px] sm:h-[50px] md:h-[60px] w-px bg-[#c2d1d9] transition-all duration-300 ease-in-out flex-shrink-0" />
 
           {/* Financial Clinic Logo */}
           <Link href="/">
             <img
               className={
                 language === "ar"
-                  ? "h-[80px] sm:h-[100px] md:h-[90px] lg:h-[120px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
-                  : "h-[55px] sm:h-[65px] md:h-[55px] lg:h-[60px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
-              }
-              style={
-                language === "ar"
-                  ? { marginRight: window.innerWidth >= 768 ? "-40px" : "0" }
-                  : {}
+                  ? "w-[100px] sm:w-[120px] md:w-[140px] lg:w-[160px] h-auto max-h-[80px] cursor-pointer object-contain object-right transition-all duration-300 ease-in-out"
+                  : "w-[120px] sm:w-[150px] md:w-[180px] lg:w-[200px] h-auto max-h-[80px] cursor-pointer object-contain transition-all duration-300 ease-in-out"
               }
               alt="Financial Clinic Logo"
               src={
