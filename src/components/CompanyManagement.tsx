@@ -109,28 +109,22 @@ export function CompanyManagement({
         return;
       }
 
-      const response = await fetch(
-        `/api/v1/admin/variation-sets?is_active=true&page_size=100`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const data = await apiClient.request<{
+        variation_sets: Array<{
+          id: number;
+          name: string;
+          description: string;
+          set_type: string;
+          is_active: boolean;
+        }>;
+      }>("/admin/variation-sets?is_active=true&page_size=100");
       
-      if (response.status === 401 || response.status === 403) {
+      setAvailableVariationSets(data.variation_sets || []);
+    } catch (error: any) {
+      if (error.status === 401 || error.status === 403) {
         console.log("Admin authentication required for variation sets");
         return;
       }
-      
-      if (response.ok) {
-        const data = await response.json();
-        setAvailableVariationSets(data.variation_sets || []);
-      } else {
-        console.log("Variation sets endpoint response:", response.status);
-      }
-    } catch (error) {
       console.error("Error fetching variation sets:", error);
     }
   };
