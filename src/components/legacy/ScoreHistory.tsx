@@ -28,6 +28,23 @@ import {
   isValidPillarScore,
 } from "../../lib/score-display-utils";
 
+// Helper function to format date as DD-MMM-YYYY
+const formatDate = (dateString: string): string => {
+  try {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  } catch (error) {
+    return "Invalid date";
+  }
+};
+
 interface ScoreHistoryProps {
   scoreHistory: ScoreCalculation[];
   onBack: () => void;
@@ -96,7 +113,7 @@ export function ScoreHistory({
       assessment: `#${scoreHistory.length - index}`,
       score: calc.totalScore || 0,
       date: calc.createdAt
-        ? new Date(calc.createdAt).toLocaleDateString()
+        ? formatDate(calc.createdAt)
         : "Unknown",
     }));
 
@@ -348,7 +365,7 @@ export function ScoreHistory({
                         </div>
                         <div className="text-xs text-muted-foreground">
                           {calc.createdAt
-                            ? new Date(calc.createdAt).toLocaleDateString()
+                            ? formatDate(calc.createdAt)
                             : "Unknown date"}
                         </div>
                       </div>

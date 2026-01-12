@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useSimpleAuth } from '@/hooks/use-simple-auth';
 import { SimpleAuthForm } from '@/components/SimpleAuthForm';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const { user, loading } = useSimpleAuth();
 
@@ -36,4 +36,12 @@ export default function LoginPage() {
   }
 
   return <SimpleAuthForm onSuccess={handleSuccess} onBack={handleBack} />;
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
 }

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { ScoreHistory } from '@/components/ScoreHistory';
 import { SimpleAuthForm } from '@/components/SimpleAuthForm';
 import { useSimpleAuth } from '@/hooks/use-simple-auth';
 
-export default function HistoryPage() {
+function HistoryContent() {
   const router = useRouter();
   const { isAuthenticated, user, logout } = useSimpleAuth();
   const [showAuthForm, setShowAuthForm] = useState(!isAuthenticated);
@@ -42,5 +42,13 @@ export default function HistoryPage() {
       onLogout={handleLogout}
       userEmail={user?.email}
     />
+  );
+}
+
+export default function HistoryPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HistoryContent />
+    </Suspense>
   );
 }
