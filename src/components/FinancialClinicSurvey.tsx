@@ -271,19 +271,17 @@ export function FinancialClinicSurvey({
             />
 
             {/* Progress Text */}
-            <div className="flex flex-col items-center gap-[3px] w-full">
-              <p
-                className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center w-full px-2"
-              >
-                {language === "ar"
-                  ? `لقد أجَبْتم عن %${Math.round(
-                      progress
-                    )} من أسئلة التقييم - تقدّم ممتاز`
-                  : `You're ${Math.round(
-                      progress
-                    )}% through your checkup—great progress!`}
-              </p>
-            </div>
+         {/* Progress Text */}
+<div className="flex flex-col items-center gap-[3px] w-full">
+  <p
+    className="font-[family-name:var(--font-poppins)] font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-5 md:leading-6 text-center w-full px-2"
+  >
+    {language === "ar"
+      ? `لقد أجبتم عن %${Math.round(progress)} من أسئلة التقييم`
+      : `You're ${Math.round(progress)}% through your checkup—great progress!`}
+  </p>
+</div>
+
           </div>
         </div>
 

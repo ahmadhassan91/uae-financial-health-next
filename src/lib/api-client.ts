@@ -631,7 +631,7 @@ class ApiClient {
 
   // Company management endpoints (Admin only)
   async getCompanies(skip: number = 0, limit: number = 100, activeOnly: boolean = true): Promise<any[]> {
-    return this.request(`/companies/?skip=${skip}&limit=${limit}&active_only=${activeOnly}`);
+    return this.request(`/companies?skip=${skip}&limit=${limit}&active_only=${activeOnly}`);
   }
 
   async createCompany(companyData: {
@@ -641,7 +641,7 @@ class ApiClient {
     phone_number?: string;
     question_variation_mapping?: Record<string, number>;
   }): Promise<any> {
-    return this.request("/companies/", {
+    return this.request("/companies", {
       method: "POST",
       body: JSON.stringify(companyData),
     });

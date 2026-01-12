@@ -273,7 +273,7 @@ export const translations = {
     previous_question: "السؤال السابق",
     complete_assessment: "إكمال التقييم",
     of: "من",
-    back: "خلف",
+    back: "رجوع",
     assessment_completed_ar: "تم الانتهاء من التقييم! تم حساب نتيجتك.",
 
     // Profile Form
