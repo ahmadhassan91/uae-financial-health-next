@@ -1,0 +1,171 @@
+# Secure nginx configuration for financialclinic.ae
+# Updated: January 2026 - Security Audit Remediation
+# 
+# This configuration addresses the following security findings:
+# 1. Clickjacking (X-Frame-Options)
+# 2. Missing Content Security Policy
+# 3. Host Header Injection
+# 4. Additional security headers
+
+# Redirect HTTP to HTTPS (UNCOMMENT IN PRODUCTION)
+server {
+    listen 80;
+    server_name financialclinic.ae www.financialclinic.ae;
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS server block
+server {
+    listen 443 ssl http2;
+    server_name financialclinic.ae www.financialclinic.ae;
+
+    # SSL certificates
+    ssl_certificate /etc/nginx/ssl/financialclinic/fullchain.crt;
+    ssl_certificate_key /etc/nginx/ssl/financialclinic/private.key;
+
+    # SSL Configuration (Strong Security)
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+
+    # =========================
+    # SECURITY HEADERS (GLOBAL)
+    # Addresses security audit findings
+    # =========================
+    
+    # Prevent Clickjacking - SECURITY AUDIT FIX
+    add_header X-Frame-Options "DENY" always;
+    
+    # Prevent MIME-type sniffing
+    add_header X-Content-Type-Options "nosniff" always;
+    
+    # XSS Protection (legacy browsers)
+    add_header X-XSS-Protection "1; mode=block" always;
+    
+    # Referrer Policy
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    
+    # Content Security Policy - SECURITY AUDIT FIX
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://financialclinic.ae https://www.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+    
+    # Strict Transport Security (HSTS) - Force HTTPS
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    
+    # Permissions Policy - Restrict browser features
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
+
+    # =========================
+    # HOST HEADER VALIDATION
+    # Prevents Host Header Injection - SECURITY AUDIT FIX
+    # =========================
+    if ($host !~ ^(financialclinic\.ae|www\.financialclinic\.ae)$) {
+        return 444;
+    }
+
+    # =========================
+    # FRONTEND / MAIN ROUTE
+    # =========================
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # =========================
+    # API BACKEND
+    # =========================
+    location /api/ {
+        proxy_pass http://192.168.128.135:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # CORS headers for frontend
+        add_header Access-Control-Allow-Origin "https://financialclinic.ae" always;
+        add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS" always;
+        add_header Access-Control-Allow-Headers "Authorization, Content-Type, Accept, Origin, X-Requested-With" always;
+        add_header Access-Control-Allow-Credentials "true" always;
+
+        # Handle preflight requests
+        if ($request_method = 'OPTIONS') {
+            add_header Access-Control-Allow-Origin "https://financialclinic.ae" always;
+            add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS" always;
+            add_header Access-Control-Allow-Headers "Authorization, Content-Type, Accept, Origin, X-Requested-With" always;
+            add_header Access-Control-Allow-Credentials "true" always;
+            add_header Access-Control-Max-Age 86400;
+            add_header Content-Length 0;
+            add_header Content-Type text/plain;
+            return 204;
+        }
+    }
+
+    # =========================
+    # STATIC ASSETS (Backend)
+    # =========================
+    location /static/ {
+        alias /home/finclinic01/projects/uae-financial-backend/app/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        
+        # CORS headers for email clients
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Allow-Methods "GET, OPTIONS" always;
+        
+        # Security headers for static content
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+
+    # Block direct access to reports directory
+    location /static/reports/ {
+        return 403;
+    }
+
+    # =========================
+    # STORAGE (NFS Mount)
+    # =========================
+    location /storage/ {
+        alias /mnt/financialclinic/;
+        autoindex off;
+        
+        # Security headers
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+
+    location /storage/reports/ {
+        alias /mnt/financialclinic/reports/;
+        add_header Content-Type application/pdf;
+        expires 1d;
+        
+        # Security headers
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Content-Disposition "inline" always;
+    }
+
+    # =========================
+    # SECURITY: Block sensitive files
+    # =========================
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    location ~ /\.env {
+        deny all;
+    }
+
+    location ~ /\.git {
+        deny all;
+    }
+}

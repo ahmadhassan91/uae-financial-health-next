@@ -254,7 +254,7 @@ export function FinancialClinicSurvey({
               <>
                 Welcome to your Financial Clinic checkup! Let's take a few minutes to understand
                 <br />
-                your financial habits no judgments, just insights.
+                your financial habits, no judgments just insights.
               </>
             )}
           </p>
@@ -278,7 +278,7 @@ export function FinancialClinicSurvey({
   >
     {language === "ar"
       ? `لقد أجبتم عن %${Math.round(progress)} من أسئلة التقييم`
-      : `You're ${Math.round(progress)}% through your checkup—great progress!`}
+      : `You're ${Math.round(progress)}% through your checkup.`}
   </p>
 </div>
 
