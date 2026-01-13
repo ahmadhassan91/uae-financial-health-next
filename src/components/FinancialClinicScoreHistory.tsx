@@ -33,6 +33,23 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLocalization } from "@/contexts/LocalizationContext";
 
+// Helper function to format date as DD-MMM-YYYY (e.g., 8-Jan-2026)
+const formatDate = (dateString: string): string => {
+  try {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  } catch (error) {
+    return "Invalid date";
+  }
+};
+
 interface CategoryScore {
   score: number;
   max_possible: number;
@@ -194,7 +211,7 @@ export function FinancialClinicScoreHistory({
       return {
         assessment: `#${assessmentNumber}`,
         score: response.overall_score,
-        date: new Date(response.created_at).toLocaleDateString(),
+        date: formatDate(response.created_at),
       };
     });
 
@@ -792,10 +809,7 @@ export function FinancialClinicScoreHistory({
                         {Math.round(response.overall_score)}
                       </div>
                       <div className="text-[10px] sm:text-xs text-muted-foreground">
-                        {new Date(response.created_at).toLocaleDateString(
-                          "en-US",
-                          { day: "2-digit", month: "2-digit", year: "numeric" }
-                        )}
+                        {formatDate(response.created_at)}
                       </div>
                     </div>
 
