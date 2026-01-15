@@ -85,6 +85,7 @@ export function CompanyManagement({
     contact_person: "",
     phone_number: "",
     variation_set_id: null as number | null,
+    enable_company_field: true,
   });
 
   const [availableVariationSets, setAvailableVariationSets] = useState<
@@ -138,6 +139,7 @@ export function CompanyManagement({
         contact_person: "",
         phone_number: "",
         variation_set_id: null,
+        enable_company_field: true,
       });
       setShowCreateDialog(false);
       // Notify parent to reload filter options
@@ -224,6 +226,7 @@ export function CompanyManagement({
       contact_person: company.contact_person,
       phone_number: company.phone_number || "",
       variation_set_id: company.variation_set_id || null,
+      enable_company_field: company.enable_company_field !== false,
     });
     setShowEditDialog(true);
   };
@@ -243,6 +246,7 @@ export function CompanyManagement({
         contact_person: "",
         phone_number: "",
         variation_set_id: null,
+        enable_company_field: true,
       });
       // Refresh companies list
       loadCompanies(!showInactive);
@@ -271,8 +275,9 @@ export function CompanyManagement({
 
   const handleToggleVariations = async (company: any, enable: boolean) => {
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
       const response = await fetch(
-        `/api/v1/admin/variations/companies/${company.id}/toggle`,
+        `${apiUrl}/admin/variations/companies/${company.id}/toggle`,
         {
           method: 'POST',
           headers: {
@@ -373,7 +378,7 @@ export function CompanyManagement({
               </div>
 
               <div>
-                <Label htmlFor="company_email">Company Email</Label>
+                <Label htmlFor="company_email">Company Email (Optional)</Label>
                 <Input
                   id="company_email"
                   type="email"
@@ -389,7 +394,7 @@ export function CompanyManagement({
               </div>
 
               <div>
-                <Label htmlFor="contact_person">Contact Person</Label>
+                <Label htmlFor="contact_person">Contact Person (Optional)</Label>
                 <Input
                   id="contact_person"
                   value={newCompany.contact_person}
@@ -471,6 +476,28 @@ export function CompanyManagement({
                 </p>
               </div>
 
+              {/* Enable Company Field Toggle */}
+              <div className="space-y-3 border-t pt-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label htmlFor="enable_company_field">Enable Company Field</Label>
+                    <p className="text-sm text-muted-foreground">
+                      When enabled, users accessing this survey link will see a company/employer dropdown in their profile form.
+                    </p>
+                  </div>
+                  <Switch
+                    id="enable_company_field"
+                    checked={newCompany.enable_company_field !== false}
+                    onCheckedChange={(checked) =>
+                      setNewCompany((prev) => ({
+                        ...prev,
+                        enable_company_field: checked,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+
               <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
@@ -480,11 +507,7 @@ export function CompanyManagement({
                 </Button>
                 <Button
                   onClick={handleCreateCompany}
-                  disabled={
-                    !newCompany.company_name ||
-                    !newCompany.company_email ||
-                    !newCompany.contact_person
-                  }
+                  disabled={!newCompany.company_name.trim()}
                 >
                   Create Company
                 </Button>
@@ -521,7 +544,7 @@ export function CompanyManagement({
             </div>
 
             <div>
-              <Label htmlFor="edit_company_email">Company Email</Label>
+              <Label htmlFor="edit_company_email">Company Email (Optional)</Label>
               <Input
                 id="edit_company_email"
                 type="email"
@@ -537,7 +560,7 @@ export function CompanyManagement({
             </div>
 
             <div>
-              <Label htmlFor="edit_contact_person">Contact Person</Label>
+              <Label htmlFor="edit_contact_person">Contact Person (Optional)</Label>
               <Input
                 id="edit_contact_person"
                 value={newCompany.contact_person}
@@ -619,6 +642,28 @@ export function CompanyManagement({
               </p>
             </div>
 
+            {/* Enable Company Field Toggle */}
+            <div className="space-y-3 border-t pt-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label htmlFor="edit_enable_company_field">Enable Company Field on Profile Page</Label>
+                  <p className="text-sm text-muted-foreground">
+                    When enabled, users will see a company/employer dropdown in the profile form
+                  </p>
+                </div>
+                <Switch
+                  id="edit_enable_company_field"
+                  checked={newCompany.enable_company_field !== false}
+                  onCheckedChange={(checked) =>
+                    setNewCompany((prev) => ({
+                      ...prev,
+                      enable_company_field: checked,
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
             <div className="flex justify-end gap-2">
               <Button
                 variant="outline"
@@ -631,11 +676,7 @@ export function CompanyManagement({
               </Button>
               <Button
                 onClick={handleUpdateCompany}
-                disabled={
-                  !newCompany.company_name ||
-                  !newCompany.company_email ||
-                  !newCompany.contact_person
-                }
+                disabled={!newCompany.company_name.trim()}
               >
                 Update Company
               </Button>

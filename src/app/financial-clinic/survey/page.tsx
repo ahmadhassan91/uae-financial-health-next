@@ -188,12 +188,14 @@ export default function FinancialClinicSurveyPage() {
       );
 
       console.log('Survey submitted successfully:', result);
+      console.log('🔍 survey_response_id in result:', result.survey_response_id);
 
       // Mark survey as completed (remove from incomplete)
       await incompleteSurveyService.markCompleted();
       
       // Store result in localStorage for results page
       localStorage.setItem('financialClinicResult', JSON.stringify(result));
+      console.log('💾 Stored result in localStorage with survey_response_id:', result.survey_response_id);
 
       // Navigate to results page
       router.push('/financial-clinic/results');

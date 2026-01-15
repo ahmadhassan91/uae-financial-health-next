@@ -78,6 +78,9 @@ export default function FinancialClinicPage({
     companyName?: string;
   } | null>(null);
 
+  // Track if company field should be enabled on profile page
+  const [enableCompanyField, setEnableCompanyField] = useState<boolean>(true);
+
   const [companyOptions, setCompanyOptions] = useState<
     { id: number; name: string }[]
   >([]);
@@ -227,7 +230,7 @@ export default function FinancialClinicPage({
     const companyUrl = searchParams.get("company");
 
     if (companyUrl) {
-      // Fetch company name to display
+      // Fetch company name to display and check if company field should be enabled
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies/by-url/${companyUrl}`)
         .then((res) => res.json())
         .then((data) => {
@@ -235,12 +238,16 @@ export default function FinancialClinicPage({
             active: true,
             companyName: data.company_name,
           });
+          // Set the enable_company_field setting (default to true if not present)
+          setEnableCompanyField(data.enable_company_field !== false);
         })
         .catch(() => {
           setCompanyTracking({ active: true }); // Show generic message if fetch fails
+          setEnableCompanyField(true); // Default to enabled on error
         });
     } else {
       setCompanyTracking({ active: false });
+      setEnableCompanyField(true); // Default to enabled when no company URL
     }
   }, []);
 
@@ -472,8 +479,8 @@ export default function FinancialClinicPage({
       hasError = true;
     }
 
-    // Validate company field - only if companies exist
-    if (companyOptions && companyOptions.length > 0) {
+    // Validate company field - only if companies exist AND company field is enabled
+    if (companyOptions && companyOptions.length > 0 && enableCompanyField) {
       if (!profile.company_name?.trim()) {
         setCompanyError(language === "ar" ? "الشركة مطلوبة" : "Company is required");
         hasError = true;
@@ -998,8 +1005,8 @@ export default function FinancialClinicPage({
             </div>
           </div>
 
-          {/* Company Selection - Only show if companies exist */}
-          {companyOptions && companyOptions.length > 0 && (
+          {/* Company Selection - Only show if companies exist AND company field is enabled */}
+          {companyOptions && companyOptions.length > 0 && enableCompanyField && (
             <div className="grid grid-cols-1 w-full">
               <div className="w-full relative">
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">

@@ -513,6 +513,7 @@ export function FinancialClinicResults({
       <ConsultationRequestModal
         isOpen={isConsultationModalOpen}
         onClose={() => setIsConsultationModalOpen(false)}
+        surveyResponseId={result.survey_response_id ?? undefined}
       />
     </div>
   );

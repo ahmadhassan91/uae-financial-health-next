@@ -31,8 +31,9 @@ export function CompanyVariationControl() {
     setLoading(true);
     try {
       const token = localStorage.getItem('admin_access_token');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
       const response = await fetch(
-        `/api/v1/admin/variations/companies`,
+        `${apiUrl}/admin/variations/companies`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -82,8 +83,9 @@ export function CompanyVariationControl() {
     setUpdating(companyId);
     try {
       const token = localStorage.getItem('admin_access_token');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
       const response = await fetch(
-        `/api/v1/admin/variations/companies/${companyId}/toggle`,
+        `${apiUrl}/admin/variations/companies/${companyId}/toggle`,
         {
           method: 'POST',
           headers: {

@@ -316,6 +316,29 @@ export function CompaniesDetails() {
     document.body.removeChild(a);
   };
 
+  const downloadCompaniesCSV = async () => {
+    try {
+      toast.info('Preparing CSV download...');
+      const response = await adminApi.downloadCompaniesCSV();
+      
+      // Create blob and download
+      const blob = new Blob([response], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      a.download = `companies_export_${timestamp}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success('Companies exported successfully!');
+    } catch (error) {
+      console.error('Error downloading companies CSV:', error);
+      toast.error('Failed to download companies CSV');
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Companies Module Toggle */}
@@ -425,6 +448,16 @@ export function CompaniesDetails() {
             >
               <Download className="w-4 h-4" />
               Download Sample CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={downloadCompaniesCSV}
+              className="flex items-center gap-2"
+              disabled={totalCompanies === 0}
+            >
+              <Download className="w-4 h-4" />
+              Download Companies ({totalCompanies})
             </Button>
           </div>
         </CardContent>

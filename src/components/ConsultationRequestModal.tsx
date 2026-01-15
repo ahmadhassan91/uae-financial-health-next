@@ -27,6 +27,7 @@ import { toast } from "sonner";
 interface ConsultationRequestModalProps {
   onClose: () => void;
   isOpen: boolean;
+  surveyResponseId?: number;  // Optional survey response ID to link consultation to submission
 }
 
 interface ConsultationFormData {
@@ -41,6 +42,7 @@ interface ConsultationFormData {
 export function ConsultationRequestModal({
   onClose,
   isOpen,
+  surveyResponseId,
 }: ConsultationRequestModalProps) {
   const { language } = useLocalization();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -187,15 +189,24 @@ export function ConsultationRequestModal({
     try {
       const apiUrl =
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+      
+      // Debug logging
+      console.log("🔍 Consultation Request - surveyResponseId:", surveyResponseId);
+      
+      const requestBody = {
+        ...formData,
+        source: "financial_clinic_results",
+        survey_response_id: surveyResponseId,  // Link to survey submission for leads_requested tracking
+      };
+      
+      console.log("📤 Sending consultation request:", requestBody);
+      
       const response = await fetch(`${apiUrl}/consultations/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...formData,
-          source: "financial_clinic_results",
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {

@@ -630,6 +630,25 @@ export const adminApi = {
     return response.json();
   },
 
+  async downloadCompaniesCSV(): Promise<string> {
+    const response = await fetch(
+      `${getBackendUrl()}/companies-details/export-csv`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_access_token")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.detail || 'Failed to download companies CSV');
+    }
+
+    return response.text();
+  },
+
   async createCompany(companyData: {
     company_name: string;
     company_email?: string;

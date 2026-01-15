@@ -31,6 +31,8 @@ export default function FinancialClinicResultsPage() {
       if (storedResult) {
         try {
           const parsedResult = JSON.parse(storedResult);
+          console.log('📥 Loaded result from localStorage:', parsedResult);
+          console.log('🔍 survey_response_id:', parsedResult.survey_response_id);
           setResult(parsedResult);
 
           if (storedProfile) {
