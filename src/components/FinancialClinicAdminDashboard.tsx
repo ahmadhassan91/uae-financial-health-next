@@ -210,7 +210,7 @@ export function FinancialClinicAdminDashboard({
         adminApi.getScoreAnalyticsTable(filters, dateParams),
         adminApi.getGenderBreakdown(filters, dateParams),
       ]);
-      
+
       console.log('🔧 [DEBUG] API Results:', {
         genBreakdown: results[0],
         emirBreakdown: results[1],
@@ -247,20 +247,20 @@ export function FinancialClinicAdminDashboard({
           return null;
         }
       }) as [
-        OverviewMetrics | null,
-        ScoreDistribution[] | null,
-        CategoryPerformance[] | null,
-        TimeSeriesData[] | null,
-        NationalityBreakdown[] | null,
-        AgeBreakdown[] | null,
-        { status: string; count: number }[] | null,
-        { emirate: string; count: number }[] | null,
-        { count_label: string; count: number; average_score: number }[] | null,
-        { range: string; count: number; average_score: number }[] | null,
-        CompanyAnalytics[] | null,
-        ScoreAnalyticsResponse | null,
-        { gender: string; count: number; percentage: number }[] | null
-      ];
+          OverviewMetrics | null,
+          ScoreDistribution[] | null,
+          CategoryPerformance[] | null,
+          TimeSeriesData[] | null,
+          NationalityBreakdown[] | null,
+          AgeBreakdown[] | null,
+          { status: string; count: number }[] | null,
+          { emirate: string; count: number }[] | null,
+          { count_label: string; count: number; average_score: number }[] | null,
+          { range: string; count: number; average_score: number }[] | null,
+          CompanyAnalytics[] | null,
+          ScoreAnalyticsResponse | null,
+          { gender: string; count: number; percentage: number }[] | null
+        ];
 
       // Set data only if successfully loaded
       if (metrics) setOverviewMetrics(metrics);
@@ -317,9 +317,8 @@ export function FinancialClinicAdminDashboard({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `financial-clinic-export-${
-        new Date().toISOString().split("T")[0]
-      }.${format === "csv" ? "csv" : "xlsx"}`;
+      a.download = `financial-clinic-export-${new Date().toISOString().split("T")[0]
+        }.${format === "csv" ? "csv" : "xlsx"}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -374,11 +373,10 @@ export function FinancialClinicAdminDashboard({
           className={`
           fixed lg:sticky top-0 h-screen overflow-y-auto border-r bg-background z-50
           w-80 transition-transform duration-300 ease-in-out
-          ${
-            isSidebarOpen
+          ${isSidebarOpen
               ? "translate-x-0"
               : "-translate-x-full lg:translate-x-0"
-          }
+            }
         `}
         >
           <div className="p-4 border-b flex items-center justify-between">
@@ -542,11 +540,12 @@ export function FinancialClinicAdminDashboard({
             >
               <div className="w-full overflow-x-auto pb-2">
                 <TabsList
-                  className={`inline-flex w-auto min-w-full lg:grid ${
-                    user?.admin_role === "view_only"
+                  className={`inline-flex w-auto min-w-full lg:grid ${user?.admin_role === "view_only"
+                    ? "lg:grid-cols-5"
+                    : user?.admin_role === "ops"
                       ? "lg:grid-cols-5"
                       : "lg:grid-cols-7"
-                  } gap-1`}
+                    } gap-1`}
                 >
                   <TabsTrigger
                     value="overview"
@@ -560,7 +559,8 @@ export function FinancialClinicAdminDashboard({
                   >
                     Submissions
                   </TabsTrigger>
-                  {user?.admin_role !== "view_only" && (
+                  {/* Unique URLs - FULL ADMIN ONLY */}
+                  {user?.admin_role === "full" && (
                     <TabsTrigger
                       value="companies"
                       className="text-xs sm:text-sm whitespace-nowrap"
@@ -568,12 +568,15 @@ export function FinancialClinicAdminDashboard({
                       Unique URLs
                     </TabsTrigger>
                   )}
-                  <TabsTrigger
-                    value="companies-details"
-                    className="text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    Company Management
-                  </TabsTrigger>
+                  {/* Company Management - FULL & OPS ONLY */}
+                  {user?.admin_role !== "view_only" && (
+                    <TabsTrigger
+                      value="companies-details"
+                      className="text-xs sm:text-sm whitespace-nowrap"
+                    >
+                      Company Management
+                    </TabsTrigger>
+                  )}
                   <TabsTrigger
                     value="leads"
                     className="text-xs sm:text-sm whitespace-nowrap"
@@ -586,7 +589,8 @@ export function FinancialClinicAdminDashboard({
                   >
                     Incomplete
                   </TabsTrigger>
-                  {user?.admin_role !== "view_only" && (
+                  {/* System - FULL ADMIN ONLY */}
+                  {user?.admin_role === "full" && (
                     <TabsTrigger
                       value="system"
                       className="text-xs sm:text-sm whitespace-nowrap"
@@ -750,7 +754,7 @@ export function FinancialClinicAdminDashboard({
               </TabsContent>
 
               {/* Companies Tab - Only for full admins */}
-              {user?.admin_role !== "view_only" && (
+              {user?.admin_role === "full" && (
                 <TabsContent value="companies" className="space-y-6">
                   {companiesModuleEnabled && companiesAnalytics && (
                     <CompaniesAnalyticsTable data={companiesAnalytics} />
@@ -771,10 +775,12 @@ export function FinancialClinicAdminDashboard({
                 <LeadsManagement />
               </TabsContent>
 
-              {/* Companies Details Tab */}
-              <TabsContent value="companies-details" className="space-y-6">
-                <CompaniesDetails />
-              </TabsContent>
+              {/* Companies Details Tab - Full & Ops only */}
+              {user?.admin_role !== "view_only" && (
+                <TabsContent value="companies-details" className="space-y-6">
+                  <CompaniesDetails />
+                </TabsContent>
+              )}
 
               {/* Incomplete Tab */}
               <TabsContent value="incomplete" className="space-y-6">
@@ -782,7 +788,7 @@ export function FinancialClinicAdminDashboard({
               </TabsContent>
 
               {/* System Tab - Only for full admins */}
-              {user?.admin_role !== "view_only" && (
+              {user?.admin_role === "full" && (
                 <TabsContent value="system" className="space-y-6">
                   <SystemManagement />
                 </TabsContent>
