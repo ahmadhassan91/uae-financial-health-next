@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import { DatePickerComponent } from "@/components/ui/date-picker";
 import {
   Search,
   Download,
@@ -122,11 +123,30 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
+  const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
   const pageSize = 20;
 
   useEffect(() => {
     loadCompanies();
   }, []);
+
+  // Sync dateParams prop to local date state
+  useEffect(() => {
+    if (dateParams?.startDate) {
+      setDateFrom(new Date(dateParams.startDate));
+    } else {
+      setDateFrom(undefined);
+    }
+
+    if (dateParams?.endDate) {
+      const end = new Date(dateParams.endDate);
+      // Determine if we need to adjust the end date based on time or if it's just a date string
+      setDateTo(end);
+    } else {
+      setDateTo(undefined);
+    }
+  }, [dateParams]);
 
   useEffect(() => {
     const filtered = companies.filter(company =>
@@ -138,7 +158,7 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
   useEffect(() => {
     loadSubmissions();
     loadStats();
-  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, uniqueUrlFilter, incomeFilter, ageGroupFilter, dateParams]);
+  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, uniqueUrlFilter, incomeFilter, ageGroupFilter, dateFrom, dateTo]);
 
   const loadCompanies = async () => {
     try {
@@ -169,9 +189,9 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
-      // Apply date filters from props
-      if (dateParams?.startDate) params.append('date_from', dateParams.startDate);
-      if (dateParams?.endDate) params.append('date_to', dateParams.endDate);
+      // Apply date filters from local state
+      if (dateFrom) params.append('date_from', dateFrom.toISOString());
+      if (dateTo) params.append('date_to', dateTo.toISOString());
 
       console.log('🔧 [DEBUG] Loading submissions with params:', params.toString());
       const response = await apiClient.request(`/admin/simple/submissions?${params}`) as any;
@@ -207,9 +227,9 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
-      // Apply date filters from props
-      if (dateParams?.startDate) params.append('date_from', dateParams.startDate);
-      if (dateParams?.endDate) params.append('date_to', dateParams.endDate);
+      // Apply date filters from local state
+      if (dateFrom) params.append('date_from', dateFrom.toISOString());
+      if (dateTo) params.append('date_to', dateTo.toISOString());
 
       const queryString = params.toString();
       const url = queryString ? `/admin/simple/submissions/stats?${queryString}` : '/admin/simple/submissions/stats';
@@ -249,6 +269,8 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
       if (uniqueUrlFilter !== 'all') params.append('company_id', uniqueUrlFilter);
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
+      if (dateFrom) params.append('date_from', dateFrom.toISOString());
+      if (dateTo) params.append('date_to', dateTo.toISOString());
 
       const token = localStorage.getItem('admin_access_token');
       const response = await fetch(
@@ -403,6 +425,26 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
         <CardContent>
           {/* Filters */}
           <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4 mb-2">
+              <div className="w-full sm:w-[200px]">
+                <DatePickerComponent
+                  date={dateFrom}
+                  onSelect={setDateFrom}
+                  placeholder="Date From"
+                  maxDate={dateTo || new Date()}
+                />
+              </div>
+              <div className="w-full sm:w-[200px]">
+                <DatePickerComponent
+                  date={dateTo}
+                  onSelect={setDateTo}
+                  placeholder="Date To"
+                  minDate={dateFrom}
+                  maxDate={new Date()}
+                />
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
