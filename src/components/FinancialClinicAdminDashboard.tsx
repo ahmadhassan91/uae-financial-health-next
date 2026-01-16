@@ -750,7 +750,7 @@ export function FinancialClinicAdminDashboard({
 
               {/* Submissions Tab */}
               <TabsContent value="submissions">
-                <SubmissionsTable />
+                <SubmissionsTable dateParams={dateParams} />
               </TabsContent>
 
               {/* Companies Tab - Only for full admins */}

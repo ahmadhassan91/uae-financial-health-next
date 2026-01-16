@@ -43,6 +43,7 @@ import {
   Building,
 } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
+import { DateRangeParams } from '@/lib/admin-api';
 
 interface FinancialClinicSubmission {
   id: number;
@@ -96,7 +97,11 @@ interface UniqueUrl {
   unique_url: string;
 }
 
-export function SubmissionsTable() {
+interface SubmissionsTableProps {
+  dateParams?: DateRangeParams;
+}
+
+export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
   const [submissions, setSubmissions] = useState<FinancialClinicSubmission[]>([]);
   const [stats, setStats] = useState<SubmissionStats | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]); // From CompanyDetails table
@@ -124,7 +129,7 @@ export function SubmissionsTable() {
   }, []);
 
   useEffect(() => {
-    const filtered = companies.filter(company => 
+    const filtered = companies.filter(company =>
       company.name.toLowerCase().includes(companySearch.toLowerCase())
     );
     setFilteredCompanies(filtered);
@@ -133,7 +138,7 @@ export function SubmissionsTable() {
   useEffect(() => {
     loadSubmissions();
     loadStats();
-  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, uniqueUrlFilter, incomeFilter, ageGroupFilter]);
+  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, uniqueUrlFilter, incomeFilter, ageGroupFilter, dateParams]);
 
   const loadCompanies = async () => {
     try {
@@ -161,12 +166,17 @@ export function SubmissionsTable() {
       if (companyFilter !== 'all') params.append('company_name', companyFilter); // Changed to company_name for CompanyDetails
       if (uniqueUrlFilter !== 'all') params.append('company_id', uniqueUrlFilter); // Unique URL uses company_id
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
+      if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
+
+      // Apply date filters from props
+      if (dateParams?.startDate) params.append('date_from', dateParams.startDate);
+      if (dateParams?.endDate) params.append('date_to', dateParams.endDate);
 
       console.log('🔧 [DEBUG] Loading submissions with params:', params.toString());
       const response = await apiClient.request(`/admin/simple/submissions?${params}`) as any;
       console.log('🔧 [DEBUG] Submissions response:', response);
-      
+
       if (response.submissions && response.submissions.length > 0) {
         console.log('🔧 [DEBUG] First submission company data:', {
           id: response.submissions[0].id,
@@ -174,7 +184,7 @@ export function SubmissionsTable() {
           profile_name: response.submissions[0].profile_name
         });
       }
-      
+
       setSubmissions(response.submissions || []);
       setTotalPages(response.total_pages || 1);
     } catch (error) {
@@ -196,7 +206,11 @@ export function SubmissionsTable() {
       if (uniqueUrlFilter !== 'all') params.append('company_id', uniqueUrlFilter);
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
-      
+
+      // Apply date filters from props
+      if (dateParams?.startDate) params.append('date_from', dateParams.startDate);
+      if (dateParams?.endDate) params.append('date_to', dateParams.endDate);
+
       const queryString = params.toString();
       const url = queryString ? `/admin/simple/submissions/stats?${queryString}` : '/admin/simple/submissions/stats';
       const data = await apiClient.request(url) as any;
@@ -451,7 +465,7 @@ export function SubmissionsTable() {
                 />
                 {showCompanyDropdown && (
                   <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-                    <div 
+                    <div
                       className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer"
                       onClick={() => {
                         setCompanyFilter('all');
@@ -474,7 +488,7 @@ export function SubmissionsTable() {
                         {company.name}
                       </div>
                     ))}
-                    <div 
+                    <div
                       className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer border-t border-gray-200"
                       onClick={() => {
                         setCompanyFilter('other');
