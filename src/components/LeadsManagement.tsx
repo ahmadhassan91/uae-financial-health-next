@@ -56,6 +56,7 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { ScheduleEmailModal } from "@/components/ScheduleEmailModal";
+import { DatePickerComponent } from "@/components/ui/date-picker";
 
 interface ConsultationRequest {
   id: number;
@@ -110,6 +111,8 @@ export function LeadsManagement() {
     []
   );
   const [isScheduleEmailOpen, setIsScheduleEmailOpen] = useState(false);
+  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
+  const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
 
   const loadLeads = async () => {
     try {
@@ -123,6 +126,8 @@ export function LeadsManagement() {
       if (ageGroupFilter !== "all") params.append("age_group", ageGroupFilter);
       if (companyFilter !== "all") params.append("company_id", companyFilter);
       if (searchTerm) params.append("search", searchTerm);
+      if (dateFrom) params.append("date_from", dateFrom.toISOString());
+      if (dateTo) params.append("date_to", dateTo.toISOString());
 
       const data = (await apiClient.request(
         `/consultations/admin/list?${params}`
@@ -173,6 +178,8 @@ export function LeadsManagement() {
     ageGroupFilter,
     companyFilter,
     searchTerm,
+    dateFrom,
+    dateTo
   ]);
 
   const handleStatusUpdate = async (
@@ -224,6 +231,8 @@ export function LeadsManagement() {
       if (statusFilter !== "all") params.append("status", statusFilter);
       if (sourceFilter !== "all") params.append("source", sourceFilter);
       if (searchTerm) params.append("search", searchTerm);
+      if (dateFrom) params.append("date_from", dateFrom.toISOString());
+      if (dateTo) params.append("date_to", dateTo.toISOString());
 
       const token = localStorage.getItem("admin_access_token");
       const response = await fetch(
@@ -240,9 +249,8 @@ export function LeadsManagement() {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `consultation-leads-${
-          new Date().toISOString().split("T")[0]
-        }.csv`;
+        a.download = `consultation-leads-${new Date().toISOString().split("T")[0]
+          }.csv`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -430,6 +438,26 @@ export function LeadsManagement() {
         <CardContent>
           {/* Filters */}
           <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="w-full sm:w-[200px]">
+                <DatePickerComponent
+                  date={dateFrom}
+                  onSelect={setDateFrom}
+                  placeholder="Date From"
+                  maxDate={dateTo || new Date()}
+                />
+              </div>
+              <div className="w-full sm:w-[200px]">
+                <DatePickerComponent
+                  date={dateTo}
+                  onSelect={setDateTo}
+                  placeholder="Date To"
+                  minDate={dateFrom}
+                  maxDate={new Date()}
+                />
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <Input
