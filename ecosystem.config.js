@@ -29,6 +29,7 @@ module.exports = {
             env: {
                 NODE_ENV: 'production',
                 PORT: 3000,
+                STATIC_EXPORT: 'false', // Ensure we use standard build
             },
 
             // Production-specific settings

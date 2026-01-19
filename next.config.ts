@@ -1,12 +1,13 @@
 import type { NextConfig } from "next";
 
 // Check if we should build for static export (on-prem deployment)
+// DEFAULT TO FALSE for standard production server
 const isStaticExport = process.env.STATIC_EXPORT === 'true';
 
 const nextConfig: NextConfig = {
   // Enable static export for on-prem deployment when STATIC_EXPORT=true
   output: isStaticExport ? 'export' : undefined,
-  
+
   // Exclude dynamic pages from static generation
   ...(isStaticExport && {
     trailingSlash: true,
