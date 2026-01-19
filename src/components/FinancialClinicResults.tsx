@@ -80,6 +80,7 @@ export function FinancialClinicResults({
         ar: "إدارة النفقات الشهرية",
       },
       "Savings Habit": { en: "Savings Habit", ar: "السلوك الادخاري" },
+      "Saving Habits": { en: "Saving Habits", ar: "السلوك الادخاري" },
       "Emergency Savings": { en: "Emergency Savings", ar: "مدخرات الطوارئ" },
       "Debt Management": { en: "Debt Management", ar: "إدارة الديون" },
       "Retirement Planning": {
@@ -188,10 +189,10 @@ export function FinancialClinicResults({
                 result.total_score >= 80
                   ? "#6cc922"
                   : result.total_score >= 60
-                  ? "#fca924"
-                  : result.total_score >= 30
-                  ? "#fe6521"
-                  : "#f00c01",
+                    ? "#fca924"
+                    : result.total_score >= 30
+                      ? "#fe6521"
+                      : "#f00c01",
             }}
           >
             {getScoreBandText(result.total_score)}
@@ -204,14 +205,14 @@ export function FinancialClinicResults({
                 result.total_score >= 80
                   ? "#6cc922"
                   : result.total_score >= 60
-                  ? "#fca924"
-                  : result.total_score >= 30
-                  ? "#fe6521"
-                  : "#f00c01",
+                    ? "#fca924"
+                    : result.total_score >= 30
+                      ? "#fe6521"
+                      : "#f00c01",
             }}
-            // style={{
-            //   color: "#5E5E5E",
-            // }}
+          // style={{
+          //   color: "#5E5E5E",
+          // }}
           >
             {Math.round(result.total_score)}%
           </div>
@@ -237,13 +238,11 @@ export function FinancialClinicResults({
                 {SCORE_BANDS.map((band, index) => (
                   <div
                     key={index}
-                    className={`flex flex-1 h-[50px] sm:h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-1 sm:gap-2.5 p-1 sm:p-1.5 md:p-2.5 ${
-                      band.bgColor
-                    } ${
-                      index < SCORE_BANDS.length - 1
+                    className={`flex flex-1 h-[50px] sm:h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-1 sm:gap-2.5 p-1 sm:p-1.5 md:p-2.5 ${band.bgColor
+                      } ${index < SCORE_BANDS.length - 1
                         ? "border-r-2 [border-right-style:solid] border-white"
                         : ""
-                    }`}
+                      }`}
                   >
                     <div className="font-semibold text-white text-xs sm:text-sm md:text-lg lg:text-2xl text-center tracking-[0] leading-tight md:leading-7 px-0.5">
                       {band.range}
@@ -294,6 +293,7 @@ export function FinancialClinicResults({
                 // Fixed order as per design specification
                 const categoryOrder = [
                   "Income Stream",
+                  "Saving Habits",
                   "Savings Habit",
                   "Emergency Savings",
                   "Debt Management",
@@ -321,14 +321,12 @@ export function FinancialClinicResults({
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6 w-full">
                       {/* Title and description */}
                       <div
-                        className={`flex flex-col gap-1 w-full md:flex-shrink-0 ${
-                          isRTL ? "md:w-[190px]" : "md:w-[300px]"
-                        }`}
+                        className={`flex flex-col gap-1 w-full md:flex-shrink-0 ${isRTL ? "md:w-[190px]" : "md:w-[300px]"
+                          }`}
                       >
                         <div
-                          className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${
-                            isRTL ? "" : ""
-                          }`}
+                          className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${isRTL ? "" : ""
+                            }`}
                         >
                           {getCategoryTranslation(categoryName)}
                         </div>
@@ -350,8 +348,8 @@ export function FinancialClinicResults({
 
                     {index <
                       Object.entries(result.category_scores).length - 1 && (
-                      <Separator className="w-full mt-3" />
-                    )}
+                        <Separator className="w-full mt-3" />
+                      )}
                   </div>
                 );
               })}
@@ -383,41 +381,67 @@ export function FinancialClinicResults({
           <Card className="flex flex-col items-center gap-4 md:gap-[19px] p-4 md:p-8 lg:p-[42px] w-full bg-[#f8fbfd] border border-solid border-[#bdcdd6]">
             <CardContent className="p-0 flex flex-col items-center gap-4 md:gap-[19px] w-full">
               {result.insights.length > 0 ? (
-                result.insights.slice(0, 5).map((insight, index) => (
-                  <div
-                    key={index}
-                    className={`flex gap-2 w-full items-start ${
-                      isRTL ? "flex-row-reverse" : "flex-row"
-                    }`}
-                  >
-                    {!isRTL && (
-                      <div className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7 flex-shrink-0">
-                        {index + 1}.
-                      </div>
-                    )}
+                result.insights.slice(0, 5).map((insight, index) => {
+                  const text =
+                    language === "ar"
+                      ? insight.text_ar || insight.text
+                      : insight.text;
+                  const products = [
+                    "My Million",
+                    "myPlan",
+                    "Second Salary Plan",
+                    "Saving Bonds",
+                    "Ahed",
+                    "Tejouri",
+                    "الراتب الإضافي",
+                    "صكوك الادخار",
+                    "عهد",
+                    "Tejouri", // Duplicate just in case
+                  ];
+                  // Escape special regex chars if any (none here really, maybe spaces)
+                  const regex = new RegExp(`(${products.join("|")})`, "g");
+                  const parts = text.split(regex);
 
+                  return (
                     <div
-                      className={`flex-1 ${
-                        isRTL ? "flex-row-reverse" : "flex-row"
-                      }`}
+                      key={index}
+                      className={`flex gap-2 w-full items-start ${isRTL ? "flex-row-reverse" : "flex-row"
+                        }`}
                     >
-                      <span className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
-                        {translateInsightCategory(insight.category)}:{" "}
-                      </span>
-                      <span className="text-[#737c84] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
-                        {language === "ar"
-                          ? insight.text_ar || insight.text
-                          : insight.text}
-                      </span>
-                    </div>
+                      {!isRTL && (
+                        <div className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7 flex-shrink-0">
+                          {index + 1}.
+                        </div>
+                      )}
 
-                    {isRTL && (
-                      <div className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7 flex-shrink-0">
-                        {index + 1}.
+                      <div
+                        className={`flex-1 ${isRTL ? "flex-row-reverse" : "flex-row"
+                          }`}
+                      >
+                        <span className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
+                          {translateInsightCategory(insight.category)}:{" "}
+                        </span>
+                        <span className="text-[#737c84] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
+                          {parts.map((part, i) =>
+                            i % 2 === 1 ? (
+                              <b key={i} className="font-bold text-[#5e5e5e]">
+                                {part}
+                              </b>
+                            ) : (
+                              part
+                            )
+                          )}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                ))
+
+                      {isRTL && (
+                        <div className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7 flex-shrink-0">
+                          {index + 1}.
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
               ) : (
                 <div className="text-center text-[#737c84] text-base md:text-lg">
                   {language === "ar"
@@ -430,7 +454,7 @@ export function FinancialClinicResults({
         </div>
 
         {/* Main Action Buttons - Design Spec */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]" style={{marginTop:"38pxF"}}>
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]" style={{ marginTop: "38pxF" }}>
           <Button
             onClick={() => setIsConsultationModalOpen(true)}
             className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"
@@ -491,8 +515,8 @@ export function FinancialClinicResults({
                 ? "عرض تاريخ التقييمات"
                 : "View Assessment History"
               : language === "ar"
-              ? "الوصول إلى السجل"
-              : "Access My History"}
+                ? "الوصول إلى السجل"
+                : "Access My History"}
           </Button>
 
           {onRetake && (
