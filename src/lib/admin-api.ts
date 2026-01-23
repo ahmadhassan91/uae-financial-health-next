@@ -57,7 +57,7 @@ export interface DemographicFilters {
 }
 
 export interface DateRangeParams {
-  dateRange?: "7d" | "30d" | "90d" | "1y" | "ytd" | "all";
+  dateRange?: "7d" | "30d" | "90d" | "1y" | "ytd" | "all" | "custom";
   startDate?: string;
   endDate?: string;
 }
@@ -610,7 +610,7 @@ export const adminApi = {
   }> {
     const formData = new FormData();
     formData.append('file', file);
-    
+
     const response = await fetch(
       `${getBackendUrl()}/companies-details/upload-csv`,
       {
@@ -662,7 +662,7 @@ export const adminApi = {
     if (companyData.contact_person) formData.append('contact_person', companyData.contact_person);
     if (companyData.phone_number) formData.append('phone_number', companyData.phone_number);
     if (companyData.additional_details) formData.append('additional_details', companyData.additional_details);
-    
+
     const response = await fetch(
       `${getBackendUrl()}/companies-details/create-company`,
       {
@@ -685,7 +685,7 @@ export const adminApi = {
   async createCompanyFromOther(companyName: string): Promise<any> {
     const formData = new FormData();
     formData.append('company_name', companyName);
-    
+
     const response = await fetch(
       `${getBackendUrl()}/companies-details/create-from-other`,
       {
@@ -717,12 +717,12 @@ export const adminApi = {
     if (options?.search) params.append('search', options.search);
     if (options?.skip !== undefined) params.append('skip', options.skip.toString());
     if (options?.limit !== undefined) params.append('limit', options.limit.toString());
-    
+
     const response = await fetch(
       `${getBackendUrl()}/companies-details/companies?${params}`,
       { headers: getAuthHeaders() }
     );
-    
+
     if (!response.ok) {
       if (response.status === 500) {
         const errorText = await response.text();
@@ -743,18 +743,18 @@ export const adminApi = {
         body: JSON.stringify(data),
       }
     );
-    
+
     if (!response.ok) throw new Error("Failed to update company");
     return await response.json();
   },
 
-  
+
   async searchCompanies(query: string, limit: number = 10): Promise<any[]> {
     const response = await fetch(
       `${getBackendUrl()}/companies-details/search-companies?q=${encodeURIComponent(query)}&limit=${limit}`,
       { headers: getAuthHeaders() }
     );
-    
+
     if (!response.ok) throw new Error("Failed to search companies");
     return await response.json();
   },
@@ -776,7 +776,7 @@ export const adminApi = {
     Object.entries(profileData).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
-    
+
     const response = await fetch(
       `${getBackendUrl()}/companies-details/customer-profile`,
       {
@@ -787,7 +787,7 @@ export const adminApi = {
         body: formData,
       }
     );
-    
+
     if (!response.ok) throw new Error("Failed to create customer profile");
     return await response.json();
   },
@@ -795,22 +795,22 @@ export const adminApi = {
   async getCustomerProfiles(companyId?: number): Promise<any[]> {
     const params = new URLSearchParams();
     if (companyId) params.append('company_id', companyId.toString());
-    
+
     const response = await fetch(
       `${getBackendUrl()}/companies-details/customer-profiles?${params}`,
       { headers: getAuthHeaders() }
     );
-    
+
     if (!response.ok) throw new Error("Failed to fetch customer profiles");
     return await response.json();
   },
 
   async toggleCompanyStatus(companyId: number): Promise<any> {
     console.log('🔧 [DEBUG] Admin API: Toggling company status:', companyId);
-    
+
     const url = `${getBackendUrl()}/companies-details/${companyId}/toggle-status`;
     console.log('🔧 [DEBUG] Toggle URL:', url);
-    
+
     const response = await fetch(
       url,
       {
@@ -818,15 +818,15 @@ export const adminApi = {
         headers: getAuthHeaders()
       }
     );
-    
+
     console.log('🔧 [DEBUG] Toggle response status:', response.status);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('🔧 [DEBUG] Toggle error response:', errorText);
       throw new Error(`Failed to toggle company status: ${errorText}`);
     }
-    
+
     const result = await response.json();
     console.log('🔧 [DEBUG] Toggle response data:', result);
     return result;
@@ -834,10 +834,10 @@ export const adminApi = {
 
   async deleteCompany(companyId: string | number): Promise<any> {
     console.log('🔧 [DEBUG] Admin API: Deleting company:', companyId);
-    
+
     const url = `${getBackendUrl()}/companies-details/${companyId}`;
     console.log('🔧 [DEBUG] Delete URL:', url);
-    
+
     const response = await fetch(
       url,
       {
@@ -845,15 +845,15 @@ export const adminApi = {
         headers: getAuthHeaders()
       }
     );
-    
+
     console.log('🔧 [DEBUG] Delete response status:', response.status);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('🔧 [DEBUG] Delete error response:', errorText);
       throw new Error(`Failed to delete company: ${errorText}`);
     }
-    
+
     const result = await response.json();
     console.log('🔧 [DEBUG] Delete response data:', result);
     return result;
@@ -865,7 +865,7 @@ export const adminApi = {
       `${getBackendUrl()}/companies-details/module-status`,
       { headers: getAuthHeaders() }
     );
-    
+
     if (!response.ok) throw new Error("Failed to fetch companies module status");
     return await response.json();
   },
@@ -873,7 +873,7 @@ export const adminApi = {
   async updateCompaniesModuleStatus(enabled: boolean): Promise<{ enabled: boolean; message: string }> {
     const formData = new FormData();
     formData.append('enabled', String(enabled));
-    
+
     const response = await fetch(
       `${getBackendUrl()}/companies-details/module-status`,
       {
@@ -884,7 +884,7 @@ export const adminApi = {
         body: formData,
       }
     );
-    
+
     if (!response.ok) throw new Error("Failed to update companies module status");
     return await response.json();
   },

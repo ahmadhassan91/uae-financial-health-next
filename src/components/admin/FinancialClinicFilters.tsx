@@ -67,7 +67,8 @@ export function FinancialClinicFilters({
   const handleDateRangeChange = (value: string) => {
     if (value === "custom") {
       setShowCustomDatePicker(true);
-      onDateParamsChange({ dateRange: undefined });
+      // Don't clear dateRange, keep it as "custom" to show correct selection
+      onDateParamsChange({ dateRange: "custom" });
     } else {
       setShowCustomDatePicker(false);
       onDateParamsChange({ dateRange: value as any });
@@ -78,7 +79,7 @@ export function FinancialClinicFilters({
   const handleCustomDateApply = () => {
     if (startDate && endDate) {
       onDateParamsChange({
-        dateRange: undefined,
+        dateRange: "custom",
         startDate: format(startDate, "yyyy-MM-dd"),
         endDate: format(endDate, "yyyy-MM-dd"),
       });
@@ -402,17 +403,16 @@ export function FinancialClinicFilters({
                     value: company.id.toString(),
                   }))}
                   selected={filters.activeCompanies || []}
-                  onChange={(values) =>
-                    {
-                      console.log('🔧 [DEBUG] Company filter changed to:', values);
-                      console.log('🔧 [DEBUG] Previous filters:', filters);
-                      const newFilters = {
-                        ...filters,
-                        activeCompanies: values.length > 0 ? values : undefined,
-                      };
-                      console.log('🔧 [DEBUG] New filters to send:', newFilters);
-                      onFiltersChange(newFilters);
-                    }
+                  onChange={(values) => {
+                    console.log('🔧 [DEBUG] Company filter changed to:', values);
+                    console.log('🔧 [DEBUG] Previous filters:', filters);
+                    const newFilters = {
+                      ...filters,
+                      activeCompanies: values.length > 0 ? values : undefined,
+                    };
+                    console.log('🔧 [DEBUG] New filters to send:', newFilters);
+                    onFiltersChange(newFilters);
+                  }
                   }
                   placeholder="Select active companies"
                 />
