@@ -143,8 +143,20 @@ export function LeadsManagement() {
 
   const loadStats = async () => {
     try {
+      const params = new URLSearchParams();
+      if (statusFilter !== "all") params.append("status", statusFilter);
+      if (sourceFilter !== "all") params.append("source", sourceFilter);
+      if (incomeFilter !== "all") params.append("income_range", incomeFilter);
+      if (nationalityFilter !== "all")
+        params.append("nationality", nationalityFilter);
+      if (ageGroupFilter !== "all") params.append("age_group", ageGroupFilter);
+      if (companyFilter !== "all") params.append("company_id", companyFilter);
+      if (searchTerm) params.append("search", searchTerm);
+      if (dateFrom) params.append("date_from", dateFrom.toISOString());
+      if (dateTo) params.append("date_to", dateTo.toISOString());
+
       const data = (await apiClient.request(
-        "/consultations/admin/stats"
+        `/consultations/admin/stats?${params}`
       )) as LeadsStats;
       setStats(data);
     } catch (error) {
