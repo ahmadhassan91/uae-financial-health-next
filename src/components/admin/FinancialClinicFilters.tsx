@@ -53,7 +53,7 @@ export function FinancialClinicFilters({
   // Calculate active filter count
   const activeFilterCount = Object.entries(filters).reduce(
     (count, [key, value]) => {
-      if (key === "unique_users_only") {
+      if (key === "unique_users_only" || key === "exclude_unique_urls") {
         return count + (value ? 1 : 0);
       }
       return count + (Array.isArray(value) ? value.length : 0);
@@ -98,7 +98,7 @@ export function FinancialClinicFilters({
 
   // Remove specific filter value
   const removeFilterValue = (
-    filterKey: Exclude<keyof DemographicFilters, "unique_users_only">,
+    filterKey: Exclude<keyof DemographicFilters, "unique_users_only" | "exclude_unique_urls">,
     value: string
   ) => {
     const currentValues = (filters[filterKey] as string[]) || [];
@@ -446,6 +446,31 @@ export function FinancialClinicFilters({
             </p>
           </div>
 
+          {/* Exclude Unique URLs Filter */}
+          <div className="mt-4 pt-4 border-t">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="exclude-unique-urls-filter"
+                checked={filters.exclude_unique_urls || false}
+                onCheckedChange={(checked) => {
+                  onFiltersChange({
+                    ...filters,
+                    exclude_unique_urls: checked === true ? true : undefined,
+                  });
+                }}
+              />
+              <label
+                htmlFor="exclude-unique-urls-filter"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              >
+                Exclude Unique URLs
+              </label>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1 ml-6">
+              Exclude submissions from Company Trackers (unique URLs)
+            </p>
+          </div>
+
           {/* Active Filter Tags */}
           {hasActiveFilters && (
             <div className="mt-4 pt-4 border-t">
@@ -469,9 +494,29 @@ export function FinancialClinicFilters({
                     </button>
                   </Badge>
                 )}
+                {filters.exclude_unique_urls && (
+                  <Badge
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
+                    Exclude Unique URLs
+                    <button
+                      onClick={() =>
+                        onFiltersChange({
+                          ...filters,
+                          exclude_unique_urls: undefined,
+                        })
+                      }
+                      className="ml-1 hover:text-destructive"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                )}
                 {Object.entries(filters).map(
                   ([filterKey, values]) =>
                     filterKey !== "unique_users_only" &&
+                    filterKey !== "exclude_unique_urls" &&
                     Array.isArray(values) &&
                     values.map((value: string) => (
                       <Badge
@@ -485,7 +530,7 @@ export function FinancialClinicFilters({
                             removeFilterValue(
                               filterKey as Exclude<
                                 keyof DemographicFilters,
-                                "unique_users_only"
+                                "unique_users_only" | "exclude_unique_urls"
                               >,
                               value
                             )

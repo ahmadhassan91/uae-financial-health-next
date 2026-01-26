@@ -54,6 +54,7 @@ export interface DemographicFilters {
   companies?: string[];
   activeCompanies?: string[];
   unique_users_only?: boolean;
+  exclude_unique_urls?: boolean;
 }
 
 export interface DateRangeParams {
@@ -65,6 +66,7 @@ export interface DateRangeParams {
 export interface OverviewMetrics {
   total_submissions: number;
   average_score: number;
+  average_score_band?: string;
   excellent_count: number;
   good_count: number;
   needs_improvement_count: number;
@@ -190,6 +192,11 @@ const buildQueryParams = (
   // Add unique users filter
   if (filters?.unique_users_only) {
     params.append("unique_users_only", "true");
+  }
+
+  // Add exclude unique URLs filter
+  if (filters?.exclude_unique_urls) {
+    params.append("exclude_unique_urls", "true");
   }
 
   // Add any extra parameters

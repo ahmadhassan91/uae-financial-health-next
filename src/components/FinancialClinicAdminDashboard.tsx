@@ -668,6 +668,9 @@ export function FinancialClinicAdminDashboard({
                         <CardContent>
                           <div className="text-2xl font-bold">
                             {overviewMetrics.average_score?.toFixed(1) || "0.0"}
+                            <span className="text-lg font-normal text-muted-foreground ml-2">
+                              / {overviewMetrics.average_score_band || "N/A"}
+                            </span>
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">
                             Out of 100
