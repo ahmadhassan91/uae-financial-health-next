@@ -29,6 +29,7 @@ import {
 import { toast } from 'sonner';
 import { DatePickerComponent } from "@/components/ui/date-picker";
 import {
+
   Search,
   Download,
   Eye,
@@ -42,7 +43,23 @@ import {
   TrendingUp,
   Award,
   Building,
+  Check,
+  ChevronsUpDown,
 } from 'lucide-react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 import { apiClient } from '@/lib/api-client';
 import { DateRangeParams } from '@/lib/admin-api';
 
@@ -115,6 +132,8 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
   const [uniqueUrlFilter, setUniqueUrlFilter] = useState<string>('all');
   const [companySearch, setCompanySearch] = useState<string>('');
   const [showCompanyDropdown, setShowCompanyDropdown] = useState<boolean>(false);
+  const [uniqueUrlSearch, setUniqueUrlSearch] = useState<string>('');
+  const [showUniqueUrlDropdown, setShowUniqueUrlDropdown] = useState<boolean>(false);
   const [filteredCompanies, setFilteredCompanies] = useState<Company[]>([]);
   const [incomeFilter, setIncomeFilter] = useState<string>('all');
   const [ageGroupFilter, setAgeGroupFilter] = useState<string>('all');
@@ -480,86 +499,151 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
                 </SelectContent>
               </Select>
               <div className="relative w-full sm:w-[200px]">
-                <Input
-                  type="text"
-                  placeholder="Filter by company"
-                  value={companySearch}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setCompanySearch(value);
-                    setShowCompanyDropdown(true);
-                    if (value === '') {
-                      setCompanyFilter('all');
-                    } else if (value.toLowerCase() === 'other') {
-                      setCompanyFilter('other');
-                    } else {
-                      const matchedCompany = companies.find(c => c.name.toLowerCase() === value.toLowerCase());
-                      if (matchedCompany) {
-                        setCompanyFilter(matchedCompany.name); // Use company name for filtering
-                      } else {
-                        setCompanyFilter('all');
-                      }
-                    }
-                  }}
-                  onFocus={() => setShowCompanyDropdown(true)}
-                  onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
-                  className="w-full"
-                />
-                {showCompanyDropdown && (
-                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-                    <div
-                      className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => {
-                        setCompanyFilter('all');
-                        setCompanySearch('');
-                        setShowCompanyDropdown(false);
-                      }}
+                <Popover open={showCompanyDropdown} onOpenChange={setShowCompanyDropdown}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={showCompanyDropdown}
+                      className="w-full justify-between"
                     >
-                      All Companies
-                    </div>
-                    {filteredCompanies.map((company) => (
-                      <div
-                        key={company.id}
-                        className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                        onClick={() => {
-                          setCompanyFilter(company.name); // Use company name for filtering
-                          setCompanySearch(company.name);
-                          setShowCompanyDropdown(false);
-                        }}
-                      >
-                        {company.name}
-                      </div>
-                    ))}
-                    <div
-                      className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer border-t border-gray-200"
-                      onClick={() => {
-                        setCompanyFilter('other');
-                        setCompanySearch('Other');
-                        setShowCompanyDropdown(false);
-                      }}
-                    >
-                      Other
-                    </div>
-                  </div>
-                )}
+                      {companyFilter === 'all'
+                        ? "Filter by company"
+                        : companyFilter === 'other'
+                          ? "Other"
+                          : companies.find((company) => company.name === companyFilter)?.name || companyFilter}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search company..." />
+                      <CommandList>
+                        <CommandEmpty>No company found.</CommandEmpty>
+                        <CommandGroup>
+                          <CommandItem
+                            value="all companies"
+                            onSelect={() => {
+                              setCompanyFilter("all");
+                              setCompanySearch("");
+                              setShowCompanyDropdown(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                companyFilter === "all" ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            All Companies
+                          </CommandItem>
+                          {companies.map((company) => (
+                            <CommandItem
+                              key={company.id}
+                              value={company.name}
+                              onSelect={(currentValue) => {
+                                setCompanyFilter(currentValue === companyFilter ? "all" : currentValue);
+                                setCompanySearch(currentValue === companyFilter ? "" : currentValue);
+                                setShowCompanyDropdown(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  companyFilter === company.name ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {company.name}
+                            </CommandItem>
+                          ))}
+                          <CommandItem
+                            value="other"
+                            onSelect={() => {
+                              setCompanyFilter("other");
+                              setCompanySearch("Other");
+                              setShowCompanyDropdown(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                companyFilter === "other" ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            Other
+                          </CommandItem>
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 
             {/* Additional Demographic Filters Row */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Select value={uniqueUrlFilter} onValueChange={setUniqueUrlFilter}>
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="Unique URL" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Unique URLs</SelectItem>
-                  {uniqueUrls.map((url) => (
-                    <SelectItem key={url.id} value={url.id.toString()}>
-                      {url.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="relative w-full sm:w-[200px]">
+                <Popover open={showUniqueUrlDropdown} onOpenChange={setShowUniqueUrlDropdown}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={showUniqueUrlDropdown}
+                      className="w-full justify-between"
+                    >
+                      {uniqueUrlFilter === 'all'
+                        ? "Unique URL"
+                        : uniqueUrls.find((url) => url.id.toString() === uniqueUrlFilter)?.name || "Unique URL"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search URL..." />
+                      <CommandList>
+                        <CommandEmpty>No unique URL found.</CommandEmpty>
+                        <CommandGroup>
+                          <CommandItem
+                            value="all unique urls"
+                            onSelect={() => {
+                              setUniqueUrlFilter("all");
+                              setUniqueUrlSearch("");
+                              setShowUniqueUrlDropdown(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                uniqueUrlFilter === "all" ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            All Unique URLs
+                          </CommandItem>
+                          {uniqueUrls.map((url) => (
+                            <CommandItem
+                              key={url.id}
+                              value={url.name}
+                              onSelect={() => {
+                                setUniqueUrlFilter(url.id.toString());
+                                setUniqueUrlSearch(url.name);
+                                setShowUniqueUrlDropdown(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  uniqueUrlFilter === url.id.toString() ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {url.name}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
 
               <Select value={incomeFilter} onValueChange={setIncomeFilter}>
                 <SelectTrigger className="w-full sm:w-[200px]">

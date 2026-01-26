@@ -133,6 +133,9 @@ export function FinancialClinicAdminDashboard({
   const [companiesAnalytics, setCompaniesAnalytics] = useState<
     CompanyAnalytics[]
   >([]);
+  const [uniqueUrlAnalytics, setUniqueUrlAnalytics] = useState<
+    CompanyAnalytics[]
+  >([]);
   const [scoreAnalyticsTable, setScoreAnalyticsTable] =
     useState<ScoreAnalyticsResponse | null>(null);
 
@@ -209,6 +212,7 @@ export function FinancialClinicAdminDashboard({
         adminApi.getCompaniesAnalytics(filters, dateParams),
         adminApi.getScoreAnalyticsTable(filters, dateParams),
         adminApi.getGenderBreakdown(filters, dateParams),
+        adminApi.getUniqueUrlAnalytics(filters, dateParams),
       ]);
 
       console.log('🔧 [DEBUG] API Results:', {
@@ -236,6 +240,7 @@ export function FinancialClinicAdminDashboard({
         compAnalytics,
         scoreTable,
         genBreakdown,
+        urlAnalytics,
       ] = results.map((result, index) => {
         if (result.status === "fulfilled") {
           return result.value;
@@ -259,7 +264,8 @@ export function FinancialClinicAdminDashboard({
           { range: string; count: number; average_score: number }[] | null,
           CompanyAnalytics[] | null,
           ScoreAnalyticsResponse | null,
-          { gender: string; count: number; percentage: number }[] | null
+          { gender: string; count: number; percentage: number }[] | null,
+          CompanyAnalytics[] | null
         ];
 
       // Set data only if successfully loaded
@@ -276,6 +282,7 @@ export function FinancialClinicAdminDashboard({
       if (compAnalytics) setCompaniesAnalytics(compAnalytics);
       if (scoreTable) setScoreAnalyticsTable(scoreTable);
       if (genBreakdown) setGenderBreakdown(genBreakdown);
+      if (urlAnalytics) setUniqueUrlAnalytics(urlAnalytics);
     } catch (error) {
       console.error("Failed to load analytics:", error);
       toast.error("Failed to load analytics data");
@@ -756,8 +763,8 @@ export function FinancialClinicAdminDashboard({
               {/* Companies Tab - Only for full admins */}
               {user?.admin_role === "full" && (
                 <TabsContent value="companies" className="space-y-6">
-                  {companiesModuleEnabled && companiesAnalytics && (
-                    <CompaniesAnalyticsTable data={companiesAnalytics} />
+                  {companiesModuleEnabled && uniqueUrlAnalytics && (
+                    <CompaniesAnalyticsTable data={uniqueUrlAnalytics} />
                   )}
                   {!companiesModuleEnabled && (
                     <Card>

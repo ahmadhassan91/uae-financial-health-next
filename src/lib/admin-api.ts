@@ -404,7 +404,7 @@ export const adminApi = {
   },
 
   /**
-   * Get companies analytics
+   * Get companies analytics (from CompanyDetails table - Company Management)
    */
   async getCompaniesAnalytics(
     filters?: DemographicFilters,
@@ -423,6 +423,37 @@ export const adminApi = {
 
     return companies.map((item: any) => ({
       company: item.company_name || item.company || "Unknown",
+      total_submissions: item.total_responses || 0,
+      average_score: item.average_score || item.avg_score || 0,
+      excellent: item.excellent_count || 0,
+      good: item.good_count || 0,
+      needs_improvement: item.needs_improvement_count || 0,
+      at_risk: item.at_risk_count || 0,
+    }));
+  },
+
+  /**
+   * Get unique URL analytics (from CompanyTracker table - Unique URLs)
+   */
+  async getUniqueUrlAnalytics(
+    filters?: DemographicFilters,
+    dateParams?: DateRangeParams
+  ): Promise<CompanyAnalytics[]> {
+    const queryString = buildQueryParams(filters, dateParams);
+    const response = await fetch(
+      `${getBackendUrl()}/admin/simple/unique-url-analytics?${queryString}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Failed to fetch unique URL analytics");
+    const data = await response.json();
+
+    // Transform backend response - same structure as companies analytics
+    const companies = data.companies || [];
+
+    return companies.map((item: any) => ({
+      company: item.company_name || item.company || "Unknown",
+      unique_url: item.unique_url,
+      tracker_id: item.tracker_id,
       total_submissions: item.total_responses || 0,
       average_score: item.average_score || item.avg_score || 0,
       excellent: item.excellent_count || 0,

@@ -36,7 +36,7 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
     const sortedData = [...data].sort((a, b) => b.total_submissions - a.total_submissions);
     const topCompanies = sortedData.slice(0, 9);
     const othersCount = sortedData.slice(9).reduce((sum, item) => sum + item.total_submissions, 0);
-    
+
     const pieData = topCompanies.map(item => ({
         company: item.company,
         count: item.total_submissions,
@@ -124,14 +124,18 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
                                 outerRadius={80}
                                 fill="#8884d8"
                                 dataKey="count"
+                                nameKey="company"
                             >
                                 {pieData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
                             <Tooltip content={<CustomTooltip />} />
-                            <Legend 
-                                formatter={(value, entry: any) => `${entry.payload.company} (${value})`}
+                            <Legend
+                                formatter={(value, entry: any) => {
+                                    const count = entry.payload.count;
+                                    return `${value} (${count})`;
+                                }}
                                 wrapperStyle={{ paddingTop: '20px' }}
                             />
                         </PieChart>
@@ -151,8 +155,8 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis 
-                                dataKey="company" 
+                            <XAxis
+                                dataKey="company"
                                 angle={-45}
                                 textAnchor="end"
                                 height={100}
