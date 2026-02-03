@@ -312,20 +312,24 @@ export function FinancialClinicAdminDashboard({
     }
   };
 
-  const handleExport = async (format: "csv" | "excel") => {
+  const handleExport = async (format: "csv" | "excel" | "consolidated") => {
     setExporting(true);
     try {
-      const blob =
-        format === "csv"
+      let blob;
+      if (format === "consolidated") {
+        blob = await adminApi.exportConsolidatedCSV(filters, dateParams);
+      } else {
+        blob = format === "csv"
           ? await adminApi.exportCSV(filters, dateParams)
           : await adminApi.exportExcel(filters, dateParams);
+      }
 
       // Create download link
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `financial-clinic-export-${new Date().toISOString().split("T")[0]
-        }.${format === "csv" ? "csv" : "xlsx"}`;
+      const extension = format === "excel" ? "xlsx" : "csv";
+      a.download = `financial-clinic-${format}-export-${new Date().toISOString().split("T")[0]}.${extension}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -454,6 +458,19 @@ export function FinancialClinicAdminDashboard({
 
                 <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
                   {/* Export Buttons */}
+                  <Button
+                    variant="default"
+                    onClick={() => handleExport("consolidated")}
+                    disabled={exporting}
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {exporting ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4" />
+                    )}
+                    Consolidated Export
+                  </Button>
                   <Button
                     variant="outline"
                     onClick={() => handleExport("csv")}
@@ -760,7 +777,7 @@ export function FinancialClinicAdminDashboard({
 
               {/* Submissions Tab */}
               <TabsContent value="submissions">
-                <SubmissionsTable dateParams={dateParams} />
+                <SubmissionsTable filters={filters} dateParams={dateParams} />
               </TabsContent>
 
               {/* Companies Tab - Only for full admins */}

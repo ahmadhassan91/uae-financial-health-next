@@ -540,6 +540,22 @@ export const adminApi = {
   },
 
   /**
+   * Export consolidated data as CSV
+   */
+  async exportConsolidatedCSV(
+    filters?: DemographicFilters,
+    dateParams?: DateRangeParams
+  ): Promise<Blob> {
+    const queryString = buildQueryParams(filters, dateParams);
+    const response = await fetch(
+      `${getBackendUrl()}/admin/simple/consolidated-export?${queryString}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Failed to export consolidated CSV");
+    return response.blob();
+  },
+
+  /**
    * Export data as Excel
    */
   async exportExcel(

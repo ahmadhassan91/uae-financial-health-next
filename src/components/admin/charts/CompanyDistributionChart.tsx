@@ -32,10 +32,10 @@ const COLORS = [
 export function CompanyDistributionChart({ data }: CompanyDistributionChartProps) {
     const total = data.reduce((sum, item) => sum + item.total_submissions, 0);
 
-    // For pie chart - show top 10 companies, group others as "Others"
+    // For pie chart - show top 6 companies, group others as "Others"
     const sortedData = [...data].sort((a, b) => b.total_submissions - a.total_submissions);
-    const topCompanies = sortedData.slice(0, 9);
-    const othersCount = sortedData.slice(9).reduce((sum, item) => sum + item.total_submissions, 0);
+    const topCompanies = sortedData.slice(0, 6);
+    const othersCount = sortedData.slice(6).reduce((sum, item) => sum + item.total_submissions, 0);
 
     const pieData = topCompanies.map(item => ({
         company: item.company,
@@ -51,12 +51,15 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
         });
     }
 
-    // For bar chart - show top 10 companies by submissions
+    // For bar chart - show top 6 companies by submissions
     const barData = topCompanies.map(item => ({
         company: item.company.length > 15 ? item.company.substring(0, 15) + '...' : item.company,
         submissions: item.total_submissions,
         avgScore: item.average_score,
     }));
+
+    // For table - show top 20 companies
+    const top20Companies = sortedData.slice(0, 20);
 
     const CustomTooltip = ({ active, payload }: any) => {
         if (active && payload && payload.length) {
@@ -109,7 +112,7 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
                 <CardHeader>
                     <CardTitle>Company / Employer</CardTitle>
                     <CardDescription>
-                        Percentage of submissions by company (Top 10 shown)
+                        Percentage of submissions by company (Top 6 shown)
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -148,7 +151,7 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
                 <CardHeader>
                     <CardTitle>Top Companies by Submissions</CardTitle>
                     <CardDescription>
-                        Number of submissions per company (Top 10)
+                        Number of submissions per company (Top 6)
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -168,6 +171,47 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
                             <Bar dataKey="submissions" fill="#3B82F6" />
                         </BarChart>
                     </ResponsiveContainer>
+                </CardContent>
+            </Card>
+
+            {/* Table - Top 20 Companies */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Top 20 Companies</CardTitle>
+                    <CardDescription>
+                        Companies ranked by number of submissions
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                            <thead>
+                                <tr className="border-b">
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">#</th>
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">Company</th>
+                                    <th className="text-right py-3 px-4 font-medium text-gray-600">Submissions</th>
+                                    <th className="text-right py-3 px-4 font-medium text-gray-600">Avg Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {top20Companies.map((item, index) => (
+                                    <tr key={index} className="border-b hover:bg-gray-50">
+                                        <td className="py-3 px-4 text-gray-500">{index + 1}</td>
+                                        <td className="py-3 px-4 font-medium">{item.company}</td>
+                                        <td className="py-3 px-4 text-right">{item.total_submissions}</td>
+                                        <td className="py-3 px-4 text-right">{item.average_score.toFixed(1)}</td>
+                                    </tr>
+                                ))}
+                                {top20Companies.length === 0 && (
+                                    <tr>
+                                        <td colSpan={4} className="py-8 text-center text-gray-500">
+                                            No company data available
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </CardContent>
             </Card>
         </div>

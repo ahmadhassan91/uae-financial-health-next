@@ -116,10 +116,11 @@ interface UniqueUrl {
 }
 
 interface SubmissionsTableProps {
+  filters?: DemographicFilters;
   dateParams?: DateRangeParams;
 }
 
-export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
+export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps) {
   const [submissions, setSubmissions] = useState<FinancialClinicSubmission[]>([]);
   const [stats, setStats] = useState<SubmissionStats | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]); // From CompanyDetails table
@@ -177,7 +178,7 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
   useEffect(() => {
     loadSubmissions();
     loadStats();
-  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, uniqueUrlFilter, incomeFilter, ageGroupFilter, dateFrom, dateTo]);
+  }, [page, searchTerm, statusFilter, nationalityFilter, companyFilter, uniqueUrlFilter, incomeFilter, ageGroupFilter, dateFrom, dateTo, filters, dateParams]);
 
   const loadCompanies = async () => {
     try {
@@ -208,9 +209,23 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
-      // Apply date filters from local state
-      if (dateFrom) params.append('date_from', dateFrom.toISOString());
-      if (dateTo) params.append('date_to', dateTo.toISOString());
+      // Add global date range params
+      if (dateParams?.dateRange) params.append('date_range', dateParams.dateRange);
+      if (dateParams?.startDate) params.append('start_date', dateParams.startDate);
+      if (dateParams?.endDate) params.append('end_date', dateParams.endDate);
+
+      // Add global demographic filters
+      if (filters) {
+        if (filters.genders) params.append('genders', filters.genders.join(','));
+        if (filters.nationalities) params.append('nationalities', filters.nationalities.join(','));
+        if (filters.emirates) params.append('emirates', filters.emirates.join(','));
+        if (filters.employmentStatuses) params.append('employment_statuses', filters.employmentStatuses.join(','));
+        if (filters.incomeRanges) params.append('income_ranges', filters.incomeRanges.join(','));
+        if (filters.ageGroups) params.append('age_groups', filters.ageGroups.join(','));
+        if (filters.children) params.append('children', filters.children.join(','));
+        if (filters.activeCompanies) params.append('activeCompanies', filters.activeCompanies.join(','));
+        if (filters.exclude_unique_urls) params.append('exclude_unique_urls', 'true');
+      }
 
       console.log('🔧 [DEBUG] Loading submissions with params:', params.toString());
       const response = await apiClient.request(`/admin/simple/submissions?${params}`) as any;
@@ -246,9 +261,23 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
       if (incomeFilter !== 'all') params.append('income_range', incomeFilter);
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
 
-      // Apply date filters from local state
-      if (dateFrom) params.append('date_from', dateFrom.toISOString());
-      if (dateTo) params.append('date_to', dateTo.toISOString());
+      // Add global date range params
+      if (dateParams?.dateRange) params.append('date_range', dateParams.dateRange);
+      if (dateParams?.startDate) params.append('start_date', dateParams.startDate);
+      if (dateParams?.endDate) params.append('end_date', dateParams.endDate);
+
+      // Add global demographic filters
+      if (filters) {
+        if (filters.genders) params.append('genders', filters.genders.join(','));
+        if (filters.nationalities) params.append('nationalities', filters.nationalities.join(','));
+        if (filters.emirates) params.append('emirates', filters.emirates.join(','));
+        if (filters.employmentStatuses) params.append('employment_statuses', filters.employmentStatuses.join(','));
+        if (filters.incomeRanges) params.append('income_ranges', filters.incomeRanges.join(','));
+        if (filters.ageGroups) params.append('age_groups', filters.ageGroups.join(','));
+        if (filters.children) params.append('children', filters.children.join(','));
+        if (filters.activeCompanies) params.append('activeCompanies', filters.activeCompanies.join(','));
+        if (filters.exclude_unique_urls) params.append('exclude_unique_urls', 'true');
+      }
 
       const queryString = params.toString();
       const url = queryString ? `/admin/simple/submissions/stats?${queryString}` : '/admin/simple/submissions/stats';
@@ -556,22 +585,6 @@ export function SubmissionsTable({ dateParams }: SubmissionsTableProps) {
                               {company.name}
                             </CommandItem>
                           ))}
-                          <CommandItem
-                            value="other"
-                            onSelect={() => {
-                              setCompanyFilter("other");
-                              setCompanySearch("Other");
-                              setShowCompanyDropdown(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                companyFilter === "other" ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            Other
-                          </CommandItem>
                         </CommandGroup>
                       </CommandList>
                     </Command>

@@ -154,6 +154,23 @@ export function FinancialClinicFilters({
             </SelectContent>
           </Select>
 
+          {/* Display selected custom dates if picker is collapsed */}
+          {!showCustomDatePicker && dateParams.dateRange === "custom" && (dateParams.startDate || dateParams.endDate) && (
+            <div className="flex flex-col gap-1 px-1 py-1 text-xs text-muted-foreground bg-muted/30 rounded-md border border-dashed border-primary/20">
+              <div className="flex justify-between items-center">
+                <span>Range: {dateParams.startDate || '...'} to {dateParams.endDate || '...'}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 h-auto p-0"
+                  onClick={() => setShowCustomDatePicker(true)}
+                >
+                  <CalendarIcon className="w-3 h-3" />
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Custom Date Picker */}
           {showCustomDatePicker && (
             <div className="grid grid-cols-2 gap-3">
@@ -400,7 +417,7 @@ export function FinancialClinicFilters({
                 <MultiSelect
                   options={availableOptions.activeCompanies.map((company) => ({
                     label: company.name,
-                    value: company.id.toString(),
+                    value: company.id !== null ? company.id.toString() : 'blank',
                   }))}
                   selected={filters.activeCompanies || []}
                   onChange={(values) => {
