@@ -27,12 +27,12 @@ export function useSurvey() {
     if (scoreHistory.length > 0) {
       return scoreHistory;
     }
-    
+
     // If no data and user is not authenticated, show sample data for demo
     if (!apiClient.isAuthenticated()) {
       return generateSampleData();
     }
-    
+
     // Authenticated user with no data - show empty array
     return [];
   }, [scoreHistory]);
@@ -45,10 +45,10 @@ export function useSurvey() {
       // Check if user is truly authenticated (not just has a stale admin token)
       const hasSimpleAuthSession = localStorage.getItem('simple_auth_session');
       const hasApiToken = localStorage.getItem('auth_token');
-      
+
       // Only use API if user has simple auth session or valid API token
       const isValidAuth = !!(hasSimpleAuthSession || hasApiToken);
-      
+
       console.log('Survey history auth check:');
       console.log('- Simple auth session:', !!hasSimpleAuthSession);
       console.log('- API token:', !!hasApiToken);
@@ -118,8 +118,8 @@ export function useSurvey() {
           }));
 
           return {
-            id: item.id.toString(),
-            userId: item.user_id.toString(),
+            id: item.id?.toString() || '',
+            userId: item.user_id?.toString() || '',
             profile: profile!,
             responses: Object.entries(item.responses).map(([questionId, value]) => ({
               questionId,
@@ -162,7 +162,7 @@ export function useSurvey() {
       }
     } catch (err) {
       console.error('Failed to load survey history:', err);
-      
+
       // Since we validate authentication first, any error here is likely a real API issue
       // Fall back to localStorage as a safety net
       console.log('API error occurred, falling back to localStorage');
@@ -218,7 +218,7 @@ export function useSurvey() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const responsesObject = responses.reduce((acc, response) => {
         acc[response.questionId] = response.value;
         return acc;
@@ -229,15 +229,15 @@ export function useSurvey() {
       const hasSimpleAuthSession = localStorage.getItem('simple_auth_session');
       const hasApiToken = localStorage.getItem('auth_token');
       const hasAdminToken = localStorage.getItem('admin_access_token');
-      
+
       console.log('Survey submission auth check:');
       console.log('- Simple auth session:', !!hasSimpleAuthSession);
       console.log('- API token:', !!hasApiToken);
       console.log('- Admin token:', !!hasAdminToken);
-      
+
       // Only use authenticated endpoint if user has simple auth or API token (not admin token)
       const isValidAuth = !!(hasSimpleAuthSession || hasApiToken);
-      
+
       console.log('Using authenticated endpoint:', isValidAuth);
 
       let apiResult;
@@ -321,12 +321,12 @@ export function useSurvey() {
       return newCalculation;
     } catch (err) {
       console.error('Survey submission error:', err);
-      
+
       let errorMessage = 'Failed to submit survey';
-      
+
       if (err instanceof Error) {
         errorMessage = err.message;
-        
+
         // Provide more specific error messages
         if (err.message.includes('Failed to fetch')) {
           errorMessage = 'Unable to connect to server. Please check your internet connection and try again.';
@@ -336,7 +336,7 @@ export function useSurvey() {
           errorMessage = 'Please complete your profile before submitting the survey.';
         }
       }
-      
+
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {

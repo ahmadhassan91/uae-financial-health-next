@@ -454,7 +454,7 @@ export function CompanyManagement({
                       </SelectItem>
                     ) : (
                       availableVariationSets.map((set) => (
-                        <SelectItem key={set.id} value={set.id.toString()}>
+                        <SelectItem key={set.id} value={set.id?.toString() || 'unknown'}>
                           <div className="flex flex-col">
                             <span className="font-medium">{set.name}</span>
                             {set.description && (
