@@ -119,7 +119,7 @@ export function CompanyManagement({
           is_active: boolean;
         }>;
       }>("/admin/variation-sets?is_active=true&page_size=100");
-      
+
       setAvailableVariationSets(data.variation_sets || []);
     } catch (error: any) {
       if (error.status === 401 || error.status === 403) {
@@ -620,7 +620,7 @@ export function CompanyManagement({
                     </SelectItem>
                   ) : (
                     availableVariationSets.map((set) => (
-                      <SelectItem key={set.id} value={set.id.toString()}>
+                      <SelectItem key={set.id} value={set.id?.toString() || 'unknown'}>
                         <div className="flex flex-col">
                           <span className="font-medium">{set.name}</span>
                           {set.description && (
@@ -688,7 +688,7 @@ export function CompanyManagement({
       {/* Variations Info */}
       <Alert>
         <AlertDescription>
-          <strong>Variations Control:</strong> Toggle variations to enable/disable custom questions for each company. 
+          <strong>Variations Control:</strong> Toggle variations to enable/disable custom questions for each company.
           When disabled, companies will see default questions regardless of assigned variation sets.
         </AlertDescription>
       </Alert>
@@ -768,11 +768,11 @@ export function CompanyManagement({
             <div className="text-2xl font-bold">
               {companies.length > 0
                 ? Math.round(
-                    companies.reduce(
-                      (sum, c) => sum + (c.average_score || 0),
-                      0
-                    ) / companies.length
-                  )
+                  companies.reduce(
+                    (sum, c) => sum + (c.average_score || 0),
+                    0
+                  ) / companies.length
+                )
                 : 0}
             </div>
           </CardContent>
@@ -846,7 +846,7 @@ export function CompanyManagement({
                     </TableCell>
                     <TableCell>
                       {company.question_variation_mapping &&
-                      Object.keys(company.question_variation_mapping).length >
+                        Object.keys(company.question_variation_mapping).length >
                         0 ? (
                         <Badge variant="secondary" className="gap-1">
                           <span>
@@ -878,7 +878,7 @@ export function CompanyManagement({
                         </Badge>
                         <Switch
                           checked={company.enable_variations || false}
-                          onCheckedChange={(checked) => 
+                          onCheckedChange={(checked) =>
                             handleToggleVariations(company, checked)
                           }
                         />

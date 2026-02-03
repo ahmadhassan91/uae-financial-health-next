@@ -606,7 +606,7 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
                     >
                       {uniqueUrlFilter === 'all'
                         ? "Unique URL"
-                        : uniqueUrls.find((url) => url.id.toString() === uniqueUrlFilter)?.name || "Unique URL"}
+                        : uniqueUrls.find((url) => url.id?.toString() === uniqueUrlFilter)?.name || "Unique URL"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
@@ -637,7 +637,7 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
                               key={url.id}
                               value={url.name}
                               onSelect={() => {
-                                setUniqueUrlFilter(url.id.toString());
+                                setUniqueUrlFilter(url.id?.toString() || "");
                                 setUniqueUrlSearch(url.name);
                                 setShowUniqueUrlDropdown(false);
                               }}
@@ -645,7 +645,7 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  uniqueUrlFilter === url.id.toString() ? "opacity-100" : "opacity-0"
+                                  uniqueUrlFilter === url.id?.toString() ? "opacity-100" : "opacity-0"
                                 )}
                               />
                               {url.name}

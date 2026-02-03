@@ -573,7 +573,7 @@ export function LeadsManagement() {
                 <SelectContent>
                   <SelectItem value="all">All Companies</SelectItem>
                   {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.id.toString()}>
+                    <SelectItem key={company.id} value={company.id?.toString() || 'unknown'}>
                       {company.name}
                     </SelectItem>
                   ))}

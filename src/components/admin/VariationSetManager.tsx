@@ -10,8 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { 
-  Plus, Edit, Trash2, Copy, Package, Building2, 
+import {
+  Plus, Edit, Trash2, Copy, Package, Building2,
   CheckCircle, AlertTriangle, Eye, Search
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -79,7 +79,7 @@ export function VariationSetManager() {
   const [variationSets, setVariationSets] = useState<VariationSet[]>([]);
   const [availableVariations, setAvailableVariations] = useState<QuestionVariation[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Filters
   const [filters, setFilters] = useState({
     set_type: 'all',
@@ -89,11 +89,11 @@ export function VariationSetManager() {
     page: 1,
     page_size: 20
   });
-  
+
   // Pagination
   const [totalSets, setTotalSets] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  
+
   // Form state
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingSet, setEditingSet] = useState<VariationSet | null>(null);
@@ -141,7 +141,7 @@ export function VariationSetManager() {
       if (filters.search) params.append('search', filters.search);
 
       const response = await adminApiCall(`/admin/variation-sets?${params}`);
-      
+
       if (response.ok) {
         const data = await response.json();
         setVariationSets(data.variation_sets);
@@ -166,14 +166,14 @@ export function VariationSetManager() {
       let allVariations: QuestionVariation[] = [];
       let page = 1;
       let hasMore = true;
-      
+
       while (hasMore) {
         const response = await adminApiCall(`/admin/question-variations/?limit=100&page=${page}`);
-        
+
         if (response.ok) {
           const data = await response.json();
           allVariations = [...allVariations, ...data.variations];
-          
+
           // Check if there are more pages
           hasMore = data.variations.length === 100 && allVariations.length < data.total;
           page++;
@@ -182,7 +182,7 @@ export function VariationSetManager() {
           hasMore = false;
         }
       }
-      
+
       console.log('📊 Loaded variations:', allVariations.length, 'variations');
       console.log('📊 Sample variation:', allVariations[0]);
       setAvailableVariations(allVariations);
@@ -195,7 +195,7 @@ export function VariationSetManager() {
     // Filter variations by question number (base_question_id is stored as "fc_q1", "fc_q2", etc.)
     const questionId = `fc_q${questionNumber}`;
     const filtered = availableVariations.filter(v => v.base_question_id === questionId);
-    
+
     // Debug logging
     if (questionNumber === 1) {
       console.log(`🔍 Getting variations for Q${questionNumber} (${questionId}):`, {
@@ -205,7 +205,7 @@ export function VariationSetManager() {
         filtered: filtered.map(v => ({ id: v.id, name: v.variation_name }))
       });
     }
-    
+
     return filtered;
   };
 
@@ -265,7 +265,7 @@ export function VariationSetManager() {
 
     try {
       const payload: any = { ...formData };
-      
+
       // Convert to numbers, only include changed fields
       for (let i = 1; i <= 15; i++) {
         const key = `q${i}_variation_id` as keyof VariationSetFormData;
@@ -511,7 +511,7 @@ export function VariationSetManager() {
           <Alert className="mb-4">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              <strong>New Feature:</strong> Variations must now be explicitly enabled for each company. 
+              <strong>New Feature:</strong> Variations must now be explicitly enabled for each company.
               Companies with variations disabled will see default questions regardless of company URL.
               Use the API endpoints to manage variation settings per company.
             </AlertDescription>
@@ -716,7 +716,7 @@ export function VariationSetManager() {
                   </div>
                 </div>
               </div>
-              
+
               {viewingSet.description && (
                 <div>
                   <Label>Description</Label>
@@ -738,7 +738,7 @@ export function VariationSetManager() {
                     const key = `q${num}_variation_id` as keyof VariationSet;
                     const variationId = viewingSet[key] as number;
                     const variation = availableVariations.find(v => v.id === variationId);
-                    
+
                     return (
                       <div key={num} className="flex flex-col gap-1 p-3 bg-gray-50 rounded border">
                         <div className="flex items-center gap-2">
@@ -855,13 +855,13 @@ function VariationSetForm({
         <p className="text-sm text-gray-500 mb-4">
           Select one variation for each of the 15 Financial Clinic questions
         </p>
-        
+
         <div className="space-y-3">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((num) => {
             const variations = getVariationsForQuestion(num);
             const key = `q${num}_variation_id` as keyof VariationSetFormData;
             const selectedVariation = availableVariations.find(v => v.id === Number(formData[key]));
-            
+
             return (
               <div key={num} className="grid grid-cols-12 gap-4 items-center">
                 <div className="col-span-1">
@@ -891,9 +891,9 @@ function VariationSetForm({
                         </SelectItem>
                       ) : (
                         variations.map((variation) => (
-                          <SelectItem 
-                            key={variation.id} 
-                            value={variation.id.toString()}
+                          <SelectItem
+                            key={variation.id}
+                            value={variation.id?.toString() || 'unknown'}
                             className="py-3 cursor-pointer"
                           >
                             <div className="flex flex-col gap-1">
