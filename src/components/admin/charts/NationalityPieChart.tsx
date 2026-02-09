@@ -26,6 +26,8 @@ export function NationalityPieChart({ data }: NationalityPieChartProps) {
 
     const chartData = data.map(item => ({
         ...item,
+        // Map 0 -> Emirati (Blue), 1 -> Non-Emirati (Gold)
+        nationality: item.nationality === "0" ? "Emirati" : item.nationality === "1" ? "Non-Emirati" : item.nationality,
         percentage: total > 0 ? ((item.count / total) * 100).toFixed(1) : '0.0',
     }));
 

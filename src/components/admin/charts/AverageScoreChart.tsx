@@ -26,7 +26,7 @@ export function AverageScoreChart({ data, groupBy, onGroupByChange }: AverageSco
     const chartData = Array.isArray(data) ? data.map(item => ({
         ...item,
         formattedPeriod: formatChartDate(item.period),
-        formattedScore: parseFloat(formatDecimal(item.average_score))
+        formattedScore: Math.round(item.average_score)
     })) : [];
 
     return (
@@ -75,7 +75,7 @@ export function AverageScoreChart({ data, groupBy, onGroupByChange }: AverageSco
                                         return (
                                             <div className="bg-background border rounded-lg p-3 shadow-lg">
                                                 <p className="font-semibold">{data.formattedPeriod}</p>
-                                                <p className="text-sm">Avg Score: {formatDecimal(data.average_score)}</p>
+                                                <p className="text-sm">Avg Score: {Math.round(data.average_score)}</p>
                                                 <p className="text-xs text-muted-foreground">{data.submissions} submissions</p>
                                             </div>
                                         );
@@ -97,7 +97,7 @@ export function AverageScoreChart({ data, groupBy, onGroupByChange }: AverageSco
                                     dataKey="formattedScore"
                                     position="top"
                                     fontSize={12}
-                                    formatter={(value: number) => formatDecimal(value)}
+                                    formatter={(value: number) => Math.round(value)}
                                 />
                             </Line>
                         </LineChart>

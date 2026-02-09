@@ -27,6 +27,8 @@ export function GenderDistributionChart({ data }: GenderDistributionChartProps) 
 
     const chartData = data.map(item => ({
         ...item,
+        // Map 0 -> Male (Blue), 1 -> Female (Pink)
+        gender: item.gender === "0" ? "Male" : item.gender === "1" ? "Female" : item.gender,
         percentage: total > 0 ? ((item.count / total) * 100).toFixed(1) : '0.0',
     }));
 

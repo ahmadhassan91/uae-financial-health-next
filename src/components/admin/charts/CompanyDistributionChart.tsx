@@ -168,7 +168,9 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
                             />
                             <YAxis />
                             <Tooltip content={<BarTooltip />} />
-                            <Bar dataKey="submissions" fill="#3B82F6" />
+                            <Bar dataKey="submissions" fill="#3B82F6">
+                                <LabelList dataKey="submissions" position="top" />
+                            </Bar>
                         </BarChart>
                     </ResponsiveContainer>
                 </CardContent>

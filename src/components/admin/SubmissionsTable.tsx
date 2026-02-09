@@ -211,8 +211,19 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
 
       // Add global date range params
       if (dateParams?.dateRange) params.append('date_range', dateParams.dateRange);
-      if (dateParams?.startDate) params.append('start_date', dateParams.startDate);
-      if (dateParams?.endDate) params.append('end_date', dateParams.endDate);
+
+      // Use local date state if available, otherwise fall back to props (Fixed)
+      if (dateFrom) {
+        params.append('start_date', dateFrom.toISOString());
+      } else if (dateParams?.startDate) {
+        params.append('start_date', dateParams.startDate);
+      }
+
+      if (dateTo) {
+        params.append('end_date', dateTo.toISOString());
+      } else if (dateParams?.endDate) {
+        params.append('end_date', dateParams.endDate);
+      }
 
       // Add global demographic filters
       if (filters) {
