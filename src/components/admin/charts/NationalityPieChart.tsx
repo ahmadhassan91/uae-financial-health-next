@@ -59,6 +59,7 @@ export function NationalityPieChart({ data }: NationalityPieChartProps) {
                                     outerRadius={100}
                                     fill="#8884d8"
                                     dataKey="count"
+                                    nameKey="nationality"
                                 >
                                     {chartData.map((entry, index) => (
                                         <Cell

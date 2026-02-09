@@ -60,6 +60,7 @@ export function GenderDistributionChart({ data }: GenderDistributionChartProps) 
                                     outerRadius={100}
                                     fill="#8884d8"
                                     dataKey="count"
+                                    nameKey="gender"
                                 >
                                     {chartData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[entry.gender as keyof typeof COLORS] || '#9CA3AF'} />
