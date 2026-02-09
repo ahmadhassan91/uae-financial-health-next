@@ -12,6 +12,7 @@ import {
     Bar,
     XAxis,
     YAxis,
+    LabelList,
     CartesianGrid,
 } from 'recharts';
 
