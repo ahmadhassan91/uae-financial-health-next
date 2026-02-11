@@ -32,9 +32,9 @@ export function AgeBreakdownChart({ data }: AgeBreakdownChartProps) {
         ) : (
           <>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={sortedData}>
+              <BarChart data={sortedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="age_group" />
+                <XAxis dataKey="age_group" interval={0} />
                 <YAxis domain={[0, 100]} />
                 <Tooltip
                   content={({ active, payload }) => {

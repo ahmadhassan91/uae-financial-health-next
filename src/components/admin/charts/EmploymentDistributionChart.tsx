@@ -35,10 +35,10 @@ export function EmploymentDistributionChart({ data }: EmploymentDistributionChar
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={data} layout="vertical" margin={{ left: 40 }}>
+                        <BarChart data={data} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                             <XAxis type="number" />
-                            <YAxis dataKey="status" type="category" width={100} tick={{ fontSize: 12 }} />
+                            <YAxis dataKey="status" type="category" width={120} tick={{ fontSize: 12 }} />
                             <Tooltip
                                 content={({ active, payload }) => {
                                     if (active && payload && payload.length) {

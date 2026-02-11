@@ -58,7 +58,7 @@ export function AverageScoreChart({ data, groupBy, onGroupByChange }: AverageSco
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height={350}>
-                        <LineChart data={chartData}>
+                        <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
                                 dataKey="formattedPeriod"
