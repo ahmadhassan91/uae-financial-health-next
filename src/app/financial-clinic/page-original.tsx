@@ -1010,14 +1010,26 @@ export default function FinancialClinicPage({
                 </Label>
                 <div className="relative">
                   <Input
+                    id="company-input"
                     type="text"
                     placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
                     value={profile.company_name || companySearch}
                     onChange={(e) => {
                       const value = e.target.value;
+                      // If user previously selected "Other", prevent deleting the "Other: " prefix
+                      const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
+                      if ((profile.company_name || "").startsWith(otherPrefix) && !value.startsWith(otherPrefix)) {
+                        // User is trying to delete prefix — keep it
+                        return;
+                      }
                       setCompanySearch(value);
                       setIsUserTyping(true);
-                      setShowCompanyDropdown(true);
+                      // Only show dropdown if NOT in "Other: " mode
+                      if (!value.startsWith(otherPrefix)) {
+                        setShowCompanyDropdown(true);
+                      } else {
+                        setShowCompanyDropdown(false);
+                      }
                       setProfile((prev) => {
                         const updated = {
                           ...prev,
@@ -1030,9 +1042,13 @@ export default function FinancialClinicPage({
                       if (companyError) setCompanyError("");
                     }}
                     onFocus={() => {
-                      setShowCompanyDropdown(true);
-                      setIsUserTyping(false);
-                      loadCompanies(); // Refresh companies when dropdown is focused
+                      const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
+                      // Don't reopen dropdown if in "Other: " mode
+                      if (!(profile.company_name || "").startsWith(otherPrefix)) {
+                        setShowCompanyDropdown(true);
+                        setIsUserTyping(false);
+                        loadCompanies(); // Refresh companies when dropdown is focused
+                      }
                     }}
                     onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
                     className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${companyError ? "border-red-500" : "border-[#c2d1d9]"
@@ -1063,6 +1079,31 @@ export default function FinancialClinicPage({
                           {company.name}
                         </div>
                       ))}
+                      {/* "Other" option - always shown at the bottom */}
+                      <div
+                        className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer border-t border-gray-100 font-medium text-[#505d68]"
+                        onClick={() => {
+                          const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
+                          setProfile((prev) => ({
+                            ...prev,
+                            company_name: otherPrefix,
+                          }));
+                          setCompanySearch(otherPrefix);
+                          setShowCompanyDropdown(false);
+                          setIsUserTyping(false);
+                          setCompanyError("");
+                          // Focus the input and place cursor after "Other: "
+                          setTimeout(() => {
+                            const input = document.getElementById('company-input') as HTMLInputElement;
+                            if (input) {
+                              input.focus();
+                              input.setSelectionRange(otherPrefix.length, otherPrefix.length);
+                            }
+                          }, 100);
+                        }}
+                      >
+                        {language === "ar" ? "أخرى" : "Other"}
+                      </div>
                     </div>
                   )}
                 </div>
