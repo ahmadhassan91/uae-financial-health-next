@@ -21,8 +21,8 @@ const getApiBaseUrl = (): string => {
   }
 
   // Fallback to localhost for development only
-  if (process.env.NODE_ENV === "development" || 
-      (typeof window !== "undefined" && window.location.hostname === "localhost")) {
+  if (process.env.NODE_ENV === "development" ||
+    (typeof window !== "undefined" && window.location.hostname === "localhost")) {
     return DEVELOPMENT_API_URL;
   }
 
@@ -1021,8 +1021,39 @@ class ApiClient {
     limit: number = 50
   ): Promise<any[]> {
     return this.request(
-      `/financial-clinic/history?skip=${skip}&limit=${limit}`
+      `/surveys/history?skip=${skip}&limit=${limit}`
     );
+  }
+
+  // Email Automation Configuration
+  async getEmailConfig(): Promise<{
+    id: number;
+    incomplete_enabled: boolean;
+    incomplete_days: number;
+    checkup_enabled: boolean;
+    checkup_days: number;
+    updated_at: string;
+  }> {
+    return this.request("/admin/email-config");
+  }
+
+  async updateEmailConfig(config: {
+    incomplete_enabled: boolean;
+    incomplete_days: number;
+    checkup_enabled: boolean;
+    checkup_days: number;
+  }): Promise<{
+    id: number;
+    incomplete_enabled: boolean;
+    incomplete_days: number;
+    checkup_enabled: boolean;
+    checkup_days: number;
+    updated_at: string;
+  }> {
+    return this.request("/admin/email-config", {
+      method: "PUT",
+      body: JSON.stringify(config),
+    });
   }
 }
 
