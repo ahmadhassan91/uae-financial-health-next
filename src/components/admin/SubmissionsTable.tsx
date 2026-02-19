@@ -211,8 +211,19 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
 
       // Add global date range params
       if (dateParams?.dateRange) params.append('date_range', dateParams.dateRange);
-      if (dateParams?.startDate) params.append('start_date', dateParams.startDate);
-      if (dateParams?.endDate) params.append('end_date', dateParams.endDate);
+
+      // Use local date state if available, otherwise fall back to props (Fixed)
+      if (dateFrom) {
+        params.append('start_date', dateFrom.toISOString());
+      } else if (dateParams?.startDate) {
+        params.append('start_date', dateParams.startDate);
+      }
+
+      if (dateTo) {
+        params.append('end_date', dateTo.toISOString());
+      } else if (dateParams?.endDate) {
+        params.append('end_date', dateParams.endDate);
+      }
 
       // Add global demographic filters
       if (filters) {
@@ -223,6 +234,7 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
         if (filters.incomeRanges) params.append('income_ranges', filters.incomeRanges.join(','));
         if (filters.ageGroups) params.append('age_groups', filters.ageGroups.join(','));
         if (filters.children) params.append('children', filters.children.join(','));
+        if (filters.companies) params.append('companies', filters.companies.join(','));
         if (filters.activeCompanies) params.append('activeCompanies', filters.activeCompanies.join(','));
         if (filters.exclude_unique_urls) params.append('exclude_unique_urls', 'true');
       }
@@ -275,6 +287,7 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
         if (filters.incomeRanges) params.append('income_ranges', filters.incomeRanges.join(','));
         if (filters.ageGroups) params.append('age_groups', filters.ageGroups.join(','));
         if (filters.children) params.append('children', filters.children.join(','));
+        if (filters.companies) params.append('companies', filters.companies.join(','));
         if (filters.activeCompanies) params.append('activeCompanies', filters.activeCompanies.join(','));
         if (filters.exclude_unique_urls) params.append('exclude_unique_urls', 'true');
       }
@@ -310,6 +323,8 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
     try {
       setIsExporting(true);
       const params = new URLSearchParams();
+
+      // Local table filters
       if (searchTerm) params.append('search', searchTerm);
       if (statusFilter !== 'all') params.append('status_band', statusFilter);
       if (nationalityFilter !== 'all') params.append('nationality', nationalityFilter);
@@ -319,6 +334,25 @@ export function SubmissionsTable({ filters, dateParams }: SubmissionsTableProps)
       if (ageGroupFilter !== 'all') params.append('age_group', ageGroupFilter);
       if (dateFrom) params.append('date_from', dateFrom.toISOString());
       if (dateTo) params.append('date_to', dateTo.toISOString());
+
+      // Global date range params from sidebar
+      if (dateParams?.dateRange) params.append('date_range', dateParams.dateRange);
+      if (!dateFrom && dateParams?.startDate) params.append('start_date', dateParams.startDate);
+      if (!dateTo && dateParams?.endDate) params.append('end_date', dateParams.endDate);
+
+      // Global demographic filters from sidebar
+      if (filters) {
+        if (filters.genders) params.append('genders', filters.genders.join(','));
+        if (filters.nationalities) params.append('nationalities', filters.nationalities.join(','));
+        if (filters.emirates) params.append('emirates', filters.emirates.join(','));
+        if (filters.employmentStatuses) params.append('employment_statuses', filters.employmentStatuses.join(','));
+        if (filters.incomeRanges) params.append('income_ranges', filters.incomeRanges.join(','));
+        if (filters.ageGroups) params.append('age_groups', filters.ageGroups.join(','));
+        if (filters.children) params.append('children', filters.children.join(','));
+        if (filters.companies) params.append('companies', filters.companies.join(','));
+        if (filters.activeCompanies) params.append('activeCompanies', filters.activeCompanies.join(','));
+        if (filters.exclude_unique_urls) params.append('exclude_unique_urls', 'true');
+      }
 
       const token = localStorage.getItem('admin_access_token');
       const response = await fetch(

@@ -32,9 +32,9 @@ export function AgeBreakdownChart({ data }: AgeBreakdownChartProps) {
         ) : (
           <>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={sortedData}>
+              <BarChart data={sortedData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="age_group" />
+                <XAxis dataKey="age_group" interval={0} />
                 <YAxis domain={[0, 100]} />
                 <Tooltip
                   content={({ active, payload }) => {
@@ -44,7 +44,7 @@ export function AgeBreakdownChart({ data }: AgeBreakdownChartProps) {
                         <div className="bg-background border rounded-lg p-3 shadow-lg">
                           <p className="font-semibold">{data.age_group}</p>
                           <p className="text-sm">Total: {data.total}</p>
-                          <p className="text-sm">Avg Score: {formatDecimal(data.average_score)}</p>
+                          <p className="text-sm">Avg Score: {Math.round(data.average_score)}</p>
                           <p className="text-sm">Percentage: {formatDecimal(data.percentage)}%</p>
                         </div>
                       );
@@ -58,7 +58,7 @@ export function AgeBreakdownChart({ data }: AgeBreakdownChartProps) {
                     dataKey="average_score"
                     position="top"
                     fontSize={12}
-                    formatter={(value: number) => formatDecimal(value)}
+                    formatter={(value: number) => Math.round(value)}
                   />
                   {sortedData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={AGE_GROUP_COLORS[index % AGE_GROUP_COLORS.length]} />
@@ -76,7 +76,7 @@ export function AgeBreakdownChart({ data }: AgeBreakdownChartProps) {
                   <p className="text-xs font-medium">{item.age_group}</p>
                   <p className="text-lg font-bold">{item.total}</p>
                   <p className="text-xs text-muted-foreground">
-                    Avg: {formatDecimal(item.average_score)}
+                    Avg: {Math.round(item.average_score)}
                   </p>
                 </div>
               ))}

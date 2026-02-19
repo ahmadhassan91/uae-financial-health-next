@@ -12,6 +12,7 @@ import {
     Bar,
     XAxis,
     YAxis,
+    LabelList,
     CartesianGrid,
 } from 'recharts';
 
@@ -107,44 +108,7 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
 
     return (
         <div className="space-y-6">
-            {/* Pie Chart */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Company / Employer</CardTitle>
-                    <CardDescription>
-                        Percentage of submissions by company (Top 6 shown)
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <PieChart>
-                            <Pie
-                                data={pieData}
-                                cx="50%"
-                                cy="50%"
-                                labelLine={false}
-                                label={({ percentage }) => `${percentage}%`}
-                                outerRadius={80}
-                                fill="#8884d8"
-                                dataKey="count"
-                                nameKey="company"
-                            >
-                                {pieData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip content={<CustomTooltip />} />
-                            <Legend
-                                formatter={(value, entry: any) => {
-                                    const count = entry.payload.count;
-                                    return `${value} (${count})`;
-                                }}
-                                wrapperStyle={{ paddingTop: '20px' }}
-                            />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </CardContent>
-            </Card>
+
 
             {/* Bar Chart */}
             <Card>
@@ -168,7 +132,9 @@ export function CompanyDistributionChart({ data }: CompanyDistributionChartProps
                             />
                             <YAxis />
                             <Tooltip content={<BarTooltip />} />
-                            <Bar dataKey="submissions" fill="#3B82F6" />
+                            <Bar dataKey="submissions" fill="#3B82F6">
+                                <LabelList dataKey="submissions" position="top" />
+                            </Bar>
                         </BarChart>
                     </ResponsiveContainer>
                 </CardContent>

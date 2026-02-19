@@ -35,9 +35,9 @@ export function NationalityBreakdownChart({ data }: NationalityBreakdownChartPro
         ) : (
           <>
             <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={chartData}>
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="nationality" />
+                <XAxis dataKey="nationality" interval={0} />
                 <YAxis />
                 <Tooltip
                   content={({ active, payload }) => {
