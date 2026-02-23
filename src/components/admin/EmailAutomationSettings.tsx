@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
-import { Mail, Clock, Calendar, Save, AlertTriangle, Loader2 } from 'lucide-react';
+import { Mail, Clock, Calendar, Save, AlertTriangle, Loader2, FileText, Shield } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function EmailAutomationSettings() {
@@ -18,9 +20,21 @@ export function EmailAutomationSettings() {
 
     const [config, setConfig] = useState({
         incomplete_enabled: false,
-        incomplete_days: 2,
+        incomplete_days: 2.0,
         checkup_enabled: false,
-        checkup_days: 180
+        checkup_days: 180.0,
+
+        incomplete_subject_en: '',
+        incomplete_subject_ar: '',
+        incomplete_body_en: '',
+        incomplete_body_ar: '',
+
+        checkup_subject_en: '',
+        checkup_subject_ar: '',
+        checkup_body_en: '',
+        checkup_body_ar: '',
+
+        allowed_emails: '' as string  // comma-separated whitelist
     });
 
     useEffect(() => {
@@ -35,7 +49,19 @@ export function EmailAutomationSettings() {
                 incomplete_enabled: data.incomplete_enabled,
                 incomplete_days: data.incomplete_days,
                 checkup_enabled: data.checkup_enabled,
-                checkup_days: data.checkup_days
+                checkup_days: data.checkup_days,
+
+                incomplete_subject_en: data.incomplete_subject_en || '',
+                incomplete_subject_ar: data.incomplete_subject_ar || '',
+                incomplete_body_en: data.incomplete_body_en || '',
+                incomplete_body_ar: data.incomplete_body_ar || '',
+
+                checkup_subject_en: data.checkup_subject_en || '',
+                checkup_subject_ar: data.checkup_subject_ar || '',
+                checkup_body_en: data.checkup_body_en || '',
+                checkup_body_ar: data.checkup_body_ar || '',
+
+                allowed_emails: Array.isArray(data.allowed_emails) ? data.allowed_emails.join(', ') : ''
             });
             setError(null);
         } catch (err) {
@@ -49,7 +75,11 @@ export function EmailAutomationSettings() {
     const handleSave = async () => {
         try {
             setSaving(true);
-            await apiClient.updateEmailConfig(config);
+            // Parse allowed_emails from comma-separated string to array
+            const allowedEmailsArray = config.allowed_emails
+                ? config.allowed_emails.split(',').map((e: string) => e.trim()).filter(Boolean)
+                : null;
+            await apiClient.updateEmailConfig({ ...config, allowed_emails: allowedEmailsArray });
             toast.success('Settings saved successfully');
             setError(null);
         } catch (err) {
@@ -128,10 +158,11 @@ export function EmailAutomationSettings() {
                                 <Input
                                     id="incomplete-days"
                                     type="number"
-                                    min="1"
+                                    step="0.1"
+                                    min="0.1"
                                     max="30"
                                     value={config.incomplete_days}
-                                    onChange={(e) => setConfig({ ...config, incomplete_days: parseInt(e.target.value) || 1 })}
+                                    onChange={(e) => setConfig({ ...config, incomplete_days: parseFloat(e.target.value) || 1 })}
                                     className="w-24"
                                     disabled={!config.incomplete_enabled}
                                 />
@@ -139,8 +170,72 @@ export function EmailAutomationSettings() {
                             </div>
                             <p className="text-[0.8rem] text-muted-foreground">
                                 We recommend waiting at least 24 hours (1 day) before sending a reminder.
+                                Use decimal values (e.g. 0.5) for partial days.
                             </p>
                         </div>
+
+                        {config.incomplete_enabled && (
+                            <div className="border rounded-md p-4 bg-muted/20">
+                                <Label className="mb-2 block flex items-center">
+                                    <FileText className="w-4 h-4 mr-2" />
+                                    Message Template
+                                </Label>
+                                <Tabs defaultValue="en" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2">
+                                        <TabsTrigger value="en">English</TabsTrigger>
+                                        <TabsTrigger value="ar">Arabic</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="en" className="space-y-3 mt-3">
+                                        <div className="space-y-1">
+                                            <Label htmlFor="inc-subject-en" className="text-xs">Subject Line</Label>
+                                            <Input
+                                                id="inc-subject-en"
+                                                placeholder="Reminder: Complete Your Financial Health Assessment"
+                                                value={config.incomplete_subject_en}
+                                                onChange={(e) => setConfig({ ...config, incomplete_subject_en: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label htmlFor="inc-body-en" className="text-xs">Email Body</Label>
+                                            <Textarea
+                                                id="inc-body-en"
+                                                placeholder="HTML content or plain text..."
+                                                className="min-h-[100px] font-mono text-xs"
+                                                value={config.incomplete_body_en}
+                                                onChange={(e) => setConfig({ ...config, incomplete_body_en: e.target.value })}
+                                            />
+                                            <p className="text-[10px] text-muted-foreground">
+                                                Available placeholders: {'{customer_name}'}, {'{resume_link}'}, {'{base_url}'}
+                                            </p>
+                                        </div>
+                                    </TabsContent>
+                                    <TabsContent value="ar" className="space-y-3 mt-3" dir="rtl">
+                                        <div className="space-y-1">
+                                            <Label htmlFor="inc-subject-ar" className="text-xs">الموضوع</Label>
+                                            <Input
+                                                id="inc-subject-ar"
+                                                placeholder="تذكير: أكمل تقييم صحتك المالية"
+                                                value={config.incomplete_subject_ar}
+                                                onChange={(e) => setConfig({ ...config, incomplete_subject_ar: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label htmlFor="inc-body-ar" className="text-xs">نص الرسالة</Label>
+                                            <Textarea
+                                                id="inc-body-ar"
+                                                placeholder="محتوى HTML أو نص عادي..."
+                                                className="min-h-[100px] font-mono text-xs"
+                                                value={config.incomplete_body_ar}
+                                                onChange={(e) => setConfig({ ...config, incomplete_body_ar: e.target.value })}
+                                            />
+                                            <p className="text-[10px] text-muted-foreground text-right">
+                                                المتغيرات المتاحة: {'{customer_name}'}, {'{resume_link}'}, {'{base_url}'}
+                                            </p>
+                                        </div>
+                                    </TabsContent>
+                                </Tabs>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
 
@@ -176,11 +271,11 @@ export function EmailAutomationSettings() {
                                 <Input
                                     id="checkup-days"
                                     type="number"
-                                    min="30"
+                                    min="0.1"
                                     max="365"
-                                    step="30"
+                                    step="0.1"
                                     value={config.checkup_days}
-                                    onChange={(e) => setConfig({ ...config, checkup_days: parseInt(e.target.value) || 180 })}
+                                    onChange={(e) => setConfig({ ...config, checkup_days: parseFloat(e.target.value) || 180 })}
                                     className="w-24"
                                     disabled={!config.checkup_enabled}
                                 />
@@ -190,9 +285,101 @@ export function EmailAutomationSettings() {
                                 Standard practice is 180 days (6 months) for financial health reviews.
                             </p>
                         </div>
+
+                        {config.checkup_enabled && (
+                            <div className="border rounded-md p-4 bg-muted/20">
+                                <Label className="mb-2 block flex items-center">
+                                    <FileText className="w-4 h-4 mr-2" />
+                                    Message Template
+                                </Label>
+                                <Tabs defaultValue="en" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2">
+                                        <TabsTrigger value="en">English</TabsTrigger>
+                                        <TabsTrigger value="ar">Arabic</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="en" className="space-y-3 mt-3">
+                                        <div className="space-y-1">
+                                            <Label htmlFor="chk-subject-en" className="text-xs">Subject Line</Label>
+                                            <Input
+                                                id="chk-subject-en"
+                                                placeholder="Time for Your Financial Health Checkup"
+                                                value={config.checkup_subject_en}
+                                                onChange={(e) => setConfig({ ...config, checkup_subject_en: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label htmlFor="chk-body-en" className="text-xs">Email Body</Label>
+                                            <Textarea
+                                                id="chk-body-en"
+                                                placeholder="HTML content or plain text..."
+                                                className="min-h-[100px] font-mono text-xs"
+                                                value={config.checkup_body_en}
+                                                onChange={(e) => setConfig({ ...config, checkup_body_en: e.target.value })}
+                                            />
+                                            <p className="text-[10px] text-muted-foreground">
+                                                Available placeholders: {'{customer_name}'}, {'{base_url}'}
+                                            </p>
+                                        </div>
+                                    </TabsContent>
+                                    <TabsContent value="ar" className="space-y-3 mt-3" dir="rtl">
+                                        <div className="space-y-1">
+                                            <Label htmlFor="chk-subject-ar" className="text-xs">الموضوع</Label>
+                                            <Input
+                                                id="chk-subject-ar"
+                                                placeholder="حان وقت مراجعة صحتك المالية"
+                                                value={config.checkup_subject_ar}
+                                                onChange={(e) => setConfig({ ...config, checkup_subject_ar: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <Label htmlFor="chk-body-ar" className="text-xs">نص الرسالة</Label>
+                                            <Textarea
+                                                id="chk-body-ar"
+                                                placeholder="محتوى HTML أو نص عادي..."
+                                                className="min-h-[100px] font-mono text-xs"
+                                                value={config.checkup_body_ar}
+                                                onChange={(e) => setConfig({ ...config, checkup_body_ar: e.target.value })}
+                                            />
+                                            <p className="text-[10px] text-muted-foreground text-right">
+                                                المتغيرات المتاحة: {'{customer_name}'}, {'{base_url}'}
+                                            </p>
+                                        </div>
+                                    </TabsContent>
+                                </Tabs>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
             </div>
+
+
+            {/* Whitelist / Allowed Emails */}
+            <Card>
+                <CardHeader>
+                    <div className="flex items-center space-x-2">
+                        <Shield className="h-5 w-5 text-violet-500" />
+                        <CardTitle>Allowed Emails (Whitelist)</CardTitle>
+                    </div>
+                    <CardDescription>
+                        Restrict automated emails to only the addresses listed below. Leave empty to send to all eligible users.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    <div className="space-y-1">
+                        <Label htmlFor="allowed-emails">Allowed Email Addresses</Label>
+                        <Textarea
+                            id="allowed-emails"
+                            placeholder="user1@example.com, user2@example.com"
+                            className="min-h-[80px] font-mono text-xs"
+                            value={config.allowed_emails}
+                            onChange={(e) => setConfig({ ...config, allowed_emails: e.target.value })}
+                        />
+                        <p className="text-[0.75rem] text-muted-foreground">
+                            Comma-separated list of email addresses. When set, <strong>only</strong> these addresses will receive automated reminder emails. Leave blank to send to all eligible users.
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
 
             <Card>
                 <CardHeader>
@@ -210,6 +397,9 @@ export function EmailAutomationSettings() {
                             <strong>3. Checkups:</strong> Users who completed a survey more than X days ago (and haven't taken one since) will receive a "Time for a Checkup" email.
                         </p>
                         <p>
+                            <strong>4. Limits &amp; Opt-Out:</strong> A maximum of 2 reminder emails are sent per user per campaign. Users can unsubscribe via the link in any email.
+                        </p>
+                        <p>
                             <strong>Note:</strong> Emails are only sent if the user has provided an email address.
                         </p>
                     </div>
@@ -218,3 +408,4 @@ export function EmailAutomationSettings() {
         </div>
     );
 }
+

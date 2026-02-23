@@ -1032,6 +1032,17 @@ class ApiClient {
     incomplete_days: number;
     checkup_enabled: boolean;
     checkup_days: number;
+
+    incomplete_subject_en?: string;
+    incomplete_subject_ar?: string;
+    incomplete_body_en?: string;
+    incomplete_body_ar?: string;
+
+    checkup_subject_en?: string;
+    checkup_subject_ar?: string;
+    checkup_body_en?: string;
+    checkup_body_ar?: string;
+
     updated_at: string;
   }> {
     return this.request("/admin/email-config");
@@ -1042,12 +1053,35 @@ class ApiClient {
     incomplete_days: number;
     checkup_enabled: boolean;
     checkup_days: number;
+
+    incomplete_subject_en?: string;
+    incomplete_subject_ar?: string;
+    incomplete_body_en?: string;
+    incomplete_body_ar?: string;
+
+    checkup_subject_en?: string;
+    checkup_subject_ar?: string;
+    checkup_body_en?: string;
+    checkup_body_ar?: string;
+
+    allowed_emails?: string[] | null;
   }): Promise<{
     id: number;
     incomplete_enabled: boolean;
     incomplete_days: number;
     checkup_enabled: boolean;
     checkup_days: number;
+
+    incomplete_subject_en?: string;
+    incomplete_subject_ar?: string;
+    incomplete_body_en?: string;
+    incomplete_body_ar?: string;
+
+    checkup_subject_en?: string;
+    checkup_subject_ar?: string;
+    checkup_body_en?: string;
+    checkup_body_ar?: string;
+
     updated_at: string;
   }> {
     return this.request("/admin/email-config", {
