@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
-import { Mail, Clock, Calendar, Save, AlertTriangle, Loader2, FileText } from 'lucide-react';
+import { Mail, Clock, Calendar, Save, AlertTriangle, Loader2, FileText, Shield } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function EmailAutomationSettings() {
@@ -32,7 +32,9 @@ export function EmailAutomationSettings() {
         checkup_subject_en: '',
         checkup_subject_ar: '',
         checkup_body_en: '',
-        checkup_body_ar: ''
+        checkup_body_ar: '',
+
+        allowed_emails: '' as string  // comma-separated whitelist
     });
 
     useEffect(() => {
@@ -57,7 +59,9 @@ export function EmailAutomationSettings() {
                 checkup_subject_en: data.checkup_subject_en || '',
                 checkup_subject_ar: data.checkup_subject_ar || '',
                 checkup_body_en: data.checkup_body_en || '',
-                checkup_body_ar: data.checkup_body_ar || ''
+                checkup_body_ar: data.checkup_body_ar || '',
+
+                allowed_emails: Array.isArray(data.allowed_emails) ? data.allowed_emails.join(', ') : ''
             });
             setError(null);
         } catch (err) {
@@ -71,7 +75,11 @@ export function EmailAutomationSettings() {
     const handleSave = async () => {
         try {
             setSaving(true);
-            await apiClient.updateEmailConfig(config);
+            // Parse allowed_emails from comma-separated string to array
+            const allowedEmailsArray = config.allowed_emails
+                ? config.allowed_emails.split(',').map((e: string) => e.trim()).filter(Boolean)
+                : null;
+            await apiClient.updateEmailConfig({ ...config, allowed_emails: allowedEmailsArray });
             toast.success('Settings saved successfully');
             setError(null);
         } catch (err) {
@@ -344,6 +352,35 @@ export function EmailAutomationSettings() {
                 </Card>
             </div>
 
+
+            {/* Whitelist / Allowed Emails */}
+            <Card>
+                <CardHeader>
+                    <div className="flex items-center space-x-2">
+                        <Shield className="h-5 w-5 text-violet-500" />
+                        <CardTitle>Allowed Emails (Whitelist)</CardTitle>
+                    </div>
+                    <CardDescription>
+                        Restrict automated emails to only the addresses listed below. Leave empty to send to all eligible users.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    <div className="space-y-1">
+                        <Label htmlFor="allowed-emails">Allowed Email Addresses</Label>
+                        <Textarea
+                            id="allowed-emails"
+                            placeholder="user1@example.com, user2@example.com"
+                            className="min-h-[80px] font-mono text-xs"
+                            value={config.allowed_emails}
+                            onChange={(e) => setConfig({ ...config, allowed_emails: e.target.value })}
+                        />
+                        <p className="text-[0.75rem] text-muted-foreground">
+                            Comma-separated list of email addresses. When set, <strong>only</strong> these addresses will receive automated reminder emails. Leave blank to send to all eligible users.
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg">How it works</CardTitle>
@@ -360,6 +397,9 @@ export function EmailAutomationSettings() {
                             <strong>3. Checkups:</strong> Users who completed a survey more than X days ago (and haven't taken one since) will receive a "Time for a Checkup" email.
                         </p>
                         <p>
+                            <strong>4. Limits &amp; Opt-Out:</strong> A maximum of 2 reminder emails are sent per user per campaign. Users can unsubscribe via the link in any email.
+                        </p>
+                        <p>
                             <strong>Note:</strong> Emails are only sent if the user has provided an email address.
                         </p>
                     </div>
@@ -368,3 +408,4 @@ export function EmailAutomationSettings() {
         </div>
     );
 }
+

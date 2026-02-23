@@ -1063,6 +1063,8 @@ class ApiClient {
     checkup_subject_ar?: string;
     checkup_body_en?: string;
     checkup_body_ar?: string;
+
+    allowed_emails?: string[] | null;
   }): Promise<{
     id: number;
     incomplete_enabled: boolean;
