@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +13,165 @@ import {
 import { HomepageHeader } from "@/components/homepage/Header";
 import { HomepageFooter } from "@/components/homepage/Footer";
 import { ConsultationRequestModal } from "@/components/ConsultationRequestModal";
+
+// ─── Product hover popup data ───────────────────────────────────────────────
+
+interface ProductInfo {
+  image?: string;
+  description: string;
+  description_ar: string;
+}
+
+const PRODUCT_INFO: Record<string, ProductInfo> = {
+  "Booster": {
+    image: "/products/booster.jpg",
+    description: "Boosted anticipated returns up to 17% with our newly launched investment solutions designed to fit your short to long-term financial plans.",
+    description_ar: "عوائد متوقعة معززة تصل إلى 17% مع حلول الاستثمار الجديدة المصممة لتناسب خططكم المالية قصيرة وطويلة الأجل.",
+  },
+  "Ahed": {
+    image: "/products/ahed.jpg",
+    description: "Exclusively for Emirati women to help start building emergency savings with ease and flexibility.",
+    description_ar: "حصرياً للمرأة الإماراتية للمساعدة في بناء مدخرات الطوارئ بسهولة ومرونة.",
+  },
+  "My Education Plan": {
+    image: "/products/my-education-plan.jpg",
+    description: "Whether you're saving for school, university, or personal growth, My Education Plan helps you reach your goals.",
+    description_ar: "سواء كنت تدخر للمدرسة أو الجامعة أو التطوير الشخصي، تساعدك خطة تعليمي على تحقيق أهدافك.",
+  },
+  "Saving Bonds": {
+    image: "/products/saving-bonds.jpg",
+    description: "Savings Bonds empower you to achieve your goals, and build a secure safety net, on your terms.",
+    description_ar: "صكوك الادخار تمكّنك من تحقيق أهدافك وبناء شبكة أمان آمنة وفق شروطك.",
+  },
+  "My Million": {
+    description: "A long-term wealth accumulation plan by National Bonds designed to help you grow your savings towards your first million.",
+    description_ar: "خطة تراكم الثروة طويلة الأجل من الصكوك الوطنية، مصممة لمساعدتك على تنمية مدخراتك نحو مليونك الأول.",
+  },
+  "myPlan": {
+    description: "A flexible monthly savings plan starting from AED 100 to build consistency and financial discipline.",
+    description_ar: "خطة ادخار شهرية مرنة تبدأ من 100 درهم لبناء الاتساق والانضباط المالي.",
+  },
+  "Second Salary Plan": {
+    description: "A monthly plan with flexible and defined durations to help you build a steady secondary income stream.",
+    description_ar: "خطة شهرية بمدد مرنة ومحددة لمساعدتك على بناء تدفق دخل ثانوي مستقر.",
+  },
+  "Second Salary": {
+    description: "A monthly plan with flexible and defined durations to help you build a steady secondary income stream.",
+    description_ar: "خطة شهرية بمدد مرنة ومحددة لمساعدتك على بناء تدفق دخل ثانوي مستقر.",
+  },
+  "Term Sukuk": {
+    description: "Flexible duration investment with monthly or quarterly profit payout options to grow your surplus savings.",
+    description_ar: "استثمار بمدد مرنة مع خيار توزيع الأرباح شهرياً أو ربع سنوياً لتنمية مدخراتك الفائضة.",
+  },
+  "Tejouri": {
+    description: "National Bonds savings account offering competitive returns with easy access to your funds.",
+    description_ar: "حساب ادخار الصكوك الوطنية يوفر عوائد تنافسية مع إمكانية الوصول السهل إلى أموالك.",
+  },
+};
+
+// Arabic product name aliases → canonical English key
+const ARABIC_PRODUCT_MAP: Record<string, string> = {
+  "الراتب الإضافي": "Second Salary",
+  "صكوك الادخار": "Saving Bonds",
+  "عهد": "Ahed",
+  "خطة تعليمي": "My Education Plan",
+};
+
+// Full product name list for regex (longest first to avoid partial matches)
+const PRODUCT_NAMES = [
+  "Second Salary Plan",
+  "My Education Plan",
+  "My Million",
+  "Saving Bonds",
+  "Term Sukuk",
+  "Booster",
+  "myPlan",
+  "Second Salary",
+  "Tejouri",
+  "Ahed",
+  // Arabic
+  "الراتب الإضافي",
+  "صكوك الادخار",
+  "عهد",
+  "خطة تعليمي",
+];
+
+// ─── ProductTooltip component ────────────────────────────────────────────────
+
+function ProductTooltip({ name, language }: { name: string; language: string }) {
+  const [visible, setVisible] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const canonicalKey = ARABIC_PRODUCT_MAP[name] ?? name;
+  const info = PRODUCT_INFO[canonicalKey];
+
+  const show = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setVisible(true);
+  };
+  const hide = () => {
+    timeoutRef.current = setTimeout(() => setVisible(false), 120);
+  };
+  const toggle = () => setVisible((v) => !v);
+
+  const desc = language === "ar" ? info?.description_ar : info?.description;
+
+  return (
+    <span className="relative inline-block">
+      <b
+        className="font-bold text-[#3d6b8e] cursor-pointer underline decoration-dotted underline-offset-2 hover:text-[#2a4f6b] transition-colors"
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onClick={toggle}
+      >
+        {name}
+      </b>
+      {visible && info && (
+        <span
+          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-white border border-[#c2d1d9] rounded-lg shadow-xl p-3 flex flex-col gap-2 pointer-events-auto"
+          onMouseEnter={show}
+          onMouseLeave={hide}
+          style={{ minWidth: "200px" }}
+        >
+          {info.image && (
+            <img
+              src={info.image}
+              alt={name}
+              className="w-full h-28 object-cover rounded-md"
+            />
+          )}
+          <p className="text-xs text-[#505d68] leading-4">{desc}</p>
+          {/* Triangle pointer */}
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white drop-shadow-sm" />
+        </span>
+      )}
+    </span>
+  );
+}
+
+// ─── Helper to split text and render product tooltips ────────────────────────
+
+function InsightText({ text, language }: { text: string; language: string }) {
+  const escapedNames = PRODUCT_NAMES.map((n) =>
+    n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  );
+  const regex = new RegExp(`(${escapedNames.join("|")})`, "g");
+  const parts = text.split(regex);
+
+  return (
+    <span className="text-[#737c84] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
+      {parts.map((part, i) =>
+        PRODUCT_NAMES.includes(part) ? (
+          <ProductTooltip key={i} name={part} language={language} />
+        ) : (
+          part
+        )
+      )}
+    </span>
+  );
+}
+
+// ─── Main component ──────────────────────────────────────────────────────────
 
 interface FinancialClinicResultsProps {
   result: FinancialClinicResult;
@@ -56,76 +215,46 @@ export function FinancialClinicResults({
     !!localStorage.getItem("simpleAuthSession");
 
   const handleSaveOrHistory = () => {
-    // For both logged in and guest users, go to history page
-    // Guest users will see their current result displayed
     window.location.href = "/financial-clinic/history";
   };
+
   const getScoreBandColor = (score: number): string => {
-    if (score >= 80) {
-      return "#6cc922"; // Excellent - green
-    } else if (score >= 60) {
-      return "#fca924"; // Good - orange
-    } else if (score >= 30) {
-      return "#fe6521"; // Fair - orange-red
-    } else {
-      return "#f00c01"; // Needs Improvement - red
-    }
+    if (score >= 80) return "#6cc922";
+    else if (score >= 60) return "#fca924";
+    else if (score >= 30) return "#fe6521";
+    else return "#f00c01";
   };
 
   const getCategoryTranslation = (category: string): string => {
     const categoryMap: Record<string, { en: string; ar: string }> = {
       "Income Stream": { en: "Income Stream", ar: "موارد الدخل" },
-      "Monthly Expenses Management": {
-        en: "Monthly Expenses Management",
-        ar: "إدارة النفقات الشهرية",
-      },
+      "Monthly Expenses Management": { en: "Monthly Expenses Management", ar: "إدارة النفقات الشهرية" },
       "Savings Habit": { en: "Savings Habit", ar: "السلوك الادخاري" },
       "Saving Habits": { en: "Saving Habits", ar: "السلوك الادخاري" },
       "Emergency Savings": { en: "Emergency Savings", ar: "مدخرات الطوارئ" },
       "Debt Management": { en: "Debt Management", ar: "إدارة الديون" },
-      "Retirement Planning": {
-        en: "Retirement Planning",
-        ar: "التخطيط للتقاعد",
-      },
-      "Protecting Your Assets | Loved Ones": {
-        en: "Protecting Your Assets | Loved Ones",
-        ar: "حماية أصولك | أحبائك",
-      },
-      "Planning for Your Future | Siblings": {
-        en: "Planning for Your Future | Siblings",
-        ar: "التخطيط لمستقبلك | الأشقاء",
-      },
-      "Protecting Your Family": {
-        en: "Protecting Your Family",
-        ar: "حماية عائلتك",
-      },
+      "Retirement Planning": { en: "Retirement Planning", ar: "التخطيط للتقاعد" },
+      "Protecting Your Assets | Loved Ones": { en: "Protecting Your Assets | Loved Ones", ar: "حماية أصولك | أحبائك" },
+      "Planning for Your Future | Siblings": { en: "Planning for Your Future | Siblings", ar: "التخطيط لمستقبلك | الأشقاء" },
+      "Protecting Your Family": { en: "Protecting Your Family", ar: "حماية عائلتك" },
     };
     const categoryData = categoryMap[category];
-    return language === "ar"
-      ? categoryData?.ar || category
-      : categoryData?.en || category;
+    return language === "ar" ? categoryData?.ar || category : categoryData?.en || category;
   };
 
   const getCategoryDescription = (category: string): string => {
-    const desc =
-      CATEGORY_DESCRIPTIONS[category as keyof typeof CATEGORY_DESCRIPTIONS];
+    const desc = CATEGORY_DESCRIPTIONS[category as keyof typeof CATEGORY_DESCRIPTIONS];
     return language === "ar" ? desc?.ar || "" : desc?.en || "";
   };
 
   const getScoreBandText = (score: number): string => {
-    if (score >= 80) {
-      return language === "ar" ? "ممتاز" : "Excellent";
-    } else if (score >= 60) {
-      return language === "ar" ? "جيد" : "Good";
-    } else if (score >= 30) {
-      return language === "ar" ? "متوسط" : "Fair";
-    } else {
-      return language === "ar" ? "يحتاج إلى تحسين" : "Needs Improvement";
-    }
+    if (score >= 80) return language === "ar" ? "ممتاز" : "Excellent";
+    else if (score >= 60) return language === "ar" ? "جيد" : "Good";
+    else if (score >= 30) return language === "ar" ? "متوسط" : "Fair";
+    else return language === "ar" ? "يحتاج إلى تحسين" : "Needs Improvement";
   };
 
   const translateInsightCategory = (category: string): string => {
-    // Map English insight category names to Arabic
     const categoryMap: Record<string, string> = {
       "Income Stream": "تدفق الدخل",
       "Monthly Expenses Management": "إدارة النفقات الشهرية",
@@ -153,11 +282,8 @@ export function FinancialClinicResults({
         <div className="flex flex-col items-center gap-3 md:gap-4 lg:gap-[22px] w-full">
           <div className="inline-flex flex-col items-center gap-1.5 px-4">
             <h1 className="font-semibold text-[#5E5E5E] text-2xl md:text-[28px] lg:text-[33px] tracking-[0] leading-tight md:leading-[38px] text-center">
-              {language === "ar"
-                ? "إليك درجة صحتك المالية!"
-                : "Here's your Financial Health Score!"}
+              {language === "ar" ? "إليك درجة صحتك المالية!" : "Here's your Financial Health Score!"}
             </h1>
-
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "نقدّم لكم لمحة سريعة تعكس رؤية واضحة لمدى صحّة وضعكم المالي اليوم."
@@ -171,7 +297,6 @@ export function FinancialClinicResults({
                 ? "تشير نتيجتكم إلى مستوى أدائكم في الجوانب الرئيسية."
                 : "Your score reflects how you're doing across key areas."}
             </p>
-
             <p className="font-normal text-[#575757] text-xs md:text-sm text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
               {language === "ar"
                 ? "تابعوا تحسين سلوكيّاتكم المالية لتتعزّز جودة حياتكم المالية تدريجياً مع الوقت."
@@ -185,14 +310,7 @@ export function FinancialClinicResults({
           <div
             className="text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]"
             style={{
-              color:
-                result.total_score >= 80
-                  ? "#6cc922"
-                  : result.total_score >= 60
-                    ? "#fca924"
-                    : result.total_score >= 30
-                      ? "#fe6521"
-                      : "#f00c01",
+              color: result.total_score >= 80 ? "#6cc922" : result.total_score >= 60 ? "#fca924" : result.total_score >= 30 ? "#fe6521" : "#f00c01",
             }}
           >
             {getScoreBandText(result.total_score)}
@@ -201,18 +319,8 @@ export function FinancialClinicResults({
           <div
             className="font-normal text-6xl md:text-8xl lg:text-[103px] text-center tracking-tight md:tracking-[-5.15px] leading-none md:leading-[106px]"
             style={{
-              color:
-                result.total_score >= 80
-                  ? "#6cc922"
-                  : result.total_score >= 60
-                    ? "#fca924"
-                    : result.total_score >= 30
-                      ? "#fe6521"
-                      : "#f00c01",
+              color: result.total_score >= 80 ? "#6cc922" : result.total_score >= 60 ? "#fca924" : result.total_score >= 30 ? "#fe6521" : "#f00c01",
             }}
-          // style={{
-          //   color: "#5E5E5E",
-          // }}
           >
             {Math.round(result.total_score)}%
           </div>
@@ -233,16 +341,11 @@ export function FinancialClinicResults({
             </h2>
 
             <div className="flex flex-col w-full items-start gap-3 md:gap-3.5">
-              {/* Color-coded bands */}
               <div className="flex w-full items-center rounded-[50px] md:rounded-[100px] overflow-hidden">
                 {SCORE_BANDS.map((band, index) => (
                   <div
                     key={index}
-                    className={`flex flex-1 h-[50px] sm:h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-1 sm:gap-2.5 p-1 sm:p-1.5 md:p-2.5 ${band.bgColor
-                      } ${index < SCORE_BANDS.length - 1
-                        ? "border-r-2 [border-right-style:solid] border-white"
-                        : ""
-                      }`}
+                    className={`flex flex-1 h-[50px] sm:h-[60px] md:h-[70px] lg:h-[81px] items-center justify-center gap-1 sm:gap-2.5 p-1 sm:p-1.5 md:p-2.5 ${band.bgColor} ${index < SCORE_BANDS.length - 1 ? "border-r-2 [border-right-style:solid] border-white" : ""}`}
                   >
                     <div className="font-semibold text-white text-xs sm:text-sm md:text-lg lg:text-2xl text-center tracking-[0] leading-tight md:leading-7 px-0.5">
                       {band.range}
@@ -251,13 +354,9 @@ export function FinancialClinicResults({
                 ))}
               </div>
 
-              {/* Band labels */}
               <div className="flex flex-row items-start w-full">
                 {SCORE_BANDS.map((band, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col flex-1 items-center px-0.5 sm:px-2 md:px-3 py-0"
-                  >
+                  <div key={index} className="flex flex-col flex-1 items-center px-0.5 sm:px-2 md:px-3 py-0">
                     <div className="font-semibold text-[#575757] text-[8px] sm:text-xs md:text-sm text-center tracking-[0] leading-3 sm:leading-4 md:leading-5 w-full">
                       {band.title[language]}
                     </div>
@@ -275,22 +374,16 @@ export function FinancialClinicResults({
         <div className="flex flex-col items-start gap-8 md:gap-[60px] w-full">
           <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
             <h2 className="font-semibold text-[#5E5E5E] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
-              {language === "ar"
-                ? "درجات الركائز المالية"
-                : "Financial Pillar Scores"}
+              {language === "ar" ? "درجات الركائز المالية" : "Financial Pillar Scores"}
             </h2>
-
             <p className="font-normal text-[#575757] text-sm md:text-base text-center tracking-[0] leading-5 md:leading-6 max-w-[600px]">
-              {language === "ar"
-                ? "أدائك عبر مجالات رئيسية للصحة المالية"
-                : "Your performance across key areas of financial health"}
+              {language === "ar" ? "أدائك عبر مجالات رئيسية للصحة المالية" : "Your performance across key areas of financial health"}
             </p>
           </div>
 
           <div className="flex flex-col items-center w-full px-4 gap-6">
             {Object.entries(result.category_scores)
               .sort(([nameA]: [string, any], [nameB]: [string, any]) => {
-                // Fixed order as per design specification
                 const categoryOrder = [
                   "Income Stream",
                   "Saving Habits",
@@ -300,44 +393,25 @@ export function FinancialClinicResults({
                   "Retirement Planning",
                   "Protecting Your Family",
                 ];
-
                 const indexA = categoryOrder.indexOf(nameA);
                 const indexB = categoryOrder.indexOf(nameB);
-                // Put unknown categories at the end
                 if (indexA === -1) return 1;
                 if (indexB === -1) return -1;
                 return indexA - indexB;
               })
               .map(([categoryName, category]: [string, any], index) => {
-                const percentage =
-                  (category.score / category.max_possible) * 100;
-
+                const percentage = (category.score / category.max_possible) * 100;
                 return (
-                  <div
-                    key={index}
-                    className="flex flex-col items-start gap-3 w-full max-w-[1000px]"
-                  >
-                    {/* Title and Progress bar on same line */}
+                  <div key={index} className="flex flex-col items-start gap-3 w-full max-w-[1000px]">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6 w-full">
-                      {/* Title and description */}
-                      <div
-                        className={`flex flex-col gap-1 w-full md:flex-shrink-0 ${isRTL ? "md:w-[190px]" : "md:w-[300px]"
-                          }`}
-                      >
-                        <div
-                          className={`font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6 ${isRTL ? "" : ""
-                            }`}
-                        >
+                      <div className={`flex flex-col gap-1 w-full md:flex-shrink-0 ${isRTL ? "md:w-[190px]" : "md:w-[300px]"}`}>
+                        <div className="font-semibold text-[#424b5a] text-sm md:text-base tracking-[0] leading-5 md:leading-6">
                           {getCategoryTranslation(categoryName)}
                         </div>
-                        <div
-                          className={`font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] whitespace-pre-line`}
-                        >
+                        <div className="font-normal text-[#575757] text-xs md:text-sm tracking-[0] leading-4 md:leading-[21px] whitespace-pre-line">
                           {getCategoryDescription(categoryName)}
                         </div>
                       </div>
-
-                      {/* Progress bar - inline on desktop */}
                       <StripedProgress
                         value={percentage}
                         className="w-full h-[12px] md:h-[14px]"
@@ -345,11 +419,9 @@ export function FinancialClinicResults({
                         isRTL={isRTL}
                       />
                     </div>
-
-                    {index <
-                      Object.entries(result.category_scores).length - 1 && (
-                        <Separator className="w-full mt-3" />
-                      )}
+                    {index < Object.entries(result.category_scores).length - 1 && (
+                      <Separator className="w-full mt-3" />
+                    )}
                   </div>
                 );
               })}
@@ -359,11 +431,8 @@ export function FinancialClinicResults({
         {/* Your Personalized Action Plan */}
         <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-4">
           <h2 className="font-semibold text-[#5E5E5E] text-2xl md:text-3xl lg:text-[35px] tracking-[0] leading-tight md:leading-[38px] text-center">
-            {language === "ar"
-              ? "خطة العمل المعدّة خصيصاً لكم"
-              : "Your Personalized Action Plan"}
+            {language === "ar" ? "خطة العمل المعدّة خصيصاً لكم" : "Your Personalized Action Plan"}
           </h2>
-
           <p className="font-normal text-sm md:text-base leading-5 md:leading-6 text-[#575757] text-center tracking-[0] max-w-[600px]">
             {language === "ar"
               ? "التغييرات البسيطة تُحدث فارقاً كبيراً. لتحسين نتيجتكم، ننصحكم بما يلي"
@@ -373,9 +442,7 @@ export function FinancialClinicResults({
 
         <div className="flex flex-col w-full max-w-[948px] items-start gap-3 md:gap-3.5 px-4">
           <h3 className="font-semibold text-[#5E5E5E] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
-            {language === "ar"
-              ? "فئات التوصيات:"
-              : "Recommendation Categories:"}
+            {language === "ar" ? "فئات التوصيات:" : "Recommendation Categories:"}
           </h3>
 
           <Card className="flex flex-col items-center gap-4 md:gap-[19px] p-4 md:p-8 lg:p-[42px] w-full bg-[#f8fbfd] border border-solid border-[#bdcdd6]">
@@ -386,27 +453,11 @@ export function FinancialClinicResults({
                     language === "ar"
                       ? insight.text_ar || insight.text
                       : insight.text;
-                  const products = [
-                    "My Million",
-                    "myPlan",
-                    "Second Salary Plan",
-                    "Saving Bonds",
-                    "Ahed",
-                    "Tejouri",
-                    "الراتب الإضافي",
-                    "صكوك الادخار",
-                    "عهد",
-                    "Tejouri", // Duplicate just in case
-                  ];
-                  // Escape special regex chars if any (none here really, maybe spaces)
-                  const regex = new RegExp(`(${products.join("|")})`, "g");
-                  const parts = text.split(regex);
 
                   return (
                     <div
                       key={index}
-                      className={`flex gap-2 w-full items-start ${isRTL ? "flex-row-reverse" : "flex-row"
-                        }`}
+                      className={`flex gap-2 w-full items-start ${isRTL ? "flex-row-reverse" : "flex-row"}`}
                     >
                       {!isRTL && (
                         <div className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7 flex-shrink-0">
@@ -414,24 +465,11 @@ export function FinancialClinicResults({
                         </div>
                       )}
 
-                      <div
-                        className={`flex-1 ${isRTL ? "flex-row-reverse" : "flex-row"
-                          }`}
-                      >
+                      <div className={`flex-1 ${isRTL ? "flex-row-reverse" : "flex-row"}`}>
                         <span className="font-semibold text-[#767f87] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
                           {translateInsightCategory(insight.category)}:{" "}
                         </span>
-                        <span className="text-[#737c84] text-base md:text-lg tracking-[0] leading-6 md:leading-7">
-                          {parts.map((part, i) =>
-                            i % 2 === 1 ? (
-                              <b key={i} className="font-bold text-[#5e5e5e]">
-                                {part}
-                              </b>
-                            ) : (
-                              part
-                            )
-                          )}
-                        </span>
+                        <InsightText text={text} language={language} />
                       </div>
 
                       {isRTL && (
@@ -453,16 +491,14 @@ export function FinancialClinicResults({
           </Card>
         </div>
 
-        {/* Main Action Buttons - Design Spec */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]" style={{ marginTop: "38pxF" }}>
+        {/* Main Action Buttons */}
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-wrap justify-center px-4 w-full max-w-[900px]">
           <Button
             onClick={() => setIsConsultationModalOpen(true)}
             className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"
           >
             <span className="font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px]">
-              {language === "ar"
-                ? "احجز استشارة مجانية"
-                : "BOOK A FREE CONSULTATION"}
+              {language === "ar" ? "احجز استشارة مجانية" : "BOOK A FREE CONSULTATION"}
             </span>
           </Button>
 
@@ -471,9 +507,7 @@ export function FinancialClinicResults({
             className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"
           >
             <span className="font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px]">
-              {language === "ar"
-                ? "ابدأ الادخار مع الصكوك الوطنية"
-                : "START SAVING WITH NATIONAL BONDS"}
+              {language === "ar" ? "ابدأ الادخار مع الصكوك الوطنية" : "START SAVING WITH NATIONAL BONDS"}
             </span>
           </Button>
 
@@ -483,15 +517,13 @@ export function FinancialClinicResults({
               className="inline-flex items-center justify-center gap-2.5 px-6 md:px-7 py-2.5 bg-[#5E5E5E] hover:bg-[#5E5E5E]/90 h-auto w-full md:w-auto"
             >
               <span className="font-normal text-white text-xs md:text-sm text-center tracking-[0] leading-[18px]">
-                {language === "ar"
-                  ? "تنزيل التقرير الكامل"
-                  : "DOWNLOAD FULL REPORT"}
+                {language === "ar" ? "تنزيل التقرير الكامل" : "DOWNLOAD FULL REPORT"}
               </span>
             </Button>
           )}
         </div>
 
-        {/* Additional Action Buttons - Keep existing functionality */}
+        {/* Additional Action Buttons */}
         <div className="flex flex-col md:flex-row flex-wrap justify-center gap-3 md:gap-4 pt-6 px-4 w-full max-w-[800px]">
           {onEmailReport && (
             <Button
@@ -499,9 +531,7 @@ export function FinancialClinicResults({
               variant="outline"
               className="gap-2 border-[#5E5E5E] text-[#5E5E5E] hover:bg-[#5E5E5E] hover:text-white w-full md:w-auto text-sm"
             >
-              {language === "ar"
-                ? "إرسال التقرير بالبريد الإلكتروني"
-                : "Email Report"}
+              {language === "ar" ? "إرسال التقرير بالبريد الإلكتروني" : "Email Report"}
             </Button>
           )}
 
@@ -511,12 +541,8 @@ export function FinancialClinicResults({
             className="gap-2 border-[#5E5E5E] text-[#5E5E5E] hover:bg-[#5E5E5E] hover:text-white w-full md:w-auto text-sm"
           >
             {isLoggedIn
-              ? language === "ar"
-                ? "عرض تاريخ التقييمات"
-                : "View Assessment History"
-              : language === "ar"
-                ? "الوصول إلى السجل"
-                : "Access My History"}
+              ? language === "ar" ? "عرض تاريخ التقييمات" : "View Assessment History"
+              : language === "ar" ? "الوصول إلى السجل" : "Access My History"}
           </Button>
 
           {onRetake && (
