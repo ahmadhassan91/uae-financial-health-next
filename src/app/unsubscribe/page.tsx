@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://uae-financial-health-filters-68ab0c8434cb.herokuapp.com';
+// Static assets are served at the root (no /api/v1 prefix)
+const ASSETS_BASE = API_BASE.replace('/api/v1', '');
 
-export default function UnsubscribePage() {
+function UnsubscribeContent() {
     const searchParams = useSearchParams();
     const email = searchParams.get('email') || '';
 
@@ -45,7 +47,7 @@ export default function UnsubscribePage() {
             <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 text-center">
                 {/* Logo */}
                 <img
-                    src={`${API_BASE}/static/icons/financial.png`}
+                    src={`${ASSETS_BASE}/static/icons/financial.png`}
                     alt="Financial Clinic"
                     className="h-10 mx-auto mb-6"
                 />
@@ -91,5 +93,17 @@ export default function UnsubscribePage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function UnsubscribePage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600" />
+            </div>
+        }>
+            <UnsubscribeContent />
+        </Suspense>
     );
 }
