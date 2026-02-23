@@ -482,15 +482,13 @@ export default function FinancialClinicPage({
     }
 
     // Validate company field - only if companies exist AND company field is enabled
-    // OPTIONAL: Company field is now optional
-    /*
+    // Company field is mandatory
     if (companyOptions && companyOptions.length > 0 && enableCompanyField) {
       if (!profile.company_name?.trim()) {
         setCompanyError(language === "ar" ? "الشركة مطلوبة" : "Company is required");
         hasError = true;
       }
     }
-    */
 
     if (!profile.date_of_birth.trim()) {
       setDateError(
@@ -1009,7 +1007,8 @@ export default function FinancialClinicPage({
             <div className="grid grid-cols-1 w-full">
               <div className="w-full relative">
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                  {language === "ar" ? "الشركة / صاحب العمل" : "Company / Employer"}
+                  {language === "ar" ? "الشركة / صاحب العمل" : "Company / Employer"}{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
                   <div className={`flex items-stretch w-full rounded-[3px] border border-solid ${companyError ? "border-red-500" : "border-[#c2d1d9]"} bg-white overflow-hidden ${language === "ar" ? "flex-row-reverse" : "flex-row"}`}>
