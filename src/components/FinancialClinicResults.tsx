@@ -128,21 +128,27 @@ function ProductTooltip({ name, language }: { name: string; language: string }) 
       </b>
       {visible && info && (
         <span
-          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-white border border-[#c2d1d9] rounded-lg shadow-xl p-3 flex flex-col gap-2 pointer-events-auto"
+          className="absolute z-[9999] top-full left-1/2 -translate-x-1/2 mt-2 bg-white border border-[#b0c8d8] rounded-xl flex flex-col overflow-hidden pointer-events-auto"
           onMouseEnter={show}
           onMouseLeave={hide}
-          style={{ minWidth: "200px" }}
+          style={{ width: "360px", boxShadow: "0 12px 40px rgba(0,0,0,0.22)" }}
         >
+          {/* Triangle pointer pointing UP toward the word */}
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 border-8 border-transparent border-b-[#b0c8d8]" style={{ marginBottom: "-1px" }} />
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 border-[7px] border-transparent border-b-white" style={{ marginBottom: "-2px" }} />
+
           {info.image && (
             <img
               src={info.image}
               alt={name}
-              className="w-full h-28 object-cover rounded-md"
+              className="w-full object-contain bg-gray-950"
+              style={{ height: "220px" }}
             />
           )}
-          <p className="text-xs text-[#505d68] leading-4">{desc}</p>
-          {/* Triangle pointer */}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white drop-shadow-sm" />
+          <div className="p-4 flex flex-col gap-1">
+            <p className="text-sm font-semibold text-[#2a4f6b]">{name}</p>
+            <p className="text-sm text-[#505d68] leading-[1.6]">{desc}</p>
+          </div>
         </span>
       )}
     </span>
