@@ -8,12 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  Clock, 
-  Mail, 
-  Phone, 
-  User, 
-  AlertTriangle, 
+import {
+  Clock,
+  Mail,
+  Phone,
+  User,
+  AlertTriangle,
   Send,
   RefreshCw,
   TrendingDown,
@@ -59,7 +59,7 @@ export function IncompleteSurveys() {
   const [error, setError] = useState<string | null>(null);
   const [selectedSurveys, setSelectedSurveys] = useState<number[]>([]);
   const [followUpMessage, setFollowUpMessage] = useState(
-    "Hi! We noticed you started our financial health assessment but didn't complete it. Would you like to continue where you left off? It only takes a few more minutes to get your personalized recommendations."
+    "Hi {customer_name},\n\nYou've already started your journey toward financial clarity.\n\nThe good news? You're just a few steps away from gaining complete financial clarity.\n\nTake this quick test to see exactly where you stand financially and learn about it in the most simple and practical way.\n\nDon't stop halfway. The clarity you're looking for is just moments away.\n\nComplete your financial check-up now: {resume_link}"
   );
   const [sendingFollowUp, setSendingFollowUp] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
@@ -70,7 +70,7 @@ export function IncompleteSurveys() {
     const now = new Date();
     const lastActivity = new Date(survey.last_activity);
     const hoursSinceActivity = (now.getTime() - lastActivity.getTime()) / (1000 * 60 * 60);
-    
+
     if (hoursSinceActivity < 24) {
       return { label: 'Active', variant: 'default' as const, color: 'text-green-600', bgColor: 'bg-green-100' };
     } else if (hoursSinceActivity < 72) {
@@ -127,7 +127,7 @@ export function IncompleteSurveys() {
 
     try {
       setSendingFollowUp(true);
-      
+
       const result = await apiClient.sendFollowUp({
         survey_ids: selectedSurveys,
         message_template: followUpMessage,
@@ -138,7 +138,7 @@ export function IncompleteSurveys() {
       // Refresh data
       await loadData();
       setSelectedSurveys([]);
-      
+
       toast.success(`Follow-up sent to ${result.sent_count} users`, {
         description: `Successfully sent reminder emails to ${result.sent_count} incomplete survey participants`,
       });
@@ -157,7 +157,7 @@ export function IncompleteSurveys() {
     const now = new Date();
     const activity = new Date(lastActivity);
     const diffHours = Math.floor((now.getTime() - activity.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffHours < 1) return 'Less than 1 hour ago';
     if (diffHours < 24) return `${diffHours} hours ago`;
     const diffDays = Math.floor(diffHours / 24);
@@ -287,12 +287,12 @@ export function IncompleteSurveys() {
               </TabsTrigger>
             </TabsList>
             <p className="text-xs text-muted-foreground mt-2">
-              {activeTab === 'all' 
-                ? 'View all incomplete surveys including recent attempts' 
+              {activeTab === 'all'
+                ? 'View all incomplete surveys including recent attempts'
                 : 'Abandoned surveys requiring follow-up (inactive for 24+ hours)'}
             </p>
           </div>
-          
+
           <div className="flex space-x-2">
             <Button onClick={handleExportCSV} disabled={isExporting || surveys.length === 0} variant="outline" size="sm">
               {isExporting ? (
@@ -310,7 +310,7 @@ export function IncompleteSurveys() {
         </div>
 
         <TabsContent value="all" className="space-y-4">
-          <SurveyList 
+          <SurveyList
             surveys={surveys}
             selectedSurveys={selectedSurveys}
             onSelectSurvey={handleSelectSurvey}
@@ -321,7 +321,7 @@ export function IncompleteSurveys() {
         </TabsContent>
 
         <TabsContent value="abandoned" className="space-y-4">
-          <SurveyList 
+          <SurveyList
             surveys={surveys}
             selectedSurveys={selectedSurveys}
             onSelectSurvey={handleSelectSurvey}
@@ -341,7 +341,7 @@ export function IncompleteSurveys() {
               Send Follow-up Messages
             </CardTitle>
             <CardDescription>
-              Send reminder emails to users who haven't completed their surveys. 
+              Send reminder emails to users who haven't completed their surveys.
               <span className="text-orange-600 font-medium"> Note: Email delivery requires configuration.</span>
             </CardDescription>
           </CardHeader>
@@ -355,13 +355,13 @@ export function IncompleteSurveys() {
                 className="mt-1"
               />
             </div>
-            
+
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
                 {selectedSurveys.length} of {eligibleForFollowUp.length} surveys selected
               </p>
-              
-              <Button 
+
+              <Button
                 onClick={handleSendFollowUp}
                 disabled={selectedSurveys.length === 0 || sendingFollowUp}
               >
@@ -392,12 +392,12 @@ function SurveyList({ surveys, selectedSurveys, onSelectSurvey, onSelectAll, eli
     const responsesCount = survey.responses ? Object.keys(survey.responses).length : 0;
     // Assume total questions based on the survey type - Financial Clinic has 15 questions
     const totalQuestions = 15; // This could be made dynamic based on survey type
-    
+
     // If no responses, fall back to step-based calculation for very early stages
     if (responsesCount === 0) {
       return Math.round((survey.current_step / survey.total_steps) * 100);
     }
-    
+
     return Math.round((responsesCount / totalQuestions) * 100);
   };
 
@@ -405,7 +405,7 @@ function SurveyList({ surveys, selectedSurveys, onSelectSurvey, onSelectAll, eli
     const now = new Date();
     const activity = new Date(lastActivity);
     const diffHours = Math.floor((now.getTime() - activity.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffHours < 1) return 'Less than 1 hour ago';
     if (diffHours < 24) return `${diffHours} hours ago`;
     const diffDays = Math.floor(diffHours / 24);
@@ -416,28 +416,28 @@ function SurveyList({ surveys, selectedSurveys, onSelectSurvey, onSelectAll, eli
     const now = new Date();
     const activity = new Date(lastActivity);
     const diffHours = Math.floor((now.getTime() - activity.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffHours < 24) {
-      return { 
-        label: 'Active', 
-        icon: '🟢', 
-        variant: 'default' as const, 
+      return {
+        label: 'Active',
+        icon: '🟢',
+        variant: 'default' as const,
         className: 'bg-green-500 hover:bg-green-600',
         description: 'Less than 24 hours since last activity'
       };
     } else if (diffHours < 72) {
-      return { 
-        label: 'Stalled', 
-        icon: '🟡', 
-        variant: 'secondary' as const, 
+      return {
+        label: 'Stalled',
+        icon: '🟡',
+        variant: 'secondary' as const,
         className: 'bg-yellow-500 hover:bg-yellow-600 text-white',
         description: '1-3 days since last activity'
       };
     } else {
-      return { 
-        label: 'Abandoned', 
-        icon: '🔴', 
-        variant: 'destructive' as const, 
+      return {
+        label: 'Abandoned',
+        icon: '🔴',
+        variant: 'destructive' as const,
         className: '',
         description: 'More than 3 days since last activity'
       };
@@ -454,7 +454,7 @@ function SurveyList({ surveys, selectedSurveys, onSelectSurvey, onSelectAll, eli
               {surveys.length} incomplete surveys found
             </CardDescription>
           </div>
-          
+
           {eligibleCount > 0 && (
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -469,121 +469,120 @@ function SurveyList({ surveys, selectedSurveys, onSelectSurvey, onSelectAll, eli
           )}
         </div>
       </CardHeader>
-      
+
       <CardContent>
         <div className="space-y-4">
           {surveys.map((survey) => {
             const statusInfo = getStatusBadge(survey.last_activity);
             return (
-            <div 
-              key={survey.id} 
-              className={`border rounded-lg p-4 transition-all hover:shadow-md ${
-                statusInfo.label === 'Abandoned' ? 'border-red-200 bg-red-50/30' :
-                statusInfo.label === 'Stalled' ? 'border-yellow-200 bg-yellow-50/30' :
-                'border-green-200 bg-green-50/30'
-              }`}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3">
-                  {survey.email && !survey.follow_up_sent && (
-                    <div className="flex items-center justify-center min-w-[24px] min-h-[24px] p-1">
-                      <Checkbox
-                        checked={selectedSurveys.includes(survey.id)}
-                        onCheckedChange={(checked) => onSelectSurvey(survey.id, !!checked)}
-                        className="w-5 h-5 border-2 border-gray-400 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500"
-                      />
-                    </div>
-                  )}
-                  
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center space-x-2 flex-wrap gap-2">
-                      {survey.user_id ? (
-                        <User className="h-4 w-4 text-blue-500" />
-                      ) : (
-                        <User className="h-4 w-4 text-gray-400" />
-                      )}
-                      <span className="font-medium">
-                        {survey.user_id ? 'Registered User' : 'Guest User'}
-                      </span>
-                      
-                      {/* Company Badge */}
-                      {survey.company_url && (
-                        <Badge variant="outline" className="border-purple-500 text-purple-700 bg-purple-50">
-                          <span className="mr-1">🏢</span>
-                          {survey.company_url}
+              <div
+                key={survey.id}
+                className={`border rounded-lg p-4 transition-all hover:shadow-md ${statusInfo.label === 'Abandoned' ? 'border-red-200 bg-red-50/30' :
+                    statusInfo.label === 'Stalled' ? 'border-yellow-200 bg-yellow-50/30' :
+                      'border-green-200 bg-green-50/30'
+                  }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start space-x-3">
+                    {survey.email && !survey.follow_up_sent && (
+                      <div className="flex items-center justify-center min-w-[24px] min-h-[24px] p-1">
+                        <Checkbox
+                          checked={selectedSurveys.includes(survey.id)}
+                          onCheckedChange={(checked) => onSelectSurvey(survey.id, !!checked)}
+                          className="w-5 h-5 border-2 border-gray-400 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center space-x-2 flex-wrap gap-2">
+                        {survey.user_id ? (
+                          <User className="h-4 w-4 text-blue-500" />
+                        ) : (
+                          <User className="h-4 w-4 text-gray-400" />
+                        )}
+                        <span className="font-medium">
+                          {survey.user_id ? 'Registered User' : 'Guest User'}
+                        </span>
+
+                        {/* Company Badge */}
+                        {survey.company_url && (
+                          <Badge variant="outline" className="border-purple-500 text-purple-700 bg-purple-50">
+                            <span className="mr-1">🏢</span>
+                            {survey.company_url}
+                          </Badge>
+                        )}
+
+                        {/* Status Badge */}
+                        <Badge
+                          variant={statusInfo.variant}
+                          className={statusInfo.className}
+                          title={statusInfo.description}
+                        >
+                          <span className="mr-1">{statusInfo.icon}</span>
+                          {statusInfo.label}
                         </Badge>
-                      )}
-                      
-                      {/* Status Badge */}
-                      <Badge 
-                        variant={statusInfo.variant}
-                        className={statusInfo.className}
-                        title={statusInfo.description}
-                      >
-                        <span className="mr-1">{statusInfo.icon}</span>
-                        {statusInfo.label}
-                      </Badge>
-                      
-                      {survey.follow_up_sent && (
-                        <Badge variant="outline" className="border-blue-500 text-blue-500">
-                          Follow-up Sent ({survey.follow_up_count})
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <p className="text-muted-foreground">Progress</p>
-                        <div className="flex items-center space-x-2">
-                          <div className="flex-1 bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-blue-500 h-2 rounded-full" 
-                              style={{ width: `${getCompletionPercentage(survey)}%` }}
-                            />
+
+                        {survey.follow_up_sent && (
+                          <Badge variant="outline" className="border-blue-500 text-blue-500">
+                            Follow-up Sent ({survey.follow_up_count})
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <p className="text-muted-foreground">Progress</p>
+                          <div className="flex items-center space-x-2">
+                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-blue-500 h-2 rounded-full"
+                                style={{ width: `${getCompletionPercentage(survey)}%` }}
+                              />
+                            </div>
+                            <span className="font-medium">
+                              {getCompletionPercentage(survey)}%
+                            </span>
                           </div>
-                          <span className="font-medium">
-                            {getCompletionPercentage(survey)}%
-                          </span>
+                          <p className="text-xs text-muted-foreground">
+                            Step {survey.current_step} of {survey.total_steps}
+                          </p>
                         </div>
-                        <p className="text-xs text-muted-foreground">
-                          Step {survey.current_step} of {survey.total_steps}
-                        </p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-muted-foreground">Contact</p>
-                        {survey.email && (
-                          <div className="flex items-center space-x-1">
-                            <Mail className="h-3 w-3" />
-                            <span className="text-xs">{survey.email}</span>
-                          </div>
-                        )}
-                        {survey.phone_number && (
-                          <div className="flex items-center space-x-1">
-                            <Phone className="h-3 w-3" />
-                            <span className="text-xs">{survey.phone_number}</span>
-                          </div>
-                        )}
-                        {!survey.email && !survey.phone_number && (
-                          <span className="text-xs text-muted-foreground">No contact info</span>
-                        )}
-                      </div>
-                      
-                      <div>
-                        <p className="text-muted-foreground">Last Activity</p>
-                        <p className="text-xs">{getTimeSinceActivity(survey.last_activity)}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Started: {new Date(survey.started_at).toLocaleDateString()}
-                        </p>
+
+                        <div>
+                          <p className="text-muted-foreground">Contact</p>
+                          {survey.email && (
+                            <div className="flex items-center space-x-1">
+                              <Mail className="h-3 w-3" />
+                              <span className="text-xs">{survey.email}</span>
+                            </div>
+                          )}
+                          {survey.phone_number && (
+                            <div className="flex items-center space-x-1">
+                              <Phone className="h-3 w-3" />
+                              <span className="text-xs">{survey.phone_number}</span>
+                            </div>
+                          )}
+                          {!survey.email && !survey.phone_number && (
+                            <span className="text-xs text-muted-foreground">No contact info</span>
+                          )}
+                        </div>
+
+                        <div>
+                          <p className="text-muted-foreground">Last Activity</p>
+                          <p className="text-xs">{getTimeSinceActivity(survey.last_activity)}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Started: {new Date(survey.started_at).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
             );
           })}
-          
+
           {surveys.length === 0 && (
             <div className="text-center py-12">
               <div className="flex justify-center mb-4">
@@ -594,13 +593,13 @@ function SurveyList({ surveys, selectedSurveys, onSelectSurvey, onSelectAll, eli
                 )}
               </div>
               <p className="text-lg font-medium text-muted-foreground mb-2">
-                {isAbandonedView 
+                {isAbandonedView
                   ? '🎉 Great News! No Abandoned Surveys'
                   : 'No Incomplete Surveys Found'}
               </p>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                {isAbandonedView 
-                  ? 'All incomplete surveys are still active or have been completed. No recovery action needed at this time.' 
+                {isAbandonedView
+                  ? 'All incomplete surveys are still active or have been completed. No recovery action needed at this time.'
                   : 'All users are actively completing their financial health assessments. Check back later to monitor progress.'}
               </p>
             </div>

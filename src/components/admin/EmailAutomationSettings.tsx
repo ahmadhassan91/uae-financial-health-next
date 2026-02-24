@@ -51,15 +51,15 @@ export function EmailAutomationSettings() {
                 checkup_enabled: data.checkup_enabled,
                 checkup_days: data.checkup_days,
 
-                incomplete_subject_en: data.incomplete_subject_en || '',
-                incomplete_subject_ar: data.incomplete_subject_ar || '',
-                incomplete_body_en: data.incomplete_body_en || '',
-                incomplete_body_ar: data.incomplete_body_ar || '',
+                incomplete_subject_en: data.incomplete_subject_en || "You've opened the door. Now step inside.",
+                incomplete_subject_ar: data.incomplete_subject_ar || 'لقد فتحتم الباب، وحان وقت الخطوة الأولى.',
+                incomplete_body_en: data.incomplete_body_en || "Hi {customer_name},\n\nYou've already started your journey toward financial clarity.\n\nThe good news? You're just a few steps away from gaining complete financial clarity.\n\nTake this quick test to see exactly where you stand financially and learn about it in the most simple and practical way.\n\nDon't stop halfway. The clarity you're looking for is just moments away.\n\nComplete your financial check-up now:\n{resume_link}",
+                incomplete_body_ar: data.incomplete_body_ar || 'مرحبًا {customer_name}،\n\nلقد بدأتم بالفعل رحلتكم نحو معرفة وضعكم المالي.\n\nوالخبر السار هو! أنكم على بُعد خطوات قليلة من التعرف على صحتكم المالية.\n\nفي دقائق معدودة، ستحصلون على تقرير واضح بطريقة بسيطة وعملية وسهلة.\n\nلا تتوقفوا في منتصف الطريق، فالوضوح الذي تبحثون عنه أقرب مما تتصورون.\n\nأكملوا فحصكم المالي الآن:\n{resume_link}',
 
-                checkup_subject_en: data.checkup_subject_en || '',
-                checkup_subject_ar: data.checkup_subject_ar || '',
-                checkup_body_en: data.checkup_body_en || '',
-                checkup_body_ar: data.checkup_body_ar || '',
+                checkup_subject_en: data.checkup_subject_en || "Time for Your Financial Health Checkup",
+                checkup_subject_ar: data.checkup_subject_ar || 'حان وقت مراجعة صحتك المالية',
+                checkup_body_en: data.checkup_body_en || "It's been a while since your last Financial Health Assessment.\n\nFinancial health is a journey, not a destination. Regular checkups help you track your progress and adjust your strategy as your life changes.\n\nWhy take a new assessment?\n- See how your score has improved\n- Update your financial goals\n- Get fresh recommendations\n\nComplete your financial check-up now:\nhttps://financialclinic.ae/company/nationalbonds/financial-clinic",
+                checkup_body_ar: data.checkup_body_ar || 'لقد مر بعض الوقت منذ آخر تقييم لصحتك المالية.\n\nالصحة المالية هي رحلة وليست وجهة. تساعدك المراجعات المنتظمة على تتبع تقدمك وتعديل استراتيجيتك مع تغير حياتك.\n\nلماذا تجري تقييماً جديداً؟\n- شاهد كيف تحسنت نتيجتك\n- قم بتحديث أهدافك المالية\n- احصل على توصيات جديدة\n\nأكملوا فحصكم المالي الآن:\nhttps://financialclinic.ae/company/nationalbonds/financial-clinic',
 
                 allowed_emails: Array.isArray(data.allowed_emails) ? data.allowed_emails.join(', ') : ''
             });
