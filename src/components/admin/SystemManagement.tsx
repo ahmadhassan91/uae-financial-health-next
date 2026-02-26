@@ -4,13 +4,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import {
   Settings, Languages, Users, BarChart3,
-  FileText, Globe, Code, Target, Package, Mail
+  FileText, Globe, Code, Target, Package, Shield, Mail
 } from 'lucide-react';
 
 import { QuestionVariationManager } from './QuestionVariationManager';
 import { VariationSetManager } from './VariationSetManager';
 import { DemographicRuleManager } from './DemographicRuleManager';
 import { LocalizationManager } from './LocalizationManager';
+import { CRMManagement } from './CRMManagement';
 import { EmailAutomationSettings } from './EmailAutomationSettings';
 
 export function SystemManagement() {
@@ -33,6 +34,7 @@ export function SystemManagement() {
           <TabsTrigger value="questions">Question Variations</TabsTrigger>
           <TabsTrigger value="sets">Variation Sets</TabsTrigger>
           <TabsTrigger value="email">Email Automation</TabsTrigger>
+          <TabsTrigger value="crm">CRM Integration</TabsTrigger>
           {/* <TabsTrigger value="rules">Demographic Rules</TabsTrigger> */}
           {/* <TabsTrigger value="localization">Localization</TabsTrigger> */}
         </TabsList>
@@ -111,6 +113,24 @@ export function SystemManagement() {
               </CardContent>
             </Card> */}
 
+            {/* CRM Integration Overview */}
+            <Card className="cursor-pointer hover:shadow-md transition-shadow border-primary/20"
+              onClick={() => setSelectedTab('crm')}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">CRM Integration</CardTitle>
+                <Shield className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">Active</div>
+                <p className="text-xs text-muted-foreground">
+                  Microsoft Dynamics CRM Sync
+                </p>
+                <div className="flex items-center space-x-2 mt-2">
+                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100 border-none">Secure</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Localization Overview - HIDDEN */}
             {/* <Card className="cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => setSelectedTab('localization')}>
@@ -143,16 +163,20 @@ export function SystemManagement() {
           <EmailAutomationSettings />
         </TabsContent>
 
-        {/* HIDDEN: Demographic Rules - Not needed at this time */}
-        {/* <TabsContent value="rules">
+        <TabsContent value="crm">
+          <CRMManagement />
+        </TabsContent>
+
+      {/* HIDDEN: Demographic Rules - Not needed at this time */}
+      {/* <TabsContent value="rules">
           <DemographicRuleManager />
         </TabsContent> */}
 
-        {/* HIDDEN: Localization - Not needed at this time */}
-        {/* <TabsContent value="localization">
+      {/* HIDDEN: Localization - Not needed at this time */}
+      {/* <TabsContent value="localization">
           <LocalizationManager />
         </TabsContent> */}
-      </Tabs>
-    </div>
+    </Tabs>
+    </div >
   );
 }
