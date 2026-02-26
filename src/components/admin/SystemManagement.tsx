@@ -29,7 +29,7 @@ export function SystemManagement() {
       </div>
 
       <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="questions">Question Variations</TabsTrigger>
           <TabsTrigger value="sets">Variation Sets</TabsTrigger>
@@ -167,16 +167,16 @@ export function SystemManagement() {
           <CRMManagement />
         </TabsContent>
 
-      {/* HIDDEN: Demographic Rules - Not needed at this time */}
-      {/* <TabsContent value="rules">
+        {/* HIDDEN: Demographic Rules - Not needed at this time */}
+        {/* <TabsContent value="rules">
           <DemographicRuleManager />
         </TabsContent> */}
 
-      {/* HIDDEN: Localization - Not needed at this time */}
-      {/* <TabsContent value="localization">
+        {/* HIDDEN: Localization - Not needed at this time */}
+        {/* <TabsContent value="localization">
           <LocalizationManager />
         </TabsContent> */}
-    </Tabs>
+      </Tabs>
     </div >
   );
 }
