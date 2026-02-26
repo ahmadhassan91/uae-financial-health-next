@@ -20,7 +20,7 @@ export default function FinancialClinicWrapper() {
   const router = useRouter();
   const sessionId = searchParams?.get('session');
   const companyUrl = searchParams?.get('company');
-  
+
   const [isRestoring, setIsRestoring] = useState(false);
   const [restoredData, setRestoredData] = useState<RestoredSurveyData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export default function FinancialClinicWrapper() {
       console.log('🏢 Storing company URL from parameters:', companyUrl);
       sessionStorage.setItem('company_url', companyUrl);
     }
-    
+
     if (sessionId) {
       restoreSession(sessionId);
     }
@@ -40,30 +40,30 @@ export default function FinancialClinicWrapper() {
   const restoreSession = async (sessionId: string) => {
     setIsRestoring(true);
     setError(null);
-    
+
     try {
       console.log('🔄 Restoring survey session:', sessionId);
-      
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
       const response = await fetch(`${apiUrl}/surveys/incomplete/resume/${sessionId}`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error('Survey session not found. It may have been completed or deleted.');
         } else if (response.status === 410) {
-          throw new Error('Survey session has expired. Sessions expire after 30 days.');
+          throw new Error('Survey session has expired. Sessions expire after 9 months.');
         } else {
           throw new Error('Failed to restore survey session');
         }
       }
-      
+
       const data = await response.json();
       console.log('✅ Survey session restored:', data);
-      
+
       // Store restored data in localStorage for the survey page to pick up
       localStorage.setItem('restoredAnswers', JSON.stringify(data.responses || {}));
       localStorage.setItem('restoredStep', String(data.current_step || 0));
-      
+
       // Store profile data if available
       if (data.profile) {
         console.log('👤 Restoring profile data:', data.profile);
@@ -84,19 +84,19 @@ export default function FinancialClinicWrapper() {
         console.log('👤 Creating basic profile from session:', basicProfile);
         localStorage.setItem('financialClinicProfile', JSON.stringify(basicProfile));
       }
-      
+
       // If survey has company context, restore it to sessionStorage
       if (data.company_url) {
         console.log('🏢 Restoring company tracking:', data.company_url);
         sessionStorage.setItem('company_url', data.company_url);
       }
-      
+
       // Redirect to survey page to continue
       console.log('🚀 Redirecting to survey page...');
       router.push('/financial-clinic/survey');
-      
+
       setRestoredData(data);
-      
+
     } catch (err) {
       console.error('❌ Failed to restore survey:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to restore survey';
@@ -131,29 +131,29 @@ export default function FinancialClinicWrapper() {
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <div className="text-center">
             <div className="mb-4">
-              <svg 
-                className="mx-auto h-16 w-16 text-red-500" 
-                fill="none" 
-                viewBox="0 0 24 24" 
+              <svg
+                className="mx-auto h-16 w-16 text-red-500"
+                fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                 />
               </svg>
             </div>
-            
+
             <h2 className="text-2xl font-bold text-gray-900 mb-3">
               Unable to Resume Survey
             </h2>
-            
+
             <p className="text-gray-600 mb-6">
               {error}
             </p>
-            
+
             <div className="space-y-3">
               <button
                 onClick={() => {
@@ -166,7 +166,7 @@ export default function FinancialClinicWrapper() {
               >
                 Start New Survey
               </button>
-              
+
               <button
                 onClick={() => router.push('/')}
                 className="w-full px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
