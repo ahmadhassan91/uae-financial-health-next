@@ -34,7 +34,9 @@ export function EmailAutomationSettings() {
         checkup_body_en: '',
         checkup_body_ar: '',
 
-        allowed_emails: '' as string  // comma-separated whitelist
+        allowed_emails: '' as string,  // comma-separated whitelist
+        incomplete_exclude_company_url: false,
+        checkup_exclude_company_url: false
     });
 
     useEffect(() => {
@@ -50,6 +52,8 @@ export function EmailAutomationSettings() {
                 incomplete_days: data.incomplete_days,
                 checkup_enabled: data.checkup_enabled,
                 checkup_days: data.checkup_days,
+                incomplete_exclude_company_url: data.incomplete_exclude_company_url ?? false,
+                checkup_exclude_company_url: data.checkup_exclude_company_url ?? false,
 
                 incomplete_subject_en: data.incomplete_subject_en || "You've opened the door. Now step inside.",
                 incomplete_subject_ar: data.incomplete_subject_ar || 'لقد فتحتم الباب، وحان وقت الخطوة الأولى.',
@@ -236,6 +240,22 @@ export function EmailAutomationSettings() {
                                 </Tabs>
                             </div>
                         )}
+
+                        {/* Company URL Exclusion Toggle */}
+                        <div className="flex items-center justify-between space-x-2 pt-2 border-t">
+                            <Label htmlFor="incomplete-exclude-company" className="flex flex-col space-y-1">
+                                <span>Exclude Company URL Users</span>
+                                <span className="font-normal text-xs text-muted-foreground">
+                                    Skip users who submitted via a company tracker URL
+                                </span>
+                            </Label>
+                            <Switch
+                                id="incomplete-exclude-company"
+                                checked={config.incomplete_exclude_company_url}
+                                onCheckedChange={(checked) => setConfig({ ...config, incomplete_exclude_company_url: checked })}
+                            />
+                        </div>
+
                     </CardContent>
                 </Card>
 
@@ -348,6 +368,22 @@ export function EmailAutomationSettings() {
                                 </Tabs>
                             </div>
                         )}
+
+                        {/* Company URL Exclusion Toggle */}
+                        <div className="flex items-center justify-between space-x-2 pt-2 border-t">
+                            <Label htmlFor="checkup-exclude-company" className="flex flex-col space-y-1">
+                                <span>Exclude Company URL Users</span>
+                                <span className="font-normal text-xs text-muted-foreground">
+                                    Skip users who completed via a company tracker URL
+                                </span>
+                            </Label>
+                            <Switch
+                                id="checkup-exclude-company"
+                                checked={config.checkup_exclude_company_url}
+                                onCheckedChange={(checked) => setConfig({ ...config, checkup_exclude_company_url: checked })}
+                            />
+                        </div>
+
                     </CardContent>
                 </Card>
             </div>

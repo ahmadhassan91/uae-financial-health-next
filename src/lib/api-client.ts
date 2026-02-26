@@ -1043,6 +1043,10 @@ class ApiClient {
     checkup_body_en?: string;
     checkup_body_ar?: string;
 
+    allowed_emails?: string[] | null;
+    incomplete_exclude_company_url: boolean;
+    checkup_exclude_company_url: boolean;
+
     updated_at: string;
   }> {
     return this.request("/admin/email-config");
@@ -1065,6 +1069,8 @@ class ApiClient {
     checkup_body_ar?: string;
 
     allowed_emails?: string[] | null;
+    incomplete_exclude_company_url: boolean;
+    checkup_exclude_company_url: boolean;
   }): Promise<{
     id: number;
     incomplete_enabled: boolean;
@@ -1081,6 +1087,10 @@ class ApiClient {
     checkup_subject_ar?: string;
     checkup_body_en?: string;
     checkup_body_ar?: string;
+
+    allowed_emails?: string[] | null;
+    incomplete_exclude_company_url: boolean;
+    checkup_exclude_company_url: boolean;
 
     updated_at: string;
   }> {
