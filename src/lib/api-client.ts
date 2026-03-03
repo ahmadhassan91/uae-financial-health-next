@@ -1099,6 +1099,33 @@ class ApiClient {
       body: JSON.stringify(config),
     });
   }
+
+  async sendTestReminderEmail(data: {
+    email: string;
+    name?: string;
+    language?: string;
+    resume_link?: string;
+    subject?: string;
+    body?: string;
+  }): Promise<any> {
+    return this.request("/admin/test-reminder-email", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async sendTestCheckupEmail(data: {
+    email: string;
+    name?: string;
+    language?: string;
+    subject?: string;
+    body?: string;
+  }): Promise<any> {
+    return this.request("/admin/test-checkup-email", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
 }
 
 // Export singleton instance
