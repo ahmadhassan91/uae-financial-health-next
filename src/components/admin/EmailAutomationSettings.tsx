@@ -16,7 +16,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 export function EmailAutomationSettings() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [sendingTest, setSendingTest] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [testEmailIncomplete, setTestEmailIncomplete] = useState('');
+    const [testEmailCheckup, setTestEmailCheckup] = useState('');
 
     const [config, setConfig] = useState({
         incomplete_enabled: false,
@@ -92,6 +95,39 @@ export function EmailAutomationSettings() {
             toast.error('Failed to save settings');
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleSendTest = async (type: 'incomplete' | 'checkup', language: 'en' | 'ar') => {
+        const email = type === 'incomplete' ? testEmailIncomplete : testEmailCheckup;
+        if (!email || !email.includes('@')) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
+
+        try {
+            setSendingTest(`${type}-${language}`);
+            if (type === 'incomplete') {
+                await apiClient.sendTestReminderEmail({
+                    email,
+                    language,
+                    subject: language === 'en' ? config.incomplete_subject_en : config.incomplete_subject_ar,
+                    body: language === 'en' ? config.incomplete_body_en : config.incomplete_body_ar
+                });
+            } else {
+                await apiClient.sendTestCheckupEmail({
+                    email,
+                    language,
+                    subject: language === 'en' ? config.checkup_subject_en : config.checkup_subject_ar,
+                    body: language === 'en' ? config.checkup_body_en : config.checkup_body_ar
+                });
+            }
+            toast.success(`Test email sent to ${email}`);
+        } catch (err) {
+            console.error('Failed to send test email:', err);
+            toast.error('Failed to send test email');
+        } finally {
+            setSendingTest(null);
         }
     };
 
@@ -212,9 +248,30 @@ export function EmailAutomationSettings() {
                                                 Available placeholders: {'{customer_name}'}, {'{resume_link}'}, {'{base_url}'}
                                             </p>
                                         </div>
+                                        <div className="pt-4 mt-4 border-t border-dashed">
+                                            <Label htmlFor="test-email-inc-en" className="text-xs font-semibold block mb-2">Send Test Email (English)</Label>
+                                            <div className="flex gap-2">
+                                                <Input
+                                                    id="test-email-inc-en"
+                                                    placeholder="Enter test email address"
+                                                    value={testEmailIncomplete}
+                                                    onChange={(e) => setTestEmailIncomplete(e.target.value)}
+                                                    className="flex-1"
+                                                />
+                                                <Button
+                                                    size="sm"
+                                                    variant="secondary"
+                                                    disabled={sendingTest === 'incomplete-en'}
+                                                    onClick={() => handleSendTest('incomplete', 'en')}
+                                                >
+                                                    {sendingTest === 'incomplete-en' && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                                                    Send Test
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </TabsContent>
                                     <TabsContent value="ar" className="space-y-3 mt-3" dir="rtl">
-                                        <div className="space-y-1">
+                                        <div className="space-y-1 text-right">
                                             <Label htmlFor="inc-subject-ar" className="text-xs">الموضوع</Label>
                                             <Input
                                                 id="inc-subject-ar"
@@ -223,7 +280,7 @@ export function EmailAutomationSettings() {
                                                 onChange={(e) => setConfig({ ...config, incomplete_subject_ar: e.target.value })}
                                             />
                                         </div>
-                                        <div className="space-y-1">
+                                        <div className="space-y-1 text-right">
                                             <Label htmlFor="inc-body-ar" className="text-xs">نص الرسالة</Label>
                                             <Textarea
                                                 id="inc-body-ar"
@@ -235,6 +292,27 @@ export function EmailAutomationSettings() {
                                             <p className="text-[10px] text-muted-foreground text-right">
                                                 المتغيرات المتاحة: {'{customer_name}'}, {'{resume_link}'}, {'{base_url}'}
                                             </p>
+                                        </div>
+                                        <div className="pt-4 mt-4 border-t border-dashed text-right">
+                                            <Label htmlFor="test-email-inc-ar" className="text-xs font-semibold block mb-2">إرسال بريد اختبار (عربي)</Label>
+                                            <div className="flex gap-2">
+                                                <Button
+                                                    size="sm"
+                                                    variant="secondary"
+                                                    disabled={sendingTest === 'incomplete-ar'}
+                                                    onClick={() => handleSendTest('incomplete', 'ar')}
+                                                >
+                                                    {sendingTest === 'incomplete-ar' && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                                                    إرسال
+                                                </Button>
+                                                <Input
+                                                    id="test-email-inc-ar"
+                                                    placeholder="أدخل عنوان البريد الإلكتروني"
+                                                    value={testEmailIncomplete}
+                                                    onChange={(e) => setTestEmailIncomplete(e.target.value)}
+                                                    className="flex-1"
+                                                />
+                                            </div>
                                         </div>
                                     </TabsContent>
                                 </Tabs>
@@ -340,9 +418,30 @@ export function EmailAutomationSettings() {
                                                 Available placeholders: {'{customer_name}'}, {'{base_url}'}
                                             </p>
                                         </div>
+                                        <div className="pt-4 mt-4 border-t border-dashed">
+                                            <Label htmlFor="test-email-chk-en" className="text-xs font-semibold block mb-2">Send Test Email (English)</Label>
+                                            <div className="flex gap-2">
+                                                <Input
+                                                    id="test-email-chk-en"
+                                                    placeholder="Enter test email address"
+                                                    value={testEmailCheckup}
+                                                    onChange={(e) => setTestEmailCheckup(e.target.value)}
+                                                    className="flex-1"
+                                                />
+                                                <Button
+                                                    size="sm"
+                                                    variant="secondary"
+                                                    disabled={sendingTest === 'checkup-en'}
+                                                    onClick={() => handleSendTest('checkup', 'en')}
+                                                >
+                                                    {sendingTest === 'checkup-en' && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                                                    Send Test
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </TabsContent>
                                     <TabsContent value="ar" className="space-y-3 mt-3" dir="rtl">
-                                        <div className="space-y-1">
+                                        <div className="space-y-1 text-right">
                                             <Label htmlFor="chk-subject-ar" className="text-xs">الموضوع</Label>
                                             <Input
                                                 id="chk-subject-ar"
@@ -351,7 +450,7 @@ export function EmailAutomationSettings() {
                                                 onChange={(e) => setConfig({ ...config, checkup_subject_ar: e.target.value })}
                                             />
                                         </div>
-                                        <div className="space-y-1">
+                                        <div className="space-y-1 text-right">
                                             <Label htmlFor="chk-body-ar" className="text-xs">نص الرسالة</Label>
                                             <Textarea
                                                 id="chk-body-ar"
@@ -363,6 +462,27 @@ export function EmailAutomationSettings() {
                                             <p className="text-[10px] text-muted-foreground text-right">
                                                 المتغيرات المتاحة: {'{customer_name}'}, {'{base_url}'}
                                             </p>
+                                        </div>
+                                        <div className="pt-4 mt-4 border-t border-dashed text-right">
+                                            <Label htmlFor="test-email-chk-ar" className="text-xs font-semibold block mb-2">إرسال بريد اختبار (عربي)</Label>
+                                            <div className="flex gap-2">
+                                                <Button
+                                                    size="sm"
+                                                    variant="secondary"
+                                                    disabled={sendingTest === 'checkup-ar'}
+                                                    onClick={() => handleSendTest('checkup', 'ar')}
+                                                >
+                                                    {sendingTest === 'checkup-ar' && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                                                    إرسال
+                                                </Button>
+                                                <Input
+                                                    id="test-email-chk-ar"
+                                                    placeholder="أدخل عنوان البريد الإلكتروني"
+                                                    value={testEmailCheckup}
+                                                    onChange={(e) => setTestEmailCheckup(e.target.value)}
+                                                    className="flex-1"
+                                                />
+                                            </div>
                                         </div>
                                     </TabsContent>
                                 </Tabs>
