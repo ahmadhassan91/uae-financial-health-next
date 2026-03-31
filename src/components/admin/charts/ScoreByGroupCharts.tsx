@@ -37,17 +37,17 @@ interface ScoreByGroupChartsProps {
 }
 
 const TRAFFIC_COLORS = {
-  "At Risk": "#dc2626",
-  "Needs Improvement": "#d97706",
-  Good: "#2563eb",
-  Excellent: "#16a34a",
+  "At Risk": "#ef4444",
+  "Needs Improvement": "#eab308",
+  Good: "#3b82f6",
+  Excellent: "#22c55e",
 };
 
 const bandColor = (score: number) => {
-  if (score >= 65) return "#16a34a";
-  if (score >= 50) return "#2563eb";
-  if (score >= 35) return "#d97706";
-  return "#dc2626";
+  if (score >= 65) return "#22c55e";
+  if (score >= 50) return "#3b82f6";
+  if (score >= 35) return "#eab308";
+  return "#ef4444";
 };
 
 export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {

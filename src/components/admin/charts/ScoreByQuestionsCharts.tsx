@@ -22,10 +22,10 @@ interface ScoreByQuestionsChartsProps {
 }
 
 const TRAFFIC_COLORS = {
-  Excellent: "#16a34a",
-  Good: "#2563eb",
-  "Needs Improvement": "#d97706",
-  "At Risk": "#dc2626",
+  Excellent: "#22c55e",
+  Good: "#3b82f6",
+  "Needs Improvement": "#eab308",
+  "At Risk": "#ef4444",
 };
 
 const CATEGORY_COLORS = ["#16a34a", "#2563eb", "#0891b2", "#7c3aed", "#d97706", "#dc2626"];
@@ -50,15 +50,14 @@ export function ScoreByQuestionsCharts({
   const avgBarData = categoryPerformance.map((d) => ({
     name: shortLabel(d.category),
     score: parseFloat(d.average_score.toFixed(1)),
-    fill: TRAFFIC_COLORS[
+    fill:
       d.percentage >= 65
-        ? "Excellent"
+        ? "#22c55e"
         : d.percentage >= 50
-        ? "Good"
+        ? "#3b82f6"
         : d.percentage >= 35
-        ? "Needs Improvement"
-        : "At Risk"
-    ],
+        ? "#eab308"
+        : "#ef4444",
   }));
 
   // Traffic light bar — uses score distribution per category — we approximate
