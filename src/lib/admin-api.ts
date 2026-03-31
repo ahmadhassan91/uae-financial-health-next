@@ -111,6 +111,10 @@ export interface AgeBreakdown {
   total: number;
   average_score: number;
   percentage: number;
+  excellent: number;
+  good: number;
+  needs_improvement: number;
+  at_risk: number;
 }
 
 export interface CompanyAnalytics {
@@ -407,6 +411,10 @@ export const adminApi = {
       total: item.count,
       average_score: item.avg_score || 0,
       percentage: total > 0 ? (item.count / total) * 100 : 0,
+      excellent: item.excellent || 0,
+      good: item.good || 0,
+      needs_improvement: item.needs_improvement || 0,
+      at_risk: item.at_risk || 0,
     }));
   },
 
@@ -588,13 +596,14 @@ export const adminApi = {
     return data.breakdown || [];
   },
 
+
   /**
    * Get emirate breakdown
    */
   async getEmirateBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ emirate: string; count: number }[]> {
+  ): Promise<{ emirate: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/emirate-breakdown?${queryString}`,
@@ -602,7 +611,15 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error("Failed to fetch emirate breakdown");
     const data = await response.json();
-    return data.breakdown || [];
+    return (data.breakdown || []).map((item: any) => ({
+      emirate: item.emirate,
+      count: item.count,
+      average_score: item.average_score || 0,
+      excellent: item.excellent || 0,
+      good: item.good || 0,
+      needs_improvement: item.needs_improvement || 0,
+      at_risk: item.at_risk || 0,
+    }));
   },
 
   /**
@@ -611,7 +628,7 @@ export const adminApi = {
   async getChildrenBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ count_label: string; count: number; average_score: number }[]> {
+  ): Promise<{ count_label: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/children-breakdown?${queryString}`,
@@ -619,7 +636,15 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error("Failed to fetch children breakdown");
     const data = await response.json();
-    return data.breakdown || [];
+    return (data.breakdown || []).map((item: any) => ({
+      count_label: item.count_label,
+      count: item.count,
+      average_score: item.average_score || 0,
+      excellent: item.excellent || 0,
+      good: item.good || 0,
+      needs_improvement: item.needs_improvement || 0,
+      at_risk: item.at_risk || 0,
+    }));
   },
 
   /**
@@ -628,7 +653,7 @@ export const adminApi = {
   async getIncomeRangeBreakdown(
     filters?: DemographicFilters,
     dateParams?: DateRangeParams
-  ): Promise<{ range: string; count: number; average_score: number }[]> {
+  ): Promise<{ range: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[]> {
     const queryString = buildQueryParams(filters, dateParams);
     const response = await fetch(
       `${getBackendUrl()}/admin/simple/income-breakdown?${queryString}`,
@@ -636,7 +661,15 @@ export const adminApi = {
     );
     if (!response.ok) throw new Error("Failed to fetch income breakdown");
     const data = await response.json();
-    return data.breakdown || [];
+    return (data.breakdown || []).map((item: any) => ({
+      range: item.range,
+      count: item.count,
+      average_score: item.average_score || 0,
+      excellent: item.excellent || 0,
+      good: item.good || 0,
+      needs_improvement: item.needs_improvement || 0,
+      at_risk: item.at_risk || 0,
+    }));
   },
 
   /**
