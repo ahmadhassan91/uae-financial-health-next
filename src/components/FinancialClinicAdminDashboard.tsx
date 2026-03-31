@@ -77,6 +77,11 @@ import { IncompleteSurveys } from "./admin/IncompleteSurveys";
 import { SystemManagement } from "./admin/SystemManagement";
 import { SubmissionsTable } from "./admin/SubmissionsTable";
 import { RegistrationMetrics } from "./admin/RegistrationMetrics";
+import { ScoreByQuestionsCharts } from "./admin/charts/ScoreByQuestionsCharts";
+import { ScoreByAgeGroupCharts } from "./admin/charts/ScoreByAgeGroupCharts";
+import { ScoreByEmirateCharts } from "./admin/charts/ScoreByEmirateCharts";
+import { ScoreByIncomeRangeCharts } from "./admin/charts/ScoreByIncomeRangeCharts";
+import { ScoreByChildrenCharts } from "./admin/charts/ScoreByChildrenCharts";
 
 interface FinancialClinicAdminDashboardProps {
   onBack?: () => void;
@@ -92,7 +97,7 @@ export function FinancialClinicAdminDashboard({
   // State for filters and date range
   const [filters, setFilters] = useState<DemographicFilters>({});
   const [dateParams, setDateParams] = useState<DateRangeParams>({
-    dateRange: "30d",
+    dateRange: "all",
   });
   const [availableOptions, setAvailableOptions] =
     useState<FilterOptions | null>(null);
@@ -119,13 +124,13 @@ export function FinancialClinicAdminDashboard({
     { status: string; count: number }[]
   >([]);
   const [emirateBreakdown, setEmirateBreakdown] = useState<
-    { emirate: string; count: number }[]
+    { emirate: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[]
   >([]);
   const [childrenBreakdown, setChildrenBreakdown] = useState<
-    { count_label: string; count: number; average_score: number }[]
+    { count_label: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[]
   >([]);
   const [incomeBreakdown, setIncomeBreakdown] = useState<
-    { range: string; count: number; average_score: number }[]
+    { range: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[]
   >([]);
   const [genderBreakdown, setGenderBreakdown] = useState<
     { gender: string; count: number; percentage: number }[]
@@ -259,9 +264,9 @@ export function FinancialClinicAdminDashboard({
           NationalityBreakdown[] | null,
           AgeBreakdown[] | null,
           { status: string; count: number }[] | null,
-          { emirate: string; count: number }[] | null,
-          { count_label: string; count: number; average_score: number }[] | null,
-          { range: string; count: number; average_score: number }[] | null,
+          { emirate: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[] | null,
+          { count_label: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[] | null,
+          { range: string; count: number; average_score: number; excellent: number; good: number; needs_improvement: number; at_risk: number }[] | null,
           CompanyAnalytics[] | null,
           ScoreAnalyticsResponse | null,
           { gender: string; count: number; percentage: number }[] | null,
@@ -694,6 +699,22 @@ export function FinancialClinicAdminDashboard({
                           </p>
                         </CardContent>
                       </Card>
+                    </div>
+
+                    {/* NEW NBC-Style Charts — placed first */}
+                    <ScoreByQuestionsCharts
+                      categoryPerformance={categoryPerformance}
+                      scoreDistribution={scoreDistribution}
+                    />
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <ScoreByAgeGroupCharts data={ageBreakdown} />
+                      <ScoreByEmirateCharts data={emirateBreakdown} />
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <ScoreByIncomeRangeCharts data={incomeBreakdown} />
+                      <ScoreByChildrenCharts data={childrenBreakdown} />
                     </div>
 
                     {/* Score Distribution & Category Performance */}
