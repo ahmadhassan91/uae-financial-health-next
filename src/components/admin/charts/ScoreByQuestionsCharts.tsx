@@ -28,15 +28,30 @@ const TRAFFIC_COLORS: Record<string, string> = {
   "At Risk": "#ef4444",
 };
 
-/** Convert backend category key → display name without stripping "financial_" */
+/** Convert backend category key → display name */
 const categoryLabel = (cat: string) =>
   cat.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+/** Only these 6 categories should appear in the chart */
+const VALID_CATEGORIES = new Set([
+  "income_stream",
+  "savings_habit",
+  "emergency_savings",
+  "debt_management",
+  "retirement_planning",
+  "financial_protection",
+]);
 
 export function ScoreByQuestionsCharts({
   categoryPerformance,
   scoreDistribution,
 }: ScoreByQuestionsChartsProps) {
   const total = scoreDistribution.reduce((s, d) => s + d.count, 0);
+
+  // Filter to only valid categories
+  const validPerformance = categoryPerformance.filter((d) =>
+    VALID_CATEGORIES.has(d.category.toLowerCase())
+  );
 
   // Pie data
   const pieData = scoreDistribution.map((d) => ({ name: d.status, value: d.count }));
@@ -45,7 +60,7 @@ export function ScoreByQuestionsCharts({
   );
 
   // Avg score bar — use percentage (0-100) so bars fill correctly
-  const avgBarData = categoryPerformance.map((d) => ({
+  const avgBarData = validPerformance.map((d) => ({
     name: categoryLabel(d.category),
     score: parseFloat(d.percentage.toFixed(1)),
     fill:
@@ -60,7 +75,7 @@ export function ScoreByQuestionsCharts({
 
   // Traffic light stacked bar using overall score distribution per category
   const tlBarData = avgBarData.map((d, i) => {
-    const cp = categoryPerformance[i];
+    const cp = validPerformance[i];
     const pct = cp?.percentage ?? 0;
     // approximate per-category TL split from the overall percentages scaled by category pct
     return {
