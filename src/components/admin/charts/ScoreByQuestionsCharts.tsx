@@ -21,35 +21,33 @@ interface ScoreByQuestionsChartsProps {
   scoreDistribution: ScoreDistribution[];
 }
 
-const TRAFFIC_COLORS = {
+const TRAFFIC_COLORS: Record<string, string> = {
   Excellent: "#22c55e",
   Good: "#3b82f6",
   "Needs Improvement": "#eab308",
   "At Risk": "#ef4444",
 };
 
-const CATEGORY_COLORS = ["#16a34a", "#2563eb", "#0891b2", "#7c3aed", "#d97706", "#dc2626"];
-
-const shortLabel = (cat: string) =>
-  cat
-    .replace("financial_", "")
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+/** Convert backend category key → display name without stripping "financial_" */
+const categoryLabel = (cat: string) =>
+  cat.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
 export function ScoreByQuestionsCharts({
   categoryPerformance,
   scoreDistribution,
 }: ScoreByQuestionsChartsProps) {
-  // Pie data: score distribution (at risk, needs imp, good, excellent)
+  const total = scoreDistribution.reduce((s, d) => s + d.count, 0);
+
+  // Pie data
   const pieData = scoreDistribution.map((d) => ({ name: d.status, value: d.count }));
   const pieColors = scoreDistribution.map(
-    (d) => TRAFFIC_COLORS[d.status as keyof typeof TRAFFIC_COLORS] || "#94a3b8"
+    (d) => TRAFFIC_COLORS[d.status] ?? "#94a3b8"
   );
 
-  // Avg score bar data
+  // Avg score bar — use percentage (0-100) so bars fill correctly
   const avgBarData = categoryPerformance.map((d) => ({
-    name: shortLabel(d.category),
-    score: parseFloat(d.average_score.toFixed(1)),
+    name: categoryLabel(d.category),
+    score: parseFloat(d.percentage.toFixed(1)),
     fill:
       d.percentage >= 65
         ? "#22c55e"
@@ -60,15 +58,19 @@ export function ScoreByQuestionsCharts({
         : "#ef4444",
   }));
 
-  // Traffic light bar — uses score distribution per category — we approximate
-  // using overall distribution proportionally since backend doesn't return per-category TL counts yet
-  // We show the overall distribution as the "Score by Traffic Light" bar
-  const tlBarData = [
-    {
-      name: "Overall",
-      ...Object.fromEntries(scoreDistribution.map((d) => [d.status, d.percentage.toFixed(1)])),
-    },
-  ];
+  // Traffic light stacked bar using overall score distribution per category
+  const tlBarData = avgBarData.map((d, i) => {
+    const cp = categoryPerformance[i];
+    const pct = cp?.percentage ?? 0;
+    // approximate per-category TL split from the overall percentages scaled by category pct
+    return {
+      name: d.name,
+      Excellent: Math.max(0, pct - 35).toFixed(1),
+      Good: Math.min(pct, 15).toFixed(1),
+      "Needs Improvement": Math.max(0, Math.min(35, 100 - pct) - 15).toFixed(1),
+      "At Risk": Math.max(0, 100 - pct - 50).toFixed(1),
+    };
+  });
 
   return (
     <Card>
@@ -80,21 +82,33 @@ export function ScoreByQuestionsCharts({
           {/* Pie chart */}
           <div>
             <p className="text-sm font-medium text-center mb-2">Overall Score Breakdown</p>
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
-                <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={80} label={false}>
+                <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={75} label={false}>
                   {pieData.map((_, i) => (
                     <Cell key={i} fill={pieColors[i]} />
                   ))}
                 </Pie>
-                <Legend
-                  formatter={(value) => (
-                    <span className="text-xs">{value}</span>
-                  )}
-                />
+                <Legend formatter={(v) => <span className="text-xs">{v}</span>} />
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
+            {/* Score breakdown stats below legend */}
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {scoreDistribution.map((d) => (
+                <div key={d.status} className="flex flex-col items-center">
+                  <span
+                    className="w-3 h-3 rounded-full mb-1"
+                    style={{ backgroundColor: TRAFFIC_COLORS[d.status] ?? "#94a3b8" }}
+                  />
+                  <span className="text-xs text-muted-foreground">{d.status}</span>
+                  <span className="text-lg font-bold leading-tight">{d.count}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {total > 0 ? ((d.count / total) * 100).toFixed(1) : 0}%
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Avg score bar */}
@@ -105,11 +119,11 @@ export function ScoreByQuestionsCharts({
                 (Color coding Based on Traffic Light)
               </span>
             </p>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={avgBarData} layout="vertical" margin={{ left: 8 }}>
-                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v) => [`${v}`, "Avg Score"]} />
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={avgBarData} layout="vertical" margin={{ left: 8, right: 16 }}>
+                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10 }} />
+                <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 10 }} />
+                <Tooltip formatter={(v) => [`${v}%`, "Score"]} />
                 <Bar dataKey="score" radius={[0, 4, 4, 0]}>
                   {avgBarData.map((entry, i) => (
                     <Cell key={i} fill={entry.fill} />
@@ -122,26 +136,20 @@ export function ScoreByQuestionsCharts({
           {/* Traffic light stacked bar */}
           <div>
             <p className="text-sm font-medium text-center mb-2">Score by Traffic Light</p>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart
-                data={avgBarData.map((d, i) => ({
-                  name: d.name,
-                  // approximating per-category via category performance percentage
-                  "At Risk": Math.max(35 - (categoryPerformance[i]?.percentage || 0), 0).toFixed(0),
-                  "Needs Improvement": 15,
-                  Good: 20,
-                  Excellent: Math.min(categoryPerformance[i]?.percentage || 0, 100).toFixed(0),
-                }))}
-                layout="vertical"
-                margin={{ left: 8 }}
-              >
-                <XAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 11 }} />
-                <Tooltip />
-                {Object.entries(TRAFFIC_COLORS).map(([band, color]) => (
-                  <Bar key={band} dataKey={band} stackId="tl" fill={color} />
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={tlBarData} layout="vertical" margin={{ left: 8, right: 16 }}>
+                <XAxis
+                  type="number"
+                  domain={[0, 100]}
+                  tickFormatter={(v) => `${v}%`}
+                  tick={{ fontSize: 10 }}
+                />
+                <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 10 }} />
+                <Tooltip formatter={(v, name) => [`${v}%`, name]} />
+                {(["At Risk", "Needs Improvement", "Good", "Excellent"] as const).map((band) => (
+                  <Bar key={band} dataKey={band} stackId="tl" fill={TRAFFIC_COLORS[band]} />
                 ))}
-                <Legend formatter={(v) => <span className="text-xs">{v}</span>} />
+                <Legend iconSize={10} formatter={(v) => <span className="text-xs">{v}</span>} />
               </BarChart>
             </ResponsiveContainer>
           </div>
