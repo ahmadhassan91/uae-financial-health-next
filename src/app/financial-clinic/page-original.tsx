@@ -56,10 +56,7 @@ export default function FinancialClinicPage({
   // Consent handlers
   const handleConsentGranted = async () => {
     try {
-      const result = await consentService.grantConsent(language);
-      if (!result.success) {
-        throw new Error(result.error || "Failed to grant consent");
-      }
+      await consentService.recordConsent(true);
       setHasConsent(true);
       setShowConsent(false);
       toast.success(language === "ar" ? "تم تسجيل موافقتك بنجاح" : "Your consent has been recorded successfully");
@@ -482,13 +479,15 @@ export default function FinancialClinicPage({
     }
 
     // Validate company field - only if companies exist AND company field is enabled
-    // Company field is mandatory
+    // OPTIONAL: Company field is now optional
+    /*
     if (companyOptions && companyOptions.length > 0 && enableCompanyField) {
       if (!profile.company_name?.trim()) {
         setCompanyError(language === "ar" ? "الشركة مطلوبة" : "Company is required");
         hasError = true;
       }
     }
+    */
 
     if (!profile.date_of_birth.trim()) {
       setDateError(
@@ -1007,78 +1006,55 @@ export default function FinancialClinicPage({
             <div className="grid grid-cols-1 w-full">
               <div className="w-full relative">
                 <Label className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 mb-2 block">
-                  {language === "ar" ? "الشركة / صاحب العمل" : "Company / Employer"}{" "}
-                  <span className="text-red-500">*</span>
+                  {language === "ar" ? "الشركة / صاحب العمل" : "Company / Employer"}
                 </Label>
                 <div className="relative">
-                  <div className={`flex items-stretch w-full rounded-[3px] border border-solid ${companyError ? "border-red-500" : "border-[#c2d1d9]"} bg-white overflow-hidden ${language === "ar" ? "flex-row-reverse" : "flex-row"}`}>
-                    {((profile.company_name || "").startsWith(language === "ar" ? "أخرى: " : "Other: ")) && (
-                      <div className={`flex items-center justify-center px-4 bg-gray-50/50 border-solid border-[#c2d1d9] ${language === "ar" ? "border-l" : "border-r"} shrink-0`}>
-                        <span className="font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm whitespace-nowrap">
-                          {language === "ar" ? "أخرى" : "Other"}
-                        </span>
-                      </div>
-                    )}
-                    <Input
-                      id="company-input"
-                      type="text"
-                      placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
-                      value={((profile.company_name || "").startsWith(language === "ar" ? "أخرى: " : "Other: "))
-                        ? (profile.company_name || "").substring((language === "ar" ? "أخرى: " : "Other: ").length)
-                        : (profile.company_name || companySearch)}
-                      onChange={(e) => {
-                        let value = e.target.value;
-                        const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
-
-                        if ((profile.company_name || "").startsWith(otherPrefix)) {
-                          value = otherPrefix + value;
-                        }
-
-                        setCompanySearch(value);
-                        setIsUserTyping(true);
-
-                        if (!value.startsWith(otherPrefix)) {
-                          setShowCompanyDropdown(true);
-                        } else {
-                          setShowCompanyDropdown(false);
-                        }
-
-                        setProfile((prev) => {
-                          const updated = {
-                            ...prev,
-                            company_name: value,
-                          };
-                          console.log('🔧 [DEBUG] Profile after company change:', updated);
-                          return updated;
-                        });
-
-                        if (companyError) setCompanyError("");
-                      }}
-                      onKeyDown={(e) => {
-                        const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
-                        if ((profile.company_name || "").startsWith(otherPrefix) && e.key === "Backspace") {
-                          const currentInputVal = (profile.company_name || "").substring(otherPrefix.length);
-                          if (currentInputVal === "") {
-                            setProfile((prev) => ({ ...prev, company_name: "" }));
-                            setCompanySearch("");
-                            setShowCompanyDropdown(true);
-                            e.preventDefault();
-                          }
-                        }
-                      }}
-                      onFocus={() => {
-                        const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
-                        // Don't reopen dropdown if in "Other: " mode
-                        if (!(profile.company_name || "").startsWith(otherPrefix)) {
-                          setShowCompanyDropdown(true);
-                          setIsUserTyping(false);
-                          loadCompanies(); // Refresh companies when dropdown is focused
-                        }
-                      }}
-                      onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
-                      className={`flex-1 h-[50px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none rounded-none font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"} ${((profile.company_name || "").startsWith(language === "ar" ? "أخرى: " : "Other: ")) ? "px-3" : "px-6"}`}
-                    />
-                  </div>
+                  <Input
+                    id="company-input"
+                    type="text"
+                    placeholder={language === "ar" ? "اكتب اسم الشركة" : "Type company name"}
+                    value={profile.company_name || companySearch}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // If user previously selected "Other", prevent deleting the "Other: " prefix
+                      const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
+                      if ((profile.company_name || "").startsWith(otherPrefix) && !value.startsWith(otherPrefix)) {
+                        // User is trying to delete prefix — keep it
+                        return;
+                      }
+                      setCompanySearch(value);
+                      setIsUserTyping(true);
+                      // Only show dropdown if NOT in "Other: " mode
+                      if (!value.startsWith(otherPrefix)) {
+                        setShowCompanyDropdown(true);
+                      } else {
+                        setShowCompanyDropdown(false);
+                      }
+                      setProfile((prev) => {
+                        const updated = {
+                          ...prev,
+                          company_name: value,
+                        };
+                        console.log('🔧 [DEBUG] Profile after company change:', updated);
+                        return updated;
+                      });
+                      // Clear error when user starts typing
+                      if (companyError) setCompanyError("");
+                    }}
+                    onFocus={() => {
+                      const otherPrefix = language === "ar" ? "أخرى: " : "Other: ";
+                      // Don't reopen dropdown if in "Other: " mode
+                      if (!(profile.company_name || "").startsWith(otherPrefix)) {
+                        setShowCompanyDropdown(true);
+                        setIsUserTyping(false);
+                        loadCompanies(); // Refresh companies when dropdown is focused
+                      }
+                    }}
+                    onBlur={() => setTimeout(() => setShowCompanyDropdown(false), 200)}
+                    className={`w-full h-[50px] px-6 py-2.5 rounded-[3px] border border-solid ${companyError ? "border-red-500" : "border-[#c2d1d9]"
+                      } font-[family-name:var(--font-poppins)] font-medium text-[#505d68] text-sm tracking-[0] leading-6 placeholder:text-[#a1aeb7] ${language === "ar" ? "flex-row-reverse" : "flex-row"
+                      }`}
+                  />
                   {showCompanyDropdown && (
                     <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-[60] max-h-60 overflow-y-auto w-full">
                       {filteredCompanyOptions.map((company) => (
@@ -1116,11 +1092,12 @@ export default function FinancialClinicPage({
                           setShowCompanyDropdown(false);
                           setIsUserTyping(false);
                           setCompanyError("");
-                          // Focus the input
+                          // Focus the input and place cursor after "Other: "
                           setTimeout(() => {
                             const input = document.getElementById('company-input') as HTMLInputElement;
                             if (input) {
                               input.focus();
+                              input.setSelectionRange(otherPrefix.length, otherPrefix.length);
                             }
                           }, 100);
                         }}
