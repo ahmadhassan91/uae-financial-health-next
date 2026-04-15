@@ -52,11 +52,11 @@ const bandColor = (score: number) => {
 /** Custom legend rendered in plain HTML — always single row, centered */
 function TrafficLightLegend() {
   return (
-    <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-3">
+    <div className="flex flex-nowrap items-center justify-center gap-3 sm:gap-4 mt-6 overflow-hidden">
       {(Object.entries(TRAFFIC_COLORS) as [string, string][]).map(([label, color]) => (
-        <span key={label} className="flex items-center gap-1 text-xs text-muted-foreground">
+        <span key={label} className="flex items-center gap-1 text-[11px] sm:text-xs text-muted-foreground whitespace-nowrap">
           <span
-            style={{ backgroundColor: color, width: 10, height: 10, borderRadius: 2, display: "inline-block" }}
+            style={{ backgroundColor: color, width: 10, height: 10, borderRadius: 2, display: "inline-block flex-shrink-0" }}
           />
           {label}
         </span>
@@ -132,10 +132,10 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
                 ))}
               </BarChart>
             </ResponsiveContainer>
-            {/* Custom centered legend below chart */}
-            <TrafficLightLegend />
           </div>
         </div>
+        {/* Custom centered legend below all charts in the card */}
+        <TrafficLightLegend />
       </CardContent>
     </Card>
   );

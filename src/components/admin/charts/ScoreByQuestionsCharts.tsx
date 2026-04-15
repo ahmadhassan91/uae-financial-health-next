@@ -164,18 +164,18 @@ export function ScoreByQuestionsCharts({
                 ))}
               </BarChart>
             </ResponsiveContainer>
-            {/* Custom centered legend */}
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-3">
-              {(["At Risk", "Needs Improvement", "Good", "Excellent"] as const).map((band) => (
-                <span key={band} className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <span
-                    style={{ backgroundColor: TRAFFIC_COLORS[band], width: 10, height: 10, borderRadius: 2, display: "inline-block" }}
-                  />
-                  {band}
-                </span>
-              ))}
-            </div>
           </div>
+        </div>
+        {/* Custom centered legend below all charts in the card */}
+        <div className="flex flex-nowrap items-center justify-center gap-3 sm:gap-4 mt-6 overflow-hidden">
+          {(["At Risk", "Needs Improvement", "Good", "Excellent"] as const).map((band) => (
+            <span key={band} className="flex items-center gap-1 text-[11px] sm:text-xs text-muted-foreground whitespace-nowrap">
+              <span
+                style={{ backgroundColor: TRAFFIC_COLORS[band], width: 10, height: 10, borderRadius: 2, display: "inline-block flex-shrink-0" }}
+              />
+              {band}
+            </span>
+          ))}
         </div>
       </CardContent>
     </Card>
