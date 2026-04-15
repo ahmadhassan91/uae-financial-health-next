@@ -3,14 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FinancialClinicSurvey } from '@/components/FinancialClinicSurvey';
-import {
+import { 
   calculateFinancialClinicScore,
-  submitFinancialClinicSurvey
+  submitFinancialClinicSurvey 
 } from '@/lib/financial-clinic-survey-data';
-import type {
+import type { 
   FinancialClinicProfile,
   FinancialClinicAnswers,
-  FinancialClinicResult
+  FinancialClinicResult 
 } from '@/lib/financial-clinic-types';
 import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
@@ -30,15 +30,15 @@ export default function FinancialClinicSurveyPage() {
       try {
         const parsedProfile = JSON.parse(storedProfile);
         setProfile(parsedProfile);
-
+        
         // Check for session restoration from URL parameter (from follow-up email)
         const searchParams = new URLSearchParams(window.location.search);
         const sessionId = searchParams.get('session');
-
+        
         if (sessionId) {
           // Resume from email link - fetch session data from backend
           console.log('🔗 Resuming from email link with session:', sessionId);
-
+          
           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/surveys/incomplete/resume/${sessionId}`)
             .then(response => {
               if (!response.ok) {
@@ -48,20 +48,20 @@ export default function FinancialClinicSurveyPage() {
             })
             .then(sessionData => {
               console.log('📋 Session data retrieved:', sessionData);
-
+              
               // Restore answers and step from session data
               setAnswers(sessionData.responses || {});
               setCurrentStep(sessionData.current_step || 0);
-
+              
               // Set the session ID for future updates
               sessionStorage.setItem('incomplete_survey_session', sessionData.session_id);
-
+              
               toast.success('Welcome back! Your progress has been restored. Continue from where you left off.');
             })
             .catch(error => {
               console.error('❌ Failed to resume session:', error);
               toast.error('Session expired or not found. Starting fresh survey.');
-
+              
               // Start a new survey if session resume fails
               startNewSurvey(parsedProfile, searchParams);
             });
@@ -69,24 +69,24 @@ export default function FinancialClinicSurveyPage() {
           // Check for restored session data from localStorage
           const restoredAnswers = localStorage.getItem('restoredAnswers');
           const restoredStep = localStorage.getItem('restoredStep');
-
+          
           if (restoredAnswers) {
             const parsedAnswers = JSON.parse(restoredAnswers);
             console.log('🔄 Restoring answers from localStorage:', parsedAnswers);
             setAnswers(parsedAnswers);
-
+            
             // Clear restored answers after using
             localStorage.removeItem('restoredAnswers');
           }
-
+          
           if (restoredStep) {
             const step = parseInt(restoredStep, 10);
             console.log('🔄 Restoring step from localStorage:', step);
             setCurrentStep(step);
-
+            
             // Clear restored step after using
             localStorage.removeItem('restoredStep');
-
+            
             toast.success('Your progress has been restored! Continue from where you left off.');
           } else {
             // New survey - start tracking
@@ -109,32 +109,22 @@ export default function FinancialClinicSurveyPage() {
   const startNewSurvey = (parsedProfile: any, searchParams: URLSearchParams) => {
     // Check company URL from both URL parameters and sessionStorage
     let companyUrl = searchParams.get('company');
-
+    
     // If not in URL params, check sessionStorage (preserved from home page)
     if (!companyUrl) {
       companyUrl = sessionStorage.getItem('company_url');
     }
-
+    
     console.log('🏢 Starting survey with company URL:', companyUrl);
-
+    
     incompleteSurveyService.startTracking({
       current_step: 0,
       total_steps: parsedProfile.children > 0 ? 15 : 14,
-      responses: {
-        name: parsedProfile.name || '',
-        email: parsedProfile.email || '',
-        mobile_number: parsedProfile.mobile_number || '',
-        gender: parsedProfile.gender || '',
-        nationality: parsedProfile.nationality || '',
-        emirate: parsedProfile.emirate || '',
-        children: parsedProfile.children ?? '',
-        employment_status: parsedProfile.employment_status || '',
-        income_range: parsedProfile.income_range || '',
-        date_of_birth: parsedProfile.date_of_birth || '',
-      },
+      responses: {},
       email: parsedProfile.email,
       phone_number: parsedProfile.mobile_number,
       company_url: companyUrl || undefined,
+      profile: parsedProfile
     }).catch(err => {
       console.error('Failed to start survey tracking:', err);
       // Don't block the user if tracking fails
@@ -142,34 +132,17 @@ export default function FinancialClinicSurveyPage() {
   };
 
   const handleResponse = (questionId: string, value: number) => {
-    // Keep typed answers state clean (FinancialClinicAnswers = { [id]: number })
-    const newAnswers: FinancialClinicAnswers = {
+    const newAnswers = {
       ...answers,
       [questionId]: value
     };
-
+    
     setAnswers(newAnswers);
-
-    // Build a combined payload for the backend that includes both survey
-    // question answers AND profile demographic fields, so incomplete records
-    // in the DB capture the full user profile even if they never finish.
-    const profileFields = profile ? {
-      name: profile.name || '',
-      email: profile.email || '',
-      mobile_number: profile.mobile_number || '',
-      gender: profile.gender || '',
-      nationality: profile.nationality || '',
-      emirate: profile.emirate || '',
-      children: profile.children ?? '',
-      employment_status: profile.employment_status || '',
-      income_range: profile.income_range || '',
-      date_of_birth: profile.date_of_birth || '',
-    } : {};
-
-    // Auto-save progress to incomplete survey, merging profile + question answers
+    
+    // Auto-save progress to incomplete survey
     incompleteSurveyService.updateProgress({
       current_step: currentStep,
-      responses: { ...profileFields, ...newAnswers }
+      responses: newAnswers
     }).catch(err => {
       console.error('Failed to auto-save progress:', err);
       // Don't block the user if auto-save fails
@@ -178,25 +151,11 @@ export default function FinancialClinicSurveyPage() {
 
   const handleStepChange = (newStep: number) => {
     setCurrentStep(newStep);
-
-    // Include profile fields when auto-saving on step change
-    const profileFields = profile ? {
-      name: profile.name || '',
-      email: profile.email || '',
-      mobile_number: profile.mobile_number || '',
-      gender: profile.gender || '',
-      nationality: profile.nationality || '',
-      emirate: profile.emirate || '',
-      children: profile.children ?? '',
-      employment_status: profile.employment_status || '',
-      income_range: profile.income_range || '',
-      date_of_birth: profile.date_of_birth || '',
-    } : {};
-
+    
     // Auto-save progress when step changes
     incompleteSurveyService.updateProgress({
       current_step: newStep,
-      responses: { ...profileFields, ...answers }
+      responses: answers
     }).catch(err => {
       console.error('Failed to auto-save step progress:', err);
       // Don't block the user if auto-save fails
@@ -233,7 +192,7 @@ export default function FinancialClinicSurveyPage() {
 
       // Mark survey as completed (remove from incomplete)
       await incompleteSurveyService.markCompleted();
-
+      
       // Store result in localStorage for results page
       localStorage.setItem('financialClinicResult', JSON.stringify(result));
       console.log('💾 Stored result in localStorage with survey_response_id:', result.survey_response_id);
