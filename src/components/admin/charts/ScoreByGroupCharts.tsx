@@ -69,6 +69,7 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
   });
 
   const barHeight = Math.max(data.length * 32 + 40, 180);
+  const tlHeight = barHeight + 40; // extra room for legend below
 
   return (
     <Card>
@@ -102,8 +103,12 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
             <p className="text-xs text-muted-foreground text-center mb-2">
               Score by Traffic Light
             </p>
-            <ResponsiveContainer width="100%" height={barHeight}>
-              <BarChart data={tlData} layout="vertical" margin={{ left: 4 }}>
+            <ResponsiveContainer width="100%" height={tlHeight}>
+              <BarChart
+                data={tlData}
+                layout="vertical"
+                margin={{ left: 4, bottom: 10 }}
+              >
                 <XAxis
                   type="number"
                   domain={[0, 100]}
@@ -116,8 +121,11 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
                   <Bar key={band} dataKey={band} stackId="tl" fill={TRAFFIC_COLORS[band]} />
                 ))}
                 <Legend
+                  verticalAlign="bottom"
+                  align="center"
+                  layout="horizontal"
                   iconSize={10}
-                  formatter={(v) => <span className="text-xs">{v}</span>}
+                  wrapperStyle={{ paddingTop: 12, fontSize: 12 }}
                 />
               </BarChart>
             </ResponsiveContainer>

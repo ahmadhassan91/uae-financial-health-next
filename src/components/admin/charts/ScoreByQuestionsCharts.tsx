@@ -151,8 +151,8 @@ export function ScoreByQuestionsCharts({
           {/* Traffic light stacked bar */}
           <div>
             <p className="text-sm font-medium text-center mb-2">Score by Traffic Light</p>
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={tlBarData} layout="vertical" margin={{ left: 8, right: 16 }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={tlBarData} layout="vertical" margin={{ left: 8, right: 16, bottom: 10 }}>
                 <XAxis
                   type="number"
                   domain={[0, 100]}
@@ -164,7 +164,13 @@ export function ScoreByQuestionsCharts({
                 {(["At Risk", "Needs Improvement", "Good", "Excellent"] as const).map((band) => (
                   <Bar key={band} dataKey={band} stackId="tl" fill={TRAFFIC_COLORS[band]} />
                 ))}
-                <Legend iconSize={10} formatter={(v) => <span className="text-xs">{v}</span>} />
+                <Legend
+                  verticalAlign="bottom"
+                  align="center"
+                  layout="horizontal"
+                  iconSize={10}
+                  wrapperStyle={{ paddingTop: 12, fontSize: 12 }}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
