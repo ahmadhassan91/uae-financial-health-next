@@ -18,7 +18,6 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  Legend,
 } from "recharts";
 
 export interface GroupRow {
@@ -50,6 +49,22 @@ const bandColor = (score: number) => {
   return "#ef4444";
 };
 
+/** Custom legend rendered in plain HTML — always single row, centered */
+function TrafficLightLegend() {
+  return (
+    <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-3">
+      {(Object.entries(TRAFFIC_COLORS) as [string, string][]).map(([label, color]) => (
+        <span key={label} className="flex items-center gap-1 text-xs text-muted-foreground">
+          <span
+            style={{ backgroundColor: color, width: 10, height: 10, borderRadius: 2, display: "inline-block" }}
+          />
+          {label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
   const avgData = data.map((d) => ({
     name: d.label,
@@ -69,7 +84,6 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
   });
 
   const barHeight = Math.max(data.length * 32 + 40, 180);
-  const tlHeight = barHeight + 40; // extra room for legend below
 
   return (
     <Card>
@@ -103,12 +117,8 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
             <p className="text-xs text-muted-foreground text-center mb-2">
               Score by Traffic Light
             </p>
-            <ResponsiveContainer width="100%" height={tlHeight}>
-              <BarChart
-                data={tlData}
-                layout="vertical"
-                margin={{ left: 4, bottom: 10 }}
-              >
+            <ResponsiveContainer width="100%" height={barHeight}>
+              <BarChart data={tlData} layout="vertical" margin={{ left: 4 }}>
                 <XAxis
                   type="number"
                   domain={[0, 100]}
@@ -120,15 +130,10 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
                 {(Object.keys(TRAFFIC_COLORS) as (keyof typeof TRAFFIC_COLORS)[]).map((band) => (
                   <Bar key={band} dataKey={band} stackId="tl" fill={TRAFFIC_COLORS[band]} />
                 ))}
-                <Legend
-                  verticalAlign="bottom"
-                  align="center"
-                  layout="horizontal"
-                  iconSize={10}
-                  wrapperStyle={{ paddingTop: 12, fontSize: 12 }}
-                />
               </BarChart>
             </ResponsiveContainer>
+            {/* Custom centered legend below chart */}
+            <TrafficLightLegend />
           </div>
         </div>
       </CardContent>

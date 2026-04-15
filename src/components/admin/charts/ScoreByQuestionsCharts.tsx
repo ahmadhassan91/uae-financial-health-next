@@ -12,7 +12,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend,
 } from "recharts";
 import { CategoryPerformance, ScoreDistribution } from "@/lib/admin-api";
 
@@ -104,7 +103,6 @@ export function ScoreByQuestionsCharts({
                     <Cell key={i} fill={pieColors[i]} />
                   ))}
                 </Pie>
-                <Legend formatter={(v) => <span className="text-xs">{v}</span>} />
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
@@ -151,8 +149,8 @@ export function ScoreByQuestionsCharts({
           {/* Traffic light stacked bar */}
           <div>
             <p className="text-sm font-medium text-center mb-2">Score by Traffic Light</p>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={tlBarData} layout="vertical" margin={{ left: 8, right: 16, bottom: 10 }}>
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={tlBarData} layout="vertical" margin={{ left: 8, right: 16 }}>
                 <XAxis
                   type="number"
                   domain={[0, 100]}
@@ -164,15 +162,19 @@ export function ScoreByQuestionsCharts({
                 {(["At Risk", "Needs Improvement", "Good", "Excellent"] as const).map((band) => (
                   <Bar key={band} dataKey={band} stackId="tl" fill={TRAFFIC_COLORS[band]} />
                 ))}
-                <Legend
-                  verticalAlign="bottom"
-                  align="center"
-                  layout="horizontal"
-                  iconSize={10}
-                  wrapperStyle={{ paddingTop: 12, fontSize: 12 }}
-                />
               </BarChart>
             </ResponsiveContainer>
+            {/* Custom centered legend */}
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-3">
+              {(["At Risk", "Needs Improvement", "Good", "Excellent"] as const).map((band) => (
+                <span key={band} className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <span
+                    style={{ backgroundColor: TRAFFIC_COLORS[band], width: 10, height: 10, borderRadius: 2, display: "inline-block" }}
+                  />
+                  {band}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </CardContent>
