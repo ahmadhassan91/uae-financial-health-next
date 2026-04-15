@@ -132,10 +132,10 @@ export function ScoreByGroupCharts({ title, data }: ScoreByGroupChartsProps) {
                 ))}
               </BarChart>
             </ResponsiveContainer>
-            {/* Custom centered legend below chart */}
-            <TrafficLightLegend />
           </div>
         </div>
+        {/* Custom centered legend below all charts in the card */}
+        <TrafficLightLegend />
       </CardContent>
     </Card>
   );
